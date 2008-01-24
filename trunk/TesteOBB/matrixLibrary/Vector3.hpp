@@ -88,7 +88,7 @@ public:
 	{
 		return ( *this );
 	};
-	friend Vector3<T> operator* ( const Vector3<T>& u,const T& factor ) 	
+	friend inline Vector3<T> operator* ( const Vector3<T>& u,const T& factor ) 	
 	{
 	 	Vector3<T> w;
 	 	
@@ -99,7 +99,7 @@ public:
 		return ( w );
 	};
 	
-	friend Vector3<T> operator*	( const T& factor ,const Vector3<T>& u) 	
+	friend inline Vector3<T> operator*	( const T& factor ,const Vector3<T>& u) 	
 	{
 	 	Vector3<T> w;
 	 	
@@ -110,21 +110,30 @@ public:
 		return ( w );
 	};
 	
-	friend T operator*	( const Vector3<T>& u ,const Vector3<T>& v) 	
+	friend inline T operator*	( const Vector3<T>& u ,const Vector3<T>& v) 	
 	{
-	 	T w;
+	 	T dotProduct;
 	 	
-		w = (u.x * v.x) + 
-			(u.y * v.y) +
-			(u.z * v.z) ;
+	 	dotProduct = (u.x * v.x) + 
+					 (u.y * v.y) +
+					 (u.z * v.z) ;
 		
-		return ( w );
+		return ( dotProduct );
 	};
 
 		
-	inline Vector3<T>  operator^	( const Vector3<T>& ) 	const;
+	friend inline Vector3<T>  operator^	( const Vector3<T>& u ,const Vector3<T>& v)
+	{
+		Vector3<T> crossProduct = Vector3 ( u.y*v.z - u.z*v.y,
+										   -u.x*v.z + u.z*v.x,
+										    u.x*v.y - u.y*v.x);
+		
+		
+		
+		return ( crossProduct );
+	};
 	
-	friend  std::ostream& operator<< (std::ostream & s, const Vector3<T>& u)
+	friend inline std::ostream& operator<< (std::ostream & s, const Vector3<T>& u)
 	{
 		s << " x = " << u.x << " ,y = " << u.y << " ,z = " << u.z << std::endl;
 		

@@ -10,18 +10,23 @@ using namespace std;
 int main(int argc, char *argv[])
 {
 
-	SLAL::Vector3<double> v1(-3.0,4.0,0.0);
-	SLAL::Vector3<double> v2(-3.0,4.0,0.0);
+	SLAL::Vector3<double> v1(1.0,2.0,3.0);
+	SLAL::Vector3<double> v2(4.0,5.0,6.0);
 	
-	SLAL::Matrix3x3<double> A (1.0,1.0,1.0,
-							   2.0,2.0,2.0,
-							   3.0,3.0,3.0);
+	SLAL::Matrix3x3<double> A (2.0,5.0,3.0,
+								4.0,8.0,9.0,
+								-8.0,9.0,4.0);
 	
-	bool f = false	;
+	SLAL::Matrix3x3<double> B (-8.0,9.0,1.0,
+								2.0,5.0,0.0,
+								6.0,7.0,7.0);
 	
-	f = v1 != v2;
+		
+	v1 = v2 ^ v1;
 	
 	std::cout << v1 <<std::endl;
+	
+	A =  A * B;
 	
 	std::cout << A;
 	
