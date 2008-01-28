@@ -22,7 +22,7 @@ int main(int argc, char *argv[])
 								6.0,7.0,7.0);
 	
 		
-	v1 = v2 ^ v1;
+	v1 = v2 -v1;
 	
 	std::cout << v1 <<std::endl;
 	

@@ -80,7 +80,7 @@ struct VarOverflowRefine : public OctreeRefine <K, ItemPtr> {
     /// @param level node level
     /// @param items list of items inside the leaf node
     static bool split (const Box_3<K>& world, int level, const list<ItemPtr>& items) {
-        return items.size() > Max && level < LevelMax;
+        return items.size() > (unsigned)Max && level < LevelMax;
     }
 };
 
@@ -107,6 +107,13 @@ class OctreeNode {
     friend class OctreeIterator<K, ItemPtr, Refine>; ///< Octree iterators are friends
     typedef list<ItemPtr> ItemPtrList; ///< List of items stored inside leaf nodes
     typedef set<ItemPtr> ItemPtrSet;   ///< Return type of overlap
+
+	typedef const OctreeNode* NodePtr;
+    typedef std::pair < NodePtr, Box3 > NodeBoxPair;
+    typedef list < NodeBoxPair > OctreeNodeBoxPtrList;
+
+    //typedef list < pair <const OctreNode*, Box_3<K> > > OctreeNodeBoxPtrList;
+    //typedef list<const OctreeNode*> OctreeNodePtrList;   ///< Return type of overlap
 
     /// Returns a pointer to the octree leaf which contains point p
     /// @param p point which should be inside a descendant leaf
@@ -140,7 +147,7 @@ class OctreeNode {
     virtual ItemPtrSet overlap(const Box3& world, const Sphere3& query) const = 0;
 
     /// Returns a set of pointers to functions that overlap a query sphere
-    virtual ItemPtrSet overlapfunc(const Box3& world, const Sphere3& query) const = 0;
+    virtual OctreeNodeBoxPtrList overlapNode(const Box3& world, const Sphere3& query) const = 0;
 
     /// Returns the euclidean distance between p and the closest object stored
     /// in the octree
@@ -186,6 +193,13 @@ class OctreeInternalNode : public OctreeNode<K, ItemPtr, Refine> {
     typedef list<ItemPtr> ItemPtrList; ///< List of items stored inside leaf nodes
     typedef set<ItemPtr> ItemPtrSet;   ///< Return type of overlap
     typedef typename set<ItemPtr>::iterator ItemPtrSetIterator;
+
+    //typedef list<const OctreeNode*> OctreeNodePtrList;   ///< Return type of overlap
+	typedef const OctreeNode* NodePtr;
+    typedef std::pair < NodePtr, Box3 > NodeBoxPair;
+    typedef list < NodeBoxPair > OctreeNodeBoxPtrList;
+    typedef typename list< NodeBoxPair >::iterator OctreeNodeBoxPtrListIterator;
+    //typedef typename list<const OctreeNode*>::iterator OctreeNodePtrListIterator;
 
     OctreeNode* son[8];
 
@@ -326,13 +340,13 @@ public:
        return internal_overlap;
     }
 
-
     /// Returns a set of pointers to functions that overlap a query box
     /// @param world box of current node
     /// @param query query sphere
     /// @return set of pointers to objects that overlap query
-    virtual ItemPtrSet overlapfunc(const Box3& world, const Sphere3& query) const {
-        ItemPtrSet internal_overlapfunc;
+    virtual OctreeNodeBoxPtrList overlapNode(const Box3& world, const Sphere3& query) const {
+
+        OctreeNodeBoxPtrList internal_overlap;
 
         for (int index = 0; index < 8; ++index) {
 
@@ -341,20 +355,20 @@ public:
 
            // do_intersect must be overloaded to support also
            // the box2box check.
-           ItemPtrSet temp_overlapfunc;
+           OctreeNodeBoxPtrList temp_overlap;
 
            if (lcgOctree::checkIntersection (query, suboctant))
-               temp_overlapfunc = son[index]->overlapfunc(suboctant, query);
+               temp_overlap = son[index]->overlapNode(suboctant, query);
 
-           if (!temp_overlapfunc.empty())
-               internal_overlapfunc.insert(rbfPtr);
+           if (!temp_overlap.empty())
+            for (OctreeNodeBoxPtrListIterator it = temp_overlap.begin (); it != temp_overlap.end(); ++it){
+                   internal_overlap.push_back(*it);
+               }
+		}
 
 
-
-
-       return internal_overlapfunc;
+       return internal_overlap;
     }
-
 
     //
     //
@@ -375,12 +389,12 @@ public:
     }
 
     /// Returns the euclidean distance between p and the closest object stored
-    /// in the octree
+    /// in the octreeleaf_overlap
     ///
     /// @param world dimensions of this node
     /// @param best best estimate (closest object) found so far
     /// @param p Point in relation to which the distance will be computed
-    /// @param clsPt closest point  
+    /// @param clsPt closest point
     /// @return euclidean distance
     ///
     virtual double distance (const Box3& world, double best, const Point3& p, Point3& clsPt) const
@@ -429,6 +443,13 @@ class OctreeLeafNode : public OctreeNode<K, ItemPtr, Refine> {
 
     typedef typename list<ItemPtr>::iterator listItemPtrIterator;
     typedef typename list<ItemPtr>::const_iterator const_listItemPtrIterator;
+
+    //typedef list<const OctreeNode*> OctreeNodePtrList;   ///< Return type of overlap
+	typedef const OctreeNode* NodePtr;
+    typedef std::pair < NodePtr, Box3 > NodeBoxPair;
+    typedef list < NodeBoxPair > OctreeNodeBoxPtrList;
+    typedef typename list< NodeBoxPair >::iterator OctreeNodeBoxPtrListIterator;
+    //typedef typename list<const OctreeNode*>::iterator OctreeNodePtrListIterator;
 
     list<ItemPtr> PtrList; // Pointers to items which overlap this node
 	TPInterpolation* rbf;
@@ -514,12 +535,13 @@ class OctreeLeafNode : public OctreeNode<K, ItemPtr, Refine> {
         return leaf_overlap;
     }
 
-    /// Returns a set of pointers to functions that overlap a query sphere
-    virtual ItemPtrSet overlapfunc(const Box3& world, const Sphere3& query) const{
-      ItemPtrSet leaf_overlapfunc;
-      if (lcgOctree::checkIntersection(query, world)) leaf_overlapfunc.insert(rbfPtr);
 
-        return leaf_overlapfunc;
+/// Returns a set of pointers to functions that overlap a query sphere
+    virtual OctreeNodeBoxPtrList overlapNode(const Box3& world, const Sphere3& query) const{
+    	OctreeNodeBoxPtrList leaf_overlap;
+		if (lcgOctree::checkIntersection(query, world))
+        	leaf_overlap.push_back( make_pair < NodePtr, Box3 > (this, world) );
+        return leaf_overlap;
 	}
 
     /// Returns the euclidean distance between p and the closest object stored
@@ -605,7 +627,7 @@ public:
     InternalNode * father () const {
         assert (pathLen > 0);
         if (pathLen == 1)
-            return (InternalNode*) root;
+            return (nt*) root;
         else 
             return (InternalNode*) (*path [pathLen-2]);
     }
@@ -654,7 +676,7 @@ public:
     };
 
     /// Increments an iterator
-    OctreeIterator& operator++ () 
+    OctreeIterator& operator++ ()
     {
         assert (!null());
         debug ("PathLen="<< pathLen);
@@ -738,6 +760,9 @@ public:
     typedef list<ItemPtr> ItemPtrList; ///< What is actually stored in a leaf
     typedef set<ItemPtr> ItemPtrSet;   ///< Return type of overlap
     typedef OctreeIterator<K,ItemPtr,Refine> Iterator; ///< Octree pre-order iterator
+    //typedef list< const OctreeNode<K, ItemPtr, Refine>* > OctreeNodePtrList;   ///< Return type of overlap
+    typedef list < pair <const OctreeNode<K, ItemPtr, Refine>*, Box3 > > OctreeNodeBoxPtrList;
+
     
 protected:
     ///
@@ -790,11 +815,10 @@ public :
        return root->overlap (world, query);
     }
 
-	/// Returns all functions that overlap a given sphere
-    /// @param query query sphere
-    ItemPtrSet overlapfunc (const Sphere3 query) const {
-       return root->overlapfunc (world, query);
+    OctreeNodeBoxPtrList overlapNode (const Sphere3 query) const {
+       return root->overlapNode (world, query);
     }
+
 
     /// Returns a pre-order iterator to the octree
     Iterator begin () {
@@ -805,7 +829,7 @@ public :
     Iterator end () {
         return Iterator ();
     }
-    
+
     /// Returns the box geometry of an octree node pointed to by an iterator
     Box3 box (const Iterator& i) const {
         double xsize = world.xmax() - world.xmin();
@@ -813,6 +837,7 @@ public :
         double zsize = world.zmax() - world.zmin();
         double x0, y0, z0;
         i.minCoords (x0, y0, z0);
+        cout<<x0<<' '<<y0<<' '<<z0<<endl;
         Point3 minCorner (world.xmin() + x0 * xsize,
                           world.ymin() + y0 * ysize,
                           world.zmin() + z0 * zsize);
@@ -822,6 +847,7 @@ public :
                              minCorner.y() + ysize * sizeFraction,
                              minCorner.z() + zsize * sizeFraction));
     }
+
 
     /// Returns the euclidean distance between p and the closest object stored
     /// in the octreedistance

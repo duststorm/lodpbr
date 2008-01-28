@@ -1,8 +1,8 @@
 /********************************************************************************
 ** Form generated from reading ui file 'interface.ui'
 **
-** Created: Thu Jan 24 15:21:31 2008
-**      by: Qt User Interface Compiler version 4.3.0
+** Created: Sun Jan 27 17:20:14 2008
+**      by: Qt User Interface Compiler version 4.3.2
 **
 ** WARNING! All changes made in this file will be lost when recompiling ui file!
 ********************************************************************************/
@@ -48,9 +48,7 @@ public:
     if (MainWindow->objectName().isEmpty())
         MainWindow->setObjectName(QString::fromUtf8("MainWindow"));
     MainWindow->setWindowModality(Qt::WindowModal);
-    QSize size(665, 550);
-    size = size.expandedTo(MainWindow->minimumSizeHint());
-    MainWindow->resize(size);
+    MainWindow->resize(665, 550);
     MainWindow->setLayoutDirection(Qt::LeftToRight);
     MainWindow->setDockNestingEnabled(true);
     action_Open_Surface_A = new QAction(MainWindow);

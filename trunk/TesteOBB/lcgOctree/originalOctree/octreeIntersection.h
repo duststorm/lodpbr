@@ -1,13 +1,9 @@
 #ifndef __OCTREE_INTERSECT__
 #define __OCTREE_INTERSECT__
 
-#include "orientedpoints.h"
 
 /// defines methods dependent on the geometry of the itens into the octree.
 namespace lcgOctree {
-
-
-
         ///
         /// Intersection test between a box and a face in 3D
         ///
@@ -16,8 +12,6 @@ namespace lcgOctree {
         {
             return box.intersect(q->getPoint());
         }
-
-
         ///
         /// Intersection test between a sphere and a point in 3D
         ///
@@ -35,7 +29,6 @@ namespace lcgOctree {
             }
             return d <= r;
         }
-
         //Check to see if the Sphere overlaps a Box
         template <class K>
         bool checkIntersection (const CGAL::Sphere_3<K>& sphere, const Box_3<K>& box)

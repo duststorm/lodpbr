@@ -3,12 +3,23 @@
 
 #include <iostream>
 
+#include "Point3.hpp" 
 
 namespace SLAL { 
 
 template <class T>	class Vector3
 {
+
+private:
+
+	T x;
+	T y;
+	T z;
+	
 public:
+	
+	friend class Point3;
+	
 	// VETOR COLUNA OU VETOR LINHA ??
 	Vector3 ()
 	{
@@ -19,9 +30,9 @@ public:
 	
 	Vector3 ( const Vector3<T>& u)
 	{
-		this->x = u.x;
-		this->y = u.y;
-		this->z = u.z;;
+		this->x = u.x();
+		this->y = u.y();
+		this->z = u.z();
 	};
 	
 	Vector3 ( const T& x, const T& y, const T& z )
@@ -54,7 +65,7 @@ public:
 		return  !(u == v) ;
 	};	
 	
-	inline Vector3<T>  operator- ( const Vector3<T>& u) const
+	inline Vector3<T>&  operator- ( const Vector3<T>& u) const
 	{
 		Vector3<T> w;
 		 	
@@ -62,7 +73,9 @@ public:
 		w.y = this->y - u.y;
 		w.z = this->z - u.z;
 			
-		return ( w );
+		Vector3<T>& h = w;
+		
+		return ( h );
 	};
 	inline Vector3<T>  operator- ( ) const
 	{
@@ -110,13 +123,11 @@ public:
 		return ( w );
 	};
 	
-	friend inline T operator*	( const Vector3<T>& u ,const Vector3<T>& v) 	
+	friend inline T operator* ( const Vector3<T>& u ,const Vector3<T>& v) 	
 	{
 	 	T dotProduct;
 	 	
-	 	dotProduct = (u.x * v.x) + 
-					 (u.y * v.y) +
-					 (u.z * v.z) ;
+	 	dotProduct = (u.x * v.x) +  (u.y * v.y) + (u.z * v.z) ;
 		
 		return ( dotProduct );
 	};
@@ -124,29 +135,23 @@ public:
 		
 	friend inline Vector3<T>  operator^	( const Vector3<T>& u ,const Vector3<T>& v)
 	{
-		Vector3<T> crossProduct = Vector3 ( u.y*v.z - u.z*v.y,
-										   -u.x*v.z + u.z*v.x,
-										    u.x*v.y - u.y*v.x);
+		Vector3<T> crossProduct;
 		
-		
-		
+			crossProduct.x =  u.y*v.z - u.z*v.y;
+			crossProduct.y = -u.x*v.z + u.z*v.x;
+		    crossProduct.z =  u.x*v.y - u.y*v.x;
+				
 		return ( crossProduct );
 	};
 	
 	friend inline std::ostream& operator<< (std::ostream & s, const Vector3<T>& u)
 	{
-		s << " x = " << u.x << " ,y = " << u.y << " ,z = " << u.z << std::endl;
+		s << "Vector3"<< " x = " << u.x << " ,y = " << u.y << " ,z = " << u.z << std::endl;
 		
 		return s;
 	};
 	
 	~Vector3 (){};
-	
-	T x;
-	T y;
-	T z;
-	
-private:
 		
 };
 
@@ -210,4 +215,18 @@ SLAL::Vector3<double> v1(6.0,-1.0,0.0);
 SLAL::Vector3<double> v2(0.5,-4.0,0.0);
 double t = 0.0 ;
 */
-
+/*
+ * solucão para não ter warnning no retorno de uma referencia
+inline Vector3<T>&  operator- ( const Vector3<T>& u) const
+{
+	Vector3<T> w;
+	 	
+	w.x = this->x - u.x;
+	w.y = this->y - u.y;
+	w.z = this->z - u.z;
+		
+	Vector3<T>& h = w;
+	
+	return ( h );
+};
+*/

@@ -1,6 +1,8 @@
 #ifndef MATRIX3X3_HPP_
 #define MATRIX3X3_HPP_
 
+#include <iostream>
+
 namespace SLAL {
 
 template<class T> class Matrix3x3
@@ -233,7 +235,8 @@ public:
 	
 	friend  inline std::ostream& operator<< (std::ostream & s, const Matrix3x3<T>& A)
 	{
-		s << " a11 = " << A(0,0) << " ,a12 = " << A(0,1) << " ,a13 = " << A(0,2) << std::endl
+		s << "Matrix3" << std::endl 
+		  << " a11 = " << A(0,0) << " ,a12 = " << A(0,1) << " ,a13 = " << A(0,2) << std::endl
 		  << " a21 = " << A(1,0) << " ,a22 = " << A(1,1) << " ,a23 = " << A(1,2) << std::endl
 		  << " a31 = " << A(2,0) << " ,a32 = " << A(2,1) << " ,a33 = " << A(2,2) << std::endl;
 		
