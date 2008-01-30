@@ -7,9 +7,10 @@
 #include "support/atmatrix.hpp"
 
 #include "mycgal/polyhedron.h"
-#include "lcgOctree/originalOctree/octree.h"
-#include "lcgOctree/originalOctree/octreeBox.h"
-#include "lcgOctree/originalOctree/octreeIntersection.h"
+#include "lcgOctree/ocTree.hpp"
+#include "matrixLibrary/BoundingBox3.hpp"
+#include "matrixLibrary/Point3.hpp"
+#include "matrixLibrary/Vector3.hpp"
 
 
 class GLFrame : public QGLWidget
@@ -22,6 +23,8 @@ public:
     inline bool isVisible_A() const {  return this->show_A;  };
     inline void setVisible_A (const bool visible)  { this->show_A = visible; };
     
+    void calLimits();
+        
     void zoomIn();
    	void zoomOut();
     typedef enum RenderMode {WireFrame=0, PolygonWireFrame, Smooth, Points};   
@@ -29,8 +32,10 @@ public:
     RenderMode renderMode_A;
     
     Polyhedron * A;
-    Octree<Kernel,Facet_handle*> octree;
     
+    SLAL::BoundingBox3<float> world;
+    
+    OctreeRefine<float,SLAL::Point3<float>*> octree;
                       
 public slots:
 	
@@ -48,8 +53,11 @@ protected:
 private:
     void draw();
     void screenToWorld(int x, int y, double &xw, double &yw, double &zw);
-    Box3 limits(Polyhedron  * mesh);
- 
+    
+    template < class T>
+    SLAL::BoundingBox3<T> limits();
+    template < class T>
+    void drawBox(SLAL::BoundingBox3<T> BBox);
 
     GLfloat 			rotationX;
     GLfloat 			rotationY;

@@ -20,7 +20,7 @@ private:
 	
 public:
 	
-	
+	 
 	Point3()
 	{
 		this->x_ = (T)0;
@@ -64,17 +64,16 @@ public:
 		return ( this->z_ );
 	};
 	
-	inline T& operator [] (const unsigned int i) 
+	inline const T& operator [] ( int i)  
 	{
-		if ( i > 2)
+		if ( (i > 2) or ( i < 0))
 		{
 			std::cerr << "[ERROR] Point3 operator[]"        << std::endl
 				      << "        Out of the Point size. " << std::endl
 				      << "        Accepts, 0 , 1 , 2 only." << std::endl;
 			exit(1);
 		}
-			
-		
+				
 	    if (i == 0)
 	    	return (this->x_);
 	    if (i == 1)

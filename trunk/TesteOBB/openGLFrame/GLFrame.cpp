@@ -56,53 +56,50 @@ void GLFrame::initializeGL()
 	glEnable(GL_NORMALIZE);
 	
 	sceneTransformation.identity();
+
 	
-	Box3 theWorld = limits(A);
-	
-	octree =  Octree<Kernel,Facet_handle*>( theWorld );
-	
-	/*for(Facet_iterator f = A->facets_begin(); f != A->facets_end(); ++f) {
-		Facet_handle *fh = new Facet_handle(f->halfedge()->facet());
-		octree.insert(fh);
-	}*/
-	
+
 }
 
-
-Box3 GLFrame::limits(Polyhedron * mesh)
+void GLFrame::calLimits()
 {
 	
-	Point_iterator p = mesh->points_begin();
+	 world = SLAL::BoundingBox3<float>(A->box.xmin(),A->box.ymin(),A->box.zmin(),
+									   A->box.xmax(),A->box.ymax(),A->box.zmax());
 	
-	Point3 pmin = *p, pmax = *p;
-	
-	while(p != mesh->points_end()) {
-		if(p->x() < pmin.x())
-			pmin = Point3(p->x(), pmin.y(), pmin.z());
-		if(p->y() < pmin.y())
-			pmin = Point3(pmin.x(), p->y(), pmin.z());
-		if(p->z() < pmin.z())
-			pmin = Point3(pmin.x(), pmin.y(), p->z());
-		if(p->x() > pmax.x())
-			pmax = Point3(p->x(), pmax.y(), pmax.z());
-		if(p->y() > pmax.y())
-			pmax = Point3(pmax.x(), p->y(), pmax.z());
-		if(p->z() > pmax.z())
-			pmax = Point3(pmax.x(), pmax.y(), p->z());
-		p++;
-	}
-	
-	Vector3 size(pmin, pmax);
-	size = size * 0.5;
-	Point3 center = pmin + size; // or pmax + size
-	double radius = sqrt((size * size)); // vector lenght
-	size = Vector3(radius, radius, radius);
-	pmin = center - size;
-	pmax = center + size;
-	
-	return Box3(pmin, pmax);
+	octree = Octree<float,SLAL::Point3<float>*>(world);
 }
 
+template <class T>
+void GLFrame::drawBox(SLAL::BoundingBox3<T> BBox){
+  glColor3f (1.0, 1.0, 1.0);//white
+  glBegin(GL_LINE_LOOP);
+    glVertex3f(BBox.xmin(), BBox.ymin(), BBox.zmin());
+    glVertex3f(BBox.xmax(), BBox.ymin(), BBox.zmin());
+    glVertex3f(BBox.xmax(), BBox.ymax(), BBox.zmin());
+    glVertex3f(BBox.xmin(), BBox.ymax(), BBox.zmin());
+  glEnd();
+
+  glBegin(GL_LINE_LOOP);
+    glVertex3f(BBox.xmin(), BBox.ymin(), BBox.zmax());
+    glVertex3f(BBox.xmax(), BBox.ymin(), BBox.zmax());
+    glVertex3f(BBox.xmax(), BBox.ymax(), BBox.zmax());
+    glVertex3f(BBox.xmin(), BBox.ymax(), BBox.zmax());
+  glEnd();
+
+  glBegin(GL_LINES);
+    glVertex3f(BBox.xmin(), BBox.ymin(), BBox.zmax());
+    glVertex3f(BBox.xmin(), BBox.ymin(), BBox.zmin());
+    glVertex3f(BBox.xmax(), BBox.ymin(), BBox.zmax());
+    glVertex3f(BBox.xmax(), BBox.ymin(), BBox.zmin());
+
+    glVertex3f(BBox.xmax(), BBox.ymax(), BBox.zmax());
+    glVertex3f(BBox.xmax(), BBox.ymax(), BBox.zmin());
+
+    glVertex3f(BBox.xmin(), BBox.ymax(), BBox.zmax());
+    glVertex3f(BBox.xmin(), BBox.ymax(), BBox.zmin());
+  glEnd();
+}
 
 void GLFrame::resizeGL(int width, int height)
 {
@@ -129,6 +126,7 @@ void GLFrame::paintGL()
     
 	if( A  and  isVisible_A()  )
 	{
+		drawBox<float>(world);
 		if (renderMode_A == PolygonWireFrame)
 			A->drawPolygonWireframe(true);
 		else if (renderMode_A == WireFrame)

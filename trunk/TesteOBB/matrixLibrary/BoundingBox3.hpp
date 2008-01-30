@@ -13,7 +13,29 @@ private:
 	Point3<T> min_;
 	Point3<T> max_;
 	
+	inline const T& octMax(const T& a, const T& b) const
+	{
+	  return (a<b)? b:a;
+	}
+
+	inline const T& octMin (const T& a, const T& b) const 
+	{
+	  return (a<b)? a:b;
+	}
+	
 public:
+	
+	BoundingBox3 ( )
+	{
+		this->min_ = Point3<T> ();
+		this->max_ = Point3<T> ();
+	};
+	
+	BoundingBox3 ( const BoundingBox3<T>& box )
+	{
+		this->min_ = Point3<T> ( box.min() );
+		this->max_ = Point3<T> ( box.max() );
+	};
 	
 	BoundingBox3 ( const Point3<T>& pointMin, const Point3<T>& pointMax )
 	{
@@ -24,8 +46,8 @@ public:
 	BoundingBox3 ( const T& xMin, const T& yMin, const T& zMin,
 				   const T& xMax, const T& yMax, const T& zMax )
 	{
-		this->min_ = Point3<T> ( xMin,yMin.zMin );
-		this->max_ = Point3<T> ( xMax.yMax,zMax );
+		this->min_ = Point3<T> ( xMin,yMin,zMin );
+		this->max_ = Point3<T> ( xMax,yMax,zMax );
 	};
 	
 	
@@ -64,7 +86,7 @@ public:
 		return ( this->min_);
 	};
 	
-	inline const Point3<T>& max() const
+	inline const Point3<T>& max() const 
 	{
 		return ( this->max_ );
 	};
@@ -103,7 +125,20 @@ public:
 	             ( p.z() >= this->zmin() ) and ( p.z() < this->zmax() )   );
 	}
 	
-	virtual ~BoundingBox3();
+	bool intersect (const BoundingBox3<T>& box) const {
+	  
+	  Point3<T> Amin = this->min_;
+	  Point3<T> Amax = this->max_;
+
+	  Point3<T> Bmin = box.min();
+	  Point3<T> Bmax = box.max(); 
+	      
+	  return (octMax (Amin.x(), Bmin.x()) < octMin(Amax.x(), Bmax.x()) and
+	          octMax (Amin.y(), Bmin.y()) < octMin(Amax.y(), Bmax.y()) and
+	          octMax (Amin.z(), Bmin.z()) < octMin(Amax.z(), Bmax.z())     );
+	}
+	
+	virtual ~BoundingBox3(){};
 };
 
 }

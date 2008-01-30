@@ -50,6 +50,14 @@ void MyMainWindow::open(QString filename,bool who) {
       {
     	  glFrame->A  = new Polyhedron ( Polyhedron::load_off(filename_.data()) );
     	  glFrame->A->setColor (1.0,1.0,0.5);
+    	  glFrame->calLimits();
+    	    //o = OctreeRefine<float,SLAL::Point3<float>*>() ;
+    		
+    		/*for(Facet_iterator f = A->facets_begin(); f != A->facets_end(); ++f) {
+    			Facet_handle *fh = new Facet_handle(f->halfedge()->facet());
+    			octree.insert(fh);
+    		}*/
+    		
       }
       
       this->setWindowTitle("");
