@@ -14,69 +14,86 @@ template <class T>	class Point3
 	
 private:
 	
-	T x;
-	T y;
-	T z;
+	T x_;
+	T y_;
+	T z_;
 	
 public:
 	
-	friend class Vector3;
 	
 	Point3()
 	{
-		this->x = (T)0;
-		this->y = (T)0;
-		this->z = (T)0;
+		this->x_ = (T)0;
+		this->y_ = (T)0;
+		this->z_ = (T)0;
 	};
 	
 	Point3 ( const T& x, const T& y, const T& z )
 	{
-		this->x = x;
-		this->y = y;
-		this->z = z;
+		this->x_ = x;
+		this->y_ = y;
+		this->z_ = z;
 	};
 	
 	Point3 ( const Vector3<T>& u)
 	{
-		this->x = u.x();
-		this->y = u.y();
-		this->z = u.z();
+		this->x_ = u.x();
+		this->y_ = u.y();
+		this->z_ = u.z();
 	};
 	
 	Point3 ( const Point3<T>& p)
 	{
-		this->x = p.x();
-		this->y = p.y();
-		this->z = p.z();
+		this->x_ = p.x();
+		this->y_ = p.y();
+		this->z_ = p.z();
 	};
 	
-	inline const Point3 x() const
+	inline const T& x() const
 	{
-		return ( this->x );
-	}
+		return ( this->x_ );
+	};
 	
-	inline const Point3 y() const
+	inline const T& y() const
 	{
-		return ( this->y );
-	}
+		return ( this->y_ );
+	};
 	
-	inline const Point3 z() const
+	inline const T& z() const
 	{
-		return ( this->z );
-	}
+		return ( this->z_ );
+	};
+	
+	inline T& operator [] (const unsigned int i) 
+	{
+		if ( i > 2)
+		{
+			std::cerr << "[ERROR] Point3 operator[]"        << std::endl
+				      << "        Out of the Point size. " << std::endl
+				      << "        Accepts, 0 , 1 , 2 only." << std::endl;
+			exit(1);
+		}
+			
+		
+	    if (i == 0)
+	    	return (this->x_);
+	    if (i == 1)
+	    	return (this->y_);
+	    return (this->z_);
+	};
 	
 	inline Point3<T>& operator= ( const Point3<T>& p)
 	{
-		this->x = p.x();
-		this->y = p.y();
-		this->z = p.z();
+		this->x_ = p.x();
+		this->y_ = p.y();
+		this->z_ = p.z();
 			
 		return ( *this );
 	};
 	
-	friend inline bool operator== ( const Point3<T>& p,const Point3<T>& q) const
+	friend inline bool operator== ( const Point3<T>& p,const Point3<T>& q) 
 	{
-		return ( (p.x == q.x) and (p.y == q.y) and (p.z == q.z) );
+		return ( (p.x() == q.x()) and (p.y() == q.y()) and (p.z() == q.z()) );
 	};	
 	
 	friend inline bool operator!= ( const Point3<T>& p, const Point3<T>& q)
@@ -86,43 +103,35 @@ public:
 	
 	inline Point3<T>  operator- ( ) const
 	{
-		Point3<T> r;
-		 	
-		r.x = -this->x; 
-		r.y = -this->y;
-		r.z = -this->z;
+		Point3<T> r = Point3 (-this->x_, -this->y_, -this->z_);
 			
 		return ( r );
 	};
 	
-	inline friend const Vector3 operator- (const Point3& p, const Point3& q) 
+	inline friend const Vector3<T> operator- (const Point3<T>& p, const Point3<T>& q)  
 	{
-		Vector3<T> w;
-		
-		w.x = p.x - q.x;
-		w.y = p.y - q.y;
-		w.z = p.z - q.z;
+		Vector3<T> w = Vector3<T>( p.x() - q.x(),
+								   p.y() - q.y(),
+								   p.z() - q.z());
 		
 		return ( w );
 	};
 	
-	inline friend const Point3 operator- (const Point p, const Vector u) 
+	inline friend const Point3<T> operator- (const Point3<T>& p, const Vector3<T> u)  
 	{
-		Point3 r;
-		
-		r.x = p.x - u.x;
-		r.y = p.y - u.y;
-		r.z = p.z - u.z;
+		Point3<T> r = Point3( p.x() - u.x(),
+							  p.y() - u.y(),
+							  p.z() - u.z() );
 		
 	    return ( r );
 	};
 	
-	inline friend const Point3 operator- (const Vector u,const Point p ) {
-		Point3 r;
+	inline friend const Point3<T> operator- (const Vector3<T> u,const Point3<T> p )  
+	{
 		
-		r.x = u.x - p.x;
-		r.y = u.y - p.y;
-		r.z = u.z - p.z;
+		Point3<T> r = Point3( u.x() - p.x(),
+							  u.y() - p.y(),
+							  u.z() - p.z() );
 		
 	    return ( r );
 	};
@@ -132,34 +141,31 @@ public:
 		return ( *this );
 	};
 	
-	inline friend const Point3 operator+ (const Point p, const Vector u) 
+	inline friend const Point3<T> operator+ (const Point3<T> p, const Vector3<T> u)  
 	{
-		Point3 r;
-		
-		r.x = p.x + u.x;
-		r.y = p.y + u.y;
-		r.z = p.z + u.z;
-		
+		Point3<T> r = Point3 ( p.x() + u.x(),
+				 			   p.y() + u.y(),
+				 			   p.z() + u.z() );
+
 	    return ( r );
 	};
 	
-	inline friend const Point operator+ (const Vector u,const Point p ) 
+	inline friend  const Point3<T> operator+ (const Vector3<T> u,const Point3<T> p )  
 	{
-		Point3 r;
-		
-		r.x = p.x + u.x;
-		r.y = p.y + u.y;
-		r.z = p.z + u.z;
-		
+		Point3<T> r = Point3 ( p.x() + u.x(),
+				 			   p.y() + u.y(),
+				 			   p.z() + u.z() );
+
 	    return ( r );
 	};
 		
 	
 	friend inline std::ostream& operator<< (std::ostream & s, const Point3<T>& p)
 	{
-		s << "Point3" << " x = " << p.x << " ,y = " << p.y << " ,z = " << p.z << std::endl;
+		s << "Point3" << " x = " << p.x() << " ,y = " << p.y() << " ,z = " << p.z() << std::endl;
 		
-		return s;
+		
+		return ( s );
 	};
 	
 	virtual ~Point3(){};

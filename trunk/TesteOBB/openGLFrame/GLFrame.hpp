@@ -7,6 +7,10 @@
 #include "support/atmatrix.hpp"
 
 #include "mycgal/polyhedron.h"
+#include "lcgOctree/originalOctree/octree.h"
+#include "lcgOctree/originalOctree/octreeBox.h"
+#include "lcgOctree/originalOctree/octreeIntersection.h"
+
 
 class GLFrame : public QGLWidget
 {
@@ -25,6 +29,8 @@ public:
     RenderMode renderMode_A;
     
     Polyhedron * A;
+    Octree<Kernel,Facet_handle*> octree;
+    
                       
 public slots:
 	
@@ -41,7 +47,9 @@ protected:
 
 private:
     void draw();
-    void screenToWorld(int x, int y, double &xw, double &yw, double &zw); 
+    void screenToWorld(int x, int y, double &xw, double &yw, double &zw);
+    Box3 limits(Polyhedron  * mesh);
+ 
 
     GLfloat 			rotationX;
     GLfloat 			rotationY;

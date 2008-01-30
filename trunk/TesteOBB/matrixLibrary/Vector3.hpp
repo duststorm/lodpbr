@@ -3,8 +3,6 @@
 
 #include <iostream>
 
-#include "Point3.hpp" 
-
 namespace SLAL { 
 
 template <class T>	class Vector3
@@ -12,52 +10,84 @@ template <class T>	class Vector3
 
 private:
 
-	T x;
-	T y;
-	T z;
+	T x_;
+	T y_;
+	T z_;
 	
 public:
 	
-	friend class Point3;
-	
+
 	// VETOR COLUNA OU VETOR LINHA ??
 	Vector3 ()
 	{
-		this->x = (T)0;
-		this->y = (T)0;
-		this->z = (T)0;
+		this->x_ = (T)0;
+		this->y_ = (T)0;
+		this->z_ = (T)0;
 	};
 	
 	Vector3 ( const Vector3<T>& u)
 	{
-		this->x = u.x();
-		this->y = u.y();
-		this->z = u.z();
+		this->x_ = u.x();
+		this->y_ = u.y();
+		this->z_ = u.z();
 	};
 	
 	Vector3 ( const T& x, const T& y, const T& z )
 	{
-		this->x = x;
-		this->y = y;
-		this->z = z;
+		this->x_ = x;
+		this->y_ = y;
+		this->z_ = z;
 	};
 	
 	//Gets and Sets
 			
+	inline T x() const
+	{
+		return ( this->x_ );
+	};
+	
+	inline T y() const
+	{
+		return ( this->y_ );
+	};
+	
+	inline T z() const
+	{
+		return ( this->z_ );
+	};
+	
 	//Operator
+	
+	inline T& operator [] (const unsigned int i) 
+	{
+		if ( i > 2)
+		{
+			std::cerr << "[ERROR] Vector3 operator[]"        << std::endl
+				      << "        Out of the vector size. " << std::endl
+				      << "        Accepts, 0 , 1 , 2 only." << std::endl;
+			exit(1);
+		}
+			
+		
+	    if (i == 0)
+	    	return (this->x_);
+	    if (i == 1)
+	    	return (this->y_);
+	    return (this->z_);
+	};
 	
 	inline Vector3<T>& operator= ( const Vector3<T>& u)
 	{
-		this->x = u.x;
-		this->y = u.y;
-		this->z = u.z;
+		this->x_ = u.x();
+		this->y_ = u.y();
+		this->z_ = u.z();
 			
 		return ( *this );
 	};
 	
 	friend inline bool operator== ( const Vector3<T>& u,const Vector3<T>& v)
 	{
-		return ( (u.x == v.x) and (u.y == v.y) and (u.z == v.z) );
+		return ( ( u.x() == v.x() ) and ( u.y() == v.y() ) and ( u.z() == v.z() ) );
 	};	
 	
 	friend inline bool operator!= ( const Vector3<T>& u, const Vector3<T>& v)
@@ -65,60 +95,50 @@ public:
 		return  !(u == v) ;
 	};	
 	
-	inline Vector3<T>&  operator- ( const Vector3<T>& u) const
+	inline Vector3<T>  operator- ( const Vector3<T>& u) const
 	{
-		Vector3<T> w;
-		 	
-		w.x = this->x - u.x;
-		w.y = this->y - u.y;
-		w.z = this->z - u.z;
-			
-		Vector3<T>& h = w;
+		Vector3<T> w = Vector3( this->x_ - u.x(),
+								this->y_ - u.y(),
+							    this->z_ - u.z());
 		
-		return ( h );
+		return ( w );
 	};
+	
 	inline Vector3<T>  operator- ( ) const
 	{
-		Vector3<T> w;
-		 	
-		w.x = -this->x; 
-		w.y = -this->y;
-		w.z = -this->z;
+		Vector3<T> w = Vector3 (-this->x_, -this->y_, -this->z_);
 			
 		return ( w );
 	};
+	
 	inline Vector3<T>  operator+ ( const Vector3<T>& u)	const
 	{
-	 	Vector3<T> w;
+	 	Vector3<T> w = Vector3 ( this->x_ + u.x(),
+	 							 this->y_ + u.y(),
+	 							 this->z_ + u.z());
 	 	
-		w.x = this->x + u.x;
-		w.y = this->y + u.y;
-		w.z = this->z + u.z;
-		
 		return ( w );
 	};
+	
 	inline Vector3<T>  operator+ ( ) const
 	{
 		return ( *this );
 	};
+	
 	friend inline Vector3<T> operator* ( const Vector3<T>& u,const T& factor ) 	
 	{
-	 	Vector3<T> w;
-	 	
-		w.x = u.x * factor;
-		w.y = u.y * factor;
-		w.z = u.z * factor;
-
+	 	Vector3<T> w = Vector3( u.x() * factor,
+	 							u.y() * factor,
+	 							u.z() * factor );
+		
 		return ( w );
 	};
 	
 	friend inline Vector3<T> operator*	( const T& factor ,const Vector3<T>& u) 	
 	{
-	 	Vector3<T> w;
-	 	
-		w.x = u.x * factor;
-		w.y = u.y * factor;
-		w.z = u.z * factor;
+	 	Vector3<T> w = Vector3( u.x() * factor,
+	 							u.y() * factor,
+	 							u.z() * factor );
 
 		return ( w );
 	};
@@ -127,7 +147,7 @@ public:
 	{
 	 	T dotProduct;
 	 	
-	 	dotProduct = (u.x * v.x) +  (u.y * v.y) + (u.z * v.z) ;
+	 	dotProduct = ( u.x() * v.x()) +  (u.y() * v.y()) + (u.z() * v.z() ) ;
 		
 		return ( dotProduct );
 	};
@@ -135,18 +155,16 @@ public:
 		
 	friend inline Vector3<T>  operator^	( const Vector3<T>& u ,const Vector3<T>& v)
 	{
-		Vector3<T> crossProduct;
-		
-			crossProduct.x =  u.y*v.z - u.z*v.y;
-			crossProduct.y = -u.x*v.z + u.z*v.x;
-		    crossProduct.z =  u.x*v.y - u.y*v.x;
-				
+		Vector3<T> crossProduct = Vector3( u.y() * v.z() - u.z() * v.y(),
+										  -u.x() * v.z() + u.z() * v.x(),
+										   u.x() * v.y() - u.y() * v.x() );
+
 		return ( crossProduct );
 	};
 	
 	friend inline std::ostream& operator<< (std::ostream & s, const Vector3<T>& u)
 	{
-		s << "Vector3"<< " x = " << u.x << " ,y = " << u.y << " ,z = " << u.z << std::endl;
+		s << "Vector3"<< " x = " << u.x() << " ,y = " << u.y() << " ,z = " << u.z() << std::endl;
 		
 		return s;
 	};
@@ -155,13 +173,6 @@ public:
 		
 };
 
-/*
-template < class T >
-Vector3< T >::~Vector3()
-{
-	
-};
-*/
 
 } // END NAMESPACE
 

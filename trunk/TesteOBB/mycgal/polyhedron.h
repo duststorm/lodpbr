@@ -6,16 +6,14 @@
 #include <CGAL/Polyhedron_3.h>
 #include <CGAL/IO/Polyhedron_iostream.h>
 
-
-//#include "cgalTypes.h"
 #include "support/id.h"
 
-typedef CGAL::Cartesian<float>		K;       ///< Kernel
-typedef CGAL::Point_3<K>				Point3;  ///< Point in 3D
-typedef CGAL::Plane_3<K>				Plane3;
-typedef CGAL::Triangle_3<K>			Triangle3;
-typedef CGAL::Vector_3<K>			Vector3;
-typedef CGAL::Segment_3<K>			Segment3;
+typedef CGAL::Cartesian<float>			Kernel;       ///< Kernel
+typedef CGAL::Point_3<Kernel>				Point3;  ///< Point in 3D
+typedef CGAL::Plane_3<Kernel>				Plane3;
+typedef CGAL::Triangle_3<Kernel>				Triangle3;
+typedef CGAL::Vector_3<Kernel>				Vector3;
+typedef CGAL::Segment_3<Kernel>				Segment3;
 
 
 // An extended bounding box class
@@ -282,14 +280,14 @@ struct My_items : public CGAL::Polyhedron_items_3 {
 
 
 
-class Polyhedron : public CGAL::Polyhedron_3<K,My_items>   
+class Polyhedron : public CGAL::Polyhedron_3<Kernel,My_items>   
 {
 public:
 	
     // Polyhedron bounding box
     Bbox box;
     
-    //Octree <K,Facet_handle*> octree;
+    //Octree <Kernel,Facet_handle*> octree;
     
     /// Computes face planes from 3 vertices
     void compute_facet_planes ();
@@ -317,7 +315,7 @@ public:
     // Copy constructor
     Polyhedron (const Polyhedron * p){*this = *p;};
     /// Default constructor
-    inline Polyhedron () : CGAL::Polyhedron_3<K,My_items> (){ID::setIDs(0,0,0);};
+    inline Polyhedron () : CGAL::Polyhedron_3<Kernel,My_items> (){ID::setIDs(0,0,0);};
         
     /// Reads an off model into a polyhedron data structure and returns it
     /// @param filename Name of the file containing model

@@ -57,8 +57,52 @@ void GLFrame::initializeGL()
 	
 	sceneTransformation.identity();
 	
+	Box3 theWorld = limits(A);
+	
+	octree =  Octree<Kernel,Facet_handle*>( theWorld );
+	
+	/*for(Facet_iterator f = A->facets_begin(); f != A->facets_end(); ++f) {
+		Facet_handle *fh = new Facet_handle(f->halfedge()->facet());
+		octree.insert(fh);
+	}*/
 	
 }
+
+
+Box3 GLFrame::limits(Polyhedron * mesh)
+{
+	
+	Point_iterator p = mesh->points_begin();
+	
+	Point3 pmin = *p, pmax = *p;
+	
+	while(p != mesh->points_end()) {
+		if(p->x() < pmin.x())
+			pmin = Point3(p->x(), pmin.y(), pmin.z());
+		if(p->y() < pmin.y())
+			pmin = Point3(pmin.x(), p->y(), pmin.z());
+		if(p->z() < pmin.z())
+			pmin = Point3(pmin.x(), pmin.y(), p->z());
+		if(p->x() > pmax.x())
+			pmax = Point3(p->x(), pmax.y(), pmax.z());
+		if(p->y() > pmax.y())
+			pmax = Point3(pmax.x(), p->y(), pmax.z());
+		if(p->z() > pmax.z())
+			pmax = Point3(pmax.x(), pmax.y(), p->z());
+		p++;
+	}
+	
+	Vector3 size(pmin, pmax);
+	size = size * 0.5;
+	Point3 center = pmin + size; // or pmax + size
+	double radius = sqrt((size * size)); // vector lenght
+	size = Vector3(radius, radius, radius);
+	pmin = center - size;
+	pmax = center + size;
+	
+	return Box3(pmin, pmax);
+}
+
 
 void GLFrame::resizeGL(int width, int height)
 {
@@ -107,8 +151,7 @@ void GLFrame::keyPressEvent ( QKeyEvent * event)
 
 void GLFrame::mousePressEvent(QMouseEvent *event)
 {
-	
-	   
+	 
     if (event->button() == Qt::MidButton) 
     {
     	arcball.click(event->x(),height() - event->y());
@@ -172,7 +215,6 @@ void GLFrame::screenToWorld(int x, int y, double &xw, double &yw, double &zw) {
    glMatrixMode(GL_MODELVIEW);
    glGetDoublev(GL_MODELVIEW_MATRIX, mMtx);
    glGetDoublev (GL_PROJECTION_MATRIX, pMtx);
-
      
    gluUnProject(x, y, 1.0, mMtx, pMtx, viewport, &xw, &yw, &zw);
 }

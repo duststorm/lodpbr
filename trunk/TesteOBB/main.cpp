@@ -3,6 +3,7 @@
 
 #include "interface/myMainWindow.hpp"
 #include "matrixLibrary/Vector3.hpp"
+#include "matrixLibrary/Point3.hpp"
 #include "matrixLibrary/Matrix3x3.hpp"
 
 using namespace std;
@@ -12,6 +13,9 @@ int main(int argc, char *argv[])
 
 	SLAL::Vector3<double> v1(1.0,2.0,3.0);
 	SLAL::Vector3<double> v2(4.0,5.0,6.0);
+	
+	SLAL::Point3<double> p(1.0,2.0,3.0);
+	SLAL::Point3<double> q(4.0,2.0,7.0);
 	
 	SLAL::Matrix3x3<double> A (2.0,5.0,3.0,
 								4.0,8.0,9.0,
@@ -24,7 +28,11 @@ int main(int argc, char *argv[])
 		
 	v1 = v2 -v1;
 	
-	std::cout << v1 <<std::endl;
+	v1 = p - q;
+	
+	std::cout << v1[0] <<std::endl;
+	std::cout << v1[1] <<std::endl;
+	std::cout << v1[2] <<std::endl;
 	
 	A =  A * B;
 	
@@ -38,9 +46,8 @@ int main(int argc, char *argv[])
 	
 	MyMainWindow * form = new MyMainWindow;
 	form->show();
-    
-    //tetrahedron.setWindowTitle(QObject::tr("Tetrahedron"));
-    //tetrahedron.resize(300, 300);
+
 
     return app.exec();
 }
+
