@@ -7,8 +7,10 @@
 #include "support/atmatrix.hpp"
 
 #include "mycgal/polyhedron.h"
+
 #include "lcgOctree/ocTree.hpp"
-#include "matrixLibrary/BoundingBox3.hpp"
+#include "lcgOctree/ocTreeBox.hpp"
+
 #include "matrixLibrary/Point3.hpp"
 #include "matrixLibrary/Vector3.hpp"
 
@@ -32,10 +34,8 @@ public:
     RenderMode renderMode_A;
     
     Polyhedron * A;
-    
-    SLAL::BoundingBox3<float> world;
-    
-    Octree<float,SLAL::Point3<float>*> octree;
+   
+    Octree<double,SLAL::Point3<double>*> octree;
                       
 public slots:
 	

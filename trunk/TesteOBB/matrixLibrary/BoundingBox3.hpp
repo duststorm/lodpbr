@@ -13,29 +13,6 @@ private:
 	Point3<T> min_;
 	Point3<T> max_;
 	
-	inline const T& octMax(const T& a, const T& b) const
-	{
-	  return (a<b)? b:a;
-	}
-
-	inline const T& octMin (const T& a, const T& b) const 
-	{
-	  return (a<b)? a:b;
-	}
-	
-    inline T distancePointToPoint( Point3<T>& q,  Point3<T>& p)
-    {
-        T a, b;
-        a = (p[0] - q[0]);
-        b = a * a;
-        a = (p[1] - q[1]);
-        b += a * a;
-        a = (p[2] - q[2]);
-        b += a * a;
-        return sqrt( b );
-    }
-	
-	
 public:
 	
 	BoundingBox3 ( )
@@ -105,7 +82,7 @@ public:
 	};
 	
 	
-	BoundingBox3<T> subOctant ( int sonIndex  )
+	BoundingBox3<T> subOctant ( int sonIndex  ) const
 	{
 		
 	    Point3<T> p = this->min_;
@@ -127,8 +104,8 @@ public:
 	        }
 	        mult *= 2;
 	    }
-	    return BoundingBox3 (Point3<T>(sonMin[0], sonMin[1], sonMin[2]), 
-	    					 Point3<T>(sonMax[0], sonMax[1], sonMax[2]) );
+	    return BoundingBox3<T> (Point3<T>(sonMin[0], sonMin[1], sonMin[2]), 
+	    					 	Point3<T>(sonMax[0], sonMax[1], sonMax[2]) );
 
 	};
 	
@@ -140,38 +117,7 @@ public:
 	}
 	
 	
-	bool intersect (const BoundingBox3<T>& box) const {
-	  
-	  Point3<T> Amin = this->min_;
-	  Point3<T> Amax = this->max_;
 
-	  Point3<T> Bmin = box.min();
-	  Point3<T> Bmax = box.max(); 
-	      
-	  return (octMax (Amin.x(), Bmin.x()) < octMin(Amax.x(), Bmax.x()) and
-	          octMax (Amin.y(), Bmin.y()) < octMin(Amax.y(), Bmax.y()) and
-	          octMax (Amin.z(), Bmin.z()) < octMin(Amax.z(), Bmax.z())     );
-	}
-	
-	T distance( Point3<T>& p) 
-	{
-	    T clsPt[3]; //closest point on the box's surface to the point p
-	    for (int i = 0; i < 3; ++i)
-	    {
-	        if (p[i] < this->min()[i])
-	            clsPt[i] = (this->min()[i]);
-	        else if (p[i] > this->max()[i])
-	            clsPt[i] = (this->max()[i]);
-	        else
-	            clsPt[i] = (p[i]);
-	    }
-	    Point3<T> cls(clsPt[0], clsPt[1], clsPt[2]);
- 
-	    
-	    return distancePointToPoint( p, cls );
-	}
-	
-	
 	virtual ~BoundingBox3(){};
 };
 

@@ -64,11 +64,19 @@ void GLFrame::initializeGL()
 void GLFrame::calLimits()
 {
 	
-	 world = SLAL::BoundingBox3<float>(A->box.xmin(),A->box.ymin(),A->box.zmin(),
-									   A->box.xmax(),A->box.ymax(),A->box.zmax());
+	 Box_3<double> world = Box_3<double>( SLAL::Point3<double>(A->box.xmin(),A->box.ymin(),A->box.zmin()),
+				   		SLAL::Point3<double>(A->box.xmax(),A->box.ymax(),A->box.zmax()));
 	 
-	 octree = Octree<float,SLAL::Point3<float>*>(world) ;
+	 octree = Octree<double,SLAL::Point3<double>*>(world) ;
 
+	Point_iterator f = A->points_begin();
+    while(f != A->points_end()) {
+    	SLAL::Point3<double> *fh = new SLAL::Point3<double>(f->x(),f->y(),f->z());
+        octree.insert (fh);
+        f++;
+    }
+	 
+    std::cout << octree.root->itemPtrCount() <<  "AAA" << std::endl;
 }
 
 template <class T>
@@ -127,7 +135,13 @@ void GLFrame::paintGL()
     
 	if( A  and  isVisible_A()  )
 	{
-		drawBox<float>(world);
+		
+		   for (OctreeIterator<double, SLAL::Point3<double>*> oi = octree.begin();oi != octree.end();++oi )
+		   {
+			   if ((*oi)->isLeaf())
+				   drawBox(octree.box(oi));
+		   }
+		
 		if (renderMode_A == PolygonWireFrame)
 			A->drawPolygonWireframe(true);
 		else if (renderMode_A == WireFrame)

@@ -2,7 +2,7 @@
 #define POINT3_HPP_
 
 #include <iostream>
-
+#include <map>
 #include "Vector3.hpp"
 
 namespace SLAL
@@ -27,6 +27,19 @@ private:
 		
 	};
 	
+	union
+	{
+		struct
+		{	
+			T r_;
+			T g_;
+			T b_;
+		};
+		
+		T rgb[3];
+	};
+	
+	
 public:
 	
 	friend class Vector3<T>;
@@ -36,6 +49,10 @@ public:
 		this->x_ = (T)0;
 		this->y_ = (T)0;
 		this->z_ = (T)0;
+		
+		this->r_ = (T)0;
+		this->g_ = (T)0;
+		this->b_ = (T)0;
 	};
 	
 	Point3 ( const T& x, const T& y, const T& z )
@@ -74,7 +91,22 @@ public:
 		return ( this->z_ );
 	};
 	
-	inline  T& operator [] ( int i)  const
+	inline const T& r() const
+	{
+		return ( this->r_ );
+	};
+	
+	inline const T& g() const
+	{
+		return ( this->g_ );
+	};
+	
+	inline const T& b() const
+	{
+		return ( this->b_ );
+	};
+
+	inline  T operator [] ( int i)  const
 	{
 		if ( (i > 2) or ( i < 0))
 		{
@@ -87,7 +119,8 @@ public:
 	    return (xyz[i]);
 	};
 	
-	inline  T& operator [] ( int i)  
+	inline  T operator [] ( int i)  
+
 	{
 		if ( (i > 2) or ( i < 0))
 		{
