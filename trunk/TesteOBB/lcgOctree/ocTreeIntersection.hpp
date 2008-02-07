@@ -24,11 +24,11 @@ bool checkIntersection (const SLAL::BoundingBox3<K>& box, SLAL::Point3<K>* p) {
 /// @param clsPt closest point on object.
 /// @return distance between p and the polygon.
 template <class K>
-  double distance2Item (const SLAL::Point3<K>* pt, const SLAL::Point3<K>& p, SLAL::Point3<K>& clsp)
+  K distance2Item ( SLAL::Point3<K>* const pt,  const SLAL::Point3<K>& p, SLAL::Point3<K>& clsp)
   {
     clsp = *pt;
     SLAL::Point3<K> q = *pt;
-    double a, b;
+    K a, b;
     a = p[0] - q[0];
     b = a * a;
     a = p[1] - q[1];

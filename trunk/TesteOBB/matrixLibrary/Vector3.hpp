@@ -3,21 +3,32 @@
 
 #include <iostream>
 
+
 namespace SLAL { 
 
 template <class T>	class Vector3
 {
 
 private:
-
-	T x_;
-	T y_;
-	T z_;
+	
+	union
+	{
+	
+		struct
+		{
+			T x_;
+			T y_;
+			T z_;
+		};
+		
+		T xyz[3];
+		
+	};
 	
 public:
 	
-
 	// VETOR COLUNA OU VETOR LINHA ??
+	 
 	Vector3 ()
 	{
 		this->x_ = (T)0;
@@ -68,38 +79,119 @@ public:
 			exit(1);
 		}
 			
+		return (xyz[i]);
 		
-	    if (i == 0)
-	    	return (this->x_);
-	    if (i == 1)
-	    	return (this->y_);
-	    return (this->z_);
 	};
 	
-	inline Vector3<T>& operator= ( const Vector3<T>& u)
+	inline T& operator [] (const unsigned int i) const
 	{
-		this->x_ = u.x();
-		this->y_ = u.y();
-		this->z_ = u.z();
+		if ( i > 2)
+		{
+			std::cerr << "[ERROR] Vector3 operator[]"        << std::endl
+				      << "        Out of the vector size. " << std::endl
+				      << "        Accepts, 0 , 1 , 2 only." << std::endl;
+			exit(1);
+		}
+			
+		
+		return (xyz[i]);
+
+	};
+	
+	// Assignment Opertators
+	//With Scalar
+	inline Vector3<T>& operator= ( const Vector3<T>& u )
+	{
+		this->x_ = u.x_;
+		this->y_ = u.y_;
+		this->z_ = u.z_;
 			
 		return ( *this );
 	};
 	
-	friend inline bool operator== ( const Vector3<T>& u,const Vector3<T>& v)
+	const Vector3< T >& operator+= ( const T&  factor ) 
+	{ 
+	    this->x_ += factor; 
+	    this->y_ += factor; 
+	    this->z_ += factor;
+	    
+	    return ( *this ); 
+	} 
+	
+	const Vector3< T >& operator-= ( const T&  factor ) 
+	{ 
+	    this->x_ -= factor; 
+	    this->y_ -= factor; 
+	    this->z_ -= factor;
+	    
+	    return ( *this ); 
+	} 
+	
+	const Vector3< T >& operator*= ( const T& factor ) 
+	{ 
+	 	 	
+	 	this->x_  *= factor;
+	 	this->y_  *= factor;
+	 	this->z_  *= factor;
+						
+	    return ( *this ); 
+	}
+
+	const Vector3< T >& operator/= ( T factor ) 
+	{ 
+	    factor = (T)1 / factor;
+	    
+	    this->x_ *= factor;
+	    this->y_ *= factor; 
+	    this->z_ *= factor;
+	    
+	    return ( *this ); 
+	}
+	// With Vector
+	const Vector3< T >& operator+= (  const Vector3<T>& u ) 
+	{ 
+	    this->x_ += u.x_; 
+	    this->y_ += u.y_; 
+	    this->z_ += u.z_;
+	    
+	    return ( *this ); 
+	}
+	
+	const Vector3< T >& operator-= (  const Vector3<T>& u ) 
+	{ 
+	    this->x_ -= u.x_; 
+	    this->y_ -= u.y_; 
+	    this->z_ -= u.z_;
+	    
+	    return ( *this ); 
+	} 
+
+
+	const Vector3< T >& operator/=( const Vector3<T>& u ) 
+	{ 
+	    	    
+	    this->x_ /= u.x_;
+	    this->y_ /= u.y_; 
+	    this->z_ /= u.z_;
+	    
+	    return ( *this ); 
+	} 
+	
+	inline bool operator== ( const Vector3<T>& u) const
 	{
-		return ( ( u.x() == v.x() ) and ( u.y() == v.y() ) and ( u.z() == v.z() ) );
+		return ( ( this->x_ == u.x_ ) and ( this->y_ == u.y_ ) and ( this->z_ == u.z_ ) );
 	};	
 	
-	friend inline bool operator!= ( const Vector3<T>& u, const Vector3<T>& v)
+	inline bool operator!= ( const Vector3<T>& u) const
 	{
-		return  !(u == v) ;
+		return  !(*this == u) ;
 	};	
 	
 	inline Vector3<T>  operator- ( const Vector3<T>& u) const
 	{
-		Vector3<T> w = Vector3( this->x_ - u.x(),
-								this->y_ - u.y(),
-							    this->z_ - u.z());
+		Vector3<T> w = Vector3( this->x_ - u.x_,
+								this->y_ - u.y_,
+							    this->z_ - u.z_);
 		
 		return ( w );
 	};
@@ -113,9 +205,9 @@ public:
 	
 	inline Vector3<T>  operator+ ( const Vector3<T>& u)	const
 	{
-	 	Vector3<T> w = Vector3 ( this->x_ + u.x(),
-	 							 this->y_ + u.y(),
-	 							 this->z_ + u.z());
+	 	Vector3<T> w = Vector3 ( this->x_ + u.x_,
+	 							 this->y_ + u.y_,
+	 							 this->z_ + u.z_);
 	 	
 		return ( w );
 	};
@@ -127,37 +219,37 @@ public:
 	
 	friend inline Vector3<T> operator* ( const Vector3<T>& u,const T& factor ) 	
 	{
-	 	Vector3<T> w = Vector3( u.x() * factor,
-	 							u.y() * factor,
-	 							u.z() * factor );
+	 	Vector3<T> w = Vector3( u.x_ * factor,
+	 							u.y_ * factor,
+	 							u.z_ * factor );
 		
 		return ( w );
 	};
 	
-	friend inline Vector3<T> operator*	( const T& factor ,const Vector3<T>& u) 	
+	friend inline Vector3<T> operator*	( const T& factor ,const Vector3<T>& u) 
 	{
-	 	Vector3<T> w = Vector3( u.x() * factor,
-	 							u.y() * factor,
-	 							u.z() * factor );
+	 	Vector3<T> w = Vector3( u.x_ * factor,
+	 							u.y_ * factor,
+	 							u.z_ * factor );
 
 		return ( w );
 	};
 	
-	friend inline T operator* ( const Vector3<T>& u ,const Vector3<T>& v) 	
+	friend inline T operator* ( const Vector3<T>& u, const Vector3<T>& v) 	
 	{
 	 	T dotProduct;
 	 	
-	 	dotProduct = ( u.x() * v.x()) +  (u.y() * v.y()) + (u.z() * v.z() ) ;
+	 	dotProduct = ( (u.x_ * v.x_ ) +  ( u.x_ * v.y_ ) + ( u.x_ * v.z_ ) ) ;
 		
 		return ( dotProduct );
 	};
 
 		
-	friend inline Vector3<T>  operator^	( const Vector3<T>& u ,const Vector3<T>& v)
+	inline Vector3<T>  operator^ (const Vector3<T>& u) const
 	{
-		Vector3<T> crossProduct = Vector3( u.y() * v.z() - u.z() * v.y(),
-										  -u.x() * v.z() + u.z() * v.x(),
-										   u.x() * v.y() - u.y() * v.x() );
+		Vector3<T> crossProduct = Vector3( this->y_ * u.z_ - this->z_ * u.y_,
+										   this->z_ * u.x_ - this->x_ * u.z_,
+										   this->x_ * u.y_ - this->y_ * u.x_ );
 
 		return ( crossProduct );
 	};
@@ -171,6 +263,7 @@ public:
 	
 	~Vector3 (){};
 		
+
 };
 
 
@@ -181,8 +274,8 @@ public:
 
 // CASOS DE TESTE
 
-/*
- * Teste operator+ e operator-
+
+/* Teste operator+ e operator-
 SLAL::Vector3<double> v1(1.0,1.0,1.0);
 SLAL::Vector3<double> v2(-1.0,-1.0,-1.0);
 SLAL::Vector3<double> v3(0.0,0.0,0.0);
@@ -201,8 +294,7 @@ v3 = + v1 + v2;
 std::cout << v3.x << v3.y << v3.z << "#+v1+v2#"<<std::endl;
 */
 
-/*
- * Teste operator*
+/*Teste operator*
 	SLAL::Vector3<double> v1(1.0,1.0,1.0);
 	SLAL::Vector3<double> v3(0.0,0.0,0.0);
 	
@@ -218,14 +310,21 @@ std::cout << v3.x << v3.y << v3.z << "#+v1+v2#"<<std::endl;
 	std::cout << v3.x << v3.y << v3.z << "#(+v1)*3#"<<std::endl;
 	v3 = (+v1) * 0.0;
 	std::cout << v3.x << v3.y << v3.z << "#(+v1)*0.0#"<<std::endl;
- */
+	v3 = (+v1) * v2[1];
+	std::cout << v3.x << v3.y << v3.z << "#(+v1)*0.0#"<<std::endl;
+*/
 
-/*
- * Teste operator* (puduto interno ou  produto escalar) 
+/* Teste operator* (puduto interno ou  produto escalar) 
 SLAL::Vector3<double> v1(6.0,-1.0,0.0);
 SLAL::Vector3<double> v2(0.5,-4.0,0.0);
 double t = 0.0 ;
+t = v1 * v2
+std::cout << t << "#(v1)*(v2)#"<<std::endl;
+v1[1] = v1*(-v2)
 */
+
+
+
 /*
  * solucão para não ter warnning no retorno de uma referencia
 inline Vector3<T>&  operator- ( const Vector3<T>& u) const

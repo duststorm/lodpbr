@@ -35,7 +35,7 @@ public:
     
     SLAL::BoundingBox3<float> world;
     
-    OctreeRefine<float,SLAL::Point3<float>*> octree;
+    Octree<float,SLAL::Point3<float>*> octree;
                       
 public slots:
 	

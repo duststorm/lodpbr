@@ -66,8 +66,9 @@ void GLFrame::calLimits()
 	
 	 world = SLAL::BoundingBox3<float>(A->box.xmin(),A->box.ymin(),A->box.zmin(),
 									   A->box.xmax(),A->box.ymax(),A->box.zmax());
-	
-	octree = Octree<float,SLAL::Point3<float>*>(world);
+	 
+	 octree = Octree<float,SLAL::Point3<float>*>(world) ;
+
 }
 
 template <class T>

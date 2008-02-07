@@ -11,15 +11,25 @@ namespace SLAL
 template <class T>	class Point3
 {
 	
-	
 private:
 	
-	T x_;
-	T y_;
-	T z_;
+	union
+	{
+	
+		struct
+		{
+			T x_;
+			T y_;
+			T z_;
+		};
+		
+		T xyz[3];
+		
+	};
 	
 public:
 	
+	friend class Vector3<T>;
 	 
 	Point3()
 	{
@@ -37,9 +47,9 @@ public:
 	
 	Point3 ( const Vector3<T>& u)
 	{
-		this->x_ = u.x();
-		this->y_ = u.y();
-		this->z_ = u.z();
+		this->x_ = u.x_;
+		this->y_ = u.y_;
+		this->z_ = u.z_;
 	};
 	
 	Point3 ( const Point3<T>& p)
@@ -64,7 +74,7 @@ public:
 		return ( this->z_ );
 	};
 	
-	inline const T& operator [] ( int i)  
+	inline  T& operator [] ( int i)  const
 	{
 		if ( (i > 2) or ( i < 0))
 		{
@@ -73,12 +83,21 @@ public:
 				      << "        Accepts, 0 , 1 , 2 only." << std::endl;
 			exit(1);
 		}
-				
-	    if (i == 0)
-	    	return (this->x_);
-	    if (i == 1)
-	    	return (this->y_);
-	    return (this->z_);
+		
+	    return (xyz[i]);
+	};
+	
+	inline  T& operator [] ( int i)  
+	{
+		if ( (i > 2) or ( i < 0))
+		{
+			std::cerr << "[ERROR] Point3 operator[]"        << std::endl
+				      << "        Out of the Point size. " << std::endl
+				      << "        Accepts, 0 , 1 , 2 only." << std::endl;
+			exit(1);
+		}
+		  
+	    return (xyz[i]);
 	};
 	
 	inline Point3<T>& operator= ( const Point3<T>& p)
@@ -90,14 +109,87 @@ public:
 		return ( *this );
 	};
 	
-	friend inline bool operator== ( const Point3<T>& p,const Point3<T>& q) 
+	
+	// Assignment Opertators
+	//With Scalar
+
+	const Point3< T >& operator+= ( const T&  factor ) 
+	{ 
+	    this->x_ += factor; 
+	    this->y_ += factor; 
+	    this->z_ += factor;
+	    
+	    return ( *this ); 
+	} 
+	
+	const Point3< T >& operator-= ( const T&  factor ) 
+	{ 
+	    this->x_ -= factor; 
+	    this->y_ -= factor; 
+	    this->z_ -= factor;
+	    
+	    return ( *this ); 
+	} 
+	
+	const Point3< T >& operator*= ( const T& factor ) 
+	{ 
+	 	 	
+	 	this->x_  *= factor;
+	 	this->y_  *= factor;
+	 	this->z_  *= factor;
+						
+	    return ( *this ); 
+	}
+
+	const Point3< T >& operator/= ( T factor ) 
+	{ 
+	    factor = (T)1 / factor;
+	    
+	    this->x_ *= factor;
+	    this->y_ *= factor; 
+	    this->z_ *= factor;
+	    
+	    return ( *this ); 
+	}
+	// With Vector
+	const Point3< T >& operator+= (  const Point3<T>& u ) 
+	{ 
+	    this->x_ += u.x(); 
+	    this->y_ += u.y(); 
+	    this->z_ += u.z();
+	    
+	    return ( *this ); 
+	}
+	
+	const Point3< T >& operator-= (  const Point3<T>& u ) 
+	{ 
+	    this->x_ -= u.x(); 
+	    this->y_ -= u.y(); 
+	    this->z_ -= u.z();
+	    
+	    return ( *this ); 
+	} 
+
+
+	const Point3< T >& operator/=( const Point3<T>& u ) 
+	{ 
+	    	    
+	    this->x_ /= u.x();
+	    this->y_ /= u.y(); 
+	    this->z_ /= u.z();
+	    
+	    return ( *this ); 
+	}
+	
+	
+	inline bool operator== ( const Point3<T>& p) const
 	{
-		return ( (p.x() == q.x()) and (p.y() == q.y()) and (p.z() == q.z()) );
+		return ( ( this->x_ == p.x() ) and ( this->y_ == p.y() ) and ( this->z_ == p.z() ) );
 	};	
 	
-	friend inline bool operator!= ( const Point3<T>& p, const Point3<T>& q)
+	inline bool operator!= ( const Point3<T>& p) const
 	{
-		return  !(p == q) ;
+		return  !(*this == p) ;
 	};	
 	
 	inline Point3<T>  operator- ( ) const
@@ -109,18 +201,18 @@ public:
 	
 	inline friend const Vector3<T> operator- (const Point3<T>& p, const Point3<T>& q)  
 	{
-		Vector3<T> w = Vector3<T>( p.x() - q.x(),
-								   p.y() - q.y(),
-								   p.z() - q.z());
+		Vector3<T> w = Vector3<T>( p.x_ - q.x_,
+								   p.y_ - q.y_,
+								   p.z_ - q.z_);
 		
 		return ( w );
 	};
 	
 	inline friend const Point3<T> operator- (const Point3<T>& p, const Vector3<T> u)  
 	{
-		Point3<T> r = Point3( p.x() - u.x(),
-							  p.y() - u.y(),
-							  p.z() - u.z() );
+		Point3<T> r = Point3<T>( p.x_ - u.x_,
+							  	 p.y_ - u.y_,
+							  	 p.z_ - u.z_ );
 		
 	    return ( r );
 	};
@@ -128,9 +220,9 @@ public:
 	inline friend const Point3<T> operator- (const Vector3<T> u,const Point3<T> p )  
 	{
 		
-		Point3<T> r = Point3( u.x() - p.x(),
-							  u.y() - p.y(),
-							  u.z() - p.z() );
+		Point3<T> r = Point3<T>( u.x_ - p.x_,
+							  	 u.y_ - p.y_,
+							  	 u.z_ - p.z_ );
 		
 	    return ( r );
 	};
@@ -142,18 +234,18 @@ public:
 	
 	inline friend const Point3<T> operator+ (const Point3<T> p, const Vector3<T> u)  
 	{
-		Point3<T> r = Point3 ( p.x() + u.x(),
-				 			   p.y() + u.y(),
-				 			   p.z() + u.z() );
+		Point3<T> r = Point3 ( p.x_ + u.x_,
+				 			   p.y_ + u.y_,
+				 			   p.z_ + u.z_ );
 
 	    return ( r );
 	};
 	
 	inline friend  const Point3<T> operator+ (const Vector3<T> u,const Point3<T> p )  
 	{
-		Point3<T> r = Point3 ( p.x() + u.x(),
-				 			   p.y() + u.y(),
-				 			   p.z() + u.z() );
+		Point3<T> r = Point3 ( p.x_ + u.x_,
+				 			   p.y_ + u.y_,
+				 			   p.z_ + u.z_ );
 
 	    return ( r );
 	};

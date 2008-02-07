@@ -265,24 +265,24 @@ public:
     /// @param clsPt closest point  
     /// @return euclidean distance
     ///
-    virtual K distance (const SLAL::BoundingBox3<K>& world, K best, const SLAL::Point3<K>& p, SLAL::Point3<K>& clsPt) const
+    virtual float distance (const SLAL::BoundingBox3<K>& world, K best, const SLAL::Point3<K>& p, SLAL::Point3<K>& clsPt) const
     {
-       /* multimap <K, int, std::less<K> > iSon;
+        multimap <float, int, std::less<K> > iSon;
         for (int i = 0; i < 8; ++i)
         { 
-            iSon.insert (pair <K, int> (world.subOctant(i).distance(p), i));
+            iSon.insert (pair <float, int> (world.subOctant(i).distance(p), i));
         }
-        for (multimap <K, int, std::less<K> >::iterator j = iSon.begin (); j != iSon.end(); ++j)
+        for (multimap <float, int, std::less<float> >::iterator j = iSon.begin (); j != iSon.end(); ++j)
         {
-            K boxDist = j->first;
+            float boxDist = j->first;
             if (abs(boxDist) > abs(best)) break;
             int sonIndex = j->second;
-            K currentDist = son[sonIndex]->distance (world.subOctant (sonIndex),  best, p, clsPt);
+            float currentDist = son[sonIndex]->distance (world.subOctant (sonIndex),  best, p, clsPt);
             if (abs(currentDist) < abs(best))
             {
                 best = currentDist;
             }
-        }*/	
+        }	
         return best;
     }   
     
@@ -380,7 +380,7 @@ class OctreeLeafNode : public OctreeNode<K, ItemPtr, Refine> {
         SLAL::Point3<K> c;
         for (const_listItemPtrIterator pi = PtrList.begin (); pi != PtrList.end(); ++pi)
         {
-            K thisDistance = lcgOctree::distance2Item (*pi, p, c);
+            K thisDistance = lcgOctree::distance2Item<K>(*pi, p, c);
             if (abs(thisDistance) < abs(best)) 
             {
                 best = thisDistance;
