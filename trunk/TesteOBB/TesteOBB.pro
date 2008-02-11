@@ -30,17 +30,17 @@ HEADERS += . \
     matrixLibrary/Point3.hpp \
     matrixLibrary/Matrix3x3.hpp \
     matrixLibrary/BoundingBox3.hpp \
-    lcgOctree/ocTreeBox.hpp
+    lcgOctree/ocTreeBox.hpp \
+    plyReader/surfels.hpp \
+    plyReader/ply.h \
+    plyReader/file_io.h
 SOURCES += main.cpp \
     interface/myMainWindow.cpp \
     openGLFrame/GLFrame.cpp \
     openGLFrame/support/arcball.cpp \
     mycgal/polyhedron.cpp \
     mycgal/support/id.cpp \
-    matrixLibrary/Vector3.cpp \
-    matrixLibrary/Point3.cpp \
-    matrixLibrary/Matrix3x3.cpp \
-    matrixLibrary/BoundingBox3.cpp
+    plyReader/ply.c
 QT += opengl
 FORMS += ui/interface.ui
 

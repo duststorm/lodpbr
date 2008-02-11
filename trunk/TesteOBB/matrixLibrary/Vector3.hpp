@@ -3,6 +3,9 @@
 
 #include <iostream>
 
+#include <cassert>
+#include <cmath>
+
 
 namespace SLAL { 
 
@@ -34,6 +37,16 @@ public:
 		this->x_ = (T)0;
 		this->y_ = (T)0;
 		this->z_ = (T)0;
+	};
+	 
+	template < typename U >
+	Vector3 (const U* u)
+	{
+		assert(u);
+		
+    	this->x_ = static_cast< T > ( u[0] );
+    	this->y_ = static_cast< T > ( u[1] );
+    	this->z_ = static_cast< T > ( u[2] );
 	};
 	
 	Vector3 ( const Vector3<T>& u)
@@ -189,27 +202,28 @@ public:
 	
 	inline Vector3<T>  operator- ( const Vector3<T>& u) const
 	{
-		Vector3<T> w = Vector3( this->x_ - u.x_,
-								this->y_ - u.y_,
-							    this->z_ - u.z_);
-		
-		return ( w );
+	
+		return ( Vector3 ( this->x_ - u.x_,
+						   this->y_ - u.y_,
+						   this->z_ - u.z_) 
+			   );
 	};
 	
 	inline Vector3<T>  operator- ( ) const
 	{
-		Vector3<T> w = Vector3 (-this->x_, -this->y_, -this->z_);
-			
-		return ( w );
+		 		
+		return ( Vector3 (-this->x_, -this->y_, -this->z_) );
+		
 	};
 	
 	inline Vector3<T>  operator+ ( const Vector3<T>& u)	const
 	{
-	 	Vector3<T> w = Vector3 ( this->x_ + u.x_,
-	 							 this->y_ + u.y_,
-	 							 this->z_ + u.z_);
 	 	
-		return ( w );
+		return ( Vector3 ( this->x_ + u.x_,
+	 			     	   this->y_ + u.y_,
+	 					   this->z_ + u.z_)
+	 			);
+		
 	};
 	
 	inline Vector3<T>  operator+ ( ) const
@@ -219,39 +233,39 @@ public:
 	
 	friend inline Vector3<T> operator* ( const Vector3<T>& u,const T& factor ) 	
 	{
-	 	Vector3<T> w = Vector3( u.x_ * factor,
-	 							u.y_ * factor,
-	 							u.z_ * factor );
+	 		
+		return (  Vector3( u.x_ * factor,
+						   u.y_ * factor,
+					       u.z_ * factor ) 
+			   );
 		
-		return ( w );
 	};
 	
 	friend inline Vector3<T> operator*	( const T& factor ,const Vector3<T>& u) 
 	{
-	 	Vector3<T> w = Vector3( u.x_ * factor,
-	 							u.y_ * factor,
-	 							u.z_ * factor );
+	 	return ( Vector3( u.x_ * factor,
+	 					  u.y_ * factor,
+	 					  u.z_ * factor )
+	 			);
 
-		return ( w );
 	};
 	
 	friend inline T operator* ( const Vector3<T>& u, const Vector3<T>& v) 	
 	{
-	 	T dotProduct;
-	 	
-	 	dotProduct = ( (u.x_ * v.x_ ) +  ( u.x_ * v.y_ ) + ( u.x_ * v.z_ ) ) ;
+	 			
+		return (  (u.x_ * v.x_ ) +  ( u.x_ * v.y_ ) + ( u.x_ * v.z_ )  );
 		
-		return ( dotProduct );
 	};
 
 		
 	inline Vector3<T>  operator^ (const Vector3<T>& u) const
 	{
-		Vector3<T> crossProduct = Vector3( this->y_ * u.z_ - this->z_ * u.y_,
-										   this->z_ * u.x_ - this->x_ * u.z_,
-										   this->x_ * u.y_ - this->y_ * u.x_ );
+		return ( Vector3( this->y_ * u.z_ - this->z_ * u.y_,
+		     			  this->z_ * u.x_ - this->x_ * u.z_,
+						  this->x_ * u.y_ - this->y_ * u.x_ )
+				);
 
-		return ( crossProduct );
+		
 	};
 	
 	friend inline std::ostream& operator<< (std::ostream & s, const Vector3<T>& u)
@@ -259,6 +273,39 @@ public:
 		s << "Vector3"<< " x = " << u.x() << " ,y = " << u.y() << " ,z = " << u.z() << std::endl;
 		
 		return s;
+	};
+	
+	// AUXILIAR FUNCTIONS
+	
+	inline T length ()
+	{
+		return sqrt( (this->x_ * this->x_) + (this->y_ * this->y_) + (this->z_ * this->z_) );
+	};
+	
+	inline void normalize ()
+	{
+		T factor = sqrt( (this->x_ * this->x_) + (this->y_ * this->y_) + (this->z_ * this->z_) );
+		
+		assert (factor);
+		
+		T d = 1 / factor;
+		
+		this->x_ *= d;
+		this->y_ *= d;
+		this->x_ *= d;
+			
+	};
+	
+	inline Vector3<T> norm ()
+	{
+		T factor = sqrt( (this->x_ * this->x_) + (this->y_ * this->y_) + (this->z_ * this->z_) );
+		
+		assert (factor);
+		
+		T d = 1 / factor;
+		
+		return ( Vector3 (this->x_ * d, this->y_ * d, this->x_ * d) );
+			
 	};
 	
 	~Vector3 (){};

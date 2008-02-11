@@ -30,10 +30,11 @@ public:
 	// transpose
 	inline Matrix3x3<T> operator~ () 
 	{
-		Matrix3x3<T> A =  Matrix3x3<T>( a[0][0],a[1][0],a[2][0],
-								    	a[0][1],a[1][1],a[2][1],
-								    	a[0][2],a[1][2],a[2][2] );
-		return ( A );				
+		return ( Matrix3x3<T>( a[0][0],a[1][0],a[2][0],
+				    	       a[0][1],a[1][1],a[2][1],
+							   a[0][2],a[1][2],a[2][2] )
+			   );
+						
 	};
 	
 
@@ -79,118 +80,58 @@ public:
 	
 	inline Matrix3x3<T>  operator- ( ) const
 	{
-		Matrix3x3<T> A;
-		 	
-		A(0,0) = -this->a[0][0]; 
-		A(0,1) = -this->a[0][1];
-		A(0,2) = -this->a[0][2];
 		
-		A(1,0) = -this->a[1][0]; 
-		A(1,1) = -this->a[1][1];
-		A(1,2) = -this->a[1][2];
-		
-		A(2,0) = -this->a[2][0]; 
-		A(2,1) = -this->a[2][1];
-		A(2,2) = -this->a[2][2];
-
+		return ( Matrix3x3<T>( -this->a[0][0],-this->a[0][1],-this->a[0][2],
+							   -this->a[1][0],-this->a[1][1],-this->a[1][2],
+							   -this->a[2][0],-this->a[2][1],-this->a[2][2] )
+			   );
 			
-		return ( A );
 	};
 	
 	inline Matrix3x3<T>  operator+ ( ) const
 	{
-		Matrix3x3<T> A;
-		 	
-		A(0,0) = this->a[0][0]; 
-		A(0,1) = this->a[0][1];
-		A(0,2) = this->a[0][2];
-		
-		A(1,0) = this->a[1][0]; 
-		A(1,1) = this->a[1][1];
-		A(1,2) = this->a[1][2];
-		
-		A(2,0) = this->a[2][0]; 
-		A(2,1) = this->a[2][1];
-		A(2,2) = this->a[2][2];
-
-			
-		return ( A );
+		return ( Matrix3x3<T>( this->a[0][0],this->a[0][1],this->a[0][2],
+							   this->a[1][0],this->a[1][1],this->a[1][2],
+							   this->a[2][0],this->a[2][1],this->a[2][2] )
+			   );
 	};
 	
 	friend inline Matrix3x3<T> operator+ (Matrix3x3<T>& A, Matrix3x3<T>& B)
 	{
-		Matrix3x3<T> C;
 		
-		C.a[0][0] = A.a[0][0] + B.a[0][0];
-		C.a[0][1] = A.a[0][1] + B.a[0][1];
-		C.a[0][2] = A.a[0][2] + B.a[0][2];
-		
-		C.a[1][0] = A.a[1][0] + B.a[1][0];
-		C.a[1][1] = A.a[1][1] + B.a[1][1];
-		C.a[1][2] = A.a[1][2] + B.a[1][2];
-		
-		C.a[2][0] = A.a[2][0] + B.a[2][0];
-		C.a[2][1] = A.a[2][1] + B.a[2][1];
-		C.a[2][2] = A.a[2][2] + B.a[2][2];	
-		
-		return ( C );
+		return ( Matrix3x3<T>( A.a[0][0] + B.a[0][0], A.a[0][1] + B.a[0][1], A.a[0][2] + B.a[0][2],
+							   A.a[1][0] + B.a[1][0], A.a[1][1] + B.a[1][1], A.a[1][2] + B.a[1][2],
+							   A.a[2][0] + B.a[2][0], A.a[2][1] + B.a[2][1], A.a[2][2] + B.a[2][2] )
+			   );	
 	};
 	
 	friend inline Matrix3x3<T> operator- (Matrix3x3<T>& A, Matrix3x3<T>& B)
 	{
-		Matrix3x3<T> C;
 		
-		C.a[0][0] = A.a[0][0] - B.a[0][0];
-		C.a[0][1] = A.a[0][1] - B.a[0][1];
-		C.a[0][2] = A.a[0][2] - B.a[0][2];
-		
-		C.a[1][0] = A.a[1][0] - B.a[1][0];
-		C.a[1][1] = A.a[1][1] - B.a[1][1];
-		C.a[1][2] = A.a[1][2] - B.a[1][2];
-		
-		C.a[2][0] = A.a[2][0] - B.a[2][0];
-		C.a[2][1] = A.a[2][1] - B.a[2][1];
-		C.a[2][2] = A.a[2][2] - B.a[2][2];
-		
-		return ( C );
+		return ( Matrix3x3<T>( A.a[0][0] - B.a[0][0], A.a[0][1] - B.a[0][1], A.a[0][2] - B.a[0][2],
+							   A.a[1][0] - B.a[1][0], A.a[1][1] - B.a[1][1], A.a[1][2] - B.a[1][2],
+							   A.a[2][0] - B.a[2][0], A.a[2][1] - B.a[2][1], A.a[2][2] - B.a[2][2] )
+			   );	
 	};
 	
 	friend inline Matrix3x3<T> operator* ( const T& factor, Matrix3x3<T>& A)
 	{
-		Matrix3x3<T> B;
 		
-		B.a[0][0] = A.a[0][0] * factor;
-		B.a[0][1] = A.a[0][1] * factor;
-		B.a[0][2] = A.a[0][2] * factor;
-		
-		B.a[1][0] = A.a[1][0] * factor;
-		B.a[1][1] = A.a[1][1] * factor;
-		B.a[1][2] = A.a[1][2] * factor;
-		
-		B.a[2][0] = A.a[2][0] * factor;
-		B.a[2][1] = A.a[2][1] * factor;
-		B.a[2][2] = A.a[2][2] * factor;
-		
-		return ( B );
+		return ( Matrix3x3<T>( A.a[0][0] * factor, A.a[0][1] * factor, A.a[0][2] * factor,
+							   A.a[1][0] * factor, A.a[1][1] * factor, A.a[1][2] * factor,
+							   A.a[2][0] * factor, A.a[2][1] * factor, A.a[2][2] * factor )
+			   );	
+				
 	};
 	
 	friend inline Matrix3x3<T> operator* ( Matrix3x3<T>& A, const T& factor)
 	{
-		Matrix3x3<T> B;
 		
-		B.a[0][0] = A.a[0][0] * factor;
-		B.a[0][1] = A.a[0][1] * factor;
-		B.a[0][2] = A.a[0][2] * factor;
+		return ( Matrix3x3<T>( A.a[0][0] * factor, A.a[0][1] * factor, A.a[0][2] * factor,
+							   A.a[1][0] * factor, A.a[1][1] * factor, A.a[1][2] * factor,
+							   A.a[2][0] * factor, A.a[2][1] * factor, A.a[2][2] * factor )
+			   );
 		
-		B.a[1][0] = A.a[1][0] * factor;
-		B.a[1][1] = A.a[1][1] * factor;
-		B.a[1][2] = A.a[1][2] * factor;
-		
-		B.a[2][0] = A.a[2][0] * factor;
-		B.a[2][1] = A.a[2][1] * factor;
-		B.a[2][2] = A.a[2][2] * factor;
-		
-		return ( B );
 	};
 	
 
@@ -205,41 +146,32 @@ public:
 		    exit(1);
 		}
 		
-		B.a[0][0] = A.a[0][0] / factor;
-		B.a[0][1] = A.a[0][1] / factor;
-		B.a[0][2] = A.a[0][2] / factor;
+		T d = 1 / factor;
 		
-		B.a[1][0] = A.a[1][0] / factor;
-		B.a[1][1] = A.a[1][1] / factor;
-		B.a[1][2] = A.a[1][2] / factor;
-		
-		B.a[2][0] = A.a[2][0] / factor;
-		B.a[2][1] = A.a[2][1] / factor;
-		B.a[2][2] = A.a[2][2] / factor;
-		
-		return ( B );
+		return ( Matrix3x3<T>( A.a[0][0] * d, A.a[0][1] * d, A.a[0][2] * d,
+							   A.a[1][0] * d, A.a[1][1] * d, A.a[1][2] * d,
+							   A.a[2][0] * d, A.a[2][1] * d, A.a[2][2] * d )
+			   );	
 	};
 
 	
 	friend inline Matrix3x3<T> operator* ( const Matrix3x3<T>& A, const Matrix3x3<T>& B)
 	{
-		Matrix3x3<T> C; 
-			
-		C.a[0][0] = A.a[0][0] * B.a[0][0] + A.a[0][1] * B.a[1][0] + A.a[0][2] * B.a[2][0];
-		C.a[0][1] = A.a[0][0] * B.a[0][1] + A.a[0][1] * B.a[1][1] + A.a[0][2] * B.a[2][1];
-		C.a[0][2] =	A.a[0][0] * B.a[0][2] + A.a[0][1] * B.a[1][2] + A.a[0][2] * B.a[2][2];
+		return ( Matrix3x3<T>( A.a[0][0] * B.a[0][0] + A.a[0][1] * B.a[1][0] + A.a[0][2] * B.a[2][0],
+							   A.a[0][0] * B.a[0][1] + A.a[0][1] * B.a[1][1] + A.a[0][2] * B.a[2][1],
+							   A.a[0][0] * B.a[0][2] + A.a[0][1] * B.a[1][2] + A.a[0][2] * B.a[2][2],
+							   
+							   A.a[1][0] * B.a[0][0] + A.a[1][1] * B.a[1][0] + A.a[1][2] * B.a[2][0],
+							   A.a[1][0] * B.a[0][1] + A.a[1][1] * B.a[1][1] + A.a[1][2] * B.a[2][1],
+							   A.a[1][0] * B.a[0][2] + A.a[1][1] * B.a[1][2] + A.a[1][2] * B.a[2][2],
 		
-		C.a[1][0] = A.a[1][0] * B.a[0][0] + A.a[1][1] * B.a[1][0] + A.a[1][2] * B.a[2][0];
-		C.a[1][1] = A.a[1][0] * B.a[0][1] + A.a[1][1] * B.a[1][1] + A.a[1][2] * B.a[2][1];
-		C.a[1][2] =	A.a[1][0] * B.a[0][2] + A.a[1][1] * B.a[1][2] + A.a[1][2] * B.a[2][2];
+							   A.a[2][0] * B.a[0][0] + A.a[2][1] * B.a[1][0] + A.a[2][2] * B.a[2][0],
+							   A.a[2][0] * B.a[0][1] + A.a[2][1] * B.a[1][1] + A.a[2][2] * B.a[2][1],
+							   A.a[2][0] * B.a[0][2] + A.a[2][1] * B.a[1][2] + A.a[2][2] * B.a[2][2] )
 		
-		C.a[2][0] = A.a[2][0] * B.a[0][0] + A.a[2][1] * B.a[1][0] + A.a[2][2] * B.a[2][0];
-		C.a[2][1] = A.a[2][0] * B.a[0][1] + A.a[2][1] * B.a[1][1] + A.a[2][2] * B.a[2][1];
-		C.a[2][2] = A.a[2][0] * B.a[0][2] + A.a[2][1] * B.a[1][2] + A.a[2][2] * B.a[2][2];
+				); 
 		
-	return ( C );	
-		
-	}
+	};
 	
 	friend  inline std::ostream& operator<< (std::ostream & s, const Matrix3x3<T>& A)
 	{

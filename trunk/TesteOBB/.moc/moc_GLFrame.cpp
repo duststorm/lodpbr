@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'GLFrame.hpp'
 **
-** Created: Thu Feb 7 16:16:27 2008
+** Created: Mon Feb 11 18:49:17 2008
 **      by: The Qt Meta Object Compiler version 59 (Qt 4.3.0)
 **
 ** WARNING! All changes made in this file will be lost!
