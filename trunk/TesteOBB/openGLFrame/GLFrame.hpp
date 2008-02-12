@@ -15,8 +15,6 @@
 #include "matrixLibrary/Vector3.hpp"
 
 
-#include "plyReader/surfels.hpp"
-#include "plyReader/file_io.h"
 
 class GLFrame : public QGLWidget
 {
@@ -78,7 +76,6 @@ private:
     ArcBall 			arcball;
    
 
-    std::vector<Surfel<double> *> surfels;
     
 	bool show_A;
     
