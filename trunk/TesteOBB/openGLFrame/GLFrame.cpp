@@ -18,6 +18,8 @@ GLFrame::GLFrame(QWidget *parent):QGLWidget(parent)
 	renderMode_A = PolygonWireFrame;
 	show_A 	= true;
 	
+	surfels = Surfels<double>();
+	
 	mousePositionX = 0.0;
 	mousePositionY = 0.0;
 	mousePositionZ = 0.0;
@@ -67,7 +69,7 @@ void GLFrame::drawPoints() {
    glColor3f(1.0,0.0,0.0);
    glBegin(GL_POINTS);
    
-   std::vector<Surfel<double> >::iterator surf =  surfels.begin();
+   Surfels<double>::iterator surf =  surfels.begin();
    
    while ( surf != surfels.end() ) {
 	        
@@ -83,21 +85,22 @@ void GLFrame::drawPoints() {
 
 void GLFrame::calLimits()
 {
-	/*
-	 Box_3<double> world = Box_3<double>( SLAL::Point3<double>(A->box.xmin(),A->box.ymin(),A->box.zmin()),
-				   		SLAL::Point3<double>(A->box.xmax(),A->box.ymax(),A->box.zmax()));
+	/*Box_3<double> world = Box_3<double>( SLAL::Point3<double>(surfels.box().xmin(),surfels.box().ymin(),surfels.box().zmin()),
+				   						 SLAL::Point3<double>(surfels.box().xmax(),surfels.box().ymax(),surfels.box().zmax()));
 	 
-	 octree = Octree<double,SLAL::Point3<double>*>(world) ;
+	octree = Octree<double,SLAL::Point3<double>*>(world) ;
 
-	Point_iterator f = A->points_begin();
-    while(f != A->points_end()) {
-    	SLAL::Point3<double> *fh = new SLAL::Point3<double>(f->x(),f->y(),f->z());
+	Surfels<double>::iterator surf =  surfels.begin();
+	
+    while( surf != surfels.end() ) 
+    {
+    	SLAL::Point3<double> *fh = new SLAL::Point3<double>(surf->position(0),surf->position(1),surf->position(2));
         octree.insert (fh);
-        f++;
+        surf++;
     }
 	 
-    std::cout << octree.root->itemPtrCount() <<  "AAA" << std::endl;
-    */
+    std::cout << octree.root->itemPtrCount() <<  "AAA" << std::endl;*/
+    
 }
 
 template <class T>

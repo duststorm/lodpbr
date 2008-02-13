@@ -7,6 +7,7 @@
 #include <cassert>
 
 
+#include <CGAL/Bbox_3.h>
 
 /// A function object for computing vertex normals 
 struct Vertex_normal : public std::unary_function<Polyhedron::Vertex,void>

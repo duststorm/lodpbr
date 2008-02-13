@@ -21,20 +21,21 @@ HEADERS += . \
     openGLFrame/GLFrame.hpp \
     openGLFrame/support/arcball.hpp \
     openGLFrame/support/atmatrix.hpp \
-    matrixLibrary/Vector3.hpp \
+    slal/Vector3.hpp \
     lcgOctree/ocTree.hpp \
     lcgOctree/ocTreeIntersection.hpp \
-    matrixLibrary/Point3.hpp \
-    matrixLibrary/Matrix3x3.hpp \
-    matrixLibrary/BoundingBox3.hpp \
+    slal/Point3.hpp \
+    slal/Matrix3x3.hpp \
+    slal/BoundingBox3.hpp \
     lcgOctree/ocTreeBox.hpp \
-    plyReader/surfels.hpp \
-    plyReader/ply.h
+    surfels/surfel.hpp \
+    surfels/ply.h \
+    surfels/surfels.hpp
 SOURCES += main.cpp \
     interface/myMainWindow.cpp \
     openGLFrame/GLFrame.cpp \
     openGLFrame/support/arcball.cpp \
-    plyReader/ply.c
+    surfels/ply.c
 QT += opengl
 FORMS += ui/interface.ui
 

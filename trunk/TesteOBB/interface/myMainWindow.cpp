@@ -40,7 +40,7 @@ void MyMainWindow::open(QString filename,bool who) {
       if (who)
       {
     	  const char * text = filename.toLatin1();
-    	  Surfel<double>::loadPly(text,glFrame->surfels);
+    	  Surfels<double>::loadPly(text,glFrame->surfels);
 
       }
       

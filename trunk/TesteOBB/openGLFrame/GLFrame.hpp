@@ -11,11 +11,12 @@
 #include "lcgOctree/ocTree.hpp"
 #include "lcgOctree/ocTreeBox.hpp"
 
-#include "matrixLibrary/Point3.hpp"
-#include "matrixLibrary/Vector3.hpp"
+#include "slal/Point3.hpp"
+#include "slal/Vector3.hpp"
 
 
-#include "plyReader/surfels.hpp"
+#include "surfels/surfel.hpp"
+#include "surfels/surfels.hpp"
 
 
 class GLFrame : public QGLWidget
@@ -35,8 +36,8 @@ public:
     typedef enum RenderMode {WireFrame=0, PolygonWireFrame, Smooth, Points};   
        
     RenderMode renderMode_A;
-    
-    std::vector<Surfel<double> > surfels;
+       
+    Surfels<double> surfels;
     
     Octree<double,SLAL::Point3<double>*> octree;
                       
