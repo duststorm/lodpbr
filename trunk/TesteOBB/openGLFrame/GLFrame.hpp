@@ -1,12 +1,12 @@
 #ifndef MYGLFRAME_H
 #define MYGLFRAME_H
 
+ 
 #include <QGLWidget>
+#include <vector>
 
 #include "support/arcball.hpp"
 #include "support/atmatrix.hpp"
-
-#include "mycgal/polyhedron.h"
 
 #include "lcgOctree/ocTree.hpp"
 #include "lcgOctree/ocTreeBox.hpp"
@@ -14,6 +14,8 @@
 #include "matrixLibrary/Point3.hpp"
 #include "matrixLibrary/Vector3.hpp"
 
+
+#include "plyReader/surfels.hpp"
 
 
 class GLFrame : public QGLWidget
@@ -34,8 +36,8 @@ public:
        
     RenderMode renderMode_A;
     
-    Polyhedron * A;
-   
+    std::vector<Surfel<double> > surfels;
+    
     Octree<double,SLAL::Point3<double>*> octree;
                       
 public slots:
@@ -53,6 +55,7 @@ protected:
 
 private:
     void draw();
+    void drawPoints();
     void screenToWorld(int x, int y, double &xw, double &yw, double &zw);
     
     template < class T>
@@ -69,7 +72,7 @@ private:
        
     double  			mousePositionX; 
     double  			mousePositionY; 
-    double			mousePositionZ;
+    double				mousePositionZ;
     
     AMatrix<GLfloat> 	sceneTransformation;
     AMatrix<GLfloat> 	sceneInitialTransformation; 

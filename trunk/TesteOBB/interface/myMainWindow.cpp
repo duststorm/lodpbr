@@ -33,31 +33,15 @@ void MyMainWindow::on_action_Points_A_triggered()
 void MyMainWindow::open(QString filename,bool who) {
    
    if (filename != "") {
-      QFileInfo fi(filename);
-      QString extension = fi.suffix();
-      
-      if (extension != "off") {
-         QString errorMsgFormat = "Error encountered while opening file:\n\"%1\"\n\nError details: The \"%2\" file extension is not supported. \nYou must open < off > format models.";
-         QMessageBox::critical(this, tr("Opening Error"), errorMsgFormat.arg(filename, extension));
-         return;
-      }
-      
-           
+          
       QByteArray filename_ = filename.toLatin1();
       fileModel_Off = filename;
        
       if (who)
       {
-    	  glFrame->A  = new Polyhedron ( Polyhedron::load_off(filename_.data()) );
-    	  glFrame->A->setColor (1.0,1.0,0.5);
-    	  glFrame->calLimits();
-    	    //o = OctreeRefine<float,SLAL::Point3<float>*>() ;
-    		
-    		/*for(Facet_iterator f = A->facets_begin(); f != A->facets_end(); ++f) {
-    			Facet_handle *fh = new Facet_handle(f->halfedge()->facet());
-    			octree.insert(fh);
-    		}*/
-    		
+    	  const char * text = filename.toLatin1();
+    	  Surfel<double>::loadPly(text,glFrame->surfels);
+
       }
       
       this->setWindowTitle("");
@@ -71,7 +55,7 @@ void MyMainWindow::on_action_Open_Surface_A_triggered()
                       this, 
                       tr("Choose a mesh file"),
                       ".",
-                      tr("Off meshes (*.off)"));
+                      tr("Off meshes (*.ply)"));
     
     // Tries to load file if filename not empty.
     if (filename != "") {

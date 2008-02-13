@@ -2,6 +2,7 @@
 #include <iostream>
 
 #include "interface/myMainWindow.hpp"
+
 #include "matrixLibrary/Vector3.hpp"
 #include "matrixLibrary/Point3.hpp"
 #include "matrixLibrary/Matrix3x3.hpp"

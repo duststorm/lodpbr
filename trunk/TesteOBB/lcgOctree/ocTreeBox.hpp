@@ -221,6 +221,6 @@ double distance(const Point3& p) const
 
 };
 
-typedef Box_3<Kernel> BBox3;
+typedef Box_3<double> BBox3;
 
 #endif

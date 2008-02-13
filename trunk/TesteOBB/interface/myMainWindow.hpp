@@ -5,7 +5,6 @@
 
 #include "ui_interface.h"
 
-
 class MyMainWindow : public QMainWindow, private Ui::MainWindow 
 {
     Q_OBJECT

@@ -14,8 +14,7 @@ GLFrame::GLFrame(QWidget *parent):QGLWidget(parent)
     zoomFactor = 1.0;
     
     setFocusPolicy(Qt::StrongFocus);
-    
-	A = NULL;
+   
 	renderMode_A = PolygonWireFrame;
 	show_A 	= true;
 	
@@ -61,9 +60,30 @@ void GLFrame::initializeGL()
 
 }
 
+void GLFrame::drawPoints() {
+   
+   glDisable(GL_LIGHTING);		
+   glPointSize(5.0);
+   glColor3f(1.0,0.0,0.0);
+   glBegin(GL_POINTS);
+   
+   std::vector<Surfel<double> >::iterator surf =  surfels.begin();
+   
+   while ( surf != surfels.end() ) {
+	        
+      glVertex3f(surf->position(0),surf->position(1),surf->position(2));
+      
+      ++surf;
+   }
+   
+   glEnd();
+   glEnable(GL_LIGHTING);
+   glPointSize(1.0);
+}
+
 void GLFrame::calLimits()
 {
-	
+	/*
 	 Box_3<double> world = Box_3<double>( SLAL::Point3<double>(A->box.xmin(),A->box.ymin(),A->box.zmin()),
 				   		SLAL::Point3<double>(A->box.xmax(),A->box.ymax(),A->box.zmax()));
 	 
@@ -77,6 +97,7 @@ void GLFrame::calLimits()
     }
 	 
     std::cout << octree.root->itemPtrCount() <<  "AAA" << std::endl;
+    */
 }
 
 template <class T>
@@ -132,7 +153,12 @@ void GLFrame::paintGL()
     glLoadIdentity();
     glTranslated(0.0,0.0,-5.0);
     glMultMatrixf(&sceneTransformation);
-    
+    if ( surfels.size() != 0 )
+    {
+    	drawPoints();
+    }
+    	
+    /*
 	if( A  and  isVisible_A()  )
 	{
 		
@@ -148,7 +174,7 @@ void GLFrame::paintGL()
 			A->drawWireframe(true);
 		else 
 			A->drawPoints();
-	}
+	}*/
 }
 
 void GLFrame::keyPressEvent ( QKeyEvent * event)
