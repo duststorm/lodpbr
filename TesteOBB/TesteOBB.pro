@@ -21,12 +21,12 @@ HEADERS += . \
     openGLFrame/GLFrame.hpp \
     openGLFrame/support/arcball.hpp \
     openGLFrame/support/atmatrix.hpp \
-    matrixLibrary/Vector3.hpp \
+    slal/Vector3.hpp \
     lcgOctree/ocTree.hpp \
     lcgOctree/ocTreeIntersection.hpp \
-    matrixLibrary/Point3.hpp \
-    matrixLibrary/Matrix3x3.hpp \
-    matrixLibrary/BoundingBox3.hpp \
+    slal/Point3.hpp \
+    slal/Matrix3x3.hpp \
+    slal/BoundingBox3.hpp \
     lcgOctree/ocTreeBox.hpp \
     surfels/surfel.hpp \
     surfels/ply.h \

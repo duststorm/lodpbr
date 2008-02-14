@@ -1,8 +1,8 @@
 #ifndef __OCTREE_INTERSECT__
 #define __OCTREE_INTERSECT__
 
-#include "matrixLibrary/BoundingBox3.hpp"
-#include "matrixLibrary/Point3.hpp"
+#include "slal/BoundingBox3.hpp"
+#include "slal/Point3.hpp"
 /// defines methods dependent on the geometry of the itens into the octree.
 namespace lcgOctree {
 

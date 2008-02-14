@@ -12,8 +12,8 @@
 #include <vector>
 
 
-#include "matrixLibrary/Point3.hpp"
-#include "matrixLibrary/Vector3.hpp"
+#include "slal/Point3.hpp"
+#include "slal/Vector3.hpp"
 
 extern "C" 
 {
