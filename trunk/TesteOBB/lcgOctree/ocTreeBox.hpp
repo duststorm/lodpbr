@@ -16,8 +16,8 @@
 #ifndef __OCTREE_BOX__
 #define __OCTREE_BOX__
 
-#include "matrixLibrary/BoundingBox3.hpp"
-#include "matrixLibrary/Point3.hpp"
+#include "slal/BoundingBox3.hpp"
+#include "slal/Point3.hpp"
 
 namespace lcgOctree {
 ///

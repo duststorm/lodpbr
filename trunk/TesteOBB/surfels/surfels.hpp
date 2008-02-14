@@ -4,7 +4,7 @@
 #include <vector>
 #include <algorithm>
 
-#include "matrixLibrary/BoundingBox3.hpp"
+#include "slal/BoundingBox3.hpp"
 #include "surfel.hpp"
 
 using namespace SLAL;
