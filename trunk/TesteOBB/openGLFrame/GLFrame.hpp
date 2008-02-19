@@ -40,6 +40,8 @@ public:
     Surfels<double> surfels;
     
     Octree<double,SLAL::Point3<double>*> octree;
+    
+    SLAL::Point3<double> pontomedio;
                       
 public slots:
 	

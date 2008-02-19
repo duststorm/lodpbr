@@ -18,6 +18,8 @@ GLFrame::GLFrame(QWidget *parent):QGLWidget(parent)
 	renderMode_A = PolygonWireFrame;
 	show_A 	= true;
 	
+	pontomedio = SLAL::Point3<double>();
+	
 	surfels = Surfels<double>();
 	
 	mousePositionX = 0.0;
@@ -78,6 +80,12 @@ void GLFrame::drawPoints() {
       ++surf;
    }
    
+   glPointSize(10.0);
+   glColor3f(0.0,1.0,0.0);
+   glBegin(GL_POINTS);
+             
+   glVertex3f(pontomedio[0],pontomedio[1],pontomedio[2]);
+  
    glEnd();
    glEnable(GL_LIGHTING);
    glPointSize(1.0);
@@ -94,11 +102,14 @@ void GLFrame::calLimits()
 	
     while( surf != surfels.surfels.end() ) 
     {
+    	pontomedio += surf->position();
     	SLAL::Point3<double> *fh = new SLAL::Point3<double>(surf->position(0),surf->position(1),surf->position(2));
         octree.insert (fh);
         surf++;
     }
-	 
+	
+    pontomedio /= surfels.surfels.size();
+    
     std::cout << octree.root->itemPtrCount() <<  "AAA" << std::endl;
     
 }
