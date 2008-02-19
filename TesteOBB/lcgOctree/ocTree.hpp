@@ -30,14 +30,14 @@ using namespace std;
 ///
 /// Refinement criteria for octrees
 ///
-template <class K, class ItemPtr>
+template <class Real, class ItemPtr>
 struct OctreeRefine {
     ///
     /// Decides whether or not to split a leaf node
     /// @param world space of the node octant
     /// @param level node level
     /// @param items list of items inside the leaf node
-    static bool split (const Box_3<K>& world, int level, const list<ItemPtr>& items) {
+    static bool split (const Box_3<Real>& world, int level, const list<ItemPtr>& items) {
         return false;
     }
 };
@@ -47,14 +47,14 @@ struct OctreeRefine {
 /// A node is refined whenever it holds more than "Max" items, and 
 /// the subdivision level has not reached "LevelMax".
 ///
-template <class K, class ItemPtr, int Max = 1, int LevelMax = 5>
-struct OverflowRefine : public OctreeRefine <K, ItemPtr> {
+template <class Real, class ItemPtr, int Max = 1, int LevelMax = 5>
+struct OverflowRefine : public OctreeRefine <Real, ItemPtr> {
     ///
     /// Split a leaf node iff the list contains more than Max items
     /// @param world space of the node octant
     /// @param level node level
     /// @param items list of items inside the leaf node
-    static bool split (const Box_3<K>& world, int level, const list<ItemPtr>& items) {
+    static bool split (const Box_3<Real>& world, int level, const list<ItemPtr>& items) {
         return items.size() > Max && level < LevelMax;
     }
 };
@@ -62,25 +62,25 @@ struct OverflowRefine : public OctreeRefine <K, ItemPtr> {
 //
 // Forward declaration of OctreeIterator
 //
-template <class K, class ItemPtr, class Refine>
+template <class Real, class ItemPtr, class Refine>
 class OctreeIterator;
 
 
 ///
 /// An Octree of Pointers to Objects
 ///
-/// @param K Kernel
+/// @param Real Kernel
 /// @param ItemPtr item pointer type to be stored
 /// @param Refine refinement criteria
 ///
-template <class K, class ItemPtr, class Refine = OverflowRefine<K,ItemPtr> >
+template <class Real, class ItemPtr, class Refine = OverflowRefine<Real,ItemPtr> >
 class OctreeNode {
 
   public:
 
-    typedef typename SLAL::Point3<K>                 Point3;  ///< A Point in 3D
-    typedef Box_3<K>                                  Box3; ///< Octant box type
-    friend class OctreeIterator<K, ItemPtr, Refine>;  ///< Octree iterators are friends
+    typedef typename SLAL::Point3<Real>                 Point3;  ///< A Point in 3D
+    typedef Box_3<Real>                                  Box3; ///< Octant box type
+    friend class OctreeIterator<Real, ItemPtr, Refine>;  ///< Octree iterators are friends
     typedef list<ItemPtr>                             ItemPtrList; ///< List of items stored inside leaf nodes
     typedef set<ItemPtr>                              ItemPtrSet;   ///< Return type of overlap
 
@@ -110,7 +110,7 @@ class OctreeNode {
     /// @param best best estimate (closest object) found so far
     /// @return euclidean distance
     ///
-    virtual double distance (const Box3& world, double best, const Point3& p) const = 0;
+    virtual Real distance (const Box3& world, Real best, const Point3& p) const = 0;
 
     /// Returns the euclidean distance between p and the closest object stored
     /// in the octree
@@ -121,7 +121,7 @@ class OctreeNode {
     /// @param clsPt Closest point on object.
     /// @return euclidean distance
     ///
-    virtual double distance (const Box3& world, double best, const Point3& p, Point3& clsPt) const = 0;
+    virtual Real distance (const Box3& world, Real best, const Point3& p, Point3& clsPt) const = 0;
     
     /// Returns true or false depending on whether this is a leaf node or not
     virtual bool isLeaf () const = 0;
@@ -132,28 +132,28 @@ class OctreeNode {
 
 // This is a forward declaration of OctreeLeafNode so that we may refer to
 // it in OctreeInternalNode as a friend class
-template <class K, class ItemPtr, class Refine> 
+template <class Real, class ItemPtr, class Refine> 
 class OctreeLeafNode;
 
 ///
 /// This represents an internal Octree Node. These point to eight 
 /// son nodes each.
 ///
-template <class K, class ItemPtr, class Refine = OverflowRefine<K,ItemPtr> >
-class OctreeInternalNode : public OctreeNode<K, ItemPtr, Refine> {
+template <class Real, class ItemPtr, class Refine = OverflowRefine<Real,ItemPtr> >
+class OctreeInternalNode : public OctreeNode<Real, ItemPtr, Refine> {
 
-    typedef OctreeNode<K, ItemPtr, Refine> OctreeNode;      
+    typedef OctreeNode<Real, ItemPtr, Refine> OctreeNode;      
 
-    typedef typename SLAL::Point3<K> Point3;  ///< A Point in 3D
-    typedef Box_3<K> Box3; ///< Octant box type
+    typedef typename SLAL::Point3<Real> Point3;  ///< A Point in 3D
+    typedef Box_3<Real> Box3; ///< Octant box type
     typedef list<ItemPtr> ItemPtrList; ///< List of items stored inside leaf nodes
     typedef set<ItemPtr> ItemPtrSet;   ///< Return type of overlap
     typedef typename set<ItemPtr>::iterator ItemPtrSetIterator;
 
     OctreeNode* son[8];    
 
-    friend class OctreeLeafNode<K, ItemPtr, Refine>; ///< Leaf nodes are friends
-    friend class OctreeIterator<K, ItemPtr, Refine>; ///< Octree iterators are friends
+    friend class OctreeLeafNode<Real, ItemPtr, Refine>; ///< Leaf nodes are friends
+    friend class OctreeIterator<Real, ItemPtr, Refine>; ///< Octree iterators are friends
     
 public:
 
@@ -176,11 +176,11 @@ public:
     virtual const OctreeNode* searchLeaf (const Box3& world, const Point3& p) const {
         int mult = 1;
         int index = 0;
-        double min[3], max[3];
+        Real min[3], max[3];
         Point3 p1 (world.xmin(),world.ymin(),world.zmin());
         Point3 p2 (world.xmax(),world.ymax(),world.zmax());
         for (int d = 0; d < 3; ++d) {
-            double middle = ((p1[d] + p2[d])) * 0.5;
+            Real middle = ((p1[d] + p2[d])) * 0.5;
             if ((p[d]) > middle) {
                 index += mult;
                 min[d] = middle; max[d] = (p2[2]);
@@ -249,7 +249,7 @@ public:
     /// @param p Point in relation to which the distance will be computed 
     /// @return euclidean distance
     ///
-    virtual double distance (const Box3& world, double best, const Point3& p) const
+    virtual Real distance (const Box3& world, Real best, const Point3& p) const
     {
         Point3 c;
         return distance (world, best, p, c);
@@ -264,19 +264,24 @@ public:
     /// @param clsPt closest point  
     /// @return euclidean distance
     ///
-    virtual double distance (const Box3& world, double best, const Point3& p, Point3& clsPt) const
+    virtual Real distance (const Box3& world, Real best, const Point3& p, Point3& clsPt) const
     {
-        multimap <double, int, std::less<double> > iSon;
+    	typedef typename std::less<Real> lessReal;
+    	typedef multimap <Real, int, lessReal > multimapReal;
+        typedef typename multimap <Real, int, lessReal >::iterator multimapRealIterator;
+        
+        multimapReal iSon;
+        
         for (int i = 0; i < 8; ++i)
         { 
-            iSon.insert (pair <double, int> (world.coords(i).distance(p), i));
+            iSon.insert (pair <Real, int> (world.coords(i).distance(p), i));
         }
-        for (multimap <double, int, std::less<double> >::iterator j = iSon.begin (); j != iSon.end(); ++j)
+        for (multimapRealIterator j = iSon.begin (); j != iSon.end(); ++j)
         {
-            double boxDist = j->first;
+            Real boxDist = j->first;
             if (abs(boxDist) > abs(best)) break;
             int sonIndex = j->second;
-            double currentDist = son[sonIndex]->distance (world.coords (sonIndex),  best, p, clsPt);
+            Real currentDist = son[sonIndex]->distance (world.coords (sonIndex),  best, p, clsPt);
             if (abs(currentDist) < abs(best))
             {
                 best = currentDist;
@@ -294,17 +299,17 @@ public:
 /// This represents a leaf octree node. All indexed data (items) are
 /// stored herein.
 ///
-template <class K, class ItemPtr, class Refine = OverflowRefine<K,ItemPtr> >
-class OctreeLeafNode : public OctreeNode<K, ItemPtr, Refine> {
+template <class Real, class ItemPtr, class Refine = OverflowRefine<Real,ItemPtr> >
+class OctreeLeafNode : public OctreeNode<Real, ItemPtr, Refine> {
 
   public:
 
-    typedef OctreeNode<K, ItemPtr, Refine> OctreeNode;          
-    typedef OctreeInternalNode<K, ItemPtr, Refine> OctreeInternalNode;
+    typedef OctreeNode<Real, ItemPtr, Refine> OctreeNode;          
+    typedef OctreeInternalNode<Real, ItemPtr, Refine> OctreeInternalNode;
     
-    typedef typename SLAL::Point3<K> Point3;  ///< A Point in 3D
-    typedef Box_3<K> Box3; ///< Octant box type
-//    friend class OctreeIterator<K, ItemPtr, Refine>; ///< Octree iterators are friends
+    typedef typename SLAL::Point3<Real> Point3;  ///< A Point in 3D
+    typedef Box_3<Real> Box3; ///< Octant box type
+//    friend class OctreeIterator<Real, ItemPtr, Refine>; ///< Octree iterators are friends
     typedef list<ItemPtr> ItemPtrList; ///< List of items stored inside leaf nodes
     typedef set<ItemPtr> ItemPtrSet;   ///< Return type of overlap
     
@@ -375,12 +380,12 @@ class OctreeLeafNode : public OctreeNode<K, ItemPtr, Refine> {
     /// @param clsPt Closest point on object.
     /// @return euclidean distance
     ///
-    virtual double distance (const Box3& world, double best, const Point3& p, Point3& clsPt) const
+    virtual Real distance (const Box3& world, Real best, const Point3& p, Point3& clsPt) const
     {
         Point3 c;
         for (const_listItemPtrIterator pi = PtrList.begin (); pi != PtrList.end(); ++pi)
         {
-            double thisDistance = lcgOctree::distance2Item (*pi, p, c);
+            Real thisDistance = lcgOctree::distance2Item (*pi, p, c);
             if (abs(thisDistance) < abs(best)) 
             {
                 best = thisDistance;
@@ -398,7 +403,7 @@ class OctreeLeafNode : public OctreeNode<K, ItemPtr, Refine> {
     /// @param world dimensions of this node
     /// @return euclidean distance
     ///
-    virtual double distance (const Box3& world, double best, const Point3& p) const
+    virtual Real distance (const Box3& world, Real best, const Point3& p) const
     {
         Point3 c;
         return distance (world, best, p, c);
@@ -413,11 +418,11 @@ class OctreeLeafNode : public OctreeNode<K, ItemPtr, Refine> {
 ///
 /// Octree Iterator
 ///
-template <class K, class ItemPtr, class Refine = OverflowRefine<K,ItemPtr> >
+template <class Real, class ItemPtr, class Refine = OverflowRefine<Real,ItemPtr> >
 class OctreeIterator {
     
-    typedef OctreeNode<K, ItemPtr, Refine> Node; ///< Octree Node
-    typedef OctreeInternalNode<K, ItemPtr, Refine> InternalNode; ///< Internal OctreeNode
+    typedef OctreeNode<Real, ItemPtr, Refine> Node; ///< Octree Node
+    typedef OctreeInternalNode<Real, ItemPtr, Refine> InternalNode; ///< Internal OctreeNode
     typedef Node* NodePtr; ///< Pointer to octree node
     
     vector<NodePtr*> path; ///< Path from root to pointed node
@@ -464,8 +469,8 @@ public:
     /// Returns in x,y,z the coordinates of the minimum corner of the 
     /// box occupied by the node. The root node is assumed to be of size
     /// 1 and have min coords = (0,0,0)
-    void minCoords (double& x, double& y, double& z) const {
-        double sz = 1.0;
+    void minCoords (Real& x, Real& y, Real& z) const {
+        Real sz = 1.0;
         x = y = z = 0.0;
         InternalNode* fatherNode = (InternalNode*) root;
         for (int i = 0; i < pathLen; ++i) {
@@ -568,20 +573,20 @@ public:
  * Nodes ares split based on a given refinement criterion.
  * Default criterion is based on occupancy only.
  *
- * @param K Which CGAL Kernel to use
+ * @param Real Which CGAL Kernel to use
  * @param ItemPtr The octree will store pointers of this type
  * @param Refine given criterion.
  *
  */
-template <class K, class ItemPtr, class Refine = OverflowRefine<K,ItemPtr> >
+template <class Real, class ItemPtr, class Refine = OverflowRefine<Real,ItemPtr> >
 class Octree {
 
 public:
-    typedef typename SLAL::Point3<K> Point3;   ///< A Point in 3D
-    typedef Box_3<K> Box3;             ///< Octant extent
+    typedef typename SLAL::Point3<Real> Point3;   ///< A Point in 3D
+    typedef Box_3<Real> Box3;             ///< Octant extent
     typedef list<ItemPtr> ItemPtrList; ///< What is actually stored in a leaf
     typedef set<ItemPtr> ItemPtrSet;   ///< Return type of overlap
-    typedef OctreeIterator<K,ItemPtr,Refine> Iterator; ///< Octree pre-order iterator
+    typedef OctreeIterator<Real,ItemPtr,Refine> Iterator; ///< Octree pre-order iterator
     
 protected:
     ///
@@ -595,14 +600,14 @@ protected:
     
 
 public :
-	OctreeNode<K, ItemPtr, Refine> * root;
+	OctreeNode<Real, ItemPtr, Refine> * root;
     /// Main Constructor
     /// @param theWorld extent of the world covered by the octree
     Octree() : world (Box3(Point3(-1,-1,-1), Point3(1,1,1))), root (0){
     };
     
     Octree (const Box3& theWorld) : world (theWorld), root (0) {
-       root = new OctreeLeafNode<K, ItemPtr, Refine>;
+       root = new OctreeLeafNode<Real, ItemPtr, Refine>;
     }
    
     /// destructor. 
@@ -637,15 +642,15 @@ public :
     
     /// Returns the box geometry of an octree node pointed to by an iterator
     Box3 box (const Iterator& i) const {
-        double xsize = (world.xmax() - world.xmin());
-        double ysize = (world.ymax() - world.ymin());
-        double zsize = (world.zmax() - world.zmin());
-        double x0, y0, z0;
+        Real xsize = (world.xmax() - world.xmin());
+        Real ysize = (world.ymax() - world.ymin());
+        Real zsize = (world.zmax() - world.zmin());
+        Real x0, y0, z0;
         i.minCoords (x0, y0, z0);
         Point3 minCorner (world.xmin() + x0 * xsize,
                           world.ymin() + y0 * ysize,
                           world.zmin() + z0 * zsize);
-        double sizeFraction = 1.0 / (1 << i.level());
+        Real sizeFraction = 1.0 / (1 << i.level());
         return Box3 (minCorner, 
                      Point3 (minCorner.x() + xsize * sizeFraction,
                              minCorner.y() + ysize * sizeFraction,
@@ -658,7 +663,7 @@ public :
     /// @param p Point in relation to which the distance will be computed 
     /// @return euclidean distance
     ///
-    double distance (const Point3& p) const
+    Real distance (const Point3& p) const
     {
         return root->distance (world, HUGE_VAL, p);
     }
@@ -670,7 +675,7 @@ public :
     /// @param clsPt Closest point on object.
     /// @return euclidean distance
     ///
-    double distance (const Point3& p, Point3& clsPt) const
+    Real distance (const Point3& p, Point3& clsPt) const
     {
         return root->distance (world, HUGE_VAL, p, clsPt);
     }

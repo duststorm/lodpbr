@@ -15,7 +15,7 @@ template <class Real>	class Point3
 {
 
 private:
-	
+	// This is Wonderful 
 	union
 	{
 	
