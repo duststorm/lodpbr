@@ -23,16 +23,16 @@ namespace lcgOctree {
 ///
 /// Simple templated max operator
 ///
-template <class K>
-inline K OctMAX(const K& a, const K& b) {
+template <class Real>
+inline Real OctMAX(const Real& a, const Real& b) {
   return (a<b)? b:a;
 }
 
 ///
 /// Simple templated min operator
 ///
-template <class K>
-inline K OctMIN (const K& a, const K& b) {
+template <class Real>
+inline Real OctMIN (const Real& a, const Real& b) {
   return (a<b)? a:b;
 }
 
@@ -40,8 +40,8 @@ inline K OctMIN (const K& a, const K& b) {
 /// @param q First point.
 /// @param p Second point.
 /// @return Distance between p and q.
-template <class K>
-double distance(const SLAL::Point3<K>& q, const SLAL::Point3<K>& p)
+template <class Real>
+double distance(const SLAL::Point3<Real>& q, const SLAL::Point3<Real>& p)
 {
     double a, b;
     a = (p[0] - q[0]);
@@ -57,13 +57,13 @@ double distance(const SLAL::Point3<K>& q, const SLAL::Point3<K>& p)
 ///
 /// A class describing the geometry of an octant
 ///
-template <class K>
-class Box_3 : public SLAL::BoundingBox3<K> {
+template <class Real>
+class Box_3 : public SLAL::BoundingBox3<Real> {
 
 public:
 
-typedef typename SLAL::Point3<K> Point3;
-typedef typename SLAL::BoundingBox3<K> Bbox3;
+typedef typename SLAL::Point3<Real> Point3;
+typedef typename SLAL::BoundingBox3<Real> Bbox3;
     
 /// Constructor
 /// @param p1 first corner of box
@@ -77,8 +77,8 @@ Box_3 (const Point3& p1, const Point3& p2) : Bbox3 (p1, p2) {};
 Box_3 coords (int sonIndex) const {
      Point3 p1 = this->min();
      Point3 p2 = this->max();
-     double son_min[3], son_max[3];
-     double middle[3] = {((p1[0] + p2[0]))/2,
+     Real son_min[3], son_max[3];
+     Real middle[3] = {((p1[0] + p2[0]))/2,
 				     ((p1[1] + p2[1]))/2,
 					((p1[2] + p2[2]))/2};
 
@@ -184,9 +184,9 @@ void getFaceCoordinates(int plId, Point3* pts, Point3& normal) const
 /// Returns the euclidean distance between a given point p and this box (the closest point on its surface)
 /// @param p given point.
 /// @return euclidean distance.
-double distance(const Point3& p) const
+Real distance(const Point3& p) const
 {
-    double clsPt[3]; //closest point on the box's surface to the point p
+    Real clsPt[3]; //closest point on the box's surface to the point p
     for (int i = 0; i < 3; ++i)
     {
         if (p[i] < this->min()[i])
@@ -211,16 +211,14 @@ double distance(const Point3& p) const
                      0.5*(pmax.z()+pmin.z()));
    }
 
-   //double SQRT3 = 1.73205081;
+   //Real SQRT3 = 1.73205081;
    /// Returns the radius of the smallest sphere which containts the box
-   double radius () const {
+   Real radius () const {
 
         // 0.5*deltaside*sqrt(3) 
         return 0.5*(this->max().x() - this->min().x())*1.73205081;
    }
 
 };
-
-typedef Box_3<double> BBox3;
 
 #endif

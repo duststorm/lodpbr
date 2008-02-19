@@ -106,12 +106,12 @@ public:
 	
 	inline BoundingBox3<Real> operator+(const BoundingBox3<Real>& box) const
 	{
-	  return BoundingBox3((std::min)(xmin(), box.xmin()),
-	                	  (std::min)(ymin(), box.ymin()),
-	                	  (std::min)(zmin(), box.zmin()),
-	                	  (std::max)(xmax(), box.xmax()),
-	                	  (std::max)(ymax(), box.ymax()),
-	                	  (std::max)(zmax(), box.zmax()));	
+	  return BoundingBox3<Real>((std::min)(xmin(), box.xmin()),
+	                	  		(std::min)(ymin(), box.ymin()),
+	                	  		(std::min)(zmin(), box.zmin()),
+	                	  		(std::max)(xmax(), box.xmax()),
+	                	  		(std::max)(ymax(), box.ymax()),
+	                	  		(std::max)(zmax(), box.zmax()));	
 	};	
 	
 
