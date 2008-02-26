@@ -30,7 +30,12 @@ HEADERS += . \
     lcgOctree/ocTreeBox.hpp \
     surfels/surfel.hpp \
     surfels/ply.h \
-    surfels/surfels.hpp
+    surfels/surfels.hpp \
+    lcgOctree/ocTreeInternalNode.hpp \
+    lcgOctree/ocTreeLeafNode.hpp \
+    lcgOctree/ocTreeNode.hpp \
+    lcgOctree/ocTreeIterator.hpp \
+    lcgOctree/ocTreeRefine.hpp
 SOURCES += main.cpp \
     interface/myMainWindow.cpp \
     openGLFrame/GLFrame.cpp \

@@ -4,8 +4,17 @@
 #include <list>
 #include <set>
 
-#include "ocTreeIterator.hpp"
 #include "ocTreeRefine.hpp"
+#include "ocTreeIterator.hpp"
+#include "ocTreeBox.hpp"
+
+//
+// Forward declaration of OctreeIterator
+//
+template <class Real, class ItemPtr, class Refine>
+class OctreeIterator;
+
+
 ///
 /// An Octree of Pointers to Objects
 ///
@@ -19,7 +28,7 @@ class OctreeNode {
   public:
 
     typedef typename CGL::Point3<Real>                 Point3;  ///< A Point in 3D
-    typedef Box_3<Real>                                  Box3; ///< Octant box type
+    typedef Box_3<Real>                                  Box3; ///< Octant box type    
     friend class OctreeIterator<Real, ItemPtr, Refine>;  ///< Octree iterators are friends
     typedef std::list<ItemPtr>                             ItemPtrList; ///< List of items stored inside leaf nodes
     typedef std::set<ItemPtr>                              ItemPtrSet;   ///< Return type of overlap
@@ -35,7 +44,7 @@ class OctreeNode {
     /// @param level octree level of this node
     /// @param p pointer to object
     /// @param fatherPtr reference to the pointer inside the father which points to this node
-    virtual void insert (const Box3& world, int level, const ItemPtr p, OctreeNode*& fatherPtr) = 0;
+    virtual void insert (const Box3& world, int level, const ItemPtr p, OctreeNode*& fatherPtr,int filho) = 0;
     
     virtual void split (const Box3& world, int level,OctreeNode*& fatherPtr) = 0;
     

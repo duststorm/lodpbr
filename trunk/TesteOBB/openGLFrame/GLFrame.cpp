@@ -108,7 +108,7 @@ void GLFrame::drawPoints() {
    glColor3f(0.0,1.0,0.0);
    glBegin(GL_POINTS);
              
-   //glVertex3f(midlePoint[0],midlePoint[1],midlePoint[2]);
+   glVertex3f(midlePoint[0],midlePoint[1],midlePoint[2]);
   
    glEnd();
    glEnable(GL_LIGHTING);
@@ -132,7 +132,6 @@ void GLFrame::calLimits()
 	}
 	
 	midlePoint /= surfels.surfels.size();  
-	
 		
     std::cout << octree.root->itemPtrCount() <<  " AAA" << std::endl;
     
@@ -200,8 +199,8 @@ void GLFrame::paintGL()
     		drawPoints();
     	if (renderMode_A == Model)
     	{
-    	    model();
-    		drawPoints();
+    	   // model();
+    		//drawPoints();
     	}
 
     	
@@ -209,19 +208,7 @@ void GLFrame::paintGL()
 		{
 		   //if ((*oi)->isLeaf()) {
 			  
-				drawBox(octree.world_());
 			    drawBox(octree.box(oi));
-		    
-				   glPointSize(10.0);
-				   glColor3f(0.0,1.0,0.0);
-				   glBegin(GL_POINTS);
-				   
-
-				   glVertex3f(oi.mean()[0],oi.mean()[1],oi.mean()[2]);
-				  
-				   glEnd();
-				   glEnable(GL_LIGHTING);
-				   glPointSize(1.0);	
 				   
 			//}
 		}

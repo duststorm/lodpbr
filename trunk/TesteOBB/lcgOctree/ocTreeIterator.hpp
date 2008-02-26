@@ -4,10 +4,15 @@
 #include <vector>
 
 #include "ocTreeNode.hpp"
-#include "ocTreeRefine.hpp"
 #include "ocTreeInternalNode.hpp"
 
 #define debug(msg)
+
+template <class Real, class ItemPtr, class Refine>
+class OctreeInternalNode;
+
+template <class Real, class ItemPtr, class Refine>
+class OctreeNode;
 
 template <class Real, class ItemPtr, class Refine = OverflowRefine<Real,ItemPtr> >
 class OctreeIterator {
