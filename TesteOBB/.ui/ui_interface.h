@@ -1,8 +1,8 @@
 /********************************************************************************
 ** Form generated from reading ui file 'interface.ui'
 **
-** Created: Tue Feb 19 13:58:00 2008
-**      by: Qt User Interface Compiler version 4.3.0
+** Created: Mon Feb 25 22:00:45 2008
+**      by: Qt User Interface Compiler version 4.3.2
 **
 ** WARNING! All changes made in this file will be lost when recompiling ui file!
 ********************************************************************************/
@@ -33,6 +33,7 @@ public:
     QAction *action_Smooth_A;
     QAction *action_Show_A;
     QAction *action_Points_A;
+    QAction *action_Model;
     QWidget *centralwidget;
     QVBoxLayout *vboxLayout;
     GLFrame *glFrame;
@@ -48,9 +49,7 @@ public:
     if (MainWindow->objectName().isEmpty())
         MainWindow->setObjectName(QString::fromUtf8("MainWindow"));
     MainWindow->setWindowModality(Qt::WindowModal);
-    QSize size(665, 550);
-    size = size.expandedTo(MainWindow->minimumSizeHint());
-    MainWindow->resize(size);
+    MainWindow->resize(665, 550);
     MainWindow->setLayoutDirection(Qt::LeftToRight);
     MainWindow->setDockNestingEnabled(true);
     action_Open_Surface_A = new QAction(MainWindow);
@@ -68,6 +67,8 @@ public:
     action_Show_A->setEnabled(true);
     action_Points_A = new QAction(MainWindow);
     action_Points_A->setObjectName(QString::fromUtf8("action_Points_A"));
+    action_Model = new QAction(MainWindow);
+    action_Model->setObjectName(QString::fromUtf8("action_Model"));
     centralwidget = new QWidget(MainWindow);
     centralwidget->setObjectName(QString::fromUtf8("centralwidget"));
     vboxLayout = new QVBoxLayout(centralwidget);
@@ -108,6 +109,7 @@ public:
     toolBar_A->addAction(action_Wireframe_A);
     toolBar_A->addAction(action_Smooth_A);
     toolBar_A->addAction(action_Points_A);
+    toolBar_A->addAction(action_Model);
 
     retranslateUi(MainWindow);
     QObject::connect(MainWindow, SIGNAL(destroyed()), MainWindow, SLOT(close()));
@@ -125,6 +127,7 @@ public:
     action_Smooth_A->setText(QApplication::translate("MainWindow", "Smooth", 0, QApplication::UnicodeUTF8));
     action_Show_A->setText(QApplication::translate("MainWindow", "Show A", 0, QApplication::UnicodeUTF8));
     action_Points_A->setText(QApplication::translate("MainWindow", "Points", 0, QApplication::UnicodeUTF8));
+    action_Model->setText(QApplication::translate("MainWindow", "Draw Model", 0, QApplication::UnicodeUTF8));
     push_Button_Vertex_Around->setText(QApplication::translate("MainWindow", "Intersection", 0, QApplication::UnicodeUTF8));
     menuSair->setTitle(QApplication::translate("MainWindow", "&File", 0, QApplication::UnicodeUTF8));
     menuHelp->setTitle(QApplication::translate("MainWindow", "Help", 0, QApplication::UnicodeUTF8));

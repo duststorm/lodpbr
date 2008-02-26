@@ -25,6 +25,8 @@ public slots:
 	
 	void on_action_Show_A_triggered();
 
+	void on_action_Model_triggered();
+	
 	void on_action_Quit_MainWin_triggered();
 	void on_push_Button_Vertex_Around_clicked();
 

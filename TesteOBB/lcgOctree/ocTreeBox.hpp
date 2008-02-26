@@ -41,7 +41,7 @@ inline Real OctMIN (const Real& a, const Real& b) {
 /// @param p Second point.
 /// @return Distance between p and q.
 template <class Real>
-double distance(const SLAL::Point3<Real>& q, const SLAL::Point3<Real>& p)
+double distance(const CGL::Point3<Real>& q, const CGL::Point3<Real>& p)
 {
     double a, b;
     a = (p[0] - q[0]);
@@ -58,26 +58,58 @@ double distance(const SLAL::Point3<Real>& q, const SLAL::Point3<Real>& p)
 /// A class describing the geometry of an octant
 ///
 template <class Real>
-class Box_3 : public SLAL::BoundingBox3<Real> {
+class Box_3 : public CGL::BoundingBox3<Real> {
 
 public:
 
-typedef typename SLAL::Point3<Real> Point3;
-typedef typename SLAL::BoundingBox3<Real> Bbox3;
+typedef typename CGL::Point3<Real> Point3;
+typedef typename CGL::BoundingBox3<Real> Bbox3;
     
 /// Constructor
 /// @param p1 first corner of box
 /// @param p2 second corner of box
 Box_3 (const Point3& p1, const Point3& p2) : Bbox3 (p1, p2) {};
 
+
 /// Returns the box corresponding to the suboctant of this box corresponding to
-/// son sonIndex
+/// son sonIndex of an Point Octree
+/// @param sonIndex index of the son octant (between 0 and 7)
+/// @return box corresponding to the suboctant
+
+Box_3 coords (int sonIndex, const Point3& mean) const {
+     Point3 p1 = this->min();
+     Point3 p2 = this->max();
+     Real son_min[3], son_max[3];
+     // Center  of Region Octree
+     Real middle[3] = {	mean[0],
+				     	mean[1],
+				     	mean[2]};
+
+     int mult = 1;
+     for (int d = 0; d < 3 ; d++){
+         if ((sonIndex & mult) == 0) {
+             son_min[d] = (p1[d]);
+             son_max[d] = middle[d];
+         }
+         else {
+             son_min[d] = middle[d];
+             son_max[d] = (p2[d]);
+         }
+         mult *= 2;
+     }
+     return Box_3 (Point3(son_min[0], son_min[1], son_min[2]), Point3(son_max[0], son_max[1], son_max[2]));
+}
+
+
+/// Returns the box corresponding to the suboctant of this box corresponding to
+/// son sonIndex of an Region Octree
 /// @param sonIndex index of the son octant (between 0 and 7)
 /// @return box corresponding to the suboctant
 Box_3 coords (int sonIndex) const {
      Point3 p1 = this->min();
      Point3 p2 = this->max();
      Real son_min[3], son_max[3];
+     // Center  of Region Octree
      Real middle[3] = {((p1[0] + p2[0]))/2,
 				     ((p1[1] + p2[1]))/2,
 					((p1[2] + p2[2]))/2};
@@ -96,6 +128,7 @@ Box_3 coords (int sonIndex) const {
      }
      return Box_3 (Point3(son_min[0], son_min[1], son_min[2]), Point3(son_max[0], son_max[1], son_max[2]));
 }
+
 
 ///
 /// Checks whether a point is inside this box.

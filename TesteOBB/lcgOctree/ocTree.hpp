@@ -20,10 +20,11 @@
 #include "ocTreeBox.hpp"
 #include "ocTreeIntersection.hpp"
 
-#include <math.h>
+#include <cmath>
 #include <list>
 #include <set>
 #include <map>
+#include <numeric>
 
 using namespace std;
 
@@ -47,7 +48,7 @@ struct OctreeRefine {
 /// A node is refined whenever it holds more than "Max" items, and 
 /// the subdivision level has not reached "LevelMax".
 ///
-template <class Real, class ItemPtr, int Max = 1, int LevelMax = 5>
+template <class Real, class ItemPtr, int Max = 10, int LevelMax = 10>
 struct OverflowRefine : public OctreeRefine <Real, ItemPtr> {
     ///
     /// Split a leaf node iff the list contains more than Max items
@@ -78,12 +79,13 @@ class OctreeNode {
 
   public:
 
-    typedef typename SLAL::Point3<Real>                 Point3;  ///< A Point in 3D
+    typedef typename CGL::Point3<Real>                 Point3;  ///< A Point in 3D
     typedef Box_3<Real>                                  Box3; ///< Octant box type
     friend class OctreeIterator<Real, ItemPtr, Refine>;  ///< Octree iterators are friends
     typedef list<ItemPtr>                             ItemPtrList; ///< List of items stored inside leaf nodes
     typedef set<ItemPtr>                              ItemPtrSet;   ///< Return type of overlap
-
+    
+  
     /// Returns a pointer to the octree leaf which contains point p
     /// @param p point which should be inside a descendant leaf
     /// @param world dimensions of this node
@@ -95,6 +97,8 @@ class OctreeNode {
     /// @param p pointer to object
     /// @param fatherPtr reference to the pointer inside the father which points to this node
     virtual void insert (const Box3& world, int level, const ItemPtr p, OctreeNode*& fatherPtr) = 0;
+    
+    virtual void split (const Box3& world, int level,OctreeNode*& fatherPtr) = 0;
     
     /// Returns the number of pointers to items inserted into this node
     virtual int itemPtrCount () const = 0;
@@ -128,6 +132,9 @@ class OctreeNode {
     
     // Virtual destructor 
     virtual ~OctreeNode(){};
+    
+   
+  
 };
 
 // This is a forward declaration of OctreeLeafNode so that we may refer to
@@ -144,19 +151,29 @@ class OctreeInternalNode : public OctreeNode<Real, ItemPtr, Refine> {
 
     typedef OctreeNode<Real, ItemPtr, Refine> OctreeNode;      
 
-    typedef typename SLAL::Point3<Real> Point3;  ///< A Point in 3D
+    typedef typename CGL::Point3<Real> Point3;  ///< A Point in 3D
     typedef Box_3<Real> Box3; ///< Octant box type
     typedef list<ItemPtr> ItemPtrList; ///< List of items stored inside leaf nodes
     typedef set<ItemPtr> ItemPtrSet;   ///< Return type of overlap
     typedef typename set<ItemPtr>::iterator ItemPtrSetIterator;
 
     OctreeNode* son[8];    
-
+       
     friend class OctreeLeafNode<Real, ItemPtr, Refine>; ///< Leaf nodes are friends
     friend class OctreeIterator<Real, ItemPtr, Refine>; ///< Octree iterators are friends
     
 public:
 
+	virtual void setMean ( const Point3& m)
+	{
+		this->mean_ = m;
+	}
+	
+	virtual Point3 mean () const
+	{
+		return this->mean_;
+	}
+	
     /// constructor
     OctreeInternalNode () {
        son [0] = son [1] = son [2] = son [3] =
@@ -201,7 +218,7 @@ public:
     virtual void insert (const Box3& world, int level, const ItemPtr p, OctreeNode*& fatherPtr) {
 
         for (int index = 0; index < 8; ++index) {
-            Box3 suboctant = world.coords(index);
+            Box3 suboctant = world.coords(index,mean_);
 
             // It is necessary to define a method do_intersect (Box_3, Item)
             if (lcgOctree::checkIntersection(suboctant, p))
@@ -211,6 +228,19 @@ public:
         }
     }
 
+    
+    virtual void split (const Box3& world, int level,OctreeNode*& fatherPtr ) 
+    {
+    	    	   	
+    	for (int index = 0; index < 8; ++index) 
+    	{
+           son[index]->split(world,level+1,fatherPtr);
+    	}
+
+    	
+    }
+    
+    
     /// Returns the number of pointers to items inserted into this node
     virtual int itemPtrCount () const {
         int sum = 0;
@@ -223,7 +253,7 @@ public:
         ItemPtrSet internal_overlap;
 
         for (int index = 0; index < 8; ++index) {
-           Box3 suboctant = world.coords(index);
+           Box3 suboctant = world.coords(index,mean_);
 
            // do_intersect must be overloaded to support also
            // the box2box check.
@@ -274,14 +304,14 @@ public:
         
         for (int i = 0; i < 8; ++i)
         { 
-            iSon.insert (pair <Real, int> (world.coords(i).distance(p), i));
+            iSon.insert (pair <Real, int> (world.coords(i,mean_).distance(p), i));
         }
         for (multimapRealIterator j = iSon.begin (); j != iSon.end(); ++j)
         {
             Real boxDist = j->first;
             if (abs(boxDist) > abs(best)) break;
             int sonIndex = j->second;
-            Real currentDist = son[sonIndex]->distance (world.coords (sonIndex),  best, p, clsPt);
+            Real currentDist = son[sonIndex]->distance (world.coords (sonIndex,mean_),  best, p, clsPt);
             if (abs(currentDist) < abs(best))
             {
                 best = currentDist;
@@ -292,6 +322,10 @@ public:
     
     /// Returns true or false depending on whether this is leaf node or not
     virtual bool isLeaf () const { return false; }
+    
+private:
+	
+	  Point3 mean_;
 
 };
 
@@ -302,12 +336,12 @@ public:
 template <class Real, class ItemPtr, class Refine = OverflowRefine<Real,ItemPtr> >
 class OctreeLeafNode : public OctreeNode<Real, ItemPtr, Refine> {
 
-  public:
+public:
 
     typedef OctreeNode<Real, ItemPtr, Refine> OctreeNode;          
     typedef OctreeInternalNode<Real, ItemPtr, Refine> OctreeInternalNode;
     
-    typedef typename SLAL::Point3<Real> Point3;  ///< A Point in 3D
+    typedef CGL::Point3<Real> Point3;  ///< A Point in 3D
     typedef Box_3<Real> Box3; ///< Octant box type
 //    friend class OctreeIterator<Real, ItemPtr, Refine>; ///< Octree iterators are friends
     typedef list<ItemPtr> ItemPtrList; ///< List of items stored inside leaf nodes
@@ -341,22 +375,59 @@ class OctreeLeafNode : public OctreeNode<Real, ItemPtr, Refine> {
     virtual void insert (const Box3& world, int level, const ItemPtr p, OctreeNode*& fatherPtr) {
 
         PtrList.push_back(p);
-
-        // A maximum of elements, MaxItems, must be declared
-        if (Refine::split (world, level, PtrList)) {
-            // Overflow! Redistribute the list
-            OctreeInternalNode * newOctreeInternalNode = new OctreeInternalNode ();
-            fatherPtr = newOctreeInternalNode;
-            newOctreeInternalNode->son[0] = this;
-            for (int i = 1; i < 8; i++) newOctreeInternalNode->son[i] = new OctreeLeafNode ();
-            list<ItemPtr> oldPtrList = PtrList;
-            PtrList.clear();
-            for (listItemPtrIterator pi = oldPtrList.begin (); pi != oldPtrList.end(); ++pi) {
-                newOctreeInternalNode->insert (world, level + 1, *pi, fatherPtr);
-            }
-        }
+        
     }
 
+    
+   virtual void split( const Box3& world, int level,OctreeNode*& fatherPtr ) 
+   {
+       // A maximum of elements, MaxItems, must be declared
+	   cout << PtrList.size() << endl; 
+       if (Refine::split (world, level, PtrList)) 
+       {
+           // Overflow! Redistribute the list
+           OctreeInternalNode * newOctreeInternalNode = new OctreeInternalNode ();
+           fatherPtr = newOctreeInternalNode;
+           
+           newOctreeInternalNode->son[0] = this;
+           
+           for (int i = 1; i < 8; i++)
+           {
+           		newOctreeInternalNode->son[i] = new OctreeLeafNode ();
+           }
+           
+           list<ItemPtr> oldPtrList = PtrList;
+           
+           Point3 m = Point3();
+           
+           for (listItemPtrIterator it = PtrList.begin() ; it != PtrList.end(); ++it)
+           {
+           		m  += *(*it);
+           }
+                             
+           m /= PtrList.size();
+          
+           newOctreeInternalNode->setMean(m);
+           
+           PtrList.clear();
+           
+           for (listItemPtrIterator pi = oldPtrList.begin (); pi != oldPtrList.end(); ++pi) 
+           {
+               newOctreeInternalNode->insert (world, level + 1, *pi, fatherPtr);         
+           }
+           
+           for (int index = 0; index < 8; ++index) 
+           {
+        	   newOctreeInternalNode->son[index]->split(world,level+1,fatherPtr);
+       	   }
+           
+           
+ 
+           
+       }
+	   
+   }
+    
     /// Returns the number of pointers to items inserted into this node
     virtual int itemPtrCount () const {
         return PtrList.size();
@@ -409,8 +480,11 @@ class OctreeLeafNode : public OctreeNode<Real, ItemPtr, Refine> {
         return distance (world, best, p, c);
     }
     
+    
     /// Returns true or false depending on whether this is leaf node or not
     virtual bool isLeaf () const { return true; }
+    
+	  
 };
 
 #define debug(msg) // cout << msg << endl
@@ -424,6 +498,8 @@ class OctreeIterator {
     typedef OctreeNode<Real, ItemPtr, Refine> Node; ///< Octree Node
     typedef OctreeInternalNode<Real, ItemPtr, Refine> InternalNode; ///< Internal OctreeNode
     typedef Node* NodePtr; ///< Pointer to octree node
+    typedef CGL::Point3<Real> Point3; 
+    typedef Box_3<Real> Box3;             ///< Octant extent
     
     vector<NodePtr*> path; ///< Path from root to pointed node
     int pathLen; ///< Path length
@@ -446,9 +522,16 @@ public:
     
     /// Tells when an iterator cannot be dereferenced
     bool null () const { return root == 0 || pathLen < 0; }
+
     
     /// Level of the node inside the octree (Root is level 0)
     int level () const { return pathLen; }
+
+  Point3 mean ( void ) const { 
+    if (pathLen > 1)
+      if ((*path[pathLen-1])->isLeaf()) 
+	return father()->mean(); 
+  }
     
     /// Pointer to father node. Pre-condition: node is not root.
     InternalNode * father () const {
@@ -469,20 +552,35 @@ public:
     /// Returns in x,y,z the coordinates of the minimum corner of the 
     /// box occupied by the node. The root node is assumed to be of size
     /// 1 and have min coords = (0,0,0)
-    void minCoords (Real& x, Real& y, Real& z) const {
-        Real sz = 1.0;
-        x = y = z = 0.0;
-        InternalNode* fatherNode = (InternalNode*) root;
-        for (int i = 0; i < pathLen; ++i) {
-            sz /= 2;
-            int ison = path [i] - fatherNode->son;
-            assert (ison >= 0 && ison < 8);
-            if (ison & 1) x += sz;
-            if (ison & 2) y += sz;
-            if (ison & 4) z += sz;
-            fatherNode = (InternalNode*) (*path [i]);
-        }
-    }
+  void coords (const Box3& world, Real& minx, Real& miny, Real& minz, Real& maxx, Real& maxy, Real& maxz) const 
+  {
+
+    minx = world.xmin();
+    miny = world.ymin();
+    minz = world.zmin();
+    maxx = world.xmin();
+    maxy = world.ymin();
+    maxz = world.zmin();
+	
+    InternalNode* fatherNode = (InternalNode*) root;
+    for (int i = 0; i < pathLen; ++i) 
+    {
+    	 int ison = path [i] - fatherNode->son;
+    	 
+    	 assert (ison >= 0 && ison < 8);
+    	 
+    	 if (ison & 1) minx = fatherNode->mean().x();
+    	 else maxx = fatherNode->mean().x();
+	  
+    	 if (ison & 2) miny = fatherNode->mean().y();
+    	 else maxy = fatherNode->mean().y();
+
+    	 if (ison & 4) minz = fatherNode->mean().z();
+    	 else maxz = fatherNode->mean().z();
+
+    	 fatherNode = (InternalNode*) (*path [i]);
+         }
+  }
     
     /// Equality predicate
     bool operator== (const OctreeIterator& i) const {
@@ -582,13 +680,13 @@ template <class Real, class ItemPtr, class Refine = OverflowRefine<Real,ItemPtr>
 class Octree {
 
 public:
-    typedef typename SLAL::Point3<Real> Point3;   ///< A Point in 3D
+    typedef typename CGL::Point3<Real> Point3;   ///< A Point in 3D
     typedef Box_3<Real> Box3;             ///< Octant extent
     typedef list<ItemPtr> ItemPtrList; ///< What is actually stored in a leaf
     typedef set<ItemPtr> ItemPtrSet;   ///< Return type of overlap
     typedef OctreeIterator<Real,ItemPtr,Refine> Iterator; ///< Octree pre-order iterator
     
-protected:
+  protected:
     ///
     /// World covered by this octree
     ///
@@ -619,6 +717,11 @@ public :
          root->insert (world, 0, p, root);
     }                   
 
+    void split () 
+    {
+    	root->split(world, 0,root);
+    }
+    
     /// Returns the number of pointers to items inserted into this octree
     virtual int itemPtrCount () const {
       return root->itemPtrCount();
@@ -635,6 +738,12 @@ public :
         return Iterator (root);
     }
     
+    Box3 world_()  const
+    {
+    	return world;	
+    }
+    
+    
     /// Returns an iterator to past the end of the octree
     Iterator end () {
         return Iterator ();
@@ -645,16 +754,20 @@ public :
         Real xsize = (world.xmax() - world.xmin());
         Real ysize = (world.ymax() - world.ymin());
         Real zsize = (world.zmax() - world.zmin());
-        Real x0, y0, z0;
-        i.minCoords (x0, y0, z0);
-        Point3 minCorner (world.xmin() + x0 * xsize,
-                          world.ymin() + y0 * ysize,
-                          world.zmin() + z0 * zsize);
-        Real sizeFraction = 1.0 / (1 << i.level());
-        return Box3 (minCorner, 
-                     Point3 (minCorner.x() + xsize * sizeFraction,
-                             minCorner.y() + ysize * sizeFraction,
-                             minCorner.z() + zsize * sizeFraction));
+        Real x0, y0, z0, x1, y1, z1;
+        i.coords (world, x0, y0, z0, x1, y1, z1);
+	Point3 minCorner (x0, y0, z0);
+	Point3 maxCorner (x1, y1, z1);
+	return Box3 (minCorner, maxCorner);
+
+//         Point3 minCorner (world.xmin() + x0,// * xsize,
+//                           world.ymin() + y0,// * ysize,
+//                           world.zmin() + z0);// * zsize);
+//         Real sizeFraction = 1.0 / (1 << i.level());
+//         return Box3 (minCorner, 
+//                      Point3 (minCorner.x() + xsize * sizeFraction,
+//                              minCorner.y() + ysize * sizeFraction,
+//                              minCorner.z() + zsize * sizeFraction));
     }
     
     /// Returns the euclidean distance between p and the closest object stored

@@ -3,7 +3,7 @@
 
 #include <iostream>
 
-namespace SLAL {
+namespace CGL {
 
 template<class T> class Matrix3x3
 {
