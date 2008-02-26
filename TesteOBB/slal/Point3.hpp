@@ -97,8 +97,8 @@ namespace CGL
 			: mX(x), mY(y), mZ(z) {};
 			
 	   /*!@brief Constructor with X, Y and Z initialization of any type.
-	   * @details Initialize all abscissas of any. Try cast to the Real type of the class
-	   * @param[in] array of any type. 
+	   *  @details Initialize all abscissas of any. Try cast to the Real type of the class
+	   *  @param[in] array of any type. 
        */ 							
 		template < typename P >
 		Point3 (const P* p)

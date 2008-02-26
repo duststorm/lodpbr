@@ -4,10 +4,16 @@
 #include <list>
 #include <set>
 
-#include "ocTreeIterator.hpp"
-#include "ocTreeRefine.hpp"
 #include "ocTreeNode.hpp"
-//#include "ocTreeInternalNode.hpp"
+#include "ocTreeInternalNode.hpp"
+#include "ocTreeBox.hpp"
+#include "ocTreeIntersection.hpp"
+//
+// Forward declaration of OctreeIterator
+//
+template <class Real, class ItemPtr, class Refine>
+class OctreeInternalNode;
+
 
 /// 
 /// This represents a leaf octree node. All indexed data (items) are
@@ -52,9 +58,10 @@ public:
     /// @param level octree level of this node
     /// @param p pointer to object
     /// @param fatherPtr reference to the pointer inside the father which points to this node
-    virtual void insert (const Box3& world, int level, const ItemPtr p, OctreeNode*& fatherPtr) {
+    virtual void insert (const Box3& world, int level, const ItemPtr p, OctreeNode*& fatherPtr, int filho) {
 
         PtrList.push_back(p);
+        std::cout << PtrList.size() << "filho= " << filho << "| " << level << " |"  << *p << " Inserito" << std::endl;
         
     }
 
@@ -62,49 +69,35 @@ public:
    virtual void split( const Box3& world, int level,OctreeNode*& fatherPtr ) 
    {
        // A maximum of elements, MaxItems, must be declared
-	   std::cout << PtrList.size() << std::endl; 
+	   
        if (Refine::split (world, level, PtrList)) 
-       {
-           // Overflow! Redistribute the list
+       { 
+    	   std::cout << "split" << std::endl;
+
+    	   // Overflow! Redistribute the list
            OctreeInternalNode * newOctreeInternalNode = new OctreeInternalNode ();
            fatherPtr = newOctreeInternalNode;
-           
            newOctreeInternalNode->son[0] = this;
-           
-           for (int i = 1; i < 8; i++)
-           {
-           		newOctreeInternalNode->son[i] = new OctreeLeafNode ();
-           }
-           
+           for (int i = 1; i < 8; i++) newOctreeInternalNode->son[i] = new OctreeLeafNode ();
            std::list<ItemPtr> oldPtrList = PtrList;
-           
-           Point3 m = Point3();
-           
+           Point3 m;
            for (listItemPtrIterator it = PtrList.begin() ; it != PtrList.end(); ++it)
            {
            		m  += *(*it);
            }
-                             
            m /= PtrList.size();
-          
            newOctreeInternalNode->setMean(m);
-           
            PtrList.clear();
-           
-           for (listItemPtrIterator pi = oldPtrList.begin (); pi != oldPtrList.end(); ++pi) 
-           {
-               newOctreeInternalNode->insert (world, level + 1, *pi, fatherPtr);         
+           std::cout << oldPtrList.size() << "TAMANHO" << std::endl; 
+           for (listItemPtrIterator pi = oldPtrList.begin (); pi != oldPtrList.end(); ++pi) {
+        	   std::cout << *(*pi) << " felipe" << std::endl;
+               newOctreeInternalNode->insert (world, level, *pi, fatherPtr,0);
            }
-           
-           for (int index = 0; index < 8; ++index) 
-           {
-        	   newOctreeInternalNode->son[index]->split(world,level+1,fatherPtr);
-       	   }
-           
-           
- 
-           
+                     
+                    
        }
+       
+       std::cout << "não split" << std::endl;
 	   
    }
     

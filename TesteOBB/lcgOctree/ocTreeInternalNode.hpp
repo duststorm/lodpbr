@@ -5,10 +5,10 @@
 #include <set>
 #include <map>
 
-#include "ocTreeIterator.hpp"
 #include "ocTreeRefine.hpp"
 #include "ocTreeNode.hpp"
 #include "ocTreeLeafNode.hpp"
+
 
 ///
 /// This represents an internal Octree Node. These point to eight 
@@ -28,7 +28,7 @@ class OctreeInternalNode : public OctreeNode<Real, ItemPtr, Refine> {
     OctreeNode* son[8];    
        
     friend class OctreeLeafNode<Real, ItemPtr, Refine>; ///< Leaf nodes are friends
-    friend class OctreeIterator; ///< Octree iterators are friends
+    friend class OctreeIterator<Real, ItemPtr, Refine>; ///< Octree iterators are friends
     
 public:
 
@@ -83,16 +83,18 @@ public:
     /// @param level octree level of this node
     /// @param p pointer to object
     /// @param fatherPtr reference to the pointer inside the father which points to this node
-    virtual void insert (const Box3& world, int level, const ItemPtr p, OctreeNode*& fatherPtr) {
+    virtual void insert (const Box3& world, int level, const ItemPtr p, OctreeNode*& fatherPtr,int filho) {
 
         for (int index = 0; index < 8; ++index) {
             Box3 suboctant = world.coords(index,mean_);
-
+            
             // It is necessary to define a method do_intersect (Box_3, Item)
             if (lcgOctree::checkIntersection(suboctant, p))
             {
-                son[index]->insert(suboctant, level+1, p, son[index]);
+              	son[index]->insert(suboctant, level+1, p, son[index],index);
             }
+            
+            
         }
     }
 
@@ -102,7 +104,7 @@ public:
     	    	   	
     	for (int index = 0; index < 8; ++index) 
     	{
-           son[index]->split(world,level+1,fatherPtr);
+           son[index]->split(world,level,fatherPtr);
     	}
 
     	
