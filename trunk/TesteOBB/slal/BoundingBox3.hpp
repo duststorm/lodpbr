@@ -3,7 +3,7 @@
 
 #include "Point3.hpp" 
 
-namespace SLAL
+namespace CGL
 {
 
 template < class Real> 

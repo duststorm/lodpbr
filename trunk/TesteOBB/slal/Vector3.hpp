@@ -7,7 +7,7 @@
 #include <cmath>
 
 
-namespace SLAL { 
+namespace CGL { 
 
 template <class Real>	class Vector3
 {
@@ -47,6 +47,7 @@ public:
     	this->x_ = static_cast< Real > ( u[0] );
     	this->y_ = static_cast< Real > ( u[1] );
     	this->z_ = static_cast< Real > ( u[2] );
+    	
 	};
 	
 	Vector3 ( const Vector3<Real>& u)
@@ -323,9 +324,9 @@ public:
 
 
 /* Teste operator+ e operator-
-SLAL::Vector3<double> v1(1.0,1.0,1.0);
-SLAL::Vector3<double> v2(-1.0,-1.0,-1.0);
-SLAL::Vector3<double> v3(0.0,0.0,0.0);
+CGL::Vector3<double> v1(1.0,1.0,1.0);
+CGL::Vector3<double> v2(-1.0,-1.0,-1.0);
+CGL::Vector3<double> v3(0.0,0.0,0.0);
 
 v3 = v1 + v2;
 std::cout << v3.x << v3.y << v3.z << "#v1+v2#"<<std::endl;
@@ -342,8 +343,8 @@ std::cout << v3.x << v3.y << v3.z << "#+v1+v2#"<<std::endl;
 */
 
 /*Teste operator*
-	SLAL::Vector3<double> v1(1.0,1.0,1.0);
-	SLAL::Vector3<double> v3(0.0,0.0,0.0);
+	CGL::Vector3<double> v1(1.0,1.0,1.0);
+	CGL::Vector3<double> v3(0.0,0.0,0.0);
 	
 	v3 = 3.0 * v1;
 	std::cout << v3.x << v3.y << v3.z << "#3*v1#"<<std::endl;
@@ -362,8 +363,8 @@ std::cout << v3.x << v3.y << v3.z << "#+v1+v2#"<<std::endl;
 */
 
 /* Teste operator* (puduto interno ou  produto escalar) 
-SLAL::Vector3<double> v1(6.0,-1.0,0.0);
-SLAL::Vector3<double> v2(0.5,-4.0,0.0);
+CGL::Vector3<double> v1(6.0,-1.0,0.0);
+CGL::Vector3<double> v2(0.5,-4.0,0.0);
 double t = 0.0 ;
 t = v1 * v2
 std::cout << t << "#(v1)*(v2)#"<<std::endl;

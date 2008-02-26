@@ -12,25 +12,25 @@ using namespace std;
 int main(int argc, char *argv[])
 {
 	
-	SLAL::Point3<double> p;
-	SLAL::Point3<double> q;
+	CGL::Point3<double> p;
+	CGL::Point3<double> q;
 	
 	int  b[3] = {1,1,1};
 	
-	SLAL::Vector3<double> v(b);
+	CGL::Vector3<double> v(b);
 	
 	v = v.norm();
 	
 	
-	SLAL::Matrix3x3<double> A (2.0,5.0,3.0,
+	CGL::Matrix3x3<double> A (2.0,5.0,3.0,
 								4.0,8.0,9.0,
 								-8.0,9.0,4.0);
 	
-	SLAL::Matrix3x3<double> B (-8.0,9.0,1.0,
+	CGL::Matrix3x3<double> B (-8.0,9.0,1.0,
 								2.0,5.0,0.0,
 								6.0,7.0,7.0);
 	
-	SLAL::Matrix3x3<double> C = B * A;
+	CGL::Matrix3x3<double> C = B * A;
 	
 	double a = 0.0;
 	

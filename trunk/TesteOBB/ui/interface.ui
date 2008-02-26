@@ -79,6 +79,7 @@
    <addaction name="action_Wireframe_A" />
    <addaction name="action_Smooth_A" />
    <addaction name="action_Points_A" />
+   <addaction name="action_Model" />
   </widget>
   <action name="action_Open_Surface_A" >
    <property name="text" >
@@ -120,6 +121,11 @@
   <action name="action_Points_A" >
    <property name="text" >
     <string>Points</string>
+   </property>
+  </action>
+  <action name="action_Model" >
+   <property name="text" >
+    <string>Draw Model</string>
    </property>
   </action>
  </widget>

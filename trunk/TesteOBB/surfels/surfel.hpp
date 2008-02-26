@@ -38,8 +38,8 @@ template <class Real > class Surfel
 {
  public:
 		
-	 typedef SLAL::Point3<Real> Point3; 
-	 typedef SLAL::Vector3<Real> Vector3;
+	 typedef CGL::Point3<Real> Point3; 
+	 typedef CGL::Vector3<Real> Vector3;
 		 
 	 Surfel (const Point3& 	position, 
 			 const Vector3& normal, 
@@ -66,6 +66,12 @@ template <class Real > class Surfel
 	     this->ID_ 			= id;
 	     this->pError_ 		= static_cast<Real> (0);
 	    
+	 };
+	 
+	 Surfel (const Point3& 	position)
+	 {
+		 this->position_ 		= position;
+	         
 	 };
 	
     

@@ -3,6 +3,9 @@
 
 #include "GLFrame.hpp"
 
+
+#define DA_APLICACAO_PASSADA 0
+
 GLFrame::GLFrame(QWidget *parent):QGLWidget(parent)
 {
 	
@@ -18,7 +21,7 @@ GLFrame::GLFrame(QWidget *parent):QGLWidget(parent)
 	renderMode_A = PolygonWireFrame;
 	show_A 	= true;
 	
-	pontomedio = SLAL::Point3<double>();
+	midlePoint = CGL::Point3<double>();
 	
 	surfels = Surfels<double>();
 	
@@ -64,27 +67,48 @@ void GLFrame::initializeGL()
 
 }
 
+void GLFrame::model()
+{
+	
+	glDisable(GL_LIGHTING);		
+	glPointSize(2.0);
+	glColor3f(0.0,0.0,1.0);
+	glBegin(GL_POINTS);
+	   
+	std::vector<Surfel<double> >::iterator surf =  surfels.surfels.begin();
+	   
+	  
+	while ( surf != surfels.surfels.end() ) {
+		        
+	    glVertex3f(surf->position(0),surf->position(1),surf->position(2));
+	    ++surf;
+	}
+	   glEnd();
+	
+}
+
 void GLFrame::drawPoints() {
    
    glDisable(GL_LIGHTING);		
-   glPointSize(5.0);
+   glPointSize(3.0);
    glColor3f(1.0,0.0,0.0);
    glBegin(GL_POINTS);
    
    std::vector<Surfel<double> >::iterator surf =  surfels.surfels.begin();
    
+  
    while ( surf != surfels.surfels.end() ) {
 	        
       glVertex3f(surf->position(0),surf->position(1),surf->position(2));
-      
       ++surf;
    }
+   glEnd();
    
    glPointSize(10.0);
    glColor3f(0.0,1.0,0.0);
    glBegin(GL_POINTS);
              
-   glVertex3f(pontomedio[0],pontomedio[1],pontomedio[2]);
+   //glVertex3f(midlePoint[0],midlePoint[1],midlePoint[2]);
   
    glEnd();
    glEnable(GL_LIGHTING);
@@ -93,30 +117,33 @@ void GLFrame::drawPoints() {
 
 void GLFrame::calLimits()
 {
-	Box_3<double> world = Box_3<double>( SLAL::Point3<double>(surfels.box().xmin(),surfels.box().ymin(),surfels.box().zmin()),
-				   						 SLAL::Point3<double>(surfels.box().xmax(),surfels.box().ymax(),surfels.box().zmax()));
+	
+	Box_3<double> world = Box_3<double>( CGL::Point3<double>(surfels.box().xmin(),surfels.box().ymin(),surfels.box().zmin()),
+				   						 CGL::Point3<double>(surfels.box().xmax(),surfels.box().ymax(),surfels.box().zmax()));
 	 
-	octree = Octree<double,SLAL::Point3<double>*>(world) ;
-
+	octree = Octree<double,CGL::Point3<double>*>(world) ;
+	
 	std::vector<Surfel<double> >::iterator surf =  surfels.surfels.begin();
+	while ( surf != surfels.surfels.end() ) {
+		CGL::Point3<double> *p = new CGL::Point3<double>(surf->position(0),surf->position(1),surf->position(2));
+		octree.insert (p);
+	    ++surf;
+	    midlePoint += surf->position();
+	}
 	
-    while( surf != surfels.surfels.end() ) 
-    {
-    	pontomedio += surf->position();
-    	SLAL::Point3<double> *fh = new SLAL::Point3<double>(surf->position(0),surf->position(1),surf->position(2));
-        octree.insert (fh);
-        surf++;
-    }
+	midlePoint /= surfels.surfels.size();  
 	
-    pontomedio /= surfels.surfels.size();
+		
+    std::cout << octree.root->itemPtrCount() <<  " AAA" << std::endl;
     
-    std::cout << octree.root->itemPtrCount() <<  "AAA" << std::endl;
+    octree.split();
     
 }
 
 template <class T>
-void GLFrame::drawBox(SLAL::BoundingBox3<T> BBox){
+void GLFrame::drawBox(CGL::BoundingBox3<T> BBox){
   glColor3f (1.0, 1.0, 1.0);//white
+
   glBegin(GL_LINE_LOOP);
     glVertex3f(BBox.xmin(), BBox.ymin(), BBox.zmin());
     glVertex3f(BBox.xmax(), BBox.ymin(), BBox.zmin());
@@ -165,25 +192,48 @@ void GLFrame::paintGL()
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
-    glTranslated(0.0,0.0,-5.0);
+    glTranslated(0.0,0.0,-3.0);
     glMultMatrixf(&sceneTransformation);
     if ( surfels.surfels.size() != 0 )
     {
-    	drawPoints();
+    	if (renderMode_A == Points)
+    		drawPoints();
+    	if (renderMode_A == Model)
+    	{
+    	    model();
+    		drawPoints();
+    	}
+
     	
-		for (OctreeIterator<double, SLAL::Point3<double>*> oi = octree.begin();oi != octree.end();++oi )
+		for (OctreeIterator<double, CGL::Point3<double>*> oi = octree.begin();oi != octree.end();++oi )
 		{
-			if ((*oi)->isLeaf())
-			  drawBox(octree.box(oi));
+		   //if ((*oi)->isLeaf()) {
+			  
+				drawBox(octree.world_());
+			    drawBox(octree.box(oi));
+		    
+				   glPointSize(10.0);
+				   glColor3f(0.0,1.0,0.0);
+				   glBegin(GL_POINTS);
+				   
+
+				   glVertex3f(oi.mean()[0],oi.mean()[1],oi.mean()[2]);
+				  
+				   glEnd();
+				   glEnable(GL_LIGHTING);
+				   glPointSize(1.0);	
+				   
+			//}
 		}
 		
     }
-    	
+
+#if DA_APLICACAO_PASSADA    
     /*
 	if( A  and  isVisible_A()  )
 	{
 		
-		   for (OctreeIterator<double, SLAL::Point3<double>*> oi = octree.begin();oi != octree.end();++oi )
+		   for (OctreeIterator<double, CGL::Point3<double>*> oi = octree.begin();oi != octree.end();++oi )
 		   {
 			   if ((*oi)->isLeaf())
 				   drawBox(octree.box(oi));
@@ -196,6 +246,7 @@ void GLFrame::paintGL()
 		else 
 			A->drawPoints();
 	}*/
+#endif
 }
 
 void GLFrame::keyPressEvent ( QKeyEvent * event)

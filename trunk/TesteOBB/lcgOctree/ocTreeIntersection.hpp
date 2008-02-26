@@ -10,7 +10,7 @@ namespace lcgOctree {
 /// Intersection test between a box and a point in 3D
 ///
 template <class Real>
-bool checkIntersection (const SLAL::BoundingBox3<Real>& box, SLAL::Point3<Real>* p) {
+bool checkIntersection (const CGL::BoundingBox3<Real>& box, CGL::Point3<Real>* p) {
     return p->x() >= box.xmin() && p->x() < box.xmax() &&
            p->y() >= box.ymin() && p->y() < box.ymax() &&
            p->z() >= box.zmin() && p->z() < box.zmax();
@@ -22,10 +22,10 @@ bool checkIntersection (const SLAL::BoundingBox3<Real>& box, SLAL::Point3<Real>*
 /// @param clsPt closest point on object.
 /// @return distance between p and the polygon.
 template <class Real>
-  Real distance2Item (const SLAL::Point3<Real>* pt, const SLAL::Point3<Real>& p, SLAL::Point3<Real>& clsp)
+  Real distance2Item (const CGL::Point3<Real>* pt, const CGL::Point3<Real>& p, CGL::Point3<Real>& clsp)
   {
     clsp = *pt;
-    SLAL::Point3<Real> q = *pt;
+    CGL::Point3<Real> q = *pt;
     Real a, b;
     a = p[0] - q[0];
     b = a * a;

@@ -33,15 +33,15 @@ public:
         
     void zoomIn();
    	void zoomOut();
-    typedef enum RenderMode {WireFrame=0, PolygonWireFrame, Smooth, Points};   
+    typedef enum RenderMode {WireFrame=0, PolygonWireFrame, Smooth, Points,Model};   
        
     RenderMode renderMode_A;
        
     Surfels<double> surfels;
     
-    Octree<double,SLAL::Point3<double>*> octree;
+    Octree<double,CGL::Point3<double>*> octree;
     
-    SLAL::Point3<double> pontomedio;
+    CGL::Point3<double> midlePoint;
                       
 public slots:
 	
@@ -59,12 +59,13 @@ protected:
 private:
     void draw();
     void drawPoints();
+    void model();
     void screenToWorld(int x, int y, double &xw, double &yw, double &zw);
     
     template < class T>
-    SLAL::BoundingBox3<T> limits();
+    CGL::BoundingBox3<T> limits();
     template < class T>
-    void drawBox(SLAL::BoundingBox3<T> BBox);
+    void drawBox(CGL::BoundingBox3<T> BBox);
 
     GLfloat 			rotationX;
     GLfloat 			rotationY;
