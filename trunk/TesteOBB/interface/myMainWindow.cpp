@@ -112,7 +112,7 @@ void MyMainWindow::on_push_Button_Vertex_Around_clicked()
 		i++;
 				
 	} 
-	
+	glFrame->octree.split();
 	std::cout << i << " ==OPA== " << glFrame->surfels.temp.size() << " OctreeSize =" << glFrame->octree.root->itemPtrCount() << std::endl;
 	
 	if ( i != 0 )

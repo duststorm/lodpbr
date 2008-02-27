@@ -67,7 +67,7 @@ public :
     /// inserts a pointer to an object in this octree
     /// @param p pointer to object
     virtual void insert (const ItemPtr p) {
-         root->insert (world, 0, p, root,0);
+         root->insert (world, 0, p, root);
     }                   
 
     void split () 

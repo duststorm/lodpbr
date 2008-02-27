@@ -193,24 +193,33 @@ void GLFrame::paintGL()
     glLoadIdentity();
     glTranslated(0.0,0.0,-3.0);
     glMultMatrixf(&sceneTransformation);
+    
     if ( surfels.surfels.size() != 0 )
     {
     	if (renderMode_A == Points)
     		drawPoints();
+    	
     	if (renderMode_A == Model)
     	{
     	   // model();
     		//drawPoints();
     	}
-
     	
 		for (OctreeIterator<double, CGL::Point3<double>*> oi = octree.begin();oi != octree.end();++oi )
 		{
-		   //if ((*oi)->isLeaf()) {
-			  
-			    drawBox(octree.box(oi));
-				   
-			//}
+		   			  
+	       drawBox(octree.box(oi));
+		   glDisable(GL_LIGHTING);		
+		   glPointSize(5.0);
+		   glColor3f(0.0,0.0,1.0);
+		   glBegin(GL_POINTS);
+		   			   		   		        
+		   glVertex3f(oi.mean()[0],oi.mean()[1],oi.mean()[2]);
+		   		   
+		   glEnd();
+		   glEnable(GL_LIGHTING);
+		   glPointSize(1.0);
+						
 		}
 		
     }
