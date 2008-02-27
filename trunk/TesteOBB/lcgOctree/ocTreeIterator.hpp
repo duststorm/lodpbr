@@ -1,8 +1,10 @@
 #ifndef OCTREEINTERATOR_HPP_
 #define OCTREEINTERATOR_HPP_
 
+//[C++ STL includes]
 #include <vector>
 
+//[Project includes]
 #include "ocTreeNode.hpp"
 #include "ocTreeInternalNode.hpp"
 
@@ -14,14 +16,16 @@ class OctreeInternalNode;
 template <class Real, class ItemPtr, class Refine>
 class OctreeNode;
 
+
 template <class Real, class ItemPtr, class Refine = OverflowRefine<Real,ItemPtr> >
 class OctreeIterator {
     
-    typedef OctreeNode<Real, ItemPtr, Refine> Node; ///< Octree Node
-    typedef OctreeInternalNode<Real, ItemPtr, Refine> InternalNode; ///< Internal OctreeNode
-    typedef Node* NodePtr; ///< Pointer to octree node
-    typedef CGL::Point3<Real> Point3; 
-    typedef Box_3<Real> Box3;             ///< Octant extent
+    typedef OctreeNode<Real, ItemPtr, Refine> 			Node;         ///< Octree Node
+    typedef OctreeInternalNode<Real, ItemPtr, Refine> 	InternalNode; ///< Internal OctreeNode
+    typedef Node* 										NodePtr; 	  ///< Pointer to octree node
+    
+    typedef CGL::Point3<Real> 							Point3; 
+    typedef Box_3<Real> 								Box3;          ///< Octant extent
     
     std::vector<NodePtr*> path; ///< Path from root to pointed node
     int pathLen; ///< Path length
@@ -52,7 +56,7 @@ public:
   Point3 mean ( void ) const { 
     if (pathLen > 1)
       if ((*path[pathLen-1])->isLeaf()) 
-	return father()->mean(); 
+    	  return father()->mean(); 
   }
     
     /// Pointer to father node. Pre-condition: node is not root.

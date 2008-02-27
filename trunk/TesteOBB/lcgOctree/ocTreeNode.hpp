@@ -1,9 +1,11 @@
 #ifndef OCTREENODE_HPP_
 #define OCTREENODE_HPP_
 
+//[STL container includes]
 #include <list>
 #include <set>
 
+//[Project includes]
 #include "ocTreeRefine.hpp"
 #include "ocTreeIterator.hpp"
 #include "ocTreeBox.hpp"
@@ -27,13 +29,14 @@ class OctreeNode {
 
   public:
 
-    typedef typename CGL::Point3<Real>                 Point3;  ///< A Point in 3D
-    typedef Box_3<Real>                                  Box3; ///< Octant box type    
-    friend class OctreeIterator<Real, ItemPtr, Refine>;  ///< Octree iterators are friends
-    typedef std::list<ItemPtr>                             ItemPtrList; ///< List of items stored inside leaf nodes
-    typedef std::set<ItemPtr>                              ItemPtrSet;   ///< Return type of overlap
+    typedef typename CGL::Point3<Real>                 	Point3;  ///< A Point in 3D
+    typedef Box_3<Real>                                 Box3; ///< Octant box type    
+    typedef std::list<ItemPtr>                          ItemPtrList; ///< List of items stored inside leaf nodes
+    typedef std::set<ItemPtr>                           ItemPtrSet;   ///< Return type of overlap
     
   
+    friend class OctreeIterator<Real, ItemPtr, Refine>;  ///< Octree iterators are friends
+    
     /// Returns a pointer to the octree leaf which contains point p
     /// @param p point which should be inside a descendant leaf
     /// @param world dimensions of this node

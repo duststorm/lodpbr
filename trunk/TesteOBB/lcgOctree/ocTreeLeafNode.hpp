@@ -1,9 +1,11 @@
 #ifndef OCTREELEAFNODE_HPP_
 #define OCTREELEAFNODE_HPP_
 
+//[STL container includes]
 #include <list>
 #include <set>
 
+//[Project includes]
 #include "ocTreeNode.hpp"
 #include "ocTreeInternalNode.hpp"
 #include "ocTreeBox.hpp"
@@ -24,19 +26,21 @@ class OctreeLeafNode : public OctreeNode<Real, ItemPtr, Refine> {
 
 public:
 
-    typedef OctreeNode<Real, ItemPtr, Refine> OctreeNode;          
-    typedef OctreeInternalNode<Real, ItemPtr, Refine> OctreeInternalNode;
+    typedef OctreeNode<Real, ItemPtr, Refine>  			OctreeNode;          
+    typedef OctreeInternalNode<Real, ItemPtr, Refine> 	OctreeInternalNode;
     
-    typedef CGL::Point3<Real> Point3;  ///< A Point in 3D
-    typedef Box_3<Real> Box3; ///< Octant box type
+    typedef CGL::Point3<Real> 							Point3;  ///< A Point in 3D
+    typedef Box_3<Real> 								Box3;    ///< Octant box type
+    
 //    friend class OctreeIterator<Real, ItemPtr, Refine>; ///< Octree iterators are friends
-    typedef std::list<ItemPtr> ItemPtrList; ///< List of items stored inside leaf nodes
-    typedef std::set<ItemPtr> ItemPtrSet;   ///< Return type of overlap
     
-    typedef typename std::list<ItemPtr>::iterator listItemPtrIterator;
+    typedef std::list<ItemPtr> 							ItemPtrList; ///< List of items stored inside leaf nodes
+    typedef std::set<ItemPtr> 							ItemPtrSet;   ///< Return type of overlap
+    
+    typedef typename std::list<ItemPtr>::iterator 		listItemPtrIterator;
     typedef typename std::list<ItemPtr>::const_iterator const_listItemPtrIterator;
     
-    std::list<ItemPtr> PtrList; // Pointers to items which overlap this node
+    ItemPtrList PtrList; // Pointers to items which overlap this node
 
     /// constructor
     OctreeLeafNode () {
@@ -86,7 +90,7 @@ public:
                 newOctreeInternalNode->insert (world, level + 1, *pi, fatherPtr);
             }
  
-  
+            // call split() for sons
             newOctreeInternalNode->split(world,level,fatherPtr);
             
         }

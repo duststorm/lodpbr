@@ -127,6 +127,6 @@ public:
 	virtual ~BoundingBox3(){};
 };
 
-}
+}/* CGL :: NAMESPACE */
 
 #endif /*BOUNDINGBOX3_HPP_*/
