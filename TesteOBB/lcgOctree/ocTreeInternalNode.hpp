@@ -1,10 +1,15 @@
 #ifndef OCTREEINTERNALNODE_HPP_
 #define OCTREEINTERNALNODE_HPP_
 
+//[Standart  includes]
+#include <cmath>
+
+//[STL includes]
 #include <list>
 #include <set>
 #include <map>
 
+//[Project includes]
 #include "ocTreeRefine.hpp"
 #include "ocTreeNode.hpp"
 #include "ocTreeLeafNode.hpp"
@@ -176,10 +181,10 @@ public:
         for (multimapRealIterator j = iSon.begin (); j != iSon.end(); ++j)
         {
             Real boxDist = j->first;
-            if (abs(boxDist) > abs(best)) break;
+            if (fabs(boxDist) > fabs(best)) break;
             int sonIndex = j->second;
             Real currentDist = son[sonIndex]->distance (world.coords (sonIndex,mean_),  best, p, clsPt);
-            if (abs(currentDist) < abs(best))
+            if (fabs(currentDist) < fabs(best))
             {
                 best = currentDist;
             }

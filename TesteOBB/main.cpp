@@ -6,14 +6,16 @@
 #include "slal/Vector3.hpp"
 #include "slal/Point3.hpp"
 #include "slal/Matrix3x3.hpp"
+#include "slal/Color.hpp"
 
 using namespace std;
 
 int main(int argc, char *argv[])
 {
 	
-	CGL::Point3<double> p;
+	CGL::Point3<double> p(10.0,22.65,26.89);
 	CGL::Point3<double> q;
+	CGL::Color<double>  c;
 	
 	int  b[3] = {1,1,1};
 	
@@ -35,6 +37,8 @@ int main(int argc, char *argv[])
 	double a = 0.0;
 	
 	std::cout << v;
+	
+	std::cout << c;
 	
 	a = p[1] - q[0];
 	std::cout << C;

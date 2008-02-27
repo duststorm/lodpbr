@@ -1,8 +1,10 @@
 #ifndef OCTREEREFINE_HPP_
 #define OCTREEREFINE_HPP_
 
+//[STL container includes]
 #include <list>
 
+//[Project includes]
 #include "ocTreeBox.hpp"
 #include "ocTreeIntersection.hpp"
 
@@ -26,7 +28,7 @@ struct OctreeRefine {
 /// A node is refined whenever it holds more than "Max" items, and 
 /// the subdivision level has not reached "LevelMax".
 ///
-template <class Real, class ItemPtr, int Max = 5, int LevelMax = 5>
+template <class Real, class ItemPtr, int Max = 1000, int LevelMax = 5>
 struct OverflowRefine : public OctreeRefine <Real, ItemPtr> {
     ///
     /// Split a leaf node iff the list contains more than Max items

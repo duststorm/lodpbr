@@ -153,6 +153,8 @@ template <class Real > class Surfel
 
 	  Vector3 normal_;
 	  
+	  Point3 Color;
+	  
 	  /// Splat radius
 	  Real splatRadius_;
 

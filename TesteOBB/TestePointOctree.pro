@@ -35,7 +35,8 @@ HEADERS += . \
     lcgOctree/ocTreeLeafNode.hpp \
     lcgOctree/ocTreeNode.hpp \
     lcgOctree/ocTreeIterator.hpp \
-    lcgOctree/ocTreeRefine.hpp
+    lcgOctree/ocTreeRefine.hpp \
+    slal/Color.hpp
 SOURCES += main.cpp \
     interface/myMainWindow.cpp \
     openGLFrame/GLFrame.cpp \

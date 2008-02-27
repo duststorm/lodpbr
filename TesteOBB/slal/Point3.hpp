@@ -253,9 +253,9 @@ namespace CGL
 		 */
 		inline Point3<Real>& operator= ( const Point3<Real>& p)
 		{
-			this->mX = p.x();
-			this->mY = p.y();
-			this->mZ = p.z();
+			this->mX = p.mX;
+			this->mY = p.mY;
+			this->mZ = p.mZ;
 				
 			return ( *this );
 		};
@@ -489,7 +489,7 @@ namespace CGL
 		 */
 		friend inline std::ostream& operator<< (std::ostream & s, const Point3<Real>& p)
 		{
-			s << "Point3" << " x = " << p.x() << " ,y = " << p.y() << " ,z = " << p.z() << std::endl;
+			s << "Point3" << " x = " << p.mX << " ,y = " << p.mY << " ,z = " << p.mZ << std::endl;
 			
 			
 			return ( s );
