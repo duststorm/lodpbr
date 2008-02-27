@@ -44,7 +44,7 @@ class OctreeNode {
     /// @param level octree level of this node
     /// @param p pointer to object
     /// @param fatherPtr reference to the pointer inside the father which points to this node
-    virtual void insert (const Box3& world, int level, const ItemPtr p, OctreeNode*& fatherPtr,int filho) = 0;
+    virtual void insert (const Box3& world, int level, const ItemPtr p, OctreeNode*& fatherPtr) = 0;
     
     virtual void split (const Box3& world, int level,OctreeNode*& fatherPtr) = 0;
     

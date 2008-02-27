@@ -80,9 +80,9 @@ public:
     minx = world.xmin();
     miny = world.ymin();
     minz = world.zmin();
-    maxx = world.xmin();
-    maxy = world.ymin();
-    maxz = world.zmin();
+    maxx = world.xmax();
+    maxy = world.ymax();
+    maxz = world.zmax();
 	
     InternalNode* fatherNode = (InternalNode*) root;
     for (int i = 0; i < pathLen; ++i) 

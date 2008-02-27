@@ -65,7 +65,7 @@ public:
         Point3 p1 (world.xmin(),world.ymin(),world.zmin());
         Point3 p2 (world.xmax(),world.ymax(),world.zmax());
         for (int d = 0; d < 3; ++d) {
-            Real middle = ((p1[d] + p2[d])) * 0.5;
+            Real middle = mean_[d];
             if ((p[d]) > middle) {
                 index += mult;
                 min[d] = middle; max[d] = (p2[2]);
@@ -83,7 +83,7 @@ public:
     /// @param level octree level of this node
     /// @param p pointer to object
     /// @param fatherPtr reference to the pointer inside the father which points to this node
-    virtual void insert (const Box3& world, int level, const ItemPtr p, OctreeNode*& fatherPtr,int filho) {
+    virtual void insert (const Box3& world, int level, const ItemPtr p, OctreeNode*& fatherPtr) {
 
         for (int index = 0; index < 8; ++index) {
             Box3 suboctant = world.coords(index,mean_);
@@ -91,7 +91,7 @@ public:
             // It is necessary to define a method do_intersect (Box_3, Item)
             if (lcgOctree::checkIntersection(suboctant, p))
             {
-              	son[index]->insert(suboctant, level+1, p, son[index],index);
+              	son[index]->insert(suboctant, level+1, p, son[index]);
             }
             
             
@@ -99,15 +99,12 @@ public:
     }
 
     
-    virtual void split (const Box3& world, int level,OctreeNode*& fatherPtr ) 
+    virtual void split (const Box3& world, int level, OctreeNode*& fatherPtr) 
     {
-    	    	   	
-    	for (int index = 0; index < 8; ++index) 
-    	{
-           son[index]->split(world,level,fatherPtr);
-    	}
-
-    	
+        for (int index = 0; index < 8; ++index) {
+        	 Box3 suboctant = world.coords(index,mean_);
+        	son[index]->split(suboctant,level + 1,son[index]);
+        }
     }
     
     
