@@ -20,47 +20,46 @@ namespace CGL
 *@todo Anather model of color representation like HLS  
 */	
 
-	template <class Real> class Color
+	class Color
 	{
 		
 		public:
-			
-			friend class Point3<Real>;
-			friend class Vector3<Real>;
-			
+									
 			Color()
 			{
-				this->mRed   = static_cast< Real > (0);
-				this->mGreen = static_cast< Real > (0);
-				this->mBlue  = static_cast< Real > (0);
-				this->mAlfa  = static_cast< Real > (1);
+				this->mRed   = 0.0;
+				this->mGreen = 0.0;
+				this->mBlue  = 0.0;
+				this->mAlfa  = 0.0;
 			};
 			
-			Color(const Real&pRed,const Real&pGreen, const Real&pBlue)
+			Color(const float&pRed,const float&pGreen, const float&pBlue)
 				: mRed(pRed), mGreen(pGreen), mBlue(pBlue), mAlfa(0) {};
 				
-			Color(const Real&pRed, const Real&pGreen, const Real& pBlue, const Real& pAlfa)
+			Color(const float&pRed, const float&pGreen, const float& pBlue, const float& pAlfa)
 				: mRed(pRed), mGreen(pGreen), mBlue(pBlue), mAlfa(pAlfa) {};
 				
-			Color (const Point3<Real>& pPoint )
-				: mRed(pPoint.mX), mGreen(pPoint.mY), mBlue(pPoint.mZ), mAlfa(0) {};
+			template < typename C >				
+			Color (const Point3<C>& pPoint )
+				: mRed(pPoint.x()), mGreen(pPoint.y()), mBlue(pPoint.z()), mAlfa(0) {};
 				
-			Color (const Vector3<Real>& pVector )
-				: mRed(pVector.mX), mGreen(pVector.mY), mBlue(pVector.mZ), mAlfa(0) {};
+			template < typename C >				
+			Color (const Vector3<C>& pVector )
+				: mRed(pVector.x()), mGreen(pVector.y()), mBlue(pVector.z()), mAlfa(0) {};
 			
 			template < typename C >
 			inline void setRGB ( const C* pC)
 			{
-		    	this->mRed   = static_cast< Real > ( pC[0] );
-		    	this->mGreen = static_cast< Real > ( pC[1] );
-		    	this->mBlue  = static_cast< Real > ( pC[2] );
+		    	this->mRed   = static_cast< float > ( pC[0] );
+		    	this->mGreen = static_cast< float > ( pC[1] );
+		    	this->mBlue  = static_cast< float > ( pC[2] );
 			};	
 			/*!@brief Initialize RGB color.
-			*  @param[in] r Real.
-			*  @param[in] g Real.
-			*  @param[in] b Real. 
+			*  @param[in] r float.
+			*  @param[in] g float.
+			*  @param[in] b float. 
 			*/		
-			inline void setRGB ( const Real& pRed, const Real& pGreen, const Real& pBlue) 
+			inline void setRGB ( const float& pRed, const float& pGreen, const float& pBlue) 
 			{
 		    	this->mRed   = pRed;
 		    	this->mGreen = pGreen;
@@ -68,33 +67,33 @@ namespace CGL
 			};
 				
 			/*!@brief Initialize Red color.
-			*  @param[in] r Real.
+			*  @param[in] r float.
 			*/				
-			inline void setRed ( const Real& pRed) 
+			inline void setRed ( const float& pRed) 
 			{
 		    	this->mRed   = pRed;
 			};
 
 			/*!@brief Initialize Green color.
-			*  @param[in] g Real.
+			*  @param[in] g float.
 			*/
-			inline void setGreen ( const Real& pGreen)
+			inline void setGreen ( const float& pGreen)
 			{
 		    	this->mGreen = pGreen;
 			};
 
 			/*!@brief Initialize Blue color.
-			*  @param[in] b Real.
+			*  @param[in] b float.
 			*/		
-			inline void setBlue ( const Real& pBlue)
+			inline void setBlue ( const float& pBlue)
 			{
 		    	this->mBlue  = pBlue;
 			};
 			
 			/*!@brief Initialize Alfa atribute.
-			*  @param[in] b Real.
+			*  @param[in] b float.
 			*/		
-			inline void setAlfa ( const Real& pAlfa)
+			inline void setAlfa ( const float& pAlfa)
 			{
 		    	this->mAlfa  = pAlfa;
 			};
@@ -102,9 +101,9 @@ namespace CGL
 			/*!@brief operator[]
 			 * @details array based index. "0" for x, "1" for y, "2" for z.
 			 * @ This is ready-only
-			 * @return Real.
+			 * @return float.
 			 */
-			inline  Real operator [] ( int i)  const
+			inline  float operator [] ( int i)  const
 			{
 				if ( (i > 2) or ( i < 0))
 				{
@@ -119,9 +118,9 @@ namespace CGL
 			/*!@brief operator[]
 			 * @see operator[]
 			 * @note Acept assigement
-			 * @return Real.
+			 * @return float.
 			 */
-			inline  Real operator [] ( int i)  
+			inline  float operator [] ( int i)  
 		
 			{
 				if ( (i > 2) or ( i < 0))
@@ -139,7 +138,7 @@ namespace CGL
 			 * @details Assigment operator
 			 * @return Point3
 			 */
-			inline Color<Real>& operator= ( const Color<Real>& pColor)
+			inline Color& operator= ( const Color& pColor)
 			{
 				this->mRed   = pColor.mRed;
 				this->mGreen = pColor.mGreen;
@@ -154,7 +153,7 @@ namespace CGL
 			 * @details Two points are identical whether your correspondents abscissa are equal.
 			 * @return bool.
 			 */
-			inline bool operator== ( const Color<Real>& pColor) const
+			inline bool operator== ( const Color& pColor) const
 			{
 				return ( ( this->mRed   == pColor.mRed   ) and 
 						 ( this->mGreen == pColor.mGreen ) and 
@@ -165,7 +164,7 @@ namespace CGL
 			 * @see operator==
 			 * @return bool.
 			 */
-			inline bool operator!= ( const Color<Real>& pColor) const
+			inline bool operator!= ( const Color& pColor) const
 			{
 				return  !(*this == pColor) ;
 			};	
@@ -174,7 +173,7 @@ namespace CGL
 			/*!@brief operator<<
 			 * @details For debug
 			 */
-			friend inline std::ostream& operator<< (std::ostream & s, const Color<Real>& pColor)
+			friend inline std::ostream& operator<< (std::ostream & s, const Color& pColor)
 			{
 				s << "Color" << " Red = "    << pColor.mRed 
 							 << " ,Green = " << pColor.mGreen 
@@ -192,13 +191,13 @@ namespace CGL
 			{
 				struct
 				{	
-					Real mRed;   /*!< Red color atribute.   */  
-					Real mGreen; /*!< Green color atribute. */
-					Real mBlue;  /*!< Blue color atribute.  */
-					Real mAlfa ; /*!< Alfa color atribute.  */
+					float mRed;   /*!< Red color atribute.   */  
+					float mGreen; /*!< Green color atribute. */
+					float mBlue;  /*!< Blue color atribute.  */
+					float mAlfa ; /*!< Alfa color atribute.  */
 				};
 				
-				Real mRGB[4];/*!< Array of color atributes.*/
+				float mRGB[4];/*!< Array of color atributes.*/
 			};
 			
 	};

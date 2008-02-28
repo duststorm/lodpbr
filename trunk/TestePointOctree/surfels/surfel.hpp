@@ -14,6 +14,7 @@
 
 #include "slal/Point3.hpp"
 #include "slal/Vector3.hpp"
+#include "slal/Color.hpp"
 
 extern "C" 
 {
@@ -38,39 +39,54 @@ template <class Real > class Surfel
 {
  public:
 		
-	 typedef CGL::Point3<Real> Point3; 
+	 typedef CGL::Point3<Real>  Point3; 
 	 typedef CGL::Vector3<Real> Vector3;
+	 typedef CGL::Color         Color;
 		 
 	 Surfel (const Point3& 	position, 
 			 const Vector3& normal, 
 			 const Real& 	radius, 
 			 unsigned int 	id, 
-			 const Real& 	pError)
-	 {
-		 this->position_ 	= position;
-	     this->normal_	 	= normal;
-	     this->splatRadius_  = radius;
-	     this->ID_ 			= id;
-	     this->pError_ 		= pError;
-	    
-	 };
+			 const Real& 	pError ) : mPosition(position),
+	 								   mNormal(normal),
+	 								   mSplatRadius(radius),
+	 								   mPerpendicularError(pError),
+	 								   mID(id)
+	 	  {
+		 	mColor = Color(0.0,0.0,0.0); 
+	 	  };	
 	
+	
+	 Surfel (const Point3& 	position, 
+			 const Vector3& normal,
+			 const Color&   color,
+			 const Real& 	radius,
+			 unsigned int 	id ) : 	mPosition(position),
+			 						mNormal(normal),
+			 						mSplatRadius(radius),
+			 						mPerpendicularError(0),
+			 						mColor(color),
+			 						mID(id)
+		  {
+		 
+		  };
+	  
 	 Surfel (const Point3& 	position, 
 			 const Vector3& normal, 
 			 const Real& 	radius, 
-			 unsigned int 	id )
-	 {
-		 this->position_ 		= position;
-	     this->normal_ 		= normal;
-	     this->splatRadius_ 	= radius;
-	     this->ID_ 			= id;
-	     this->pError_ 		= static_cast<Real> (0);
-	    
-	 };
+			 unsigned int 	id ) : 	mPosition(position),
+			 						mNormal(normal),
+			 						mSplatRadius(radius),
+			 						mPerpendicularError(0),
+			 						mID(id)
+		  {
+		 	mColor = Color(0.0,0.0,0.0);
+		  };
+	
 	 
 	 Surfel (const Point3& 	position)
 	 {
-		 this->position_ 		= position;
+		 this->mPosition 		= position;
 	         
 	 };
 	
@@ -80,12 +96,12 @@ template <class Real > class Surfel
 	
 	 const Point3 position () const 
 	 { 
-		 return  ( this->position_ ) ; 
+		 return  ( this->mPosition ) ; 
 	 };
 	 
 	 Real position(const int axis)  const
 	 { 
-		 return ( this->position_[axis] ); 
+		 return ( this->mPosition[axis] ); 
 	 };
 	 
 	 void setPosition(const Point3& position) 
@@ -100,12 +116,12 @@ template <class Real > class Surfel
 	 
 	 Real normal(int axis) const 
 	 { 
-		 return ( this->normal_[axis] ); 
+		 return ( this->mNormal[axis] ); 
 	 };
 	 
 	 void setNormal (const Vector3& normal )
 	 { 
-		 this->normal_ = Vector3(normal); 
+		 this->mNormal = Vector3(normal); 
 	 };
 	
 	 unsigned int ID () const 
@@ -120,17 +136,17 @@ template <class Real > class Surfel
 	
 	 Real radius (void) const 
 	 { 
-		 return this->splatRadius_; 
+		 return this->mSplatRadius; 
 	 };
 	 
 	 void setRadius ( const Real& radius ) 
 	 { 
-		 this->splatRadius_ = radius; 
+		 this->mSplatRadius = radius; 
 	 };
 	  
 	 Real perpendicularError () const 
 	 { 
-		 return ( this->pError_ ); 
+		 return ( this->mPerpendicularError ); 
 	 };
 	
 	  /// I/O operator - output
@@ -147,22 +163,22 @@ template <class Real > class Surfel
  
  private:
 	  /// Point coordinates
-	  Point3 position_;
+	  Point3 mPosition;
 
 	  /// Estimated surface normal at point sample
 
-	  Vector3 normal_;
+	  Vector3 mNormal;
 	  
-	  Point3 Color;
+	  Color mColor;
 	  
 	  /// Splat radius
-	  Real splatRadius_;
+	  Real mSplatRadius;
 
 	  /// Perpendicular error
-	  Real pError_;
+	  Real mPerpendicularError;
 	  
 	  /// An identification number for the surfel
-	  unsigned int ID_;
+	  unsigned int mID;
 	  
   
 	  
