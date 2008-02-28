@@ -15,8 +15,7 @@ int main(int argc, char *argv[])
 	
 	CGL::Point3<double> p(10.0,22.65,26.89);
 	CGL::Point3<double> q;
-	CGL::Color<double>  c;
-	
+	CGL::Color  c = Color(p);
 	int  b[3] = {1,1,1};
 	
 	CGL::Vector3<double> v(b);

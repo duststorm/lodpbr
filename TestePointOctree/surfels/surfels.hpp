@@ -7,7 +7,6 @@
 #include "slal/BoundingBox3.hpp"
 #include "surfel.hpp"
 
-using namespace CGL;
 
 // For ply Reader
 typedef struct Vertex 
@@ -28,9 +27,8 @@ struct Bounding_box : public std::unary_function<Surfel<Real>, void>
 	CGL::BoundingBox3<Real> box;
     Bounding_box() : box(1e10,1e10,1e10,-1e10,-1e10,-1e10) {}
     void operator()(const Surfel<Real>& s) { 
-    	std:: cout << s.position() << std::endl;
         box = box + CGL::BoundingBox3<Real>(s.position(0),s.position(1),s.position(2),
-        				 			   s.position(0),s.position(1),s.position(2));
+        							   		s.position(0),s.position(1),s.position(2));
     }
 };
 
@@ -65,17 +63,21 @@ public:
 	
 	{
 		 		 
-		PlyProperty vert_props[] = 
-		{ /* list of property information for a vertex */
+
+		PlyProperty vert_props_color[] = { /* list of property information for a vertex */
 		  {"x", Float32, Float32, offsetof(Vertex,x), 0, 0, 0, 0},
 		  {"y", Float32, Float32, offsetof(Vertex,y), 0, 0, 0, 0},
 		  {"z", Float32, Float32, offsetof(Vertex,z), 0, 0, 0, 0},
+		  {"r", Float32, Float32, offsetof(Vertex,r), 0, 0, 0, 0},
+		  {"g", Float32, Float32, offsetof(Vertex,g), 0, 0, 0, 0},
+		  {"b", Float32, Float32, offsetof(Vertex,b), 0, 0, 0, 0},
 		  {"nx", Float32, Float32, offsetof(Vertex,nx), 0, 0, 0, 0},
 		  {"ny", Float32, Float32, offsetof(Vertex,ny), 0, 0, 0, 0},
 		  {"nz", Float32, Float32, offsetof(Vertex,nz), 0, 0, 0, 0},
+		  {"radius", Float32, Float32, offsetof(Vertex,radius), 0, 0, 0, 0},
 		};
-
-
+		
+		
 		 /*** the PLY object ***/
 
 		static PlyFile *in_ply;
@@ -110,17 +112,24 @@ public:
 
 		    for (j = 0; j < in_ply->elems[i]->nprops; j++) 
 		    {
-		  	  PlyProperty *prop;
-		   	  prop = in_ply->elems[i]->props[j];
-		  	  if (equal_strings ("nx", prop->name))
-		   		  setup_property_ply (in_ply, &vert_props[3]);
-		  	  if (equal_strings ("ny", prop->name))
-		   		  setup_property_ply (in_ply, &vert_props[4]);
-		   	  if (equal_strings ("nz", prop->name))
-		   		  setup_property_ply (in_ply, &vert_props[5]);
-		   	  if (equal_strings ("radius", prop->name))
-		   		  setup_property_ply (in_ply, &vert_props[6]);
-		    }
+		    	PlyProperty *prop;
+		    	prop = in_ply->elems[i]->props[j];
+		    	if (equal_strings ("r", prop->name))
+		    		setup_property_ply (in_ply, &vert_props_color[3]);
+		    	if (equal_strings ("g", prop->name))
+		    		setup_property_ply (in_ply, &vert_props_color[4]);
+		    	if (equal_strings ("b", prop->name))
+		    		setup_property_ply (in_ply, &vert_props_color[5]);
+		    	if (equal_strings ("nx", prop->name))
+		    		setup_property_ply (in_ply, &vert_props_color[6]);
+		    	if (equal_strings ("ny", prop->name))
+		    		setup_property_ply (in_ply, &vert_props_color[7]);
+		    	if (equal_strings ("nz", prop->name))
+		    		setup_property_ply (in_ply, &vert_props_color[8]);
+		    	if (equal_strings ("radius", prop->name))
+		    		setup_property_ply (in_ply, &vert_props_color[9]);
+
+		      }
 
 		    vert_other = get_other_properties_ply (in_ply, 
 		    										offsetof(Vertex,other_props));
@@ -133,9 +142,10 @@ public:
 		      get_element_ply (in_ply, (void *) &v);
 
 		      Point3 	p (v.x, v.y, v.z);
-		      Vector3 n (v.nx, v.ny, v.nz);
+		      Vector3 	n (v.nx, v.ny, v.nz);
+		      Color 	c (v.r/255.0, v.g/255.0, v.b/255.0);
 			
-		      surfels.surfels.push_back ( Surfel<Real> (p, n, static_cast<Real> (v.radius), j) );
+		      surfels.surfels.push_back ( Surfel<Real> (p, n,c, static_cast<Real> (v.radius), j) );
 		        
 		     }
 		    
