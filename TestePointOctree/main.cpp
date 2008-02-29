@@ -1,5 +1,6 @@
 #include <QApplication>
 #include <iostream>
+#include <cmath>
 
 #include "interface/myMainWindow.hpp"
 
@@ -17,14 +18,19 @@ int main(int argc, char *argv[])
 	CGL::Point3<double> p(10.0,22.65,26.89);
 	CGL::Point3<double> q;
 	CGL::Color  c(p);
-	CGL::CubicEquation<double> cubic(2.0,-4.0,-22.0,24.0);
-	int  b[3] = {1,1,1};
 	
+	int  b[3] = {1,1,1};
+	double result[3];
+		
 	CGL::Vector3<double> v(b);
 	
 	v = v.norm();
+	int r = CGL::CubicEquation<double>::findCubicRoots(1.0,0.0,0.0,0.0 ,result);
 	
-	cubic.merda();
+	if (r != CGL::CubicEquation<double>::HasThreeRealRoots)
+		std::cout << "Has_Three_Real_Roots " <<  result[0] << " " <<
+												   	 result[1] << " " <<
+												   	 result[2] << std::endl;
 	
 	CGL::Matrix3x3<double> A (2.0,5.0,3.0,
 								4.0,8.0,9.0,
@@ -38,7 +44,6 @@ int main(int argc, char *argv[])
 	
 	double a = 0.0;
 	
-	std::cout << v;
 	
 	std::cout << c;
 	

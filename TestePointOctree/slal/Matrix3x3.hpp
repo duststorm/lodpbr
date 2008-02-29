@@ -219,6 +219,20 @@ public:
 		
 		return ( s );
 	};
+
+	bool isSymetric ()
+	{
+		if ( (a[0][1] == a[1][0]) and  
+			 (a[0][2] == a[2][0]) and	
+			 (a[2][1] == a[1][2]) )
+		{
+			return true;
+		}
+					
+		return false;
+	}
+	
+	
 	
 	virtual ~Matrix3x3(){};
 	       
