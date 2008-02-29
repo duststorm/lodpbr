@@ -7,6 +7,7 @@
 #include "slal/Point3.hpp"
 #include "slal/Matrix3x3.hpp"
 #include "slal/Color.hpp"
+#include "slal/Polynomial.hpp"
 
 using namespace std;
 
@@ -15,13 +16,15 @@ int main(int argc, char *argv[])
 	
 	CGL::Point3<double> p(10.0,22.65,26.89);
 	CGL::Point3<double> q;
-	CGL::Color  c = Color(p);
+	CGL::Color  c(p);
+	CGL::CubicEquation<double> cubic(2.0,-4.0,-22.0,24.0);
 	int  b[3] = {1,1,1};
 	
 	CGL::Vector3<double> v(b);
 	
 	v = v.norm();
 	
+	cubic.merda();
 	
 	CGL::Matrix3x3<double> A (2.0,5.0,3.0,
 								4.0,8.0,9.0,
