@@ -3,6 +3,43 @@
 
 #include <iostream>
 
+/*
+ * 
+template<class Real> class Matrix3x3
+{
+private:
+	
+	Real a[3][3];
+	
+public:
+	
+	Matrix3x3();
+	
+	Matrix3x3(Real a11, Real a12, Real a13,Real a21, Real a22, Real a23,Real a31, Real a32, Real a33);
+
+	// transpose
+	inline Matrix3x3<Real> 	operator~ ();
+	Real  					operator() ( int i, int j )  	const;
+	Real& 					operator() ( int i, int j );  
+	Matrix3x3<Real>& 		operator= ( const Matrix3x3<Real>& A);
+	Matrix3x3<Real>  		operator- ( ) const;
+	Matrix3x3<Real>  		operator+ ( ) const;
+	
+	friend Matrix3x3<Real> 	operator+ (Matrix3x3<Real>& A, Matrix3x3<Real>& B);
+	friend Matrix3x3<Real> 	operator- (Matrix3x3<Real>& A, Matrix3x3<Real>& B);
+	friend Matrix3x3<Real> 	operator* ( const Real& factor, Matrix3x3<Real>& A);
+	friend Matrix3x3<Real> 	operator* ( Matrix3x3<Real>& A, const Real& factor);
+	friend Matrix3x3<Real>  operator/ ( Matrix3x3<Real>& A, const Real& factor);
+	friend Matrix3x3<Real>  operator* ( const Matrix3x3<Real>& A, const Matrix3x3<Real>& B);
+	friend std::ostream& 	operator<< (std::ostream & s, const Matrix3x3<Real>& A);
+		
+	virtual ~Matrix3x3(){};
+	       
+};
+
+*/
+
+
 namespace CGL {
 
 template<class T> class Matrix3x3

@@ -38,6 +38,7 @@ class Surfels
 {
 public:
 	
+	typedef CGL::Color Color;
 	typedef CGL::Point3<Real> Point3;
 	typedef CGL::Vector3<Real> Vector3;
 	typedef CGL::BoundingBox3<Real> Box3; 
@@ -106,9 +107,9 @@ public:
 		    nverts = elem_count;
 
 		    /* set up for getting vertex elements */
-		    setup_property_ply (in_ply, &vert_props[0]);
-		    setup_property_ply (in_ply, &vert_props[1]);
-		    setup_property_ply (in_ply, &vert_props[2]);
+		    setup_property_ply (in_ply, &vert_props_color[0]);
+		    setup_property_ply (in_ply, &vert_props_color[1]);
+		    setup_property_ply (in_ply, &vert_props_color[2]);
 
 		    for (j = 0; j < in_ply->elems[i]->nprops; j++) 
 		    {
