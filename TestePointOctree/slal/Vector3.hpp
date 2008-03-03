@@ -19,9 +19,9 @@ private:
 	
 		struct
 		{
-			Real x_;
-			Real y_;
-			Real z_;
+			Real mX;
+			Real mY;
+			Real mZ;
 		};
 		
 		Real xyz[3];
@@ -34,9 +34,9 @@ public:
 	 
 	Vector3 ()
 	{
-		this->x_ = (Real)0;
-		this->y_ = (Real)0;
-		this->z_ = (Real)0;
+		this->mX = (Real)0;
+		this->mY = (Real)0;
+		this->mZ = (Real)0;
 	};
 	 
 	template < typename U >
@@ -44,46 +44,46 @@ public:
 	{
 		assert(u);
 		
-    	this->x_ = static_cast< Real > ( u[0] );
-    	this->y_ = static_cast< Real > ( u[1] );
-    	this->z_ = static_cast< Real > ( u[2] );
+    	this->mX = static_cast< Real > ( u[0] );
+    	this->mY = static_cast< Real > ( u[1] );
+    	this->mZ = static_cast< Real > ( u[2] );
     	
 	};
 	
 	Vector3 ( const Vector3<Real>& u)
 	{
-		this->x_ = u.x();
-		this->y_ = u.y();
-		this->z_ = u.z();
+		this->mX = u.x();
+		this->mY = u.y();
+		this->mZ = u.z();
 	};
 	
-	Vector3 ( const Real& x, const Real& y, const Real& z )
+	Vector3 ( const Real& pX, const Real& pY, const Real& pZ )
 	{
-		this->x_ = x;
-		this->y_ = y;
-		this->z_ = z;
+		this->mX = pX;
+		this->mY = pY;
+		this->mZ = pZ;
 	};
 	
 	//Gets and Sets
 			
 	inline Real x() const
 	{
-		return ( this->x_ );
+		return ( this->mX );
 	};
 	
 	inline Real y() const
 	{
-		return ( this->y_ );
+		return ( this->mY );
 	};
 	
 	inline Real z() const
 	{
-		return ( this->z_ );
+		return ( this->mZ );
 	};
 	
 	//Operator
 	
-	inline Real& operator [] (const unsigned int i) 
+	inline Real operator [] ( int i) const
 	{
 		if ( i > 2)
 		{
@@ -97,7 +97,7 @@ public:
 		
 	};
 	
-	inline Real& operator [] (const unsigned int i) const
+	inline Real& operator [] ( int i) 
 	{
 		if ( i > 2)
 		{
@@ -116,27 +116,27 @@ public:
 	//With Scalar
 	inline Vector3<Real>& operator= ( const Vector3<Real>& u )
 	{
-		this->x_ = u.x_;
-		this->y_ = u.y_;
-		this->z_ = u.z_;
+		this->mX = u.mX;
+		this->mY = u.mY;
+		this->mZ = u.mZ;
 			
 		return ( *this );
 	};
 	
 	const Vector3< Real >& operator+= ( const Real&  factor ) 
 	{ 
-	    this->x_ += factor; 
-	    this->y_ += factor; 
-	    this->z_ += factor;
+	    this->mX += factor; 
+	    this->mY += factor; 
+	    this->mZ += factor;
 	    
 	    return ( *this ); 
 	} 
 	
 	const Vector3< Real >& operator-= ( const Real&  factor ) 
 	{ 
-	    this->x_ -= factor; 
-	    this->y_ -= factor; 
-	    this->z_ -= factor;
+	    this->mX -= factor; 
+	    this->mY -= factor; 
+	    this->mZ -= factor;
 	    
 	    return ( *this ); 
 	} 
@@ -144,9 +144,9 @@ public:
 	const Vector3< Real >& operator*= ( const Real& factor ) 
 	{ 
 	 	 	
-	 	this->x_  *= factor;
-	 	this->y_  *= factor;
-	 	this->z_  *= factor;
+	 	this->mX  *= factor;
+	 	this->mY  *= factor;
+	 	this->mZ  *= factor;
 						
 	    return ( *this ); 
 	}
@@ -155,27 +155,27 @@ public:
 	{ 
 	    factor = (Real)1 / factor;
 	    
-	    this->x_ *= factor;
-	    this->y_ *= factor; 
-	    this->z_ *= factor;
+	    this->mX *= factor;
+	    this->mY *= factor; 
+	    this->mZ *= factor;
 	    
 	    return ( *this ); 
 	}
 	// With Vector
 	const Vector3< Real >& operator+= (  const Vector3<Real>& u ) 
 	{ 
-	    this->x_ += u.x_; 
-	    this->y_ += u.y_; 
-	    this->z_ += u.z_;
+	    this->mX += u.mX; 
+	    this->mY += u.mY; 
+	    this->mZ += u.mZ;
 	    
 	    return ( *this ); 
 	}
 	
 	const Vector3< Real >& operator-= (  const Vector3<Real>& u ) 
 	{ 
-	    this->x_ -= u.x_; 
-	    this->y_ -= u.y_; 
-	    this->z_ -= u.z_;
+	    this->mX -= u.mX; 
+	    this->mY -= u.mY; 
+	    this->mZ -= u.mZ;
 	    
 	    return ( *this ); 
 	} 
@@ -184,16 +184,16 @@ public:
 	const Vector3< Real >& operator/=( const Vector3<Real>& u ) 
 	{ 
 	    	    
-	    this->x_ /= u.x_;
-	    this->y_ /= u.y_; 
-	    this->z_ /= u.z_;
+	    this->mX /= u.mX;
+	    this->mY /= u.mY; 
+	    this->mZ /= u.mZ;
 	    
 	    return ( *this ); 
 	} 
 	
 	inline bool operator== ( const Vector3<Real>& u) const
 	{
-		return ( ( this->x_ == u.x_ ) and ( this->y_ == u.y_ ) and ( this->z_ == u.z_ ) );
+		return ( ( this->mX == u.mX ) and ( this->mY == u.mY ) and ( this->mZ == u.mZ ) );
 	};	
 	
 	inline bool operator!= ( const Vector3<Real>& u) const
@@ -204,25 +204,25 @@ public:
 	inline Vector3<Real>  operator- ( const Vector3<Real>& u) const
 	{
 	
-		return ( Vector3 ( this->x_ - u.x_,
-						   this->y_ - u.y_,
-						   this->z_ - u.z_) 
+		return ( Vector3 ( this->mX - u.mX,
+						   this->mY - u.mY,
+						   this->mZ - u.mZ) 
 			   );
 	};
 	
 	inline Vector3<Real>  operator- ( ) const
 	{
 		 		
-		return ( Vector3 (-this->x_, -this->y_, -this->z_) );
+		return ( Vector3 (-this->mX, -this->mY, -this->mZ) );
 		
 	};
 	
 	inline Vector3<Real>  operator+ ( const Vector3<Real>& u)	const
 	{
 	 	
-		return ( Vector3 ( this->x_ + u.x_,
-	 			     	   this->y_ + u.y_,
-	 					   this->z_ + u.z_)
+		return ( Vector3 ( this->mX + u.mX,
+	 			     	   this->mY + u.mY,
+	 					   this->mZ + u.mZ)
 	 			);
 		
 	};
@@ -235,18 +235,18 @@ public:
 	friend inline Vector3<Real> operator* ( const Vector3<Real>& u,const Real& factor ) 	
 	{
 	 		
-		return (  Vector3( u.x_ * factor,
-						   u.y_ * factor,
-					       u.z_ * factor ) 
+		return (  Vector3( u.mX * factor,
+						   u.mY * factor,
+					       u.mZ * factor ) 
 			   );
 		
 	};
 	
 	friend inline Vector3<Real> operator*	( const Real& factor ,const Vector3<Real>& u) 
 	{
-	 	return ( Vector3( u.x_ * factor,
-	 					  u.y_ * factor,
-	 					  u.z_ * factor )
+	 	return ( Vector3( u.mX * factor,
+	 					  u.mY * factor,
+	 					  u.mZ * factor )
 	 			);
 
 	};
@@ -254,16 +254,16 @@ public:
 	friend inline Real operator* ( const Vector3<Real>& u, const Vector3<Real>& v) 	
 	{
 	 			
-		return (  (u.x_ * v.x_ ) +  ( u.x_ * v.y_ ) + ( u.x_ * v.z_ )  );
+		return (  (u.mX * v.mX ) +  ( u.mX * v.mY ) + ( u.mX * v.mZ )  );
 		
 	};
 
-		
+	// Cross Product	
 	inline Vector3<Real>  operator^ (const Vector3<Real>& u) const
 	{
-		return ( Vector3( this->y_ * u.z_ - this->z_ * u.y_,
-		     			  this->z_ * u.x_ - this->x_ * u.z_,
-						  this->x_ * u.y_ - this->y_ * u.x_ )
+		return ( Vector3( this->mY * u.mZ - this->mZ * u.mY,
+		     			  this->mZ * u.mX - this->mX * u.mZ,
+						  this->mX * u.mY - this->mY * u.mX )
 				);
 
 		
@@ -280,32 +280,32 @@ public:
 	
 	inline Real length ()
 	{
-		return sqrt( (this->x_ * this->x_) + (this->y_ * this->y_) + (this->z_ * this->z_) );
+		return sqrt( (this->mX * this->mX) + (this->mY * this->mY) + (this->mZ * this->mZ) );
 	};
 	
 	inline void normalize ()
 	{
-		Real factor = sqrt( (this->x_ * this->x_) + (this->y_ * this->y_) + (this->z_ * this->z_) );
+		Real factor = sqrt( (mX * mX) + (mY * mY) + (mZ * mZ) );
 		
 		assert (factor);
 		
 		Real d = 1 / factor;
 		
-		this->x_ *= d;
-		this->y_ *= d;
-		this->x_ *= d;
+		mX *= d;
+		mY *= d;
+		mZ *= d;
 			
 	};
 	
 	inline Vector3<Real> norm ()
 	{
-		Real factor = sqrt( (this->x_ * this->x_) + (this->y_ * this->y_) + (this->z_ * this->z_) );
+		Real factor = sqrt( (mX * mX) + (mY * mY) + (mZ * mZ) );
 		
 		assert (factor);
 		
 		Real d = 1 / factor;
 		
-		return ( Vector3 (this->x_ * d, this->y_ * d, this->x_ * d) );
+		return ( Vector3 (mX * d, mY * d, mZ * d) );
 			
 	};
 	

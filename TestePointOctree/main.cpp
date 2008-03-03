@@ -25,30 +25,59 @@ int main(int argc, char *argv[])
 	CGL::Vector3<double> v(b);
 	
 	v = v.norm();
-	int r = CGL::CubicEquation<double>::findCubicRoots(1.0,0.0,0.0,0.0 ,result);
+		
 	
-	if (r != CGL::CubicEquation<double>::HasThreeRealRoots)
-		std::cout << "Has_Three_Real_Roots " <<  result[0] << " " <<
-												   	 result[1] << " " <<
-												   	 result[2] << std::endl;
+	CGL::Matrix3x3<double> A (1.0,-5.0,-4.0,
+								3.0,4.0,-3.0,
+								0.0,2.0,0.0);
 	
-	CGL::Matrix3x3<double> A (2.0,5.0,3.0,
-								4.0,8.0,9.0,
-								-8.0,9.0,4.0);
+	CGL::Matrix3x3<double> B (1.0,1.0,2.0,
+								2.0,4.0,-3.0,
+								3.0,6.0,-5.0);
+	double BBB[3] = {9.0,1.0,0.0};
 	
-	CGL::Matrix3x3<double> B (-8.0,9.0,1.0,
-								2.0,5.0,0.0,
-								6.0,7.0,7.0);
+	CGL::Matrix3x3<double> C (4.0,1.0,4.0,
+							  1.0,7.0,1.0,
+							  4.0,1.0,4.0);
 	
-	CGL::Matrix3x3<double> C = B * A;
+	CGL::CubicEquation<double> resolve = CGL::CubicEquation<double>(C);
+	
+	resolve.Solve3 (B,BBB,result);
+	
+	//resolve.mEigenvector[0].normalize();
+	//resolve.mEigenvector[1].normalize();
+	//resolve.mEigenvector[2].normalize();
+	
+	std::cout << C * resolve.mEigenvector[0];
+	std::cout << C * resolve.mEigenvector[1];
+	std::cout << C * resolve.mEigenvector[2];
+
+	std::cout << "Eita " <<  resolve.mEigenvector[0];// *  resolve.mEigenvalue[0] << std::endl;
+	std::cout << "Eita " << resolve.mEigenvector[1]; // * resolve.mEigenvalue[1] << std::endl;
+	std::cout << "Eita " << resolve.mEigenvector[2];//  * resolve.mEigenvalue[2] << std::endl;
+	
+	CGL::Vector3<double> g(3.0,4.0,-5.0);
+	
+	 g =  A * g;
 	
 	double a = 0.0;
+	double * array;
 	
+	g = CGL::Vector3<double>(-209.9019,1737.5126,0.0);
 	
-	std::cout << c;
+	array = C.getArray();
+		
+	std::cout << B.row(2) << B(2,1) ;
 	
+	g = g.norm();
+	std::cout << g;
+	std::cout <<  " Result "<< array[0] << " - " << array[1]<<" - "<< array[2] << std::endl <<
+					  " - " << array[3] << " - " << array[4]<<" - "<< array[5] << std::endl <<
+					  " - " << array[6] << " - " << array[7]<<" - "<< array[8] << std::endl;
+		
 	a = p[1] - q[0];
-	std::cout << C;
+	p[1] = 3.8898;
+	//std::cout << C;
 	std::cout << p ;
 	std::cout << p.r() << p.g() << p.b() <<std::endl;
 	
