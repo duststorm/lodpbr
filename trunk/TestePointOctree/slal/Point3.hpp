@@ -234,7 +234,7 @@ namespace CGL
 		 * @note Acept assigement
 		 * @return Real.
 		 */
-		inline  Real operator [] ( int i)  
+		inline  Real& operator [] ( int i)  
 	
 		{
 			if ( (i > 2) or ( i < 0))
