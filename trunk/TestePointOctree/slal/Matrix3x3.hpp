@@ -85,7 +85,29 @@ public:
 						
 	};
 	
+	inline operator const Real* () const
+	{
+	    return mA;
+	}
+	//----------------------------------------------------------------------------
 
+	inline operator Real* ()
+	{
+	    return mA;
+	}
+	//----------------------------------------------------------------------------
+	
+	inline const Real* operator[] (int rowIndex) const
+	{
+	    return &mA[3*rowIndex];
+	}
+	//----------------------------------------------------------------------------
+	
+	inline Real* operator[] (int rowIndex)
+	{
+	    return &mA[3*rowIndex];
+	}
+	
 	Real operator() ( int i, int j )  	const
 	{
 				

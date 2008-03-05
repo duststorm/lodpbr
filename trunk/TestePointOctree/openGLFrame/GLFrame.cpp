@@ -98,19 +98,36 @@ void GLFrame::drawPoints() {
    
   
    while ( surf != surfels.surfels.end() ) {
-	        
+	     
       glVertex3f(surf->position(0),surf->position(1),surf->position(2));
+           
       ++surf;
    }
+         
    glEnd();
    
-   glPointSize(10.0);
    glColor3f(0.0,1.0,0.0);
-   glBegin(GL_POINTS);
-             
-   glVertex3f(midlePoint[0],midlePoint[1],midlePoint[2]);
+   glBegin(GL_LINES);
+   
+   std::vector<Surfel<double> >::iterator surfe =  surfels.surfels.begin();
+   
   
+   while ( surfe != surfels.surfels.end() ) {
+	     
+	   CGL::Point3<double> p = surfe->position() + surfe->normal();
+	   p *= 1.25;
+	   glVertex3f(surfe->position(0),surfe->position(1),surfe->position(2));
+	   glVertex3f(p.x(),p.y(),p.z());
+           
+      ++surfe;
+   }
+         
    glEnd();
+   
+         	
+
+   
+   
    glEnable(GL_LIGHTING);
    glPointSize(1.0);
 }
@@ -202,7 +219,7 @@ void GLFrame::paintGL()
     	if (renderMode_A == Model)
     	{
     	   // model();
-    		//drawPoints();
+    	   drawPoints();
     	}
     	
 		for (OctreeIterator<double, CGL::Point3<double>*> oi = octree.begin();oi != octree.end();++oi )

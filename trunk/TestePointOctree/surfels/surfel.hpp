@@ -111,7 +111,7 @@ template <class Real > class Surfel
 	
 	 const Vector3 normal(void) const 
 	 { 
-		 return (this->normal); 
+		 return (this->mNormal); 
 	 };
 	 
 	 Real normal(int axis) const 

@@ -3,15 +3,13 @@
 
 #include <cassert>
 
+#include <list>
+#include <algorithm>
 #include <cmath>
 
 #include "Matrix3x3.hpp"
+#include "Point3.hpp"
 #include "Vector3.hpp"
-
-#define PI 			3.14159265358979323846264338
-#define ms_dInv3 	0.333333333
-#define ms_dRoot3 	1.732050808
-
 
 namespace CGL
 {
@@ -29,599 +27,374 @@ namespace CGL
 		
 		Real 			mEigenvalue[3];
 		Vector3<Real> 	mEigenvector[3];			
-			
+		Matrix3x3<Real> mCovariance; 
+		
 		static const int	None							= 0;
 		static const int 	HasThreeRealRoots 			= 1;
 		static const int	HasAllRealRootsAndEqual 	= 2;
 		static const int	HasOnlyOneRealRoot 			= 3;
-		
 	
+		
+		CubicEquation()
+		{
+			
+		}
+		
 		CubicEquation(const Matrix3x3<Real>& rkA)
 		{
-			Matrix3x3<Real> kM = rkA;
 			
-		    double adRoot[3];
-		    ComputeRoots(kM,adRoot);
-		    
-		    double b[3] = {0.0,0.0,1.0};
-		    
-		    mEigenvalue[0] = adRoot[0];
-		    mEigenvalue[1] = adRoot[1];
-		    mEigenvalue[2] = adRoot[2];
+		}
+		
+		CubicEquation(std::list<Point3<Real>* >& pPoint3List, const Point3<Real>& pMean)
+		{
+			covarianceMatrix (pPoint3List,pMean);
+			eigen_decomposition();
+		}
+				
+		
+		void covarianceMatrix (std::list<Point3<Real>* >& pPoint3List, const Point3<Real>& pMean)
+		{
 			
-			std::cout << mEigenvalue[0] << std::endl;
-			std::cout << mEigenvalue[1] << std::endl;
-			std::cout << mEigenvalue[2] << std::endl;
-		    
-		    
-		    for (int i = 0; i < 3 ; ++i)
-		    {
-		    	double result[3];
-		    	
-		    	Matrix3x3<Real> kM = rkA;
-		    	        	
-		    	kM(0,0) -= mEigenvalue[i];
-		    	kM(1,1) -= mEigenvalue[i];
-		    	kM(2,2) -= mEigenvalue[i];
-		    	
-		    	std::cout << kM << std::endl;
-		    	
-		    	if ( Solve3(kM,b,result) ){
-		    		std::cout << "resolveu  " <<result[0]<< std::endl;
-		    		mEigenvector[i] = Vector3<Real> (result[0],result[1],result[2]);
-		    	}
-		    	    	
-		    	
-		    }
-	        
+			Real correlationXY = static_cast<Real> (0);
+			Real correlationXZ = static_cast<Real> (0); 
+			Real correlationYZ = static_cast<Real> (0);
+						
+			Real correlationXX = static_cast<Real> (0);
+			Real correlationYY = static_cast<Real> (0);
+			Real correlationZZ = static_cast<Real> (0);
+			
+			// Como é 1 e nao 1.0  o resultado é Zero
+			//Real N  = static_cast<Real> (1/  pPoint3List.size() );
+			
+			Real N  = static_cast<Real> (1.0 / pPoint3List.size());
+				
+		
+			typedef typename std::list<Point3<Real>* >::iterator ListIterator;
+					
+			for (ListIterator it = pPoint3List.begin(); it != pPoint3List.end() ; ++it)
+			{
+				correlationXX += ( ((*it)->x() - pMean.x()) * ((*it)->x() - pMean.x()) ); 
+				correlationYY += ( ((*it)->y() - pMean.y()) * ((*it)->y() - pMean.y()) );
+				correlationZZ += ( ((*it)->z() - pMean.z()) * ((*it)->z() - pMean.z()) );
+				
+				correlationXY += ( ((*it)->x() - pMean.x()) * ((*it)->y() - pMean.y()) );
+				correlationXZ += ( ((*it)->x() - pMean.x()) * ((*it)->z() - pMean.z()) );
+				correlationYZ += ( ((*it)->y() - pMean.y()) * ((*it)->z() - pMean.z()) );
+									
+			}
+					
 
-#if 0
-			// Scale the matrix so its entries are in [-1,1].  The scaling is applied
-			    // only when at least one matrix entry has magnitude larger than 1.
-				Matrix3x3<Real> kAScaled = rkA;
-			    Real* afAScaledEntry = kAScaled.getArray();
-			    Real fMax = fabs(afAScaledEntry[0]);
-			    Real fAbs = fabs(afAScaledEntry[1]);
-			    if (fAbs > fMax)
-			    {
-			        fMax = fAbs;
-			    }
-			    fAbs = fabs(afAScaledEntry[2]);
-			    if (fAbs > fMax)
-			    {
-			        fMax = fAbs;
-			    }
-			    fAbs = fabs(afAScaledEntry[4]);
-			    if (fAbs > fMax)
-			    {
-			        fMax = fAbs;
-			    }
-			    fAbs = fabs(afAScaledEntry[5]);
-			    if (fAbs > fMax)
-			    {
-			        fMax = fAbs;
-			    }
-			    fAbs = fabs(afAScaledEntry[8]);
-			    if (fAbs > fMax)
-			    {
-			        fMax = fAbs;
-			    }
-
-			    int i;
-			    if (fMax > (Real)1)
-			    {
-			        Real fInvMax = ((Real)1)/fMax;
-			        for (i = 0; i < 9; i++)
-			        {
-			            afAScaledEntry[i] *= fInvMax;
-			        }
-			    }
-
-			    // Compute the eigenvalues using double-precision arithmetic.
-			    double adRoot[3];
-			    ComputeRoots(kAScaled,adRoot);
-			    mEigenvalue[0] = adRoot[0];
-			    mEigenvalue[1] = adRoot[1];
-			    mEigenvalue[2] = adRoot[2];
-
-			    Real afMax[3];
-			    Vector3<Real> akMaxRow[3];
-			    for (i = 0; i < 3; i++)
-			    {
-			        Matrix3x3<Real> kM = kAScaled;
-			        kM(0,0) -= mEigenvalue[i];
-			        kM(1,1) -= mEigenvalue[i];
-			        kM(2,2) -= mEigenvalue[i];
-			        if (!PositiveRank(kM,afMax[i],akMaxRow[i]))
-			        {
-			            // Rescale back to the original size.
-			            if (fMax > 1.0)
-			            {
-			                for (int j = 0; j < 3; j++)
-			                {
-			                    mEigenvalue[j] *= fMax;
-			                }
-			            }
-
-			            mEigenvector[0] = Vector3<Real>(1,0,0);
-			            mEigenvector[1] = Vector3<Real>(0,1,0);
-			            mEigenvector[2] = Vector3<Real>(0,0,1);
-			            return;
-			        }
-			    }
-
-			    Real fTotalMax = afMax[0];
-			    i = 0;
-			    if (afMax[1] > fTotalMax)
-			    {
-			        fTotalMax = afMax[1];
-			        i = 1;
-			    }
-			    if (afMax[2] > fTotalMax)
-			    {
-			        i = 2;
-			    }
-
-			    if (i == 0)
-			    {
-			        akMaxRow[0].normalize();
-			        ComputeVectors(kAScaled,akMaxRow[0],1,2,0);
-			    }
-			    else if (i == 1)
-			    {
-			        akMaxRow[1].normalize();
-			        ComputeVectors(kAScaled,akMaxRow[1],2,0,1);
-			    }
-			    else
-			    {
-			        akMaxRow[2].normalize();
-			        ComputeVectors(kAScaled,akMaxRow[2],0,1,2);
-			    }
-
-			    // Rescale back to the original size.
-			    if (fMax > (Real)1)
-			    {
-			        for (i = 0; i < 3; i++)
-			        {
-			            mEigenvalue[i] *= fMax;
-			        }
-			    }
-#endif
+			mCovariance = Matrix3x3<Real>(  (N*correlationXX), (N*correlationXY) , (N*correlationXZ),
+											(N*correlationXY), (N*correlationYY) , (N*correlationYZ),
+											(N*correlationXZ), (N*correlationYZ) , (N*correlationZZ) );	
 		}
-		
-		
-		bool Solve3 (const Matrix3x3<Real>& aafA, const Real afB[3],Real afX[3])
+			/* Eigen decomposition code for symmetric 3x3 matrices, copied from the public
+		   domain Java Matrix library JAMA. */
+
+
+		Real hypot2(Real x, Real y) 
 		{
-		    Real aafAInv[3][3];
-		    
-		    aafAInv[0][0] = aafA(1,1)*aafA(2,2)-aafA(1,2)*aafA(2,1);
-		    aafAInv[0][1] = aafA(0,2)*aafA(2,1)-aafA(0,1)*aafA(2,2);
-		    aafAInv[0][2] = aafA(0,1)*aafA(1,2)-aafA(0,2)*aafA(1,1);
-		    aafAInv[1][0] = aafA(1,2)*aafA(2,0)-aafA(1,0)*aafA(2,2);
-		    aafAInv[1][1] = aafA(0,0)*aafA(2,2)-aafA(0,2)*aafA(2,0);
-		    aafAInv[1][2] = aafA(0,2)*aafA(1,0)-aafA(0,0)*aafA(1,2);
-		    aafAInv[2][0] = aafA(1,0)*aafA(2,1)-aafA(1,1)*aafA(2,0);
-		    aafAInv[2][1] = aafA(0,1)*aafA(2,0)-aafA(0,0)*aafA(2,1);
-		    aafAInv[2][2] = aafA(0,0)*aafA(1,1)-aafA(0,1)*aafA(1,0);
-		    Real fDet = aafA(0,0)*aafAInv[0][0] + aafA(0,1)*aafAInv[1][0] +
-		        aafA(0,2)*aafAInv[2][0];
-
-		    if ( fabs(fDet) < 0.00001)
-		    {
-		    	std::cout << "Mas Por que " << fabs(fDet) << std::endl;
-		        return false;
-		    }
-
-		    Real fInvDet = ((Real)1.0)/fDet;
-		    for (int iRow = 0; iRow < 3; iRow++)
-		    {
-		        for (int iCol = 0; iCol < 3; iCol++)
-		        {
-		            aafAInv[iRow][iCol] *= fInvDet;
-		        }
-		    }
-
-		    afX[0] = aafAInv[0][0]*afB[0]+aafAInv[0][1]*afB[1]+aafAInv[0][2]*afB[2];
-		    afX[1] = aafAInv[1][0]*afB[0]+aafAInv[1][1]*afB[1]+aafAInv[1][2]*afB[2];
-		    afX[2] = aafAInv[2][0]*afB[0]+aafAInv[2][1]*afB[1]+aafAInv[2][2]*afB[2];
-		    return true;
+		  return sqrt(x*x+y*y);
 		}
-		
-		//----------------------------------------------------------------------------
 
-		static void ComputeRoots (const Matrix3x3<Real>& rkA,double adRoot[3])
+		// Symmetric Householder reduction to tridiagonal form.
+
+		void eigen_decomposition() 
 		{
-		    // Convert the unique matrix entries to double precision.
-		    Real dA00 = rkA(0,0);
-		    Real dA01 = rkA(0,1);
-		    Real dA02 = rkA(0,2);
-		    Real dA11 = rkA(1,1);
-		    Real dA12 = rkA(1,2);
-		    Real dA22 = rkA(2,2);
 
-		    // The characteristic equation is x^3 - c2*x^2 + c1*x - c0 = 0.  The
-		    // eigenvalues are the roots to this equation, all guaranteed to be
-		    // real-valued, because the matrix is symmetric.
-		    Real dC0 = dA00 * dA11 * dA22 + 
-		                2.0 * dA01 * dA02 * dA12 - 
-		               dA00 * dA12 * dA12 -
-		        	   dA11 * dA02 * dA02 - 
-		        	   dA22 * dA01 * dA01;
+			 Real e[3];
+			 Real d[3];
+			
+			//  This is derived from the Algol procedures tred2 by
+			//  Bowdler, Martin, Reinsch, and Wilkinson, Handbook for
+			//  Auto. Comp., Vol.ii-Linear Algebra, and the corresponding
+			//  Fortran subroutine in EISPACK.
 
-		    Real dC1 =  dA00 * dA11 - 
-		    			dA01 * dA01 + 
-		    			dA00 * dA22 - 
-		    			dA02 * dA02 +
-		    			dA11 * dA22 - 
-		    			dA12 * dA12;
+			d[0] = mCovariance[2][0];
+			d[1] = mCovariance[2][1];
+			d[2] = mCovariance[2][2];
 
-		    Real dC2 = dA00 + dA11 + dA22;
+			// Householder reduction to tridiagonal form.
 
-		    // Construct the parameters used in classifying the roots of the equation
-		    // and in solving the equation for the roots in closed form.
-		    Real dC2Div3 = dC2*ms_dInv3;
-		    Real dADiv3 = (dC1 - dC2*dC2Div3)*ms_dInv3;
-		    
-		    if (dADiv3 > 0.0)
-		    {
-		        dADiv3 = 0.0;
-		    }
+			for (int i = 3-1; i > 0; i--) 
+			{
 
-		    Real dMBDiv2 = 0.5*(dC0 + dC2Div3*(2.0*dC2Div3*dC2Div3 - dC1));
+				// Scale to avoid under/overflow.
 
-		    Real dQ = dMBDiv2*dMBDiv2 + dADiv3*dADiv3*dADiv3;
-		    if (dQ > 0.0)
-		    {
-		        dQ = 0.0;
-		    }
+				Real scale = 0.0;
+				Real h 	   = 0.0;
+				
+				for (int k = 0; k < i; k++) 
+				{
+					scale = scale + fabs(d[k]);
+				}
+				
+				if (scale == 0.0) 
+				{
 
-		    // Compute the eigenvalues by solving for the roots of the polynomial.
-		    Real dMagnitude = sqrt(-dADiv3);
-		    Real dAngle = atan2(sqrt(-dQ),dMBDiv2)*ms_dInv3;
-		    Real dCos = cos(dAngle);
-		    Real dSin = sin(dAngle);
-		    Real dRoot0 = dC2Div3 + 2.0*dMagnitude*dCos;
-		    Real dRoot1 = dC2Div3 - dMagnitude*(dCos + ms_dRoot3*dSin);
-		    Real dRoot2 = dC2Div3 - dMagnitude*(dCos - ms_dRoot3*dSin);
+					e[i] = d[i-1];
 
-		    // Sort in increasing order.
-		    if (dRoot1 >= dRoot0)
-		    {
-		        adRoot[0] = dRoot0;
-		        adRoot[1] = dRoot1;
-		    }
-		    else
-		    {
-		        adRoot[0] = dRoot1;
-		        adRoot[1] = dRoot0;
-		    }
+					for (int j = 0; j < i; j++) 
+					{
+						d[j] = mCovariance[i-1][j];
+						mCovariance[i][j] = 0.0;
+						mCovariance[j][i] = 0.0;
+					}
 
-		    if (dRoot2 >= adRoot[1])
-		    {
-		        adRoot[2] = dRoot2;
-		    }
-		    else
-		    {
-		        adRoot[2] = adRoot[1];
-		        if (dRoot2 >= adRoot[0])
-		        {
-		            adRoot[1] = dRoot2;
-		        }
-		        else
-		        {
-		            adRoot[1] = adRoot[0];
-		            adRoot[0] = dRoot2;
-		        }
-		    }
+				}
+				else
+				{
+
+					// Generate Householder vector.
+
+					for (int k = 0; k < i; k++) 
+					{
+						d[k] /= scale;
+						h += d[k] * d[k];
+					}
+
+					Real f = d[i-1];
+					Real g = sqrt(h);
+
+					if (f > 0) 
+					{
+						g = -g;
+					}
+
+					e[i] 	= scale * g;
+					h 		= h - f * g;
+					d[i-1] 	= f - g;
+
+					for (int j = 0; j < i; j++) 
+					{
+						e[j] = 0.0;
+					}
+
+					// Apply similarity transformation to remaining columns.
+
+					for (int j = 0; j < i; j++) 
+					{
+
+						f 		= d[j];
+						mCovariance[j][i] = f;
+						g 		= e[j] + mCovariance[j][j] * f;
+
+						for (int k = j+1; k <= i-1; k++) 
+						{
+							g 	 += mCovariance[k][j] * d[k];
+							e[k] += mCovariance[k][j] * f;
+						}
+
+						e[j] = g;
+					}
+
+					f = 0.0;
+					for (int j = 0; j < i; j++) 
+					{
+						e[j] /= h;
+						f 	 += e[j] * d[j];
+					}
+					Real hh = f / (h + h);
+					for (int j = 0; j < i; j++) 
+					{
+						e[j] -= hh * d[j];
+					}
+					for (int j = 0; j < i; j++) 
+					{
+						f = d[j];
+						g = e[j];
+						for (int k = j; k <= i-1; k++) 
+						{
+							mCovariance[k][j] -= (f * e[k] + g * d[k]);
+						}
+						d[j] 	= mCovariance[i-1][j];
+						mCovariance[i][j] = 0.0;
+					}
+				}
+
+				d[i] = h;
+			}
+
+			// Accumulate transformations.
+
+			for (int i = 0; i < 3-1; i++) 
+			{
+				mCovariance[3-1][i] = mCovariance[i][i];
+				mCovariance[i][i] = 1.0;
+				Real h = d[i+1];
+				if (h != 0.0) {
+					for (int k = 0; k <= i; k++) {
+						d[k] = mCovariance[k][i+1] / h;
+					}
+					for (int j = 0; j <= i; j++) {
+						Real g = 0.0;
+						for (int k = 0; k <= i; k++) {
+							g += mCovariance[k][i+1] * mCovariance[k][j];
+						}
+						for (int k = 0; k <= i; k++) {
+							mCovariance[k][j] -= g * d[k];
+						}
+					}
+				}
+				for (int k = 0; k <= i; k++) {
+					mCovariance[k][i+1] = 0.0;
+				}
+			}
+			
+			for (int j = 0; j < 3; j++) 
+			{
+				d[j] = mCovariance[3-1][j];
+				mCovariance[3-1][j] = 0.0;
+			}
+			
+			mCovariance[3-1][3-1] = 1.0;
+			e[0] = 0.0;
+		 
+
+		// Symmetric tridiagonal QL algorithm.
+		// Start QL algorithm	
+		//static void tql2(Real V[3][3], Real d[3], Real e[3]) 
+		
+		//  This is derived from the Algol procedures tql2, by
+		//  Bowdler, Martin, Reinsch, and Wilkinson, Handbook for
+		//  Auto. Comp., Vol.ii-Linear Algebra, and the corresponding
+		//  Fortran subroutine in EISPACK.
+
+			for (int i = 1; i < 3; i++) 
+			{
+				e[i-1] = e[i];
+			}
+			e[3-1] = 0.0;
+
+			Real f = 0.0;
+			Real tst1 = 0.0;
+			Real eps = pow(2.0,-52.0);
+			for (int l = 0; l < 3; l++) {
+
+				// Find small subdiagonal element
+
+				tst1 = std::max( tst1, fabs( d[l]) + fabs(e[l] ) );
+				int m = l;
+				while (m < 3) 
+				{
+					if (fabs(e[m]) <= eps*tst1) 
+					{
+						break;
+					}
+					m++;
+				}
+
+				// If m == l, d[l] is an eigenvalue,
+				// otherwise, iterate.
+
+				if (m > l) {
+					int iter = 0;
+					do 
+					{
+						iter = iter + 1;  // (Could check iteration count here.)
+
+						// Compute implicit shift
+
+						Real g = d[l];
+						Real p = (d[l+1] - g) / (2.0 * e[l]);
+						Real r = hypot2(p,1.0);
+						if (p < 0) {
+							r = -r;
+						}
+						d[l] = e[l] / (p + r);
+						d[l+1] = e[l] * (p + r);
+						Real dl1 = d[l+1];
+						Real h = g - d[l];
+						for (int i = l+2; i < 3; i++) {
+							d[i] -= h;
+						}
+						f = f + h;
+
+						// Implicit QL transformation.
+
+						p = d[m];
+						Real c 	 = 1.0;
+						Real c2  = c;
+						Real c3  = c;
+						Real el1 = e[l+1];
+						Real s 	 = 0.0;
+						Real s2  = 0.0;
+
+						for (int i = m-1; i >= l; i--) 
+						{
+							c3 = c2;
+							c2 = c;
+							s2 = s;
+							g = c * e[i];
+							h = c * p;
+							r = hypot2(p,e[i]);
+							e[i+1] = s * r;
+							s = e[i] / r;
+							c = p / r;
+							p = c * d[i] - s * g;
+							d[i+1] = h + s * (c * g + s * d[i]);
+
+							// Accumulate transformation.
+
+							for (int k = 0; k < 3; k++) 
+							{
+								h = mCovariance[k][i+1];
+								mCovariance[k][i+1] = s * mCovariance[k][i] + c * h;
+								mCovariance[k][i] = c * mCovariance[k][i] - s * h;
+							}
+						}
+						p = -s * s2 * c3 * el1 * e[l] / dl1;
+						e[l] = s * p;
+						d[l] = c * p;
+
+						// Check for convergence.
+
+					} while (fabs(e[l]) > eps*tst1);
+				}
+				d[l] = d[l] + f;
+				e[l] = 0.0;
+			}
+
+			// Sort eigenvalues and corresponding vectors.
+
+			for (int i = 0; i < 3-1; i++) 
+			{
+				int k = i;
+				Real p = d[i];
+				for (int j = i+1; j < 3; j++) 
+				{
+					if (d[j] < p) 
+					{
+						k = j;
+						p = d[j];
+					}
+				}
+				if (k != i) 
+				{
+					d[k] = d[i];
+					d[i] = p;
+					for (int j = 0; j < 3; j++) 
+					{
+						p = mCovariance[j][i];
+						mCovariance[j][i] = mCovariance[j][k];
+						mCovariance[j][k] = p;
+					}
+				}
+			}
+			mEigenvalue[0] = d[0];
+			mEigenvalue[1] = d[1];
+			mEigenvalue[2] = d[2];
+			
+			mEigenvector[0] = mCovariance.col(0);
+			mEigenvector[1] = mCovariance.col(1);
+			mEigenvector[2] = mCovariance.col(2);
 		}
-		//----------------------------------------------------------------------------
-		bool PositiveRank (Matrix3x3<Real>& rkM,Real& rfMax, Vector3<Real>& rkMaxRow) const
-		{
-		    // Locate the maximum-magnitude entry of the matrix.
-		    rfMax = -1.0;
-		    int iRow, iCol, iMaxRow = -1;
-		    for (iRow = 0; iRow < 3; iRow++)
-		    {
-		        for (iCol = iRow; iCol < 3; iCol++)
-		        {
-		            Real fAbs = fabs(rkM(iRow,iCol));
-		            if (fAbs > rfMax)
-		            {
-		                rfMax = fAbs;
-		                iMaxRow = iRow;
-		            }
-		        }
-		    }
-
-		    // Return the row containing the maximum, to be used for eigenvector
-		    // construction.
-		    rkMaxRow = rkM.row(iMaxRow);
-
-		    return rfMax >= 1e-06f;
-		}
+	
 		
 		
-		void ComputeVectors (const Matrix3x3<Real>& rkA, Vector3<Real>& rkU2, int i0, int i1, int i2)
-		{
-			 Vector3<Real> kU0, kU1;
-			 GenerateComplementBasis (kU0,kU1,rkU2);
-
-			    // V[i2] = c0*U0 + c1*U1,  c0^2 + c1^2=1
-			    // e2*V[i2] = c0*A*U0 + c1*A*U1
-			    // e2*c0 = c0*U0.Dot(A*U0) + c1*U0.Dot(A*U1) = d00*c0 + d01*c1
-			    // e2*c1 = c0*U1.Dot(A*U0) + c1*U1.Dot(A*U1) = d01*c0 + d11*c1
-			    Vector3<Real> kTmp = rkA*kU0;
-			    Real fP00 = mEigenvalue[i2] - (kU0 * (kTmp));
-			    Real fP01 = kU1 * kTmp;
-			    Real fP11 = mEigenvalue[i2] - (kU1*(rkA*kU1));
-			    Real fInvLength;
-			    Real fMax = fabs(fP00);
-			    int iRow = 0;
-			    Real fAbs = fabs(fP01);
-			    if (fAbs > fMax)
-			    {
-			        fMax = fAbs;
-			    }
-			    fAbs = fabs(fP11);
-			    if (fAbs > fMax)
-			    {
-			        fMax = fAbs;
-			        iRow = 1;
-			    }
-
-			    if (fMax >= 1e-06f)
-			    {
-			        if (iRow == 0)
-			        {
-			            fInvLength = 1/sqrt(fP00*fP00 + fP01*fP01);
-			            fP00 *= fInvLength;
-			            fP01 *= fInvLength;
-			            mEigenvector[i2] = fP01*kU0 + fP00*kU1;
-			        }
-			        else
-			        {
-			            fInvLength = 1/sqrt(fP11*fP11 + fP01*fP01);
-			            fP11 *= fInvLength;
-			            fP01 *= fInvLength;
-			            mEigenvector[i2] = fP11*kU0 + fP01*kU1;
-			        }
-			    }
-			    else
-			    {
-			        if (iRow == 0)
-			        {
-			            mEigenvector[i2] = kU1;
-			        }
-			        else
-			        {
-			            mEigenvector[i2] = kU0;
-			        }
-			    }
-
-			    // V[i0] = c0*U2 + c1*Cross(U2,V[i2]) = c0*R + c1*S
-			    // e0*V[i0] = c0*A*R + c1*A*S
-			    // e0*c0 = c0*R.Dot(A*R) + c1*R.Dot(A*S) = d00*c0 + d01*c1
-			    // e0*c1 = c0*S.Dot(A*R) + c1*S.Dot(A*S) = d01*c0 + d11*c1
-			    Vector3<Real> kS = rkU2 ^ mEigenvector[i2];
-			    kTmp = rkA*rkU2;
-			    fP00 = mEigenvalue[i0] - (rkU2*(kTmp));
-			    fP01 = kS * kTmp;
-			    fP11 = mEigenvalue[i0] - (kS * (rkA*kS));
-			    fMax = fabs(fP00);
-			    iRow = 0;
-			    fAbs = fabs(fP01);
-			    if (fAbs > fMax)
-			    {
-			        fMax = fAbs;
-			    }
-			    fAbs = fabs(fP11);
-			    if (fAbs > fMax)
-			    {
-			        fMax = fAbs;
-			        iRow = 1;
-			    }
-
-			    if (fMax >=1e-06f)
-			    {
-			        if (iRow == 0)
-			        {
-			            fInvLength = 1/sqrt(fP00*fP00 + fP01*fP01);
-			            fP00 *= fInvLength;
-			            fP01 *= fInvLength;
-			            mEigenvector[i0] = fP01*rkU2 + fP00*kS;
-			        }
-			        else
-			        {
-			            fInvLength = 1/sqrt(fP11*fP11 + fP01*fP01);
-			            fP11 *= fInvLength;
-			            fP01 *= fInvLength;
-			            mEigenvector[i0] = fP11*rkU2 + fP01*kS;
-			        }
-			    }
-			    else
-			    {
-			        if (iRow == 0)
-			        {
-			            mEigenvector[i0] = kS;
-			        }
-			        else
-			        {
-			            mEigenvector[i0] = rkU2;
-			        }
-			    }
-
-			    // V[i1] = Cross(V[i2],V[i0])
-			    mEigenvector[i1] = mEigenvector[i2] ^ mEigenvector[i0];
-		    
-		}//Computer Vectors
-		
-		void GenerateComplementBasis (Vector3<Real>& rkU, Vector3<Real>& rkV,const Vector3<Real>& rkW)
-		{
-		    Real fInvLength;
-
-		    if ( (fabs(rkW[0])) >= ( fabs(rkW[1]) ) )
-		    {
-		        // W.x or W.z is the largest magnitude component, swap them
-		        fInvLength = 1/sqrt(rkW[0]*rkW[0] + rkW[2]*rkW[2]);
-		        rkU[0] = -rkW[2]*fInvLength;
-		        rkU[1] = (Real)0.0;
-		        rkU[2] = rkW[0]*fInvLength;
-		        rkV[0] = rkW[1]*rkU[2];
-		        rkV[1] = rkW[2]*rkU[0] - rkW[0]*rkU[2];
-		        rkV[2] = -rkW[1]*rkU[0];
-		    }
-		    else
-		    {
-		        // W.y or W.z is the largest magnitude component, swap them
-		        fInvLength = 1/sqrt(rkW[1]*rkW[1] + rkW[2]*rkW[2]);
-		        rkU[0] = (Real)0.0;
-		        rkU[1] =  rkW[2]*fInvLength;
-		        rkU[2] = -rkW[1]*fInvLength;
-		        rkV[0] =  rkW[1]*rkU[2] - rkW[2]*rkU[1];
-		        rkV[1] = -rkW[0]*rkU[2];
-		        rkV[2] =  rkW[0]*rkU[1];
-		    }
-		}// Complement Basis
-		
-
 	};
 
 }/* CGL :: NAMESPACE */
 
 #endif /*POLYNOMIAL_HPP_*/
-
-
-
-// Calcular as raizes cubic do polinomio dado
-/*static int findCubicRoots(	const Real& pA, 
-		  		   		  	const Real& pB, 
-		  		   		  	const Real& pC,
-		  		   		  	const Real& pD, Real roots[3])
-{
-	
-	Real a, b, c;
-	assert (pA);			
-	// Testar Algo para evitar Zero no parâmentro do pow
-				
-	Real f = (  (3.0*pC / pA ) - ( pow(pB,2.0) / pow(pA,2.0) ) ) / 3;
-	Real g = (  (2*pow(pB,3.0) / pow(pA,3.0) ) - ( (9.0*pB*pC) / ( pow(pA,2.0) ) ) + (27.0*pD / pA) ) / 27.0;
-	Real h = ( pow(g,2.0) / 4.0 ) + (pow(f,3.0) / 27.0 );
-
-	a = pB / pA;
-	b = pC / pA;
-	c = pD / pA;
-
-	Real Q = (a * a - 3 * b) / 9;
-	Real R = (2 * a * a * a - 9 * a * b + 27 * c) / 54;
-	Real Qcubed = Q * Q * Q;
-	Real d = Qcubed - R * R;
-
-  
-	if ( (h == 0) and (f == 0) and (g == 0) )
-	{
-		roots[0] = roots[1] = roots[2] = -pow((pD/pA),(1.0/3.0));
-		return HasAllRealRootsAndEqual;
-	}	
-	
-	/* Three real roots 
-	else if (h <= 0) 
-	{
-		Real theta = acos(R / sqrt(Qcubed));
-		Real sqrtQ = sqrt(Q);
-    
-		roots[0] = -2 * sqrtQ * cos( theta           / 3) - a / 3;
-		roots[1] = -2 * sqrtQ * cos((theta + 2 * PI) / 3) - a / 3;
-		roots[2] = -2 * sqrtQ * cos((theta + 4 * PI) / 3) - a / 3;
-    
-		return  HasThreeRealRoots;
-    
-	}
-
-	/* One real root 
-	else if (h > 0)
-	{
-		Real e = pow(sqrt(-d) + fabs(R), 1. / 3.);
-    
-		if (R > 0)
-			e = -e;
-    
-		roots[0] = (e + Q / e) - a / 3.;
-    
-		return HasOnlyOneRealRoot;
-    
-	}
-  
-	else
-	{
-		std::cerr << "NEVER !!";
-		return None;
-	}
-	  
-	  
-}*/
-
-
-
-
-/*int solver(Real * result)
-{
-	
-	Real lF = 0;
-	Real lG = 0;
-	Real lH = 0;
-	
-	Real lI = 0;
-	Real lJ = 0;
-	Real lK = 0;
-	Real lL = 0;
-	Real lM = 0;
-	Real lN = 0;
-	Real lP = 0;
-	
-
-	else if ( lH <= 0)
-	{
-		
-		lI = sqrt ( ( pow (lG,2.0) * 0.25 ) - lH );
-		std::cout << "dentro LI " << lI << std::endl;
-		lJ = pow (lI, (1.0/3.0) );
-		std::cout << "dentro LJ " << lJ << std::endl;
-		lK = acos ( -(lG / (2.0*lI) ) );
-		std::cout << "dentro LK " << lK << std::endl;
-		lL = -lJ; 
-		std::cout << "dentro LL " << lL << std::endl;
-		lM = cos( lK/3.0 );
-		std::cout << "dentro LM" << lM << std::endl;
-		lN = sqrt(3.0) * sin (lK/3.0);
-		std::cout << "dentro LN " << lN << std::endl;
-		lP = -( mB / (3.0*mA) );
-		std::cout << "dentro LP " << lP << std::endl;
-		
-		result[0] = 2.0*lJ * cos( lK/3.0 ) - (mB/(3.0*mA));
-		result[1] = lL * ( lM + lN ) + lP;
-		result[2] = lL * ( lM - lN ) + lP;
-		
-		std::cout << "dentro " << result[0] << " " << result[1] << " " << result[2] << std::endl; 
-		
-		return Has_Three_Real_Roots;	
-	}
-		
-	else if ( lH > 0)
-	{
-		lI = (-(lG*0.5)) + sqrt(lH);
-		std::cout << "dentro LI " << lI << std::endl;
-		lJ = pow (lI, (1.0/3.0));
-		std::cout << "dentro LJ " << lJ << std::endl;
-		lK = (-(lG*0.5)) - sqrt(lH);
-		std::cout << "dentro LK " << lK << std::endl;
-		lM = pow (lK, (1.0/3.0));
-		std::cout << "dentro LM " << lM << std::endl;
-		result[0] = (lJ + lM) - (mB/(3*mA));
-		
-		return Has_Only_One_Real_Root;
-	}
-	else
-		std::cout << "NEVER" << std::endl;
-
-}*/
 
