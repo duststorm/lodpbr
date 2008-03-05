@@ -32,6 +32,7 @@ public:
     typedef OctreeInternalNode<Real, ItemPtr, Refine> 	OctreeInternalNode;
     
     typedef CGL::CubicEquation<Real>					CubicEquation;
+    typedef CGL::Vector3<Real> 							Vector3;  ///< A Point in 3D
     typedef CGL::Point3<Real> 							Point3;  ///< A Point in 3D
     typedef Box_3<Real> 								Box3;    ///< Octant box type
     
@@ -89,14 +90,16 @@ public:
             m /= PtrList.size();
                         
             newOctreeInternalNode->setMean(m);
+            
             covariance = CubicEquation(PtrList,m);
             
-            newOctreeInternalNode->EigenVector[0] = covariance.mEigenvector[0];
-            newOctreeInternalNode->EigenVector[1] = covariance.mEigenvector[1];
-            newOctreeInternalNode->EigenVector[2] = covariance.mEigenvector[2];
+            newOctreeInternalNode->setEigenVector (covariance.mEigenvector);
+           
+            setEigenVector(covariance.mEigenvector) ;
             
-            
+           
             PtrList.clear();
+            
             for (listItemPtrIterator pi = oldPtrList.begin (); pi != oldPtrList.end(); ++pi) {
                 newOctreeInternalNode->insert (world, level + 1, *pi, fatherPtr);
             }
@@ -162,9 +165,46 @@ public:
     
     /// Returns true or false depending on whether this is leaf node or not
     virtual bool isLeaf () const { return true; }
+    
+    /// FUNCOES CRIADAS POR MIN
+    
+    virtual ItemPtrList itemList () const
+    {
+    	return PtrList;
+    }
+    
+    virtual Vector3 eigenVector ( int i) const
+    {
+    	return mEigenVector[i];    
+    	                    
+    }
+    
+    virtual Real eigenValues ( int i) const
+    {
+    	return mEigenValues[i];    
+    	                    
+    }
+    
+    virtual void setEigenVector (const Vector3 pEigenVector[3] ) 
+    {
+    	mEigenVector[0] = pEigenVector[0];    
+    	mEigenVector[1] = pEigenVector[1];
+    	mEigenVector[2] = pEigenVector[2];
+    	                    
+    }
+    
+    virtual void  setEigenValues ( const Real pEigenValues[3] ) 
+    {
+    	mEigenValues[0] = pEigenValues[0];    
+    	mEigenValues[1] = pEigenValues[1];
+    	mEigenValues[2] = pEigenValues[2];
+    }
+    
 private:
 	
-	CubicEquation covariance;
+	CubicEquation 	covariance;
+	Vector3 		mEigenVector[3];
+	Real    		mEigenValues[3];
  
 };
 

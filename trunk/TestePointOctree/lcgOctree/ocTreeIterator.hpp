@@ -24,7 +24,8 @@ class OctreeIterator {
     typedef OctreeInternalNode<Real, ItemPtr, Refine> 	InternalNode; ///< Internal OctreeNode
     typedef Node* 										NodePtr; 	  ///< Pointer to octree node
     
-    typedef CGL::Point3<Real> 							Point3; 
+    typedef CGL::Point3<Real> 							Point3;
+    typedef CGL::Vector3<Real> 							Vector3; 
     typedef Box_3<Real> 								Box3;          ///< Octant extent
     
     std::vector<NodePtr*> path; ///< Path from root to pointed node
@@ -53,12 +54,13 @@ public:
     /// Level of the node inside the octree (Root is level 0)
     int level () const { return pathLen; }
 
-  Point3 mean ( void ) const { 
-    if (pathLen > 1)
-      if ((*path[pathLen-1])->isLeaf()) 
-    	  return father()->mean(); 
-  }
-    
+    Point3 mean ( void ) const { 
+    	if (pathLen > 1)
+    		if ((*path[pathLen-1])->isLeaf()) 
+    			return father()->mean(); 
+    }
+
+     
     /// Pointer to father node. Pre-condition: node is not root.
     InternalNode * father () const {
         assert (pathLen > 0);

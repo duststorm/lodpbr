@@ -48,7 +48,8 @@ namespace CGL
 		CubicEquation(std::list<Point3<Real>* >& pPoint3List, const Point3<Real>& pMean)
 		{
 			covarianceMatrix (pPoint3List,pMean);
-			eigen_decomposition();
+            std::cout << mCovariance;
+           	eigen_decomposition();
 		}
 				
 		
@@ -268,7 +269,7 @@ namespace CGL
 
 			Real f = 0.0;
 			Real tst1 = 0.0;
-			Real eps = pow(2.0,-52.0);
+			Real eps = 0.00000001;
 			for (int l = 0; l < 3; l++) {
 
 				// Find small subdiagonal element

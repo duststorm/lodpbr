@@ -31,6 +31,7 @@ class OctreeInternalNode : public OctreeNode<Real, ItemPtr, Refine> {
     typedef std::list<ItemPtr> ItemPtrList; ///< List of items stored inside leaf nodes
     typedef std::set<ItemPtr> ItemPtrSet;   ///< Return type of overlap
     typedef typename std::set<ItemPtr>::iterator ItemPtrSetIterator;
+    typedef typename std::list<ItemPtr>::iterator ItemPtrListIterator;
 
     OctreeNode* son[8];    
        
@@ -201,10 +202,61 @@ public:
     /// Returns true or false depending on whether this is leaf node or not
     virtual bool isLeaf () const { return false; }
     
+    
+    /// FUNCOES QUE EU CRIEI
+    
+    virtual ItemPtrList itemList () const
+    {
+    	ItemPtrList  leafList;
+    	
+    	for (int sonIndex = 0; sonIndex < 8 ; ++sonIndex)
+    	{
+    		ItemPtrList  temp_Leaf = son[sonIndex]->itemList();
+    		
+    		if (!temp_Leaf.empty()){
+    			for (ItemPtrListIterator pi = temp_Leaf.begin (); pi != temp_Leaf.end(); ++pi){
+    				leafList.push_back(*pi);
+    			}
+    		}  
+    		
+    	}
+    	
+    	return leafList;
+    }
+    
+    virtual Vector3 eigenVector ( int i) const
+    {
+    	return mEigenVector[i];    
+    	                    
+    }
+    
+    virtual Real eigenValues ( int i) const
+    {
+    	return mEigenValues[i];    
+    	                    
+    }
+    
+    virtual void setEigenVector (const Vector3 pEigenVector[3] ) 
+    {
+    	mEigenVector[0] = pEigenVector[0];    
+    	mEigenVector[1] = pEigenVector[1];
+    	mEigenVector[2] = pEigenVector[2];
+
+    }
+
+    virtual void setEigenValues ( const Real pEigenValues[3] ) 
+    {
+    	mEigenValues[0] = pEigenValues[0];    
+    	mEigenValues[1] = pEigenValues[1];
+    	mEigenValues[2] = pEigenValues[2];
+    }
+        
+    
 private:
 	
-	  Point3 mean_;
-
+	  Point3 	mean_;
+	  Vector3 	mEigenVector[3];
+	  Real   	mEigenValues[3];
 };
 
 
