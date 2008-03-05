@@ -70,20 +70,55 @@ void GLFrame::initializeGL()
 void GLFrame::model()
 {
 	
-	glDisable(GL_LIGHTING);		
-	glPointSize(2.0);
-	glColor3f(0.0,0.0,1.0);
-	glBegin(GL_POINTS);
-	   
-	std::vector<Surfel<double> >::iterator surf =  surfels.surfels.begin();
-	   
-	  
-	while ( surf != surfels.surfels.end() ) {
-		        
-	    glVertex3f(surf->position(0),surf->position(1),surf->position(2));
-	    ++surf;
+	for (OctreeIterator<double, CGL::Point3<double>*> oi = octree.begin();oi != octree.end();++oi )
+	{
+		if ( (*oi)->isLeaf())
+		{
+	   	   glDisable(GL_LIGHTING);		
+		   glColor3f(0.0,0.0,1.0);
+		   glBegin(GL_LINES);
+
+		   std::list< CGL::Point3<double>* > lp = (*oi)->itemList();
+		   
+		   std::cout << "SIZE" << lp.size() << std::endl;
+		   
+		   std::list< CGL::Point3<double>* >::iterator surfe = lp.begin();
+		   
+		   while ( surfe != lp.end() )
+		   {
+			   
+			   std::cout <<  ( (*oi)->eigenVector(0) * (*oi)->eigenVector(1)) << "  ZERO" << std::endl;
+			   
+			   CGL::Point3<double> p0 = *(*surfe) + (*oi)->eigenVector(0);
+			   glColor3f(0.0,0.0,1.0);
+			   p0 *= 1.25;
+			   glVertex3f((*(*surfe))[0],(*(*surfe))[1],(*(*surfe))[2]);
+			   glVertex3f(p0.x(),p0.y(),p0.z());
+
+			   CGL::Point3<double> p1 = (*(*surfe)) + (*oi)->eigenVector(1);
+			   glColor3f(0.0,0.0,1.0);
+			   p1 *= 1.25;
+			   glVertex3f((*(*surfe))[0],(*(*surfe))[1],(*(*surfe))[2]);
+			   glVertex3f(p1.x(),p1.y(),p1.z());
+			   
+			   CGL::Point3<double> p2 = (*(*surfe)) + (*oi)->eigenVector(2);
+			   glColor3f(0.0,0.0,1.0);
+			   p2 *= 1.25;
+			   glVertex3f((*(*surfe))[0],(*(*surfe))[1],(*(*surfe))[2]);
+			   glVertex3f(p2.x(),p2.y(),p2.z());
+
+	
+
+			   ++surfe;
+		   }
+		   
+		   glEnd();
+		   glEnable(GL_LIGHTING);
+		   glPointSize(1.0);
+		   break;
+		}  
+					
 	}
-	   glEnd();
 	
 }
 
@@ -106,7 +141,7 @@ void GLFrame::drawPoints() {
          
    glEnd();
    
-   glColor3f(0.0,1.0,0.0);
+ /*  glColor3f(0.0,1.0,0.0);
    glBegin(GL_LINES);
    
    std::vector<Surfel<double> >::iterator surfe =  surfels.surfels.begin();
@@ -122,7 +157,7 @@ void GLFrame::drawPoints() {
       ++surfe;
    }
          
-   glEnd();
+   glEnd();*/
    
          	
 
@@ -218,7 +253,7 @@ void GLFrame::paintGL()
     	
     	if (renderMode_A == Model)
     	{
-    	   // model();
+    	   model();
     	   drawPoints();
     	}
     	

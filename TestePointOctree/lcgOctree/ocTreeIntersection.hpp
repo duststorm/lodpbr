@@ -11,9 +11,9 @@ namespace lcgOctree {
 ///
 template <class Real>
 bool checkIntersection (const CGL::BoundingBox3<Real>& box, CGL::Point3<Real>* p) {
-    return p->x() >= box.xmin() && p->x() < box.xmax() &&
-           p->y() >= box.ymin() && p->y() < box.ymax() &&
-           p->z() >= box.zmin() && p->z() < box.zmax();
+	return p->x() >= box.xmin() && p->x() < box.xmax() &&
+	p->y() >= box.ymin() && p->y() < box.ymax() &&
+	p->z() >= box.zmin() && p->z() < box.zmax();
 }
 
 /// Returns the euclidean distance between a point and a point in 3D space
@@ -22,18 +22,18 @@ bool checkIntersection (const CGL::BoundingBox3<Real>& box, CGL::Point3<Real>* p
 /// @param clsPt closest point on object.
 /// @return distance between p and the polygon.
 template <class Real>
-  Real distance2Item (const CGL::Point3<Real>* pt, const CGL::Point3<Real>& p, CGL::Point3<Real>& clsp)
-  {
-    clsp = *pt;
-    CGL::Point3<Real> q = *pt;
-    Real a, b;
-    a = p[0] - q[0];
-    b = a * a;
-    a = p[1] - q[1];
-    b += a * a;
-    a = p[2] - q[2];
-    b += a * a;
-    return sqrt( b );
+Real distance2Item (const CGL::Point3<Real>* pt, const CGL::Point3<Real>& p, CGL::Point3<Real>& clsp)
+{
+	clsp = *pt;
+	CGL::Point3<Real> q = *pt;
+	Real a, b;
+	a = p[0] - q[0];
+	b = a * a;
+	a = p[1] - q[1];
+	b += a * a;
+	a = p[2] - q[2];
+	b += a * a;
+	return sqrt( b );
 }
 
 }
