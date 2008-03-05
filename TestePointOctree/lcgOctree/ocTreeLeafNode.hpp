@@ -10,6 +10,8 @@
 #include "ocTreeInternalNode.hpp"
 #include "ocTreeBox.hpp"
 #include "ocTreeIntersection.hpp"
+
+#include "slal/Polynomial.hpp"
 //
 // Forward declaration of OctreeIterator
 //
@@ -29,6 +31,7 @@ public:
     typedef OctreeNode<Real, ItemPtr, Refine>  			OctreeNode;          
     typedef OctreeInternalNode<Real, ItemPtr, Refine> 	OctreeInternalNode;
     
+    typedef CGL::CubicEquation<Real>					CubicEquation;
     typedef CGL::Point3<Real> 							Point3;  ///< A Point in 3D
     typedef Box_3<Real> 								Box3;    ///< Octant box type
     
@@ -83,8 +86,16 @@ public:
             
             for (listItemPtrIterator pi = oldPtrList.begin (); pi != oldPtrList.end(); ++pi) m += *(*pi);
             
-            m /= PtrList.size(); 
+            m /= PtrList.size();
+                        
             newOctreeInternalNode->setMean(m);
+            covariance = CubicEquation(PtrList,m);
+            
+            newOctreeInternalNode->EigenVector[0] = covariance.mEigenvector[0];
+            newOctreeInternalNode->EigenVector[1] = covariance.mEigenvector[1];
+            newOctreeInternalNode->EigenVector[2] = covariance.mEigenvector[2];
+            
+            
             PtrList.clear();
             for (listItemPtrIterator pi = oldPtrList.begin (); pi != oldPtrList.end(); ++pi) {
                 newOctreeInternalNode->insert (world, level + 1, *pi, fatherPtr);
@@ -151,8 +162,10 @@ public:
     
     /// Returns true or false depending on whether this is leaf node or not
     virtual bool isLeaf () const { return true; }
-    
-	  
+private:
+	
+	CubicEquation covariance;
+ 
 };
 
 

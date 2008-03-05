@@ -83,6 +83,12 @@ public:
 	
 	//Operator
 	
+	
+	inline operator Real * ()
+	{
+	    return xyz;
+	}
+	
 	inline Real operator [] ( int i) const
 	{
 		if ( i > 2)

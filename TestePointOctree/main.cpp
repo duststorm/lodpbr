@@ -1,6 +1,9 @@
 #include <QApplication>
 #include <iostream>
 #include <cmath>
+#include <list>
+
+#include <suitesparse/cs.h>
 
 #include "interface/myMainWindow.hpp"
 
@@ -19,12 +22,12 @@ int main(int argc, char *argv[])
 	CGL::Point3<double> q;
 	CGL::Color  c(p);
 	
-	int  b[3] = {1,1,1};
+	double  b[3] = {0,0,0};
 	double result[3];
 		
-	CGL::Vector3<double> v(b);
+	//CGL::Vector3<double> v(b);
 	
-	v = v.norm();
+	//v = v.norm();
 		
 	
 	CGL::Matrix3x3<double> A (1.0,-5.0,-4.0,
@@ -34,53 +37,32 @@ int main(int argc, char *argv[])
 	CGL::Matrix3x3<double> B (1.0,1.0,2.0,
 								2.0,4.0,-3.0,
 								3.0,6.0,-5.0);
-	double BBB[3] = {9.0,1.0,0.0};
+		
+	CGL::Matrix3x3<double> C  (	1.5,0.5,0.75,
+								0.5,0.5,0.25,
+								0.75,0.25,0.5);
 	
-	CGL::Matrix3x3<double> C (4.0,1.0,4.0,
-							  1.0,7.0,1.0,
-							  4.0,1.0,4.0);
 	
-	CGL::CubicEquation<double> resolve = CGL::CubicEquation<double>(C);
-	
-	resolve.Solve3 (B,BBB,result);
-	
-	//resolve.mEigenvector[0].normalize();
-	//resolve.mEigenvector[1].normalize();
-	//resolve.mEigenvector[2].normalize();
-	
-	std::cout << C * resolve.mEigenvector[0];
-	std::cout << C * resolve.mEigenvector[1];
-	std::cout << C * resolve.mEigenvector[2];
 
-	std::cout << "Eita " <<  resolve.mEigenvector[0];// *  resolve.mEigenvalue[0] << std::endl;
-	std::cout << "Eita " << resolve.mEigenvector[1]; // * resolve.mEigenvalue[1] << std::endl;
-	std::cout << "Eita " << resolve.mEigenvector[2];//  * resolve.mEigenvalue[2] << std::endl;
+	std::list<CGL::Point3<double>* >  pt;
 	
-	CGL::Vector3<double> g(3.0,4.0,-5.0);
+	CGL::Point3<double> pm = CGL::Point3<double>( 1,-1,2 );
 	
-	 g =  A * g;
+	pt.push_back( new CGL::Point3<double>(-1,-2,1) );
+	pt.push_back( new CGL::Point3<double>(1,0,2)   );
+	pt.push_back( new CGL::Point3<double>(2,-1,3)  );
+	pt.push_back( new CGL::Point3<double>(2,-1,2)  );
 	
-	double a = 0.0;
-	double * array;
+	CGL::CubicEquation<double> resolve = CGL::CubicEquation<double>(pt,pm);
 	
-	g = CGL::Vector3<double>(-209.9019,1737.5126,0.0);
-	
-	array = C.getArray();
+	std::cout << resolve.mCovariance;
 		
-	std::cout << B.row(2) << B(2,1) ;
+	std::cout << "Eita " << resolve.mEigenvalue[0] << " | "<< resolve.mEigenvector[0] << " | "<< resolve.mEigenvector[0].length();// *  resolve.mEigenvalue[0] << std::endl;
+	std::cout << "Eita " << resolve.mEigenvalue[1] << " | "<< resolve.mEigenvector[1] << " | "<< resolve.mEigenvector[1].length();// *  resolve.mEigenvalue[0] << std::endl;
+	std::cout << "Eita " << resolve.mEigenvalue[2] << " | "<< resolve.mEigenvector[2] << " | "<< resolve.mEigenvector[2].length();// *  resolve.mEigenvalue[0] << std::endl;
 	
-	g = g.norm();
-	std::cout << g;
-	std::cout <<  " Result "<< array[0] << " - " << array[1]<<" - "<< array[2] << std::endl <<
-					  " - " << array[3] << " - " << array[4]<<" - "<< array[5] << std::endl <<
-					  " - " << array[6] << " - " << array[7]<<" - "<< array[8] << std::endl;
-		
-	a = p[1] - q[0];
-	p[1] = 3.8898;
-	//std::cout << C;
-	std::cout << p ;
-	std::cout << p.r() << p.g() << p.b() <<std::endl;
 	
+
     QApplication app(argc, argv);
     if (!QGLFormat::hasOpenGL()) {
         cerr << "This system has no OpenGL support" << endl;
@@ -94,4 +76,34 @@ int main(int argc, char *argv[])
     return app.exec();
 }
 
+
+
+/*CGL::Vector3<double> g(3.0,4.0,-5.0);
+
+	
+	
+	a = p[1] - q[0];
+	p[1] = 3.8898;
+	//std::cout << C;
+	std::cout << p ;
+	std::cout << p.r() << p.g() << p.b() <<std::endl;
+	
+
+g =  A * g;
+
+double a = 0.0;
+double * array;
+
+g = CGL::Vector3<double>(-209.9019,1737.5126,0.0);
+
+array = C.getArray();
+	
+std::cout << B[1][1] << B(2,1) ;
+B[1][1] = 54545.32443;
+
+g = g.norm();
+std::cout << g;
+std::cout <<  " Result "<< array[0] << " - " << array[1]<<" - "<< array[2] << std::endl <<
+				  " - " << array[3] << " - " << array[4]<<" - "<< array[5] << std::endl <<
+				  " - " << array[6] << " - " << array[7]<<" - "<< array[8] << std::endl;*/
 

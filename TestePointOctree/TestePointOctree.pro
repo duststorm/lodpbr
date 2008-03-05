@@ -48,7 +48,8 @@ FORMS += ui/interface.ui
 
 # matrixLibrary/Vector3.cpp
 # LIBRARIES
-unix:LIBS = -lCGAL
+unix:LIBS = -lCGAL \
+    -lcxsparse
 
 # Output
 unix:MOC_DIR = .moc

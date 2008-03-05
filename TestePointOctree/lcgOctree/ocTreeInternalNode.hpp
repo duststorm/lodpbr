@@ -15,6 +15,7 @@
 #include "ocTreeLeafNode.hpp"
 
 
+
 ///
 /// This represents an internal Octree Node. These point to eight 
 /// son nodes each.
@@ -25,6 +26,7 @@ class OctreeInternalNode : public OctreeNode<Real, ItemPtr, Refine> {
     typedef OctreeNode<Real, ItemPtr, Refine> OctreeNode;      
 
     typedef typename CGL::Point3<Real> Point3;  ///< A Point in 3D
+    typedef typename CGL::Vector3<Real> Vector3;  ///< A Point in 3D
     typedef Box_3<Real> Box3; ///< Octant box type
     typedef std::list<ItemPtr> ItemPtrList; ///< List of items stored inside leaf nodes
     typedef std::set<ItemPtr> ItemPtrSet;   ///< Return type of overlap
@@ -47,7 +49,11 @@ public:
 		return this->mean_;
 	}
 	
-    /// constructor
+	Vector3 EigenVector[3];
+	
+	Real 	EigenValues[3];
+	
+	/// constructor
     OctreeInternalNode () {
        son [0] = son [1] = son [2] = son [3] =
        son [4] = son [5] = son [6] = son [7] = 0;
