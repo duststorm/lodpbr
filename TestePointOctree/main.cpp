@@ -22,10 +22,9 @@ int main(int argc, char *argv[])
 	CGL::Point3<double> q;
 	CGL::Color  c(p);
 	
-	double  b[3] = {0,0,0};
+	double  b[3] = {1,1,0};
 	double result[3];
 		
-	//CGL::Vector3<double> v(b);
 	
 	//v = v.norm();
 		
@@ -38,11 +37,6 @@ int main(int argc, char *argv[])
 								2.0,4.0,-3.0,
 								3.0,6.0,-5.0);
 		
-	CGL::Matrix3x3<double> C  (	1.5,0.5,0.75,
-								0.5,0.5,0.25,
-								0.75,0.25,0.5);
-	
-	
 
 	std::list<CGL::Point3<double>* >  pt;
 	
@@ -54,6 +48,22 @@ int main(int argc, char *argv[])
 	pt.push_back( new CGL::Point3<double>(2,-1,2)  );
 	
 	CGL::CubicEquation<double> resolve = CGL::CubicEquation<double>(pt,pm);
+	
+	CGL::Matrix3x3<double> C  (	1,1,1,
+								1,2,3,
+								0.5,0.5-resolve.mEigenvalue[0],0.25);
+	
+	
+	if (resolve.Solve3(C,b,result))
+	{
+		std::cout << "Eitaxx " << result[0] << std::endl;
+		std::cout << "Eitaxx " << result[1] << std::endl;
+		std::cout << "Eitaxx " << result[2] << std::endl;
+	}
+	
+	CGL::Vector3<double> v(result);
+	
+	std::cout << v.norm() ;
 	
 	std::cout << resolve.mCovariance;
 		
