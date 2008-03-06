@@ -8,6 +8,10 @@
 #include "ocTreeNode.hpp"
 #include "ocTreeInternalNode.hpp"
 
+// @Tip Use dynamic_cast<OctreeLeafNode*> para tentar transformar OctreeNode em LeafNode
+// se der errado retornará NULL
+
+
 #define debug(msg)
 
 template <class Real, class ItemPtr, class Refine>

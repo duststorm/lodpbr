@@ -11,6 +11,10 @@
 #include "Point3.hpp"
 #include "Vector3.hpp"
 
+
+#define ms_dInv3 0.333333333
+#define ms_dRoot3 1.732050808
+
 namespace CGL
 {
  // 2x3   - 4x2   - 22x + 24 = 0  3 raizes diferentes
@@ -48,10 +52,29 @@ namespace CGL
 		CubicEquation(std::list<Point3<Real>* >& pPoint3List, const Point3<Real>& pMean)
 		{
 			covarianceMatrix (pPoint3List,pMean);
-            std::cout << mCovariance;
-           	eigen_decomposition();
+            Eigensolver (mCovariance, mEigenvalue, mEigenvector);
+           	//eigen_decomposition();
+           	
 		}
 		
+		
+		
+		void QR (Matrix3x3<Real> A)
+		{
+			
+			Vector3<Real> v1 (A.col(0));
+			Vector3<Real> v2 (A.col(1));
+			Vector3<Real> v3 (A.col(2));
+			
+			v2 = v2 - ((v1*v2) / (v1*v1))*v1;
+			
+			v3 = v3 - ((v3*v1) / (v1*v1))*v1  - ((v3*v2) / (v2*v2))*v2 ;
+			
+			std::cout << "v1 " << v1;
+			std::cout << "v2 " << v2;
+			std::cout << "v3 " << v3;
+			
+		}
 		
 		
 		bool Solve3 (const Matrix3x3<Real>& aafA, const Real afB[3],Real afX[3])
@@ -427,13 +450,15 @@ namespace CGL
 			mEigenvector[2] = mCovariance.col(2);
 		}
 	
-		void Eigensolver (Matrix3x3<Real> A, Real evalue[3], Vector3<Real> evector[3])
+		void Eigensolver (Matrix3x3<Real> A, Real * evalue, Vector3<Real> * evector)
 		{
 		    Real root[3];
 		    ComputeRoots(A,root);
+	    
 		    evalue[0] = root[0];
 		    evalue[1] = root[1];
 		    evalue[2] = root[2];
+		    
 		    Matrix3x3<Real> M0 = A - evalue[0]*M0.identity(); // I is the identity matrix
 		    int rank0 = ComputeRank(M0);
 		    if (rank0 == 0)
@@ -448,7 +473,7 @@ namespace CGL
 		    {
 		        // evalue[0] = evalue[1] < evalue[2]
 		        GetComplement2(M0.row(0),evector[0],evector[1]);
-		        evector[2] = evector[0] ^  evector[1];
+		        evector[2] = (evector[0] ^  evector[1]);
 		        return;
 		    }
 		    // rank0 == 2
@@ -464,13 +489,13 @@ namespace CGL
 		    // rank1 == 2
 		    GetComplement1(M1.row(0),M1.row(1),evector[1]);
 		    // rank2 == 2 (eigenvalues must be distinct at this point, rank2 must be 2)
-		    evector[2] = evector[0] ^ evector[1];
+		    evector[2] = (evector[0] ^ evector[1]);
 		}
 
 		
 		void GetComplement1 (Vector3<Real> U, Vector3<Real> V, Vector3<Real>& W)
 		{
-		    W = U ^ V;
+		    W = (U ^ V);
 		    W.normalize();
 		}
 
@@ -499,31 +524,82 @@ namespace CGL
 		    }
 		}
 
-		void ComputeRoots (Matrix3x3<Real> A, Real root[3])
+		void ComputeRoots (const Matrix3x3<Real>& rkA, Real adRoot[3])
 		{
-		    Real a00 = (Real)A[0][0];
-		    Real a01 = (Real)A[0][1];
-		    Real a02 = (Real)A[0][2];
-		    Real a11 = (Real)A[1][1];
-		    Real a12 = (Real)A[1][2];
-		    Real a22 = (Real)A[2][2];
-		    Real c0 = a00*a11*a22 + 2.0*a01*a02*a12 - a00*a12*a12 - a11*a02*a02 - a22*a01*a01;
-		    Real c1 = a00*a11 - a01*a01 + a00*a22 - a02*a02 + a11*a22 - a12*a12;
-		    Real c2 = a00 + a11 + a22;
-		    Real c2Div3 = c2*(1/3);
-		    Real aDiv3 = (c1 - c2*c2Div3)*(1/3);
-		    if (aDiv3 > 0.0) { aDiv3 = 0.0; }
-		    Real mbDiv2 = 0.5*(c0 + c2Div3*(2.0*c2Div3*c2Div3 - c1));
-		    Real q = mbDiv2*mbDiv2 + aDiv3*aDiv3*aDiv3;
-		    if (q > 0.0) { q = 0.0; }
-		    Real magnitude = sqrt(-aDiv3);
-		    Real angle = atan2(sqrt(-q),mbDiv2)*(1/3);
-		    Real cs = cos(angle);
-		    Real sn = sin(angle);
-		    root[0] = c2Div3 + 2.0*magnitude*cs;
-		    root[1] = c2Div3 - magnitude*(cs + sqrt(3)*sn);
-		    root[2] = c2Div3 - magnitude*(cs - sqrt(3)*sn);
-		    // Sort the roots here to obtain root[0] <= root[1] <= root[2].
+		    // Convert the unique matrix entries to double precision.
+		    Real dA00 = static_cast<Real> (rkA[0][0]);
+		    Real dA01 = static_cast<Real> (rkA[0][1]);
+		    Real dA02 = static_cast<Real> (rkA[0][2]);
+		    Real dA11 = static_cast<Real> (rkA[1][1]);
+		    Real dA12 = static_cast<Real> (rkA[1][2]);
+		    Real dA22 = static_cast<Real> (rkA[2][2]);
+
+		    // The characteristic equation is x^3 - c2*x^2 + c1*x - c0 = 0.  The
+		    // eigenvalues are the roots to this equation, all guaranteed to be
+		    // real-valued, because the matrix is symmetric.
+		    Real dC0 = dA00*dA11*dA22 + 2.0*dA01*dA02*dA12 - dA00*dA12*dA12 -
+		        dA11*dA02*dA02 - dA22*dA01*dA01;
+
+		    Real dC1 = dA00*dA11 - dA01*dA01 + dA00*dA22 - dA02*dA02 +
+		        dA11*dA22 - dA12*dA12;
+
+		    Real dC2 = dA00 + dA11 + dA22;
+
+		    // Construct the parameters used in classifying the roots of the equation
+		    // and in solving the equation for the roots in closed form.
+		    Real dC2Div3 = dC2*ms_dInv3;
+		    Real dADiv3 = (dC1 - dC2*dC2Div3)*ms_dInv3;
+		    if (dADiv3 > 0.0)
+		    {
+		        dADiv3 = 0.0;
+		    }
+
+		    Real dMBDiv2 = 0.5*(dC0 + dC2Div3*(2.0*dC2Div3*dC2Div3 - dC1));
+
+		    Real dQ = dMBDiv2*dMBDiv2 + dADiv3*dADiv3*dADiv3;
+		    if (dQ > 0.0)
+		    {
+		        dQ = 0.0;
+		    }
+
+		    // Compute the eigenvalues by solving for the roots of the polynomial.
+		    Real dMagnitude = sqrt(-dADiv3);
+		    Real dAngle = atan2(sqrt(-dQ),dMBDiv2)*ms_dInv3;
+		    Real dCos = cos(dAngle);
+		    Real dSin = sin(dAngle);
+		    Real dRoot0 = dC2Div3 + 2.0*dMagnitude*dCos;
+		    Real dRoot1 = dC2Div3 - dMagnitude*(dCos + ms_dRoot3*dSin);
+		    Real dRoot2 = dC2Div3 - dMagnitude*(dCos - ms_dRoot3*dSin);
+
+		    // Sort in increasing order.
+		    if (dRoot1 >= dRoot0)
+		    {
+		        adRoot[0] = dRoot0;
+		        adRoot[1] = dRoot1;
+		    }
+		    else
+		    {
+		        adRoot[0] = dRoot1;
+		        adRoot[1] = dRoot0;
+		    }
+
+		    if (dRoot2 >= adRoot[1])
+		    {
+		        adRoot[2] = dRoot2;
+		    }
+		    else
+		    {
+		        adRoot[2] = adRoot[1];
+		        if (dRoot2 >= adRoot[0])
+		        {
+		            adRoot[1] = dRoot2;
+		        }
+		        else
+		        {
+		            adRoot[1] = adRoot[0];
+		            adRoot[0] = dRoot2;
+		        }
+		    }
 		}
 
 	
