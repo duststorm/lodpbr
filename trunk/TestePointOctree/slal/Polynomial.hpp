@@ -427,9 +427,226 @@ namespace CGL
 			mEigenvector[2] = mCovariance.col(2);
 		}
 	
+		void Eigensolver (Matrix3x3<Real> A, Real evalue[3], Vector3<Real> evector[3])
+		{
+		    Real root[3];
+		    ComputeRoots(A,root);
+		    evalue[0] = root[0];
+		    evalue[1] = root[1];
+		    evalue[2] = root[2];
+		    Matrix3x3<Real> M0 = A - evalue[0]*M0.identity(); // I is the identity matrix
+		    int rank0 = ComputeRank(M0);
+		    if (rank0 == 0)
+		    {
+		        // evalue[0] = evalue[1] = evalue[2]
+		        evector[0] = Vector3<Real>(1,0,0);
+		        evector[1] = Vector3<Real>(0,1,0);
+		        evector[2] = Vector3<Real>(0,0,1);
+		        return;
+		    }
+		    if (rank0 == 1)
+		    {
+		        // evalue[0] = evalue[1] < evalue[2]
+		        GetComplement2(M0.row(0),evector[0],evector[1]);
+		        evector[2] = evector[0] ^  evector[1];
+		        return;
+		    }
+		    // rank0 == 2
+		    GetComplement1(M0.row(0),M0.row(1),evector[0]);
+		    Matrix3x3<Real> M1 = A - evalue[1]*M1.identity();
+		    int rank1 = ComputeRank(M1); // zero rank detected earlier, rank1 must be positive
+		    if (rank1 == 1)
+		    {
+		        // evalue[0] < evalue[1] = evalue[2]
+		        GetComplement2(evector[0],evector[1],evector[2]);
+		        return;
+		    }
+		    // rank1 == 2
+		    GetComplement1(M1.row(0),M1.row(1),evector[1]);
+		    // rank2 == 2 (eigenvalues must be distinct at this point, rank2 must be 2)
+		    evector[2] = evector[0] ^ evector[1];
+		}
+
 		
+		void GetComplement1 (Vector3<Real> U, Vector3<Real> V, Vector3<Real>& W)
+		{
+		    W = U ^ V;
+		    W.normalize();
+		}
+
+		void GetComplement2 (Vector3<Real> U, Vector3<Real>& V, Vector3<Real>& W)
+		{
+		    U.normalize();
+		    if (fabs(U[0]) >= fabs(U[1]))
+		    {
+		         Real invLength = 1/sqrt(U[0]*U[0] + U[2]*U[2]);
+		         V[0] = -U[2]*invLength;
+		         V[1] = 0;
+		         V[2] = U[0]*invLength;
+		         W[0] = U[1]*V[2];
+		         W[1] = U[2]*V[0] - U[0]*V[2];
+		         W[2] = -U[1]*V[0];
+		    }
+		    else
+		    {
+		         Real invLength = 1/sqrt(U[1]*U[1] + U[2]*U[2]);
+		         V[0] = 0;
+		         V[1] = U[2]*invLength;
+		         V[2] = -U[1]*invLength;
+		         W[0] = U[1]*V[2] - U[2]*V[1];
+		         W[1] = -U[0]*V[2];
+		         W[2] = U[0]*V[1];
+		    }
+		}
+
+		void ComputeRoots (Matrix3x3<Real> A, Real root[3])
+		{
+		    Real a00 = (Real)A[0][0];
+		    Real a01 = (Real)A[0][1];
+		    Real a02 = (Real)A[0][2];
+		    Real a11 = (Real)A[1][1];
+		    Real a12 = (Real)A[1][2];
+		    Real a22 = (Real)A[2][2];
+		    Real c0 = a00*a11*a22 + 2.0*a01*a02*a12 - a00*a12*a12 - a11*a02*a02 - a22*a01*a01;
+		    Real c1 = a00*a11 - a01*a01 + a00*a22 - a02*a02 + a11*a22 - a12*a12;
+		    Real c2 = a00 + a11 + a22;
+		    Real c2Div3 = c2*(1/3);
+		    Real aDiv3 = (c1 - c2*c2Div3)*(1/3);
+		    if (aDiv3 > 0.0) { aDiv3 = 0.0; }
+		    Real mbDiv2 = 0.5*(c0 + c2Div3*(2.0*c2Div3*c2Div3 - c1));
+		    Real q = mbDiv2*mbDiv2 + aDiv3*aDiv3*aDiv3;
+		    if (q > 0.0) { q = 0.0; }
+		    Real magnitude = sqrt(-aDiv3);
+		    Real angle = atan2(sqrt(-q),mbDiv2)*(1/3);
+		    Real cs = cos(angle);
+		    Real sn = sin(angle);
+		    root[0] = c2Div3 + 2.0*magnitude*cs;
+		    root[1] = c2Div3 - magnitude*(cs + sqrt(3)*sn);
+		    root[2] = c2Div3 - magnitude*(cs - sqrt(3)*sn);
+		    // Sort the roots here to obtain root[0] <= root[1] <= root[2].
+		}
+
+	
+		int ComputeRank (Matrix3x3<Real>& M)
+			{
+				// Compute the maximum magnitude matrix entry.
+				Real abs, save; 
+				Real max = -1;
+				int row, col, maxRow = -1, maxCol = -1;
+				for (row = 0; row < 3; row++)
+				{
+					for (col = row; col < 3; col++)
+					{
+						
+						abs = fabs (M[row][col]);
+						if (abs > max)
+						{
+							max = abs;
+							maxRow = row;
+							maxCol = col;
+						}
+					}
+				}
+				if (max == 0)
+				{
+					// The rank is 0.  The eigenvalue has multiplicity 3.
+					return 0;
+				}
+				// The rank is at least 1. Swap the row containing the maximum-magnitude
+				// entry with row 0.
+				if (maxRow != 0)
+				{
+					for (col = 0; col < 3; col++)
+					{
+						save = M[0][col];
+						M[0][col] = M[maxRow][col];
+						M[maxRow][col] = save;
+					}
+				}
+				// Row-reduce the matrix...
+				// Scale the row containing the maximum to generate a 1-valued pivot.
+				Real invMax = 1/M[maxRow][maxCol];
+				M[0][0] *= invMax;
+				M[0][1] *= invMax;
+				M[0][2] *= invMax;
+				// Eliminate the maxCol column entries in rows 1 and 2.
+				if (maxCol == 0)
+				{
+					M[1][1] -= M[1][0]*M[0][1];
+					M[1][2] -= M[1][0]*M[0][2];
+					M[2][1] -= M[2][0]*M[0][1];
+					M[2][2] -= M[2][0]*M[0][2];
+					M[1][0] = 0;
+					M[2][0] = 0;
+				}
+				else if (maxCol == 1)
+				{
+					M[1][0] -= M[1][1]*M[0][0];
+					M[1][2] -= M[1][1]*M[0][2];
+					M[2][0] -= M[2][1]*M[0][0];
+					M[2][2] -= M[2][1]*M[0][2];
+					M[1][1] = 0;
+					
+					M[2][1] = 0;
+				}
+				else
+				{
+					M[1][0] -= M[1][2]*M[0][0];
+					M[1][1] -= M[1][2]*M[0][1];
+					M[2][0] -= M[2][2]*M[0][0];
+					M[2][1] -= M[2][2]*M[0][1];
+					M[1][2] = 0;
+					M[2][2] = 0;
+				}
+				// Compute the maximum-magnitude entry of the last two rows of the
+				// row-reduced matrix.
+				max = -1;
+				maxRow = -1;
+				maxCol = -1;
+				for (row = 1; row < 3; row++)
+				{
+					for (col = 0; col < 3; col++)
+					{
+						abs = fabs (M[row][col]);
+						if (abs > max)
+						{
+							max = abs;
+							maxRow = row;
+							maxCol = col;
+						}
+					}
+				}
+				if (max == 0)
+				{
+					// The rank is 1. The eigenvalue has multiplicity 2.
+					return 1;
+				}
+				// If row 2 has the maximum-magnitude entry, swap it with row 1.
+				if (maxRow == 2)
+				{
+					for (col = 0; col < 3; col++)
+					{
+						save = M[1][col];
+						M[1][col] = M[2][col];
+						M[2][col] = save;
+					}
+				}
+				// Scale the row containing the maximum to generate a 1-valued pivot.
+				invMax = 1/M[maxRow][maxCol];
+				M[1][0] *= invMax;
+				M[1][1] *= invMax;
+				M[1][2] *= invMax;
+				
+				// The rank is 2. The eigenvalue has multiplicity 1.
+				return 2;
+			}
 		
 	};
+	
+	
+	
+	
+
 
 }/* CGL :: NAMESPACE */
 

@@ -49,17 +49,26 @@ int main(int argc, char *argv[])
 	
 	CGL::CubicEquation<double> resolve = CGL::CubicEquation<double>(pt,pm);
 	
-	CGL::Matrix3x3<double> C  (	1,1,1,
-								1,2,3,
-								0.5,0.5-resolve.mEigenvalue[0],0.25);
+	CGL::Matrix3x3<double> C  (	1.5,0.5,0.75,
+								0.5,0.5,0.25,
+								0.75,0.25,0.5);
 	
+	CGL::Vector3<double> Eigenvector[3];
 	
-	if (resolve.Solve3(C,b,result))
-	{
+	resolve.Eigensolver(C,result,Eigenvector);
+	
+	std::cout << "Rank " << resolve.ComputeRank(C) << std::endl;
+
+	std::cout << "Eita " <<  Eigenvector[0] ;
+	std::cout << "Eita " <<  Eigenvector[1] ;
+	std::cout << "Eita " <<  Eigenvector[2] ;
+	
+	//if (resolve.Solve3(C,b,result))
+//	{
 		std::cout << "Eitaxx " << result[0] << std::endl;
 		std::cout << "Eitaxx " << result[1] << std::endl;
 		std::cout << "Eitaxx " << result[2] << std::endl;
-	}
+//	}
 	
 	CGL::Vector3<double> v(result);
 	

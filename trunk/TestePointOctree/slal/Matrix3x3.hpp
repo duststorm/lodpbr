@@ -343,7 +343,12 @@ public:
 		return false;
 	}
 	
-	
+	Matrix3x3<Real> identity ()
+	{
+	  return Matrix3x3<Real>(1.0,0.0,0.0,
+			  				 0.0,1.0,0.0,
+			  				 0.0,0.0,1.0);	
+	}
 	
 	virtual ~Matrix3x3(){};
 	       
