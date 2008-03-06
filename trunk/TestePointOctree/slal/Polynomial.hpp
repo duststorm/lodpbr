@@ -51,7 +51,43 @@ namespace CGL
             std::cout << mCovariance;
            	eigen_decomposition();
 		}
-				
+		
+		
+		
+		bool Solve3 (const Matrix3x3<Real>& aafA, const Real afB[3],Real afX[3])
+		{
+		    Real aafAInv[3][3];
+		    aafAInv[0][0] = aafA(1,1)*aafA(2,2)-aafA(1,2)*aafA(2,1);
+		    aafAInv[0][1] = aafA(0,2)*aafA(2,1)-aafA(0,1)*aafA(2,2);
+		    aafAInv[0][2] = aafA(0,1)*aafA(1,2)-aafA(0,2)*aafA(1,1);
+		    aafAInv[1][0] = aafA(1,2)*aafA(2,0)-aafA(1,0)*aafA(2,2);
+		    aafAInv[1][1] = aafA(0,0)*aafA(2,2)-aafA(0,2)*aafA(2,0);
+		    aafAInv[1][2] = aafA(0,2)*aafA(1,0)-aafA(0,0)*aafA(1,2);
+		    aafAInv[2][0] = aafA(1,0)*aafA(2,1)-aafA(1,1)*aafA(2,0);
+		    aafAInv[2][1] = aafA(0,1)*aafA(2,0)-aafA(0,0)*aafA(2,1);
+		    aafAInv[2][2] = aafA(0,0)*aafA(1,1)-aafA(0,1)*aafA(1,0);
+		    Real fDet = aafA(0,0)*aafAInv[0][0] + aafA(0,1)*aafAInv[1][0] +
+		        aafA(0,2)*aafAInv[2][0];
+
+		    if (fabs(fDet) < 1e-06f)
+		    {
+		        return false;
+		    }
+
+		    Real fInvDet = ((Real)1.0)/fDet;
+		    for (int iRow = 0; iRow < 3; iRow++)
+		    {
+		        for (int iCol = 0; iCol < 3; iCol++)
+		        {
+		            aafAInv[iRow][iCol] *= fInvDet;
+		        }
+		    }
+
+		    afX[0] = aafAInv[0][0]*afB[0]+aafAInv[0][1]*afB[1]+aafAInv[0][2]*afB[2];
+		    afX[1] = aafAInv[1][0]*afB[0]+aafAInv[1][1]*afB[1]+aafAInv[1][2]*afB[2];
+		    afX[2] = aafAInv[2][0]*afB[0]+aafAInv[2][1]*afB[1]+aafAInv[2][2]*afB[2];
+		    return true;
+		}
 		
 		void covarianceMatrix (std::list<Point3<Real>* >& pPoint3List, const Point3<Real>& pMean)
 		{
