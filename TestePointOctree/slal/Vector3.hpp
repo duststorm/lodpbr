@@ -34,9 +34,9 @@ public:
 	 
 	Vector3 ()
 	{
-		this->mX = (Real)0;
-		this->mY = (Real)0;
-		this->mZ = (Real)0;
+		this->mX = static_cast< Real > ( 0 );
+		this->mY = static_cast< Real > ( 0 );
+		this->mZ = static_cast< Real > ( 0 );
 	};
 	 
 	template < typename U >
@@ -223,6 +223,8 @@ public:
 		
 	};
 	
+
+	
 	inline Vector3<Real>  operator+ ( const Vector3<Real>& u)	const
 	{
 	 	
@@ -232,6 +234,14 @@ public:
 	 			);
 		
 	};
+	
+	inline Real operator* ( const Vector3<Real>& u) const	
+	{
+		 			
+		return (  (u.mX * mX ) +  ( u.mY * mY ) + ( u.mZ * mZ )  );
+			
+	};
+
 	
 	inline Vector3<Real>  operator+ ( ) const
 	{
@@ -257,21 +267,72 @@ public:
 
 	};
 	
-	friend inline Real operator* ( const Vector3<Real>& u, const Vector3<Real>& v) 	
+	friend inline Vector3<Real> operator/ ( const Vector3<Real>& u,const Real& factor ) 	
 	{
-	 			
-		return (  (u.mX * v.mX ) +  ( u.mX * v.mY ) + ( u.mX * v.mZ )  );
+	 		
+		return (  Vector3( u.mX / factor,
+						   u.mY / factor,
+					       u.mZ / factor ) 
+			   );
 		
 	};
+	
+	friend inline Vector3<Real> operator/ ( const Real& factor ,const Vector3<Real>& u) 
+	{
+	 	return ( Vector3( factor / u.mX,
+	 					  factor / u.mY,
+	 					  factor / u.mZ )
+	 			);
 
+	};
+	
+	
+	
+	inline friend  Vector3<Real> operator+ (const Real factor,const Vector3<Real> u )  
+	{
+		return ( Vector3<Real> ( u.mX + factor,
+					      		u.mY + factor,
+					      		u.mZ + factor )
+			    );
+	    
+	};
+	
+	
+	inline friend  Vector3<Real> operator+ (const Vector3<Real> u, const Real factor )  
+	{
+		return ( Vector3<Real> ( u.mX + factor,
+								u.mY + factor,
+								u.mZ + factor )
+		);
+
+	};
+	
+	inline friend   Vector3<Real> operator- (const Real factor,const Vector3<Real> u )  
+	{
+		return ( Vector3<Real> ( factor - u.mX ,
+								factor - u.mY ,
+								factor - u.mZ  )
+			    );
+	    
+	};
+	
+	
+	inline friend  Vector3<Real> operator- (const Vector3<Real> u, const Real factor )  
+	{
+		return ( Vector3<Real> ( u.mX - factor,
+								u.mY - factor,
+								u.mZ - factor )
+		);
+
+	};
+	
 	// Cross Product	
 	inline Vector3<Real>  operator^ (const Vector3<Real>& u) const
 	{
-		return ( Vector3( this->mY * u.mZ - this->mZ * u.mY,
-		     			  this->mZ * u.mX - this->mX * u.mZ,
-						  this->mX * u.mY - this->mY * u.mX )
-				);
-
+        return ( Vector3<Real> ( 	mY*u.z() - mZ*u.y(),
+        							mZ*u.x() - mX*u.z(),
+        							mX*u.y() - mY*u.x())
+        	    );
 		
 	};
 	

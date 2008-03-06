@@ -12,7 +12,7 @@
 #include "ocTreeIntersection.hpp"
 
 #include "slal/Polynomial.hpp"
-//
+#include "slal/Eigen.hpp"
 // Forward declaration of OctreeIterator
 //
 template <class Real, class ItemPtr, class Refine>
@@ -32,6 +32,7 @@ public:
     typedef OctreeInternalNode<Real, ItemPtr, Refine> 	OctreeInternalNode;
     
     typedef CGL::CubicEquation<Real>					CubicEquation;
+    typedef CGL::Eigen<Real>					Eigen;
     typedef CGL::Vector3<Real> 							Vector3;  ///< A Point in 3D
     typedef CGL::Point3<Real> 							Point3;  ///< A Point in 3D
     typedef Box_3<Real> 								Box3;    ///< Octant box type
@@ -91,11 +92,11 @@ public:
                         
             newOctreeInternalNode->setMean(m);
             
-            covariance = CubicEquation(PtrList,m);
-            
-            newOctreeInternalNode->setEigenVector (covariance.mEigenvector);
+            covariance = Eigen(PtrList,m);
+                      
+            newOctreeInternalNode->setEigenVector (covariance.m_akEigenvector);
            
-            setEigenVector(covariance.mEigenvector) ;
+            setEigenVector(covariance.m_akEigenvector) ;
             
            
             PtrList.clear();
@@ -202,7 +203,7 @@ public:
     
 private:
 	
-	CubicEquation 	covariance;
+	Eigen 	covariance;
 	Vector3 		mEigenVector[3];
 	Real    		mEigenValues[3];
  

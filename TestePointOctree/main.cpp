@@ -3,7 +3,6 @@
 #include <cmath>
 #include <list>
 
-#include <suitesparse/cs.h>
 
 #include "interface/myMainWindow.hpp"
 
@@ -12,6 +11,7 @@
 #include "slal/Matrix3x3.hpp"
 #include "slal/Color.hpp"
 #include "slal/Polynomial.hpp"
+#include "slal/Eigen.hpp"
 
 using namespace std;
 
@@ -22,9 +22,10 @@ int main(int argc, char *argv[])
 	CGL::Point3<double> q;
 	CGL::Color  c(p);
 	
-	double  b[3] = {1,1,0};
+	double  b[3] = {0,0,0};
 	double result[3];
 		
+	//CGL::Vector3<double> v(b);
 	
 	//v = v.norm();
 		
@@ -33,15 +34,21 @@ int main(int argc, char *argv[])
 								3.0,4.0,-3.0,
 								0.0,2.0,0.0);
 	
-	CGL::Matrix3x3<double> B (1.0,1.0,2.0,
-								2.0,4.0,-3.0,
-								3.0,6.0,-5.0);
+	CGL::Matrix3x3<double> B (1.0,0.0,0.0,
+							  1.0,1.0,0.0,
+							  1.0,1.0,1.0);
 		
+	CGL::Matrix3x3<double> C  (	1.5,0.5,0.75,
+								0.5,0.5,0.25,
+								0.75,0.25,0.5);
+	
+	
 
 	std::list<CGL::Point3<double>* >  pt;
 	
 	CGL::Point3<double> pm = CGL::Point3<double>( 1,-1,2 );
 	
+
 	pt.push_back( new CGL::Point3<double>(-1,-2,1) );
 	pt.push_back( new CGL::Point3<double>(1,0,2)   );
 	pt.push_back( new CGL::Point3<double>(2,-1,3)  );
@@ -49,38 +56,36 @@ int main(int argc, char *argv[])
 	
 	CGL::CubicEquation<double> resolve = CGL::CubicEquation<double>(pt,pm);
 	
-	CGL::Matrix3x3<double> C  (	1.5,0.5,0.75,
-								0.5,0.5,0.25,
-								0.75,0.25,0.5);
+	CGL::Vector3<double> Eigenvector[3]; 
 	
-	CGL::Vector3<double> Eigenvector[3];
+	double Eigenvalue[3];
 	
-	resolve.Eigensolver(C,result,Eigenvector);
+	CGL::Eigen<double> eigen = CGL::Eigen<double>(pt,pm);
 	
-	std::cout << "Rank " << resolve.ComputeRank(C) << std::endl;
-
-	std::cout << "Eita " <<  Eigenvector[0] ;
-	std::cout << "Eita " <<  Eigenvector[1] ;
-	std::cout << "Eita " <<  Eigenvector[2] ;
+	std::cout << "ww " << eigen.m_afEigenvalue[0] << " | "<< eigen.m_akEigenvector[0];// *  resolve.mEigenvalue[0] << std::endl;
+	std::cout << "ww " << eigen.m_afEigenvalue[1] << " | "<< eigen.m_akEigenvector[1];// *  resolve.mEigenvalue[0] << std::endl;
+	std::cout << "ww " << eigen.m_afEigenvalue[2] << " | "<< eigen.m_akEigenvector[2];// *  resolve.mEigenvalue[0] << std::endl;
 	
-	//if (resolve.Solve3(C,b,result))
-//	{
-		std::cout << "Eitaxx " << result[0] << std::endl;
-		std::cout << "Eitaxx " << result[1] << std::endl;
-		std::cout << "Eitaxx " << result[2] << std::endl;
-//	}
 	
-	CGL::Vector3<double> v(result);
+	resolve.Eigensolver(C,Eigenvalue,Eigenvector);
 	
-	std::cout << v.norm() ;
+	std::cout << "Eita " << Eigenvalue[0] << " | "<< Eigenvector[0];// *  resolve.mEigenvalue[0] << std::endl;
+	std::cout << "Eita " << Eigenvalue[1] << " | "<< Eigenvector[1];// *  resolve.mEigenvalue[0] << std::endl;
+	std::cout << "Eita " << Eigenvalue[2] << " | "<< Eigenvector[2];// *  resolve.mEigenvalue[0] << std::endl;
 	
-	std::cout << resolve.mCovariance;
 		
-	std::cout << "Eita " << resolve.mEigenvalue[0] << " | "<< resolve.mEigenvector[0] << " | "<< resolve.mEigenvector[0].length();// *  resolve.mEigenvalue[0] << std::endl;
-	std::cout << "Eita " << resolve.mEigenvalue[1] << " | "<< resolve.mEigenvector[1] << " | "<< resolve.mEigenvector[1].length();// *  resolve.mEigenvalue[0] << std::endl;
-	std::cout << "Eita " << resolve.mEigenvalue[2] << " | "<< resolve.mEigenvector[2] << " | "<< resolve.mEigenvector[2].length();// *  resolve.mEigenvalue[0] << std::endl;
+	std::cout << "Eita ZERO " << resolve.mEigenvector[0] * resolve.mEigenvector[1] << std::endl;
 	
+	CGL::Vector3<double> v1 (1.0,2.0,-2.0);
+	CGL::Vector3<double> v2 (3.0,0.0,1.0);
+	CGL::Vector3<double> v3 (B.col(2));
 	
+
+	v3 = v2 ^ v1;
+	
+	std::cout << "v1 " << v1;
+	std::cout << "v2 " << v2;
+	std::cout << "v3 " << v3;
 
     QApplication app(argc, argv);
     if (!QGLFormat::hasOpenGL()) {

@@ -483,6 +483,43 @@ namespace CGL
 		    
 		};
 		
+		inline friend Point3<Real> operator+ (const Real factor,const Point3<Real> p )  
+		{
+			return ( Point3<Real> ( p.mX + factor,
+						      		p.mY + factor,
+						      		p.mZ + factor )
+				    );
+		    
+		};
+		
+		
+		inline friend Point3<Real> operator+ (const Point3<Real> p, const Real factor )  
+		{
+			return ( Point3<Real> ( p.mX + factor,
+									p.mY + factor,
+									p.mZ + factor )
+			);
+
+		};
+		
+		inline friend Point3<Real> operator- (const Real factor,const Point3<Real> p )  
+		{
+			return ( Point3<Real> ( factor - p.mX ,
+									factor - p.mY ,
+									factor - p.mZ  )
+				    );
+		    
+		};
+		
+		
+		inline friend Point3<Real> operator- (const Point3<Real> p, const Real factor )  
+		{
+			return ( Point3<Real> ( p.mX - factor,
+									p.mY - factor,
+									p.mZ - factor )
+			);
+
+		};
 		
 		/*!@brief operator<<
 		 * @details For debug
