@@ -52,7 +52,7 @@ namespace CGL
 		CubicEquation(std::list<Point3<Real>* >& pPoint3List, const Point3<Real>& pMean)
 		{
 			covarianceMatrix (pPoint3List,pMean);
-            Eigensolver (mCovariance, mEigenvalue, mEigenvector);
+           // Eigensolver (mCovariance, mEigenvalue, mEigenvector);
            	//eigen_decomposition();
            	
 		}

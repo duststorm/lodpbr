@@ -35,7 +35,7 @@ public:
 		Eigen(std::list<Point3<Real>* >& pPoint3List, const Point3<Real>& pMean)
 		{
 			covarianceMatrix (pPoint3List,pMean);
-			ComputeEigenSystem (mCovariance);
+			//ComputeEigenSystem (mCovariance);
          	         	
 		}
 	  

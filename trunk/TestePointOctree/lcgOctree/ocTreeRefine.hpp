@@ -28,7 +28,7 @@ struct OctreeRefine {
 /// A node is refined whenever it holds more than "Max" items, and 
 /// the subdivision level has not reached "LevelMax".
 ///
-template <class Real, class ItemPtr, int Max = 1, int LevelMax = 5>
+template <class Real, class ItemPtr, int Max = 10, int LevelMax = 5>
 struct OverflowRefine : public OctreeRefine <Real, ItemPtr> {
     ///
     /// Split a leaf node iff the list contains more than Max items
