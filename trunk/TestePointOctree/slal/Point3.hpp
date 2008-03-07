@@ -239,44 +239,49 @@ namespace CGL
 				 * @return Vector3
 				 */			
 				inline const Vector3<Real> operator- (const Point3<Real>& p);  
-				/*!@brief operator-
-				 * @details Binary operator tha subtract a poitn and a vecctor.
-				 * @return Point3
-				 */
-				inline friend const Point3<Real> (::operator- <>) (const Point3<Real>& p, const Vector3<Real> u);  
-				/*!@brief operator-
-				 * @see operator-
-				 * @return Point3
-				 */
-				inline friend const Point3<Real> operator- (const Vector3<Real> u,const Point3<Real> p );  
 				/*!@brief operator+
 				 * @details Unary operator tha return itself. 
 				 * @note To be clearer the arithmetic operations. 
 				 * @return Point3.
 				 */
 				inline Point3<Real>  operator+ ( ) const;
+				/*!@brief operator-
+				 * @details Binary operator tha subtract a poitn and a vecctor.
+				 * @return Point3
+				 */
+				template <class T>
+				inline friend const Point3<T> operator- (const Point3<T>& p, const Vector3<T> u);  
+				/*!@brief operator-
+				 * @see operator-
+				 * @return Point3
+				 */
+				template <class T>
+				inline friend const Point3<T> operator- (const Vector3<T> u,const Point3<T> p );  
 				/*!@brief operator+
 				 * @details Binary operator tha add a poitn and a vecctor.
 				 * @return Point3
 				 */
-				inline friend const Point3<Real> operator+ (const Point3<Real> p, const Vector3<Real> u);  
+				template <class T>
+				inline friend const Point3<T> operator+ (const Point3<T> p, const Vector3<T> u);  
 				/*!@brief operator+
 				 * @see operator+
 				 * @return Point3
 				 */
-				inline friend  const Point3<Real> operator+ (const Vector3<Real> u,const Point3<Real> p );  
-
-				inline friend Point3<Real> operator+ (const Real factor,const Point3<Real> p ); 
-
-				inline friend Point3<Real> operator+ (const Point3<Real> p, const Real factor );
-				
-				inline friend Point3<Real> operator- (const Real factor,const Point3<Real> p );  
-
-				inline friend Point3<Real> operator- (const Point3<Real> p, const Real factor );  
+				template <class T>
+				inline friend  const Point3<T> operator+ (const Vector3<T> u,const Point3<T> p );  
+				template <class T>
+				inline friend Point3<T> operator+ (const T factor,const Point3<T> p ); 
+				template <class T>
+				inline friend Point3<T> operator+ (const Point3<T> p, const T factor );
+				template <class T>
+				inline friend Point3<T> operator- (const T factor,const Point3<T> p );  
+				template <class T>
+				inline friend Point3<T> operator- (const Point3<T> p, const T factor );  
 				/*!@brief operator<<
 				 * @details For debug
 				 */
-				inline friend std::ostream& operator<< (std::ostream & s, const Point3<Real>& p);
+				template <class T>
+				inline friend std::ostream& operator<< (std::ostream & s, const Point3<T>& p);
 				/*!@fn squareDistance
 				 * @details return the distance of two points
 				 */		
