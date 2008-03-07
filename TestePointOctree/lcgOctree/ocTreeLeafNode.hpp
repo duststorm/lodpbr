@@ -4,6 +4,7 @@
 //[STL container includes]
 #include <list>
 #include <set>
+#include <vector>
 
 //[Project includes]
 #include "ocTreeNode.hpp"
@@ -13,6 +14,8 @@
 
 #include "slal/Polynomial.hpp"
 #include "slal/Eigen.hpp"
+#include <cpplapack.h>
+
 // Forward declaration of OctreeIterator
 //
 template <class Real, class ItemPtr, class Refine>
@@ -93,10 +96,31 @@ public:
             newOctreeInternalNode->setMean(m);
             
             covariance = Eigen(PtrList,m);
-                      
-            newOctreeInternalNode->setEigenVector (covariance.m_akEigenvector);
            
-            setEigenVector(covariance.m_akEigenvector) ;
+        	CPPL::dsymatrix C_lapack = CPPL::dsymatrix(3) ;
+            
+        	C_lapack(0,0) = covariance.mCovariance(0,0);
+        	C_lapack(0,1) = covariance.mCovariance(0,1);
+        	C_lapack(0,2) = covariance.mCovariance(0,2);
+        	C_lapack(1,0) = covariance.mCovariance(1,0);
+        	C_lapack(1,1) = covariance.mCovariance(1,1);
+        	C_lapack(1,2) = covariance.mCovariance(1,2);
+        	C_lapack(2,0) = covariance.mCovariance(2,0);
+        	C_lapack(2,1) = covariance.mCovariance(2,1);
+        	C_lapack(2,2) = covariance.mCovariance(2,2);
+        	
+        	
+        	std::vector<double> w1;
+        	       	
+        	C_lapack.dsyev(w1,1);
+        	
+        	mEigenVector[0] = Vector3(C_lapack(0,0),C_lapack(0,1),C_lapack(0,2));
+        	mEigenVector[1] = Vector3(C_lapack(1,0),C_lapack(1,1),C_lapack(1,2));
+			mEigenVector[2] = Vector3(C_lapack(2,0),C_lapack(2,1),C_lapack(2,2));
+        	
+            newOctreeInternalNode->setEigenVector (mEigenVector);
+           
+            //setEigenVector(covariance.m_akEigenvector) ;
             
            
             PtrList.clear();
