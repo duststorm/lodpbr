@@ -5,7 +5,7 @@
 
 
 #include "interface/myMainWindow.hpp"
-#include <cpplapack.h>
+//#include <cpplapack.h>
 
 #include "slal/Vector3.hpp"
 #include "slal/Point3.hpp"
@@ -44,7 +44,7 @@ int main(int argc, char *argv[])
 								0.75,0.25,0.5);
 	
 	
-	CPPL::dsymatrix C_lapack = CPPL::dsymatrix(3) ;
+	/*CPPL::dsymatrix C_lapack = CPPL::dsymatrix(3) ;
 	
 	std::vector<double> w1;
 	
@@ -56,13 +56,13 @@ int main(int argc, char *argv[])
 	C_lapack(1,2) = 0.25;
 	C_lapack(2,0) = 0.75;
 	C_lapack(2,1) = 0.25;
-	C_lapack(2,2) = 0.5;
+	C_lapack(2,2) = 0.5;/
 	
 	C_lapack.dsyev(w1,1);
 	
 	std::cout << w1[0] << w1[1] << w1[2];
 	
-	std::cout << C_lapack;
+	std::cout << C_lapack;*/
 	
 	std::list<CGL::Point3<double>* >  pt;
 	

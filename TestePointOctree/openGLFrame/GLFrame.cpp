@@ -91,21 +91,18 @@ void GLFrame::model()
 			   std::cout << (*oi)->eigenVector(1);
 			   std::cout << (*oi)->eigenVector(2);
 
-			   CGL::Point3<double> p0 = *(*surfe) + (*oi)->eigenVector(0);
+			   CGL::Point3<double> p0 = *(*surfe) + (*oi)->eigenVector(0)*1.25;
 			   glColor3f(1.0,0.0,0.0);
-			  p0 *= 1.25;
-			 glVertex3f((*(*surfe))[0],(*(*surfe))[1],(*(*surfe))[2]);
+			   glVertex3f((*(*surfe))[0],(*(*surfe))[1],(*(*surfe))[2]);
 			   glVertex3f(p0.x(),p0.y(),p0.z());
 
-			   CGL::Point3<double> p1 = (*(*surfe)) +  (*oi)->eigenVector(1);
+			   CGL::Point3<double> p1 = (*(*surfe)) +  (*oi)->eigenVector(1)*1.25;
 			   glColor3f(0.0,1.0,0.0);
-			   p1 *= 1.25;
 			   glVertex3f((*(*surfe))[0],(*(*surfe))[1],(*(*surfe))[2]);
 			   glVertex3f(p1.x(),p1.y(),p1.z());
 			   
-			   CGL::Point3<double> p2 = (*(*surfe)) + (*oi)->eigenVector(2);
+			   CGL::Point3<double> p2 = (*(*surfe)) + (*oi)->eigenVector(2)*1.25;
 			   glColor3f(0.0,0.0,1.0);
-			   p2 *= 1.25;
 			   glVertex3f((*(*surfe))[0],(*(*surfe))[1],(*(*surfe))[2]);
 			   glVertex3f(p2.x(),p2.y(),p2.z());
 
