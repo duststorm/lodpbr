@@ -27,14 +27,15 @@ class Ellipse:
     def SetCenter(self,pCenter):
         self.mCenter = pCenter
         
-    def GetCenter(self,pX,pY,pZ):
+    def Center(self):
         return self.mCenter
     
     def SetNormal(self,pNormal):
         self.mNormal = pNormal
         
-    def GetNormal(self,pX,pY,pZ):
+    def Normal(self):
         return self.mNormal
+      
     
     #! Return list of point in Boundaries 
     def CalculateBoundaries(self,steps): 
@@ -67,7 +68,7 @@ class Ellipse:
       return points
   
     def Area(self):
-        return (pi*mA*mB)
+        return (pi*self.mA*self.mB)
     
     def ResizeA(self,pA):
         self.mA = pA
