@@ -21,6 +21,8 @@ from Ellipse import Ellipse
 
 index = 0
 
+listEllipse     = []
+listNovoSplat   = [] 
 ######################################################
 # Class
 ######################################################
@@ -190,12 +192,17 @@ def otherevents(evt, val):
 
 def buttonevents(evt):
     
-    global index
+    global index, listEllipse ,listNovoSplat
     
     if ( evt == EVENT_EXIT ):
         Draw.Exit()
         
     if (evt == EVENT_NOVOCENTROENORMAL):
+        
+        SomaArea         = 0
+        SomaAreaCentro   = Blender.Mathutils.Vector(0.0,0.0,0.0)
+        SomaAreaNormal   = Blender.Mathutils.Vector(0.0,0.0,0.0)
+        listSelecionados = []
         
         in_editmode = Window.EditMode()
         
@@ -204,16 +211,37 @@ def buttonevents(evt):
 
         object = Blender.Object.GetSelected()
         
-        listEllipse = []
         
+                
         for i in object:
-            e = Ellipse ()
-            print i.getLocation(),'Centro do Blender'
-            print i.getData(False, True).faces[0].no,'Normal'       
-            print i.getData(False, True).verts[-1].co,  'Meu Centro'
-            print i.getName()
-
-        print '##############################'    
+            
+            for j in listEllipse:
+                if j.Name() == i.getName():
+                    print 'Vamprito'
+                    j.SetCenter(i.getData(False, True).verts[-1].co)
+                    j.SetNormal(i.getData(False, True).faces[0].no)
+                    listSelecionados.append(j)
+                    
+        print len(listSelecionados), '=='     
+        for i in listSelecionados: 
+            
+            print i.Name(),i.Center(),'==' 
+            print i.Name(),i.Normal(), '=='
+            print i.Area(), '=='
+            SomaArea         += i.Area()
+            SomaAreaCentro   += i.Area() * i.Center()
+            SomaAreaNormal   += i.Area() * i.Normal()
+        
+        me= Blender.Mesh.New('FElipe')
+       
+        me.verts.extend([SomaAreaCentro/SomaArea])
+        me.verts[-1].no = SomaAreaNormal/SomaArea
+        me.edges.extend(me.verts[0],me.verts[-1])
+        #Vertex do Centro
+      
+        scn = Blender.Scene.GetCurrent()
+        ob = scn.objects.new(me,listEllipse[-1].Name())
+        
         if in_editmode:
             Window.EditMode(1)
         
@@ -224,11 +252,13 @@ def buttonevents(evt):
        if in_editmode:
            Window.EditMode(0)
             
-       e = Ellipse(Vector(0.0,0.0,0.0),1.0,1.5,60.0,"Ellipse"+str(index))
+       listEllipse.append( Ellipse(Vector(0.0,0.0,0.0),EixoA.val,EixoB.val,60.0,"Ellipse"+str(index)) )
+       
        index += 1
-       polyline1 =  e.CalculateBoundaries(0.0)
+       
+       polyline1 =  listEllipse[-1].CalculateBoundaries(0.0)
        # Make a new mesh and add the truangles into it
-       me= Blender.Mesh.New(e.Name())
+       me= Blender.Mesh.New(listEllipse[-1].Name())
        
        me.verts.extend(polyline1)
        me.edges.extend(me.verts[0],me.verts[-1])
@@ -241,8 +271,11 @@ def buttonevents(evt):
            me.faces.extend(me.verts[i],me.verts[i+1],me.verts[-1]) # Add the faces, they reference the verts in polyline 1 and 2
 
        scn = Blender.Scene.GetCurrent()
-       ob = scn.objects.new(me,e.Name())
+       ob = scn.objects.new(me,listEllipse[-1].Name())
        
+       print ob.name,'olha o nome'
+       ob.setName(listEllipse[-1].Name())
+       print ob.name,'olha o nome',listEllipse[-1].Name()
        if in_editmode:
            Window.EditMode(1)
        
@@ -255,12 +288,15 @@ def buttonevents(evt):
 
         object = Blender.Object.GetSelected()
         
-        for i in object:
-            print '-------------------------'
-            print i.getLocation(),'Centro do Blender'
-            print i.getData(False, True).faces[0].no,'Normal'       
-            print i.getData(False, True).verts[-1].co,  'Meu Centro'
-            print i.getName()
+#        for i in object:
+#            print '-------------------------'
+#            print i.getLocation(),'Centro do Blender'
+#            print i.getData(False, True).faces[0].no,'Normal'       
+#            print i.getData(False, True).verts[-1].co,  'Meu Centro'
+#            print i.getName()
+#        for j in listEllipse:
+#            print j.Name(),j.Center(),'==' 
+#            print j.Name(),j.Normal(), '=='
         print '##############################'    
         if in_editmode:
             Window.EditMode(1)
