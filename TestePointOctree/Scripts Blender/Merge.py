@@ -4,30 +4,38 @@ import multiarray
 import LinearAlgebra as la
 import Ellipse
 
+from Blender.Mathutils import Vector, Intersect, DotVecs, ProjectVecs, CrossVecs, LineIntersect
+
 from math           import *
 from LinearAlgebra  import *
 from multiarray     import *
 from Ellipse        import Ellipse
 
+EPSILON = 0.001
+
 class Merge:
         
     def __init__(self,listEllipse):
            
-      self.listEllipse = listEllipse
-      self.mCenter     = Blender.Mathutils.Vector(0.0,0.0,0.0)
-      self.mNormal     = Blender.Mathutils.Vector(0.0,0.0,0.0)
-      self.mEigenVector = []
-      self.mEigenValues = []
+      self.listEllipse    = listEllipse
+      self.mCenter        = Blender.Mathutils.Vector(0.0,0.0,0.0)
+      self.mNormal        = Blender.Mathutils.Vector(0.0,0.0,0.0)
+      self.mEigenVector   = []
+      self.mEigenValues   = []
+      self.mPontosPorjetos = []
       self.CalcularCentroProgressiveSplatting()
+      self.CalcularPointosPojetados()
      
-    def __init__(self,pCenter,pNormal):
-        
-      self.listEllipse  = []
-      self.mEigenVector = []
-      self.mEigenValues = []
-      self.mCenter      = pCenter
-      self.mNormal      = pNormal
-      self.CalcularCentroProgressiveSplatting()
+#    def __init__(self,pCenter,pNormal):
+#        
+#      self.listEllipse    = []
+#      self.mEigenVector   = []
+#      self.mEigenValues   = []
+#      self.PontosPorjetos = []
+#      self.mCenter        = pCenter
+#      self.mNormal        = pNormal
+#      self.CalcularCentroProgressiveSplatting()
+#      self.CalcularPointosPojetados()
         
     def Center(self):
         return self.mCenter
@@ -40,17 +48,42 @@ class Merge:
     
     def EigenValues (self):
         return self.mEigenValues
-
+    
+    def PontosProjetados(self):
+        return self.mPontosPorjetos
+    def project_point_plane(self,point, norm, pop):
+        """Give the projected point on the plane (norm, pop).
+        point: point to project (Blender.Mathutils.Vector object).
+        norm: normal vector of the plane (Blender.Mathutils.Vector object).
+        pop: a point that belong to the plane (Blender.Mathutils.Vector object).
+        return: the projected point (Blender.Mathutils.Vector object), or None if invalid norm.
+        """
+        if norm.length > EPSILON:
+            return point - ProjectVecs(point - pop, norm)
+        
+    def CalcularPointosPojetados(self):
+        
+        listPoints = []
+        
+        for i in self.listEllipse:
+        
+            listPoints = i.CalculateBoundaries(0)
+            
+            for j in listPoints:
+                
+                self.mPontosPorjetos.append(self.project_point_plane(j,self.mNormal,self.mCenter)) 
+        
+        
     #! Dado dois splats calcular seu centro e normal
     def CalcularCentroProgressiveSplatting(self):
                 
-        lSomaCenterAreas = 0.0 
-        lSomaNormalAreas = 0.0
+        lSomaCenterAreas = Blender.Mathutils.Vector(0.0,0.0,0.0)
+        lSomaNormalAreas = Blender.Mathutils.Vector(0.0,0.0,0.0)
         lSomaAreas       = 0.0
         
         for i in self.listEllipse:
-            lSomaCenterAreas += i.Area() * i.GetCenter()
-            lSomaNormalAreas += i.Area() * i.GetNormal()
+            lSomaCenterAreas += i.Area() * i.Center()
+            lSomaNormalAreas += i.Area() * i.Normal()
             lSomaAreas       += i.Area()           
                
         self.mCenter = lSomaCenterAreas / lSomaAreas

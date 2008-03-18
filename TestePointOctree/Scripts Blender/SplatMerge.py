@@ -15,6 +15,8 @@ import math
 from math import *
 import goo
 
+import Merge
+from Merge import Merge
 
 import Ellipse
 from Ellipse import Ellipse    
@@ -234,9 +236,12 @@ def buttonevents(evt):
         
         me= Blender.Mesh.New('FElipe')
        
+        merge = Merge(listEllipse)
+       
         me.verts.extend([SomaAreaCentro/SomaArea])
+        me.verts.extend(merge.PontosProjetados())
         me.verts[-1].no = SomaAreaNormal/SomaArea
-        me.edges.extend(me.verts[0],me.verts[-1])
+        
         #Vertex do Centro
       
         scn = Blender.Scene.GetCurrent()
