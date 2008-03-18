@@ -17,14 +17,15 @@ class Merge:
         
     def __init__(self,listEllipse):
            
-      self.listEllipse    = listEllipse
-      self.mCenter        = Blender.Mathutils.Vector(0.0,0.0,0.0)
-      self.mNormal        = Blender.Mathutils.Vector(0.0,0.0,0.0)
-      self.mEigenVector   = []
-      self.mEigenValues   = []
+      self.listEllipse     = listEllipse
+      self.mCenter         = Blender.Mathutils.Vector(0.0,0.0,0.0)
+      self.mNormal         = Blender.Mathutils.Vector(0.0,0.0,0.0)
+      self.mEigenVector    = []
+      self.mEigenValues    = []
       self.mPontosPorjetos = []
       self.CalcularCentroProgressiveSplatting()
       self.CalcularPointosPojetados()
+      self.CalcularEixosAeB()
      
 #    def __init__(self,pCenter,pNormal):
 #        
@@ -92,12 +93,9 @@ class Merge:
     #! Usando um amostra de 8 pontos que representa a borda das elipses , calcular os AutoValores e AutoVetores    
     def CalcularEixosAeB(self):
         
-        points = []
-        
-        for i in self.listEllipse:
-            points.extend(i.CalculateBoundaries(8))
-          
-        cov = CovarianceMatrix(points)
+        cov = self.CovarianceMatrix(self.mPontosPorjetos)
+        self.mEigenValues = la.eigenvalues(cov)
+        self.mEigenVector = la.eigenvectors(cov)
         
     #! Calcular  a Matrix de Covariancia de um conjuntos de pontos
     def CovarianceMatrix(self,points):

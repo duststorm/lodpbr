@@ -237,9 +237,14 @@ def buttonevents(evt):
         me= Blender.Mesh.New('FElipe')
        
         merge = Merge(listEllipse)
-       
+        
+        #print merge.EigenVector()[0]
+        #print merge.EigenVector()[1]
+        #print merge.EigenVector()[2]
+        
         me.verts.extend([SomaAreaCentro/SomaArea])
         me.verts.extend(merge.PontosProjetados())
+        print merge.PontosProjetados()
         me.verts[-1].no = SomaAreaNormal/SomaArea
         
         #Vertex do Centro

@@ -44,68 +44,12 @@ int main(int argc, char *argv[])
 								0.75,0.25,0.5);
 	
 	
-	/*CPPL::dsymatrix C_lapack = CPPL::dsymatrix(3) ;
+	CGL::Vector3<double> v1(18,6.5,7);
+	CGL::Vector3<double> v2(-7,0,18);
 	
-	std::vector<double> w1;
+	CGL::Vector3<double> v3 = v1 ^ v2; 
 	
-	C_lapack(0,0) = 1.5;
-	C_lapack(0,1) = 0.5;
-	C_lapack(0,2) = 0.75;
-	C_lapack(1,0) = 0.5;
-	C_lapack(1,1) = 0.5;
-	C_lapack(1,2) = 0.25;
-	C_lapack(2,0) = 0.75;
-	C_lapack(2,1) = 0.25;
-	C_lapack(2,2) = 0.5;/
-	
-	C_lapack.dsyev(w1,1);
-	
-	std::cout << w1[0] << w1[1] << w1[2];
-	
-	std::cout << C_lapack;*/
-	
-	std::list<CGL::Point3<double>* >  pt;
-	
-	CGL::Point3<double> pm = CGL::Point3<double>( 1,-1,2 );
-	
-
-	pt.push_back( new CGL::Point3<double>(-1,-2,1) );
-	pt.push_back( new CGL::Point3<double>(1,0,2)   );
-	pt.push_back( new CGL::Point3<double>(2,-1,3)  );
-	pt.push_back( new CGL::Point3<double>(2,-1,2)  );
-	
-	CGL::CubicEquation<double> resolve = CGL::CubicEquation<double>(pt,pm);
-	
-	CGL::Vector3<double> Eigenvector[3]; 
-	
-	double Eigenvalue[3];
-	
-	CGL::Eigen<double> eigen = CGL::Eigen<double>(pt,pm);
-	
-	std::cout << "ww " << eigen.m_afEigenvalue[0] << " | "<< eigen.m_akEigenvector[0];// *  resolve.mEigenvalue[0] << std::endl;
-	std::cout << "ww " << eigen.m_afEigenvalue[1] << " | "<< eigen.m_akEigenvector[1];// *  resolve.mEigenvalue[0] << std::endl;
-	std::cout << "ww " << eigen.m_afEigenvalue[2] << " | "<< eigen.m_akEigenvector[2];// *  resolve.mEigenvalue[0] << std::endl;
-	
-	
-	resolve.Eigensolver(C,Eigenvalue,Eigenvector);
-	
-	std::cout << "Eita " << Eigenvalue[0] << " | "<< Eigenvector[0];// *  resolve.mEigenvalue[0] << std::endl;
-	std::cout << "Eita " << Eigenvalue[1] << " | "<< Eigenvector[1];// *  resolve.mEigenvalue[0] << std::endl;
-	std::cout << "Eita " << Eigenvalue[2] << " | "<< Eigenvector[2];// *  resolve.mEigenvalue[0] << std::endl;
-	
-		
-	std::cout << "Eita ZERO " << resolve.mEigenvector[0] * resolve.mEigenvector[1] << std::endl;
-	
-	CGL::Vector3<double> v1 (1.0,2.0,-2.0);
-	CGL::Vector3<double> v2 (3.0,0.0,1.0);
-	CGL::Vector3<double> v3 (B.col(2));
-	
-
-	v3 = v2 ^ v1;
-	
-	std::cout << "v1 " << v1;
-	std::cout << "v2 " << v2;
-	std::cout << "v3 " << v3;
+	std::cout <<" UI "<< v1*v2;
 
     QApplication app(argc, argv);
     if (!QGLFormat::hasOpenGL()) {
@@ -150,4 +94,71 @@ std::cout << g;
 std::cout <<  " Result "<< array[0] << " - " << array[1]<<" - "<< array[2] << std::endl <<
 				  " - " << array[3] << " - " << array[4]<<" - "<< array[5] << std::endl <<
 				  " - " << array[6] << " - " << array[7]<<" - "<< array[8] << std::endl;*/
+
+/*
+ * 	CPPL::dsymatrix C_lapack = CPPL::dsymatrix(3) ;
+	
+	std::vector<double> w1;
+	
+	C_lapack(0,0) = 1.5;
+	C_lapack(0,1) = 0.5;
+	C_lapack(0,2) = 0.75;
+	C_lapack(1,0) = 0.5;
+	C_lapack(1,1) = 0.5;
+	C_lapack(1,2) = 0.25;
+	C_lapack(2,0) = 0.75;
+	C_lapack(2,1) = 0.25;
+	C_lapack(2,2) = 0.5;/
+	
+	C_lapack.dsyev(w1,1);
+	
+	std::cout << w1[0] << w1[1] << w1[2];
+	
+	std::cout << C_lapack;
+	
+	std::list<CGL::Point3<double>* >  pt;
+	
+	CGL::Point3<double> pm = CGL::Point3<double>( 1,-1,2 );
+	
+
+	pt.push_back( new CGL::Point3<double>(-1,-2,1) );
+	pt.push_back( new CGL::Point3<double>(1,0,2)   );
+	pt.push_back( new CGL::Point3<double>(2,-1,3)  );
+	pt.push_back( new CGL::Point3<double>(2,-1,2)  );
+	
+	CGL::CubicEquation<double> resolve = CGL::CubicEquation<double>(pt,pm);
+	
+	CGL::Vector3<double> Eigenvector[3]; 
+	
+	double Eigenvalue[3];
+	
+	CGL::Eigen<double> eigen = CGL::Eigen<double>(pt,pm);
+	
+	std::cout << "ww " << eigen.m_afEigenvalue[0] << " | "<< eigen.m_akEigenvector[0];// *  resolve.mEigenvalue[0] << std::endl;
+	std::cout << "ww " << eigen.m_afEigenvalue[1] << " | "<< eigen.m_akEigenvector[1];// *  resolve.mEigenvalue[0] << std::endl;
+	std::cout << "ww " << eigen.m_afEigenvalue[2] << " | "<< eigen.m_akEigenvector[2];// *  resolve.mEigenvalue[0] << std::endl;
+	
+	
+	resolve.Eigensolver(C,Eigenvalue,Eigenvector);
+	
+	std::cout << "Eita " << Eigenvalue[0] << " | "<< Eigenvector[0];// *  resolve.mEigenvalue[0] << std::endl;
+	std::cout << "Eita " << Eigenvalue[1] << " | "<< Eigenvector[1];// *  resolve.mEigenvalue[0] << std::endl;
+	std::cout << "Eita " << Eigenvalue[2] << " | "<< Eigenvector[2];// *  resolve.mEigenvalue[0] << std::endl;
+	
+		
+	std::cout << "Eita ZERO " << resolve.mEigenvector[0] * resolve.mEigenvector[1] << std::endl;
+	
+	CGL::Vector3<double> v1 (1.0,2.0,-2.0);
+	CGL::Vector3<double> v2 (3.0,0.0,1.0);
+	CGL::Vector3<double> v3 (B.col(2));
+	
+
+	v3 = v2 ^ v1;
+	
+	std::cout << "v1 " << v1;
+	std::cout << "v2 " << v2;
+	std::cout << "v3 " << v3;
+ * 
+ * */
+
 
