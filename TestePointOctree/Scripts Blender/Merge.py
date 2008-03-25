@@ -68,7 +68,7 @@ class Merge:
         
         for i in self.listEllipse:
         
-            listPoints = i.CalculateBoundaries(0)
+            listPoints = i.CalculateBoundaries(0,[Vector(1.0,0.0,0.0),Vector(0.0,1.0,0.0),Vector(0.0,0.0,1.0)])
             
             for j in listPoints:
                 

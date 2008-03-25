@@ -58,10 +58,12 @@ class Ellipse:
         sinalpha =  sin(alpha)
         cosalpha =  cos(alpha)
      
-        X = self.mCenter.x + (self.mA * cosalpha * cosbeta - self.mB * sinalpha * sinbeta)
-        Y = self.mCenter.y + (self.mA * cosalpha * sinbeta + self.mB * sinalpha * cosbeta)
-     
-        points.append(Blender.Mathutils.Vector(X, Y, 0.0));
+        X = (0.0 + (self.mA * cosalpha * cosbeta - self.mB * sinalpha * sinbeta)) 
+        Y = (0.0 + (self.mA * cosalpha * sinbeta + self.mB * sinalpha * cosbeta))
+                      
+        Z = 0.0
+               
+        points.append( Blender.Mathutils.Vector(X,Y,Z) );
         
         i =  i + (360.0 / steps);
       

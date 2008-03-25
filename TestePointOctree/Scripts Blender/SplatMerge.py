@@ -30,6 +30,28 @@ listNovoSplat   = []
 ######################################################
 
 
+def perpendicular(v):
+  
+  # select the shortest of projections of axes on v
+  # (the closest to perpendicular to v),
+  # and project it to the plane defined by v
+  if abs(v.x) < abs(v.y): # x < y
+      
+    if abs(v.x) < abs(v.z):  # x < y && x < z
+      t = Blender.Mathutils.Vector(1.0 - (v.x * v.x),-v.x * v.y,-v.x * v.z);
+      return t
+     
+  else: #  y <= x
+  
+    if abs(v.y) < abs(v.z): # // y <= x && y < z
+      t = Blender.Mathutils.Vector( -v.y * v.x, 1.0 - v.y * v.y, -v.y * v.z)
+      return t
+  # z <= x && z <= y
+  t = Blender.Mathutils.Vector(-v.z * v.x, -v.z * v.y, 1.0 - v.z * v.z)
+  return t;
+
+
+
 mousex=1
 mousey=1
 
@@ -219,7 +241,6 @@ def buttonevents(evt):
             
             for j in listEllipse:
                 if j.Name() == i.getName():
-                    print 'Vamprito'
                     j.SetCenter(i.getData(False, True).verts[-1].co)
                     j.SetNormal(i.getData(False, True).faces[0].no)
                     listSelecionados.append(j)
@@ -262,11 +283,11 @@ def buttonevents(evt):
        if in_editmode:
            Window.EditMode(0)
             
-       listEllipse.append( Ellipse(Vector(0.0,0.0,0.0),EixoA.val,EixoB.val,60.0,"Ellipse"+str(index)) )
+       listEllipse.append( Ellipse(Vector(0.0,0.0,0.0),EixoA.val,EixoB.val,45.0,"Ellipse"+str(index)) )
        
        index += 1
        
-       polyline1 =  listEllipse[-1].CalculateBoundaries(0.0)
+       polyline1 =  listEllipse[-1].CalculateBoundaries(8)
        # Make a new mesh and add the truangles into it
        me= Blender.Mesh.New(listEllipse[-1].Name())
        
@@ -298,15 +319,50 @@ def buttonevents(evt):
 
         object = Blender.Object.GetSelected()
         
-#        for i in object:
-#            print '-------------------------'
-#            print i.getLocation(),'Centro do Blender'
-#            print i.getData(False, True).faces[0].no,'Normal'       
-#            print i.getData(False, True).verts[-1].co,  'Meu Centro'
-#            print i.getName()
-#        for j in listEllipse:
-#            print j.Name(),j.Center(),'==' 
-#            print j.Name(),j.Normal(), '=='
+        for i in object:
+          for j in listEllipse:
+            if j.Name() == i.getName():
+                j.SetCenter(i.getData(False, True).verts[-1].co)
+                j.SetNormal(i.getData(False, True).faces[0].no)
+        
+        me = Blender.Mesh.New('felipe')
+       
+        me.verts.extend(listEllipse[0].Center())
+        me.verts.extend(listEllipse[0].Center() + listEllipse[0].Normal()*4.0)
+        m = Blender.Mathutils.Vector(perpendicular(listEllipse[0].Normal()))
+        me.verts.extend(listEllipse[0].Center() + m*2.0)
+        m.normalize()
+        listEllipse[0].Normal().normalize()
+        v = CrossVecs(listEllipse[0].Normal(),m)
+        me.verts.extend(listEllipse[0].Center() + v*2.0)
+       
+       
+        mat = Blender.Mathutils.Matrix([m.x,m.y,m.z,1.0],[v.x,v.y,v.z,1.0],
+                                       [listEllipse[0].Normal().x,listEllipse[0].Normal().y,listEllipse[0].Normal().z,1.0],
+                                       [listEllipse[0].Center().x,listEllipse[0].Center().y,listEllipse[0].Center().z,1.0])
+        mat.invert()
+         
+        me.edges.extend(me.verts[0],me.verts[3])
+        me.edges.extend(me.verts[0],me.verts[2])
+        me.edges.extend(me.verts[0],me.verts[1])
+        
+        print listEllipse[0].Center(), 'AAA'
+        
+        list = listEllipse[0].CalculateBoundaries(0.0)
+        list2 = []
+        for i in list:
+            list2.append(Blender.Mathutils.Vector(i.x,i.y,i.z,1.0)*mat)
+        
+        list3 = []
+        for i in list2:
+            list3.append(Blender.Mathutils.Vector(i.x,i.y,i.z))
+            
+        me.verts.extend (list3)
+       #Vertex do Centro
+        scn = Blender.Scene.GetCurrent()
+        ob = scn.objects.new(me,listEllipse[-1].Name())
+                   
+
         print '##############################'    
         if in_editmode:
             Window.EditMode(1)
