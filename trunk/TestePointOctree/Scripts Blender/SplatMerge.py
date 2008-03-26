@@ -287,7 +287,7 @@ def buttonevents(evt):
        
        index += 1
        
-       polyline1 =  listEllipse[-1].CalculateBoundaries(8)
+       polyline1 =  listEllipse[-1].CalculateBoundaries(8,[Vector(1.0,0.0,0.0),Vector(0.0,1.0,0.0)])
        # Make a new mesh and add the truangles into it
        me= Blender.Mesh.New(listEllipse[-1].Name())
        
@@ -334,30 +334,18 @@ def buttonevents(evt):
         m.normalize()
         listEllipse[0].Normal().normalize()
         v = CrossVecs(listEllipse[0].Normal(),m)
+        v.normalize()
+                      
         me.verts.extend(listEllipse[0].Center() + v*2.0)
-       
-       
-        mat = Blender.Mathutils.Matrix([m.x,m.y,m.z,1.0],[v.x,v.y,v.z,1.0],
-                                       [listEllipse[0].Normal().x,listEllipse[0].Normal().y,listEllipse[0].Normal().z,1.0],
-                                       [listEllipse[0].Center().x,listEllipse[0].Center().y,listEllipse[0].Center().z,1.0])
-        mat.invert()
-         
+                      
         me.edges.extend(me.verts[0],me.verts[3])
         me.edges.extend(me.verts[0],me.verts[2])
         me.edges.extend(me.verts[0],me.verts[1])
         
-        print listEllipse[0].Center(), 'AAA'
-        
-        list = listEllipse[0].CalculateBoundaries(0.0)
-        list2 = []
-        for i in list:
-            list2.append(Blender.Mathutils.Vector(i.x,i.y,i.z,1.0)*mat)
-        
-        list3 = []
-        for i in list2:
-            list3.append(Blender.Mathutils.Vector(i.x,i.y,i.z))
-            
-        me.verts.extend (list3)
+              
+        list = listEllipse[0].CalculateBoundaries(100,[m,v])
+           
+        me.verts.extend (list)
        #Vertex do Centro
         scn = Blender.Scene.GetCurrent()
         ob = scn.objects.new(me,listEllipse[-1].Name())
