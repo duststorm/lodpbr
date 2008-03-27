@@ -36,8 +36,8 @@ class Ellipse:
         
     def Normal(self):
         return self.mNormal
-      
     
+       
     #! Return list of point in Boundaries 
     def CalculateBoundaries(self,steps,axis): 
             
@@ -51,34 +51,49 @@ class Ellipse:
       sinbeta = sin(beta)
       cosbeta = cos(beta)
      
-      #i = 0
-      i = -self.mA
-      #while i < 360 :
-      while i < self.mA :
+      i = 0
+      #i = -self.mA
+      X = 0
+      Y = 0
+      u = Blender.Mathutils.Vector(0,0)
+      while i < 360 :
+      #while i < self.mA :
         alpha = (i / 180) * pi        
         sinalpha =  sin(alpha)
         cosalpha =  cos(alpha)
         
         #X = (self.mA * cosalpha * cosbeta - self.mB * sinalpha * sinbeta)
-        X = i
+        X = self.mA * cosalpha 
+        #X = i
         
-        Y = sqrt  ( (1 - ( (X*X) / (self.mA*self.mA) )  ) * (self.mB*self.mB) ) 
-         
-        factor = sqrt(X*X + Y*Y)
-        #Y = (self.mA * cosalpha * sinbeta + self.mB * sinalpha * cosbeta)    
+        #Y = sqrt  ( (1 - ( (X*X) / (self.mA*self.mA) )  ) * (self.mB*self.mB) ) 
+           
+        #Y = (self.mA * cosalpha * sinbeta + self.mB * sinalpha * cosbeta)
         
-                             
-        #w = axis[0]*cosalpha + axis[1]*sinalpha
-        w = Blender.Mathutils.Vector(X,Y,0.0)
-        t = Blender.Mathutils.Vector(X,-Y,0.0)
-                       
+        Y = self.mB * sinalpha
+        
+        
+                
+        print X, 'X'
+        print Y, 'Y'     
+        print X*X,'X*X'
+        print Y*Y,'Y*Y'
+        print sqrt(X*X+Y*Y),'tamanho'
+        
+        factor = sqrt(X*X+Y*Y)
+        
+        angle_s = X/factor
+        angle_x = Y/factor
+               
+        w = axis[0]*angle_s + axis[1]*angle_x
+
         Z = self.mCenter.z
                             
-        points.append(self.mCenter + w)
-        points.append(self.mCenter + t)
-        
-        #i =  i + (360.0 / steps);
-        i += 0.1
+        points.append(self.mCenter + w*factor)
+        #points.append(Blender.Mathutils.Vector(X,Y,0.0))
+                                  
+        i =  i + (360.0 / steps)
+        #i += 0.1
       
       return points
   

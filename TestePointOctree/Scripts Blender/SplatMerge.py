@@ -346,6 +346,8 @@ def buttonevents(evt):
         list = listEllipse[0].CalculateBoundaries(100,[m,v])
            
         me.verts.extend (list)
+                      
+         
        #Vertex do Centro
         scn = Blender.Scene.GetCurrent()
         ob = scn.objects.new(me,listEllipse[-1].Name())
