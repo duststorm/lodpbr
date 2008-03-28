@@ -258,18 +258,40 @@ def buttonevents(evt):
         me= Blender.Mesh.New('FElipe')
        
         merge = Merge(listEllipse)
+             
         
         #print merge.EigenVector()[0]
         #print merge.EigenVector()[1]
         #print merge.EigenVector()[2]
         
-        me.verts.extend([SomaAreaCentro/SomaArea])
-        me.verts.extend(merge.PontosProjetados())
-        print merge.PontosProjetados()
-        me.verts[-1].no = SomaAreaNormal/SomaArea
+        #me.verts.extend([SomaAreaCentro/SomaArea])
         
+        #me.verts.extend(merge.PontosProjetados())
+        
+               
+        #me.verts[-1].no = SomaAreaNormal/SomaArea
+        
+        listEllipse.append(Ellipse(merge.Normal(),merge.EigenValues()[1],merge.EigenValues()[2],45.0,"Ellipse"+str(index)))
+        
+        listEllipse[-1].SetEixoA(merge.EigenVectors()[0][1])
+        
+        listEllipse[-1].SetEixoB(merge.EigenVectors()[0][2])
         #Vertex do Centro
-      
+        
+        polyline1 =  listEllipse[-1].CalculateBoundaries(8,[listEllipse[-1].EixoA(),listEllipse[-1].EixoB()])
+       # Make a new mesh and add the truangles into it
+        me= Blender.Mesh.New(listEllipse[-1].Name())
+       
+        me.verts.extend(polyline1)
+        me.edges.extend(me.verts[0],me.verts[-1])
+       #Vertex do Centro
+        me.verts.extend(listEllipse[-1].Centro())
+        me.faces.extend(me.verts[-1],me.verts[-2],me.verts[0]) # Add the faces, they reference the verts in polyline 1 and 2
+       
+        for i in range(0,len(polyline1)-1):
+           me.edges.extend(me.verts[i],me.verts[i+1])
+           me.faces.extend(me.verts[i],me.verts[i+1],me.verts[-1])
+        
         scn = Blender.Scene.GetCurrent()
         ob = scn.objects.new(me,listEllipse[-1].Name())
         
