@@ -13,6 +13,26 @@ from Ellipse        import Ellipse
 
 EPSILON = 0.001
 
+def perpendicular(v):
+  
+  # select the shortest of projections of axes on v
+  # (the closest to perpendicular to v),
+  # and project it to the plane defined by v
+  if abs(v.x) < abs(v.y): # x < y
+      
+    if abs(v.x) < abs(v.z):  # x < y && x < z
+      t = Blender.Mathutils.Vector(1.0 - (v.x * v.x),-v.x * v.y,-v.x * v.z);
+      return t
+     
+  else: #  y <= x
+  
+    if abs(v.y) < abs(v.z): # // y <= x && y < z
+      t = Blender.Mathutils.Vector( -v.y * v.x, 1.0 - v.y * v.y, -v.y * v.z)
+      return t
+  # z <= x && z <= y
+  t = Blender.Mathutils.Vector(-v.z * v.x, -v.z * v.y, 1.0 - v.z * v.z)
+  return t;
+
 class Merge:
         
     def __init__(self,listEllipse):
@@ -44,7 +64,7 @@ class Merge:
     def Normal(self):
         return self.mNormal
       
-    def EigenVector (self):
+    def EigenVectors (self):
         return self.mEigenVector
     
     def EigenValues (self):
@@ -67,8 +87,12 @@ class Merge:
         listPoints = []
         
         for i in self.listEllipse:
-        
-            listPoints = i.CalculateBoundaries(0,[Vector(1.0,0.0,0.0),Vector(0.0,1.0,0.0),Vector(0.0,0.0,1.0)])
+            m = Blender.Mathutils.Vector(perpendicular(i.Normal()))
+            m.normalize()
+            i.Normal().normalize()
+            v = CrossVecs(i.Normal(),m)
+            v.normalize()
+            listPoints = i.CalculateBoundaries(0,[m,v])
             
             for j in listPoints:
                 
@@ -94,9 +118,21 @@ class Merge:
     def CalcularEixosAeB(self):
         
         cov = self.CovarianceMatrix(self.mPontosPorjetos)
-        self.mEigenValues = la.eigenvalues(cov)
-        self.mEigenVector = la.eigenvectors(cov)
+        print cov, "MATRIX"
+        eigenvec = la.eigenvectors(cov)
+        eigenval = la.eigenvalues(cov)
         
+        print [eigenvec(0),eigenvec(1),eigenvec(2)] ,"TAMANHO DOS EIGENVECTOR"
+        
+        self.mEigenVector.append([eigenvec[0][0],eigenvec[0][1],eigenvec[0][2]])
+        self.mEigenVector.append([eigenvec[1][0],eigenvec[1][1],eigenvec[1][2]])
+        self.mEigenVector.append([eigenvec[2][0],eigenvec[2][1],eigenvec[2][2]])
+        
+        self.mEigenValues.append([eigenval[0][0],eigenval[0][1],eigenval[0][2]]) 
+        self.mEigenValues.append([eigenval[1][0],eigenval[1][1],eigenval[1][2]])
+        self.mEigenValues.append([eigenval[2][0],eigenval[2][1],eigenval[2][2]])
+         
+                
     #! Calcular  a Matrix de Covariancia de um conjuntos de pontos
     def CovarianceMatrix(self,points):
        
