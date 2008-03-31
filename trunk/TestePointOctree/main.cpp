@@ -11,7 +11,7 @@
 #include "slal/Point3.hpp"
 #include "slal/Matrix3x3.hpp"
 #include "slal/Color.hpp"
-#include "slal/Polynomial.hpp"
+#include "slal/EigenSystem.hpp"
 #include "slal/Eigen.hpp"
 
 using namespace std;
