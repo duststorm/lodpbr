@@ -3,8 +3,9 @@ import math
 import multiarray
 import LinearAlgebra as la
 
-import MergeOperator
-from MergeOperator import *
+from Blender  import Scene, Draw, BGL, Window , Mesh ,Mathutils , Object
+from Blender.Mathutils import *
+from Blender.Object import *
 
 import Ellipse
 from Ellipse import Ellipse    
@@ -13,23 +14,23 @@ from math import *
 from LinearAlgebra import *
 from multiarray import *
 
-Vector = Blender.Mathutils.Vector(256.0,1.0,1.0)
+#Vector = Blender.Mathutils.Vector(256.0,1.0,1.0)
+#
+#cov = [Blender.Mathutils.Vector(-1.0,-2.0,1.0),
+#       Blender.Mathutils.Vector(1.0,0.0,2.0),
+#       Blender.Mathutils.Vector(2.0,-1.0,3.0),
+##       Blender.Mathutils.Vector(2.0,-1.0,2.0)]
+#
+##p = Merge(Blender.Mathutils.Vector(1.0,-1.0,2.0))
+#
+##fel = p.CovarianceMatrix(cov)
+#
+#print fel,'FELIPE'
 
-cov = [Blender.Mathutils.Vector(-1.0,-2.0,1.0),
-       Blender.Mathutils.Vector(1.0,0.0,2.0),
-       Blender.Mathutils.Vector(2.0,-1.0,3.0),
-       Blender.Mathutils.Vector(2.0,-1.0,2.0)]
+a = array ([[ 1.32749402 , 0.03042916 ,-0.41181601,],[ 0.03042916 , 0.50236605 ,-0.00943975],[-0.41181601 ,-0.00943975 , 0.12775381]])  
+#a = array ([[1.5,0.5,0.75],[0.5,0.5,0.25],[0.75,0.25,0.5]])
 
-p = Merge(Blender.Mathutils.Vector(1.0,-1.0,2.0))
 
-fel = p.CovarianceMatrix(cov)
-
-print fel,'FELIPE'
-
-a = array ([[1.5,0.5,0.75],[0.5,0.5,0.25],[0.75,0.25,0.5]])
-
-#print la.eigenvalues(a)
-#print la.eigenvectors(a)
 # Outline of 5 points
 
 #def calculateEllipse(x, y, a, b, angle, steps): 
@@ -59,12 +60,11 @@ a = array ([[1.5,0.5,0.75],[0.5,0.5,0.25],[0.75,0.25,0.5]])
 #  
 #  return points;
  
-e = Ellipse(0.0,0.0,0.0,2,1.5,60.0,"felipe")
+e = Ellipse(Vector(0.0,0.0,0.0),1.0,1.5,45.0,"EllipseFelipe" )
     
-print  Vector / 3 
     
-polyline1 =  e.CalculateBoundaries(0.0)
-print polyline1 
+polyline1 =  e.CalculateBoundaries(8,[Vector(1.0,0.0,0.0),Vector(0.0,1.0,0.0)])
+ 
    # Make a new mesh and add the truangles into it
 me= Blender.Mesh.New(e.Name())
 me.verts.extend(polyline1)
@@ -83,6 +83,28 @@ po = []
 po.extend([1,2,3])
 po.extend([2,3])
 
-print Vector.x      
+b = []
+
+c =  la.eigenvectors(a)
+d = la.eigenvalues(a)
+
+opa = Vector(c[1][0])
+
+print c[0], 'Mas por que'
+print c[1][0], 'Mas por que v1' , opa.magnitude
+print c[1][1], 'Mas por que v2'
+print c[1][2], 'Mas por que v3'
+
+
+
+b =  [Vector(c[1][0]),Vector(c[1][1]),Vector(c[1][2])]
+
+print b,'Felipe b '
+
+
+g = [d[0],d[1],d[2]]
+
+print g ,"values"
+print la.eigenvectors(a)
 
 Blender.Redraw()

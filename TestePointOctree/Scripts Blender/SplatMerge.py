@@ -264,33 +264,60 @@ def buttonevents(evt):
         #print merge.EigenVector()[1]
         #print merge.EigenVector()[2]
         
-        #me.verts.extend([SomaAreaCentro/SomaArea])
         
-        #me.verts.extend(merge.PontosProjetados())
+        listEllipse.append(Ellipse(merge.Center(),2,2,45.0,"Ellipse"+str(index)))
         
-               
-        #me.verts[-1].no = SomaAreaNormal/SomaArea
+        listEllipse[-1].SetEixoA(merge.EigenVectors()[1].normalize())
         
-        listEllipse.append(Ellipse(merge.Normal(),merge.EigenValues()[1],merge.EigenValues()[2],45.0,"Ellipse"+str(index)))
+        listEllipse[-1].SetEixoB(merge.EigenVectors()[2].normalize())
         
-        listEllipse[-1].SetEixoA(merge.EigenVectors()[0][1])
+        listEllipse[-1].SetNormal(merge.EigenVectors()[0])
         
-        listEllipse[-1].SetEixoB(merge.EigenVectors()[0][2])
+        index += 1
         #Vertex do Centro
         
-        polyline1 =  listEllipse[-1].CalculateBoundaries(8,[listEllipse[-1].EixoA(),listEllipse[-1].EixoB()])
-       # Make a new mesh and add the truangles into it
-        me= Blender.Mesh.New(listEllipse[-1].Name())
+        polyline1 =  listEllipse[-1].CalculateBoundaries(100,[merge.EigenVectors()[1],merge.EigenVectors()[2]])
+        polyline2 =  listEllipse[-1].CalculateBoundaries(100,[merge.EigenVectors()[0],merge.EigenVectors()[2]])
+        polyline3 =  listEllipse[-1].CalculateBoundaries(100,[merge.EigenVectors()[0],merge.EigenVectors()[1]])
+        #Make a new mesh and add the truangles into it
+        #me= Blender.Mesh.New(listEllipse[-1].Name())
        
         me.verts.extend(polyline1)
-        me.edges.extend(me.verts[0],me.verts[-1])
-       #Vertex do Centro
-        me.verts.extend(listEllipse[-1].Centro())
-        me.faces.extend(me.verts[-1],me.verts[-2],me.verts[0]) # Add the faces, they reference the verts in polyline 1 and 2
-       
-        for i in range(0,len(polyline1)-1):
-           me.edges.extend(me.verts[i],me.verts[i+1])
-           me.faces.extend(me.verts[i],me.verts[i+1],me.verts[-1])
+        me.verts.extend(polyline2)
+        me.verts.extend(polyline3)
+#        me.edges.extend(me.verts[0],me.verts[-1])
+#       #Vertex do Centro
+#        me.verts.extend(listEllipse[-1].Center())
+#        me.faces.extend(me.verts[-1],me.verts[-2],me.verts[0]) # Add the faces, they reference the verts in polyline 1 and 2
+#       
+#        for i in range(0,len(polyline1)-1):
+#           me.edges.extend(me.verts[i],me.verts[i+1])
+#           me.faces.extend(me.verts[i],me.verts[i+1],me.verts[-1])
+        
+        me.verts.extend(merge.PontosProjetados())
+        listEllipse[-1].Normal().normalize()
+        
+        me.verts.extend(listEllipse[-1].Center())
+        
+        w = merge.EigenVectors()[0]
+        w.normalize()
+        me.verts.extend(listEllipse[-1].Center() + (w*6))
+        
+        m = merge.EigenVectors()[1]
+        m.normalize()
+        me.verts.extend(listEllipse[-1].Center() + (m*merge.EigenValues()[1]))
+        
+        v = merge.EigenVectors()[2]
+        v.normalize()
+        me.verts.extend(listEllipse[-1].Center() + (v*merge.EigenValues()[2]))
+                      
+        me.edges.extend(me.verts[-4],me.verts[-1])
+        me.edges.extend(me.verts[-4],me.verts[-2])
+        me.edges.extend(me.verts[-4],me.verts[-3])
+        
+        print "Eigen values [0] ", abs(merge.EigenValues()[0]), "EigenVectors()[0] ", merge.EigenVectors()[0]
+        print "Eigen values [1] ", abs(merge.EigenValues()[1]), "EigenVectors()[0] ", merge.EigenVectors()[1]
+        print "Eigen values [1] ", abs(merge.EigenValues()[2]), "EigenVectors()[0] ", merge.EigenVectors()[2]
         
         scn = Blender.Scene.GetCurrent()
         ob = scn.objects.new(me,listEllipse[-1].Name())
