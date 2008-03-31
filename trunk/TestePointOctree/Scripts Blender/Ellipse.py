@@ -41,6 +41,9 @@ class Ellipse:
         self.mA      = pA
         self.mB      = pB
         
+        self.mAindex      = 0
+        self.mBindex      = 0
+        
         self.mAngle  = pAngle
         
         self.mNormal = Blender.Mathutils.Vector(0.0,0.0,0.0)
@@ -48,6 +51,24 @@ class Ellipse:
     
     def Name(self):
         return self.mName
+    
+    def setAIndex(self,pIndex):
+        self.mAindex = pIndex
+        
+    def setBIndex(self,pIndex):
+        self.mBindex = pIndex
+
+    def AIndex(self):
+        return self.mAindex
+        
+    def BIndex(self):
+        return self.mBindex
+        
+    def A(self):
+        return self.mA
+    
+    def B(self):
+        return self.mB
     
     def SetCenter(self,pCenter):
         self.mCenter = pCenter
@@ -72,10 +93,10 @@ class Ellipse:
     def SetNormal(self,pNormal):
         self.mNormal = pNormal
         self.mNormal.normalize()
-        self.mEixoA = perpendicular(self.mNormal)
-        self.mEixoA.normalize()                 
-        self.mEixoB = Blender.Mathutils.CrossVecs(self.mNormal,self.mEixoA)
-        self.mEixoB.normalize()
+        #self.mEixoA = perpendicular(self.mNormal)
+        #self.mEixoA.normalize()                 
+        #self.mEixoB = Blender.Mathutils.CrossVecs(self.mNormal,self.mEixoA)
+        #self.mEixoB.normalize()
         
     def Normal(self):
         return self.mNormal
@@ -85,7 +106,7 @@ class Ellipse:
     def CalculateBoundaries(self,steps,axis): 
             
       if steps == 0.0:
-        steps = 8
+        steps = 1
     
       points = []  
         

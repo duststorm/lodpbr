@@ -107,4 +107,10 @@ g = [d[0],d[1],d[2]]
 print g ,"values"
 print la.eigenvectors(a)
 
+ve = Vector(0,232,151)
+
+m = Matrix(ve,[5,6,7],[8,9,10])
+ 
+print max(2,6)
+
 Blender.Redraw()
