@@ -40,8 +40,10 @@ class Merge:
       self.listEllipse     = listEllipse
       self.mCenter         = Blender.Mathutils.Vector(0.0,0.0,0.0)
       self.mNormal         = Blender.Mathutils.Vector(0.0,0.0,0.0)
+      
       self.mEigenVector    = []
       self.mEigenValues    = []
+      
       self.mPontosPorjetos = []
       self.CalcularCentroProgressiveSplatting()
       self.CalcularPointosPojetados()
@@ -118,20 +120,17 @@ class Merge:
     def CalcularEixosAeB(self):
         
         cov = self.CovarianceMatrix(self.mPontosPorjetos)
-        print cov, "MATRIX"
+        
+        #print cov, "MATRIX"
+               
         eigenvec = la.eigenvectors(cov)
         eigenval = la.eigenvalues(cov)
         
-        print [eigenvec(0),eigenvec(1),eigenvec(2)] ,"TAMANHO DOS EIGENVECTOR"
-        
-        self.mEigenVector.append([eigenvec[0][0],eigenvec[0][1],eigenvec[0][2]])
-        self.mEigenVector.append([eigenvec[1][0],eigenvec[1][1],eigenvec[1][2]])
-        self.mEigenVector.append([eigenvec[2][0],eigenvec[2][1],eigenvec[2][2]])
-        
-        self.mEigenValues.append([eigenval[0][0],eigenval[0][1],eigenval[0][2]]) 
-        self.mEigenValues.append([eigenval[1][0],eigenval[1][1],eigenval[1][2]])
-        self.mEigenValues.append([eigenval[2][0],eigenval[2][1],eigenval[2][2]])
-         
+        #print len(eigenvec[0]) ,' PRIMEIRO ',eigenvec[0]
+                       
+        self.mEigenVector = [Blender.Mathutils.Vector(eigenvec[1][0]),Blender.Mathutils.Vector(eigenvec[1][1]),Blender.Mathutils.Vector(eigenvec[1][2])]
+               
+        self.mEigenValues = [eigenval[0],eigenval[1],eigenval[2]]   
                 
     #! Calcular  a Matrix de Covariancia de um conjuntos de pontos
     def CovarianceMatrix(self,points):
@@ -142,6 +141,8 @@ class Merge:
         correlationXY = 0.0
         correlationXZ = 0.0
         correlationYZ = 0.0
+        
+        print len(points) ,' PRIMEIRO ',points       
                              
         N = 1.0/len(points) 
 
