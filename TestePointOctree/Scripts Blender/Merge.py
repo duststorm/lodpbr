@@ -94,7 +94,7 @@ class Merge:
             i.Normal().normalize()
             v = CrossVecs(i.Normal(),m)
             v.normalize()
-            listPoints = i.CalculateBoundaries(0,[m,v])
+            listPoints = i.CalculateBoundaries(0,[v,m])
             
             for j in listPoints:
                 
@@ -127,10 +127,10 @@ class Merge:
         eigenval = la.eigenvalues(cov)
         
         #print len(eigenvec[0]) ,' PRIMEIRO ',eigenvec[0]
-                       
+                                     
         self.mEigenVector = [Blender.Mathutils.Vector(eigenvec[1][0]),Blender.Mathutils.Vector(eigenvec[1][1]),Blender.Mathutils.Vector(eigenvec[1][2])]
                
-        self.mEigenValues = [eigenval[0],eigenval[1],eigenval[2]]   
+        self.mEigenValues = [eigenvec[0][0],eigenvec[0][1],eigenvec[0][2]]   
                 
     #! Calcular  a Matrix de Covariancia de um conjuntos de pontos
     def CovarianceMatrix(self,points):

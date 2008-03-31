@@ -33,8 +33,8 @@ public:
     typedef OctreeNode<Real, ItemPtr, Refine>  			OctreeNode;          
     typedef OctreeInternalNode<Real, ItemPtr, Refine> 	OctreeInternalNode;
     
-    typedef CGL::CubicEquation<Real>					CubicEquation;
-    typedef CGL::Eigen<Real>					Eigen;
+    typedef CGL::EigenSystem<Real>						EigenSystem;
+    typedef CGL::Eigen<Real>							Eigen;
     typedef CGL::Vector3<Real> 							Vector3;  ///< A Point in 3D
     typedef CGL::Point3<Real> 							Point3;  ///< A Point in 3D
     typedef Box_3<Real> 								Box3;    ///< Octant box type
@@ -75,6 +75,16 @@ public:
 
     }
 
+    void PCA()
+    {
+        for (listItemPtrIterator pi = PtrList.begin (); pi != PtrList.end(); ++pi) m += *(*pi);
+           
+         m /= PtrList.size();
+                       
+         eigenSystem = EigenSystem(PtrList,m);
+    	             
+         setEigenVector(covariance.mEigenvector) ;
+    }
     
     virtual void split (const Box3& world, int level, OctreeNode*& fatherPtr) 
     {
@@ -86,19 +96,20 @@ public:
             newOctreeInternalNode->son[0] = this;
             for (int i = 1; i < 8; i++) newOctreeInternalNode->son[i] = new OctreeLeafNode ();
             std::list<ItemPtr> oldPtrList = PtrList;
-            Point3 m;
             
-            for (listItemPtrIterator pi = oldPtrList.begin (); pi != oldPtrList.end(); ++pi) m += *(*pi);
+            //Point3 m;
             
-            m /= PtrList.size();
+            //for (listItemPtrIterator pi = oldPtrList.begin (); pi != oldPtrList.end(); ++pi) m += *(*pi);
+            
+            //m /= PtrList.size();
                         
-            newOctreeInternalNode->setMean(m);
+            //newOctreeInternalNode->setMean(m);
             
-            covariance = Eigen(PtrList,m);
+            //covariance = EigenSystem(PtrList,m);
      	
-            newOctreeInternalNode->setEigenVector (covariance.m_akEigenvector);
+            //newOctreeInternalNode->setEigenVector (covariance.mEigenvector);
            
-            setEigenVector(covariance.m_akEigenvector) ;
+            //setEigenVector(covariance.mEigenvector) ;
             
            
             PtrList.clear();
@@ -205,7 +216,7 @@ public:
     
 private:
 	
-	Eigen 	covariance;
+	EigenSystem 	eigenSystem;
 	Vector3 		mEigenVector[3];
 	Real    		mEigenValues[3];
  

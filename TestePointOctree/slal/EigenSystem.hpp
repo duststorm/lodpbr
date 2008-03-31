@@ -22,7 +22,7 @@ namespace CGL
  // x3   + 6x2   + 12x + 8 = 0 3 raizes reais e iguais
 
 
-	template <class Real> class CubicEquation
+	template <class Real> class EigenSystem
 	{
 	private:
 		
@@ -33,50 +33,30 @@ namespace CGL
 		Vector3<Real> 	mEigenvector[3];			
 		Matrix3x3<Real> mCovariance; 
 		
-		static const int	None							= 0;
+		static const int	None						= 0;
 		static const int 	HasThreeRealRoots 			= 1;
 		static const int	HasAllRealRootsAndEqual 	= 2;
 		static const int	HasOnlyOneRealRoot 			= 3;
 	
 		
-		CubicEquation()
+		EigenSystem()
 		{
 			
 		}
 		
-		CubicEquation(const Matrix3x3<Real>& rkA)
+		EigenSystem(const Matrix3x3<Real>& rkA)
 		{
 			
 		}
 		
-		CubicEquation(std::list<Point3<Real>* >& pPoint3List, const Point3<Real>& pMean)
+		EigenSystem(std::list<Point3<Real>* >& pPoint3List, const Point3<Real>& pMean)
 		{
 			covarianceMatrix (pPoint3List,pMean);
-           // Eigensolver (mCovariance, mEigenvalue, mEigenvector);
-           	//eigen_decomposition();
+            eigen_decomposition();
            	
 		}
 		
-		
-		
-		void QR (Matrix3x3<Real> A)
-		{
-			
-			Vector3<Real> v1 (A.col(0));
-			Vector3<Real> v2 (A.col(1));
-			Vector3<Real> v3 (A.col(2));
-			
-			v2 = v2 - ((v1*v2) / (v1*v1))*v1;
-			
-			v3 = v3 - ((v3*v1) / (v1*v1))*v1  - ((v3*v2) / (v2*v2))*v2 ;
-			
-			std::cout << "v1 " << v1;
-			std::cout << "v2 " << v2;
-			std::cout << "v3 " << v3;
-			
-		}
-		
-		
+	
 		bool Solve3 (const Matrix3x3<Real>& aafA, const Real afB[3],Real afX[3])
 		{
 		    Real aafAInv[3][3];
@@ -444,286 +424,14 @@ namespace CGL
 			mEigenvalue[0] = d[0];
 			mEigenvalue[1] = d[1];
 			mEigenvalue[2] = d[2];
-			
+
 			mEigenvector[0] = mCovariance.col(0);
 			mEigenvector[1] = mCovariance.col(1);
 			mEigenvector[2] = mCovariance.col(2);
 		}
-	
-		void Eigensolver (Matrix3x3<Real> A, Real * evalue, Vector3<Real> * evector)
-		{
-		    Real root[3];
-		    ComputeRoots(A,root);
-	    
-		    evalue[0] = root[0];
-		    evalue[1] = root[1];
-		    evalue[2] = root[2];
-		    
-		    Matrix3x3<Real> M0 = A - evalue[0]*M0.identity(); // I is the identity matrix
-		    int rank0 = ComputeRank(M0);
-		    if (rank0 == 0)
-		    {
-		        // evalue[0] = evalue[1] = evalue[2]
-		        evector[0] = Vector3<Real>(1,0,0);
-		        evector[1] = Vector3<Real>(0,1,0);
-		        evector[2] = Vector3<Real>(0,0,1);
-		        return;
-		    }
-		    if (rank0 == 1)
-		    {
-		        // evalue[0] = evalue[1] < evalue[2]
-		        GetComplement2(M0.row(0),evector[0],evector[1]);
-		        evector[2] = (evector[0] ^  evector[1]);
-		        return;
-		    }
-		    // rank0 == 2
-		    GetComplement1(M0.row(0),M0.row(1),evector[0]);
-		    Matrix3x3<Real> M1 = A - evalue[1]*M1.identity();
-		    int rank1 = ComputeRank(M1); // zero rank detected earlier, rank1 must be positive
-		    if (rank1 == 1)
-		    {
-		        // evalue[0] < evalue[1] = evalue[2]
-		        GetComplement2(evector[0],evector[1],evector[2]);
-		        return;
-		    }
-		    // rank1 == 2
-		    GetComplement1(M1.row(0),M1.row(1),evector[1]);
-		    // rank2 == 2 (eigenvalues must be distinct at this point, rank2 must be 2)
-		    evector[2] = (evector[0] ^ evector[1]);
-		}
 
-		
-		void GetComplement1 (Vector3<Real> U, Vector3<Real> V, Vector3<Real>& W)
-		{
-		    W = (U ^ V);
-		    W.normalize();
-		}
 
-		void GetComplement2 (Vector3<Real> U, Vector3<Real>& V, Vector3<Real>& W)
-		{
-		    U.normalize();
-		    if (fabs(U[0]) >= fabs(U[1]))
-		    {
-		         Real invLength = 1/sqrt(U[0]*U[0] + U[2]*U[2]);
-		         V[0] = -U[2]*invLength;
-		         V[1] = 0;
-		         V[2] = U[0]*invLength;
-		         W[0] = U[1]*V[2];
-		         W[1] = U[2]*V[0] - U[0]*V[2];
-		         W[2] = -U[1]*V[0];
-		    }
-		    else
-		    {
-		         Real invLength = 1/sqrt(U[1]*U[1] + U[2]*U[2]);
-		         V[0] = 0;
-		         V[1] = U[2]*invLength;
-		         V[2] = -U[1]*invLength;
-		         W[0] = U[1]*V[2] - U[2]*V[1];
-		         W[1] = -U[0]*V[2];
-		         W[2] = U[0]*V[1];
-		    }
-		}
-
-		void ComputeRoots (const Matrix3x3<Real>& rkA, Real adRoot[3])
-		{
-		    // Convert the unique matrix entries to double precision.
-		    Real dA00 = static_cast<Real> (rkA[0][0]);
-		    Real dA01 = static_cast<Real> (rkA[0][1]);
-		    Real dA02 = static_cast<Real> (rkA[0][2]);
-		    Real dA11 = static_cast<Real> (rkA[1][1]);
-		    Real dA12 = static_cast<Real> (rkA[1][2]);
-		    Real dA22 = static_cast<Real> (rkA[2][2]);
-
-		    // The characteristic equation is x^3 - c2*x^2 + c1*x - c0 = 0.  The
-		    // eigenvalues are the roots to this equation, all guaranteed to be
-		    // real-valued, because the matrix is symmetric.
-		    Real dC0 = dA00*dA11*dA22 + 2.0*dA01*dA02*dA12 - dA00*dA12*dA12 -
-		        dA11*dA02*dA02 - dA22*dA01*dA01;
-
-		    Real dC1 = dA00*dA11 - dA01*dA01 + dA00*dA22 - dA02*dA02 +
-		        dA11*dA22 - dA12*dA12;
-
-		    Real dC2 = dA00 + dA11 + dA22;
-
-		    // Construct the parameters used in classifying the roots of the equation
-		    // and in solving the equation for the roots in closed form.
-		    Real dC2Div3 = dC2*ms_dInv3;
-		    Real dADiv3 = (dC1 - dC2*dC2Div3)*ms_dInv3;
-		    if (dADiv3 > 0.0)
-		    {
-		        dADiv3 = 0.0;
-		    }
-
-		    Real dMBDiv2 = 0.5*(dC0 + dC2Div3*(2.0*dC2Div3*dC2Div3 - dC1));
-
-		    Real dQ = dMBDiv2*dMBDiv2 + dADiv3*dADiv3*dADiv3;
-		    if (dQ > 0.0)
-		    {
-		        dQ = 0.0;
-		    }
-
-		    // Compute the eigenvalues by solving for the roots of the polynomial.
-		    Real dMagnitude = sqrt(-dADiv3);
-		    Real dAngle = atan2(sqrt(-dQ),dMBDiv2)*ms_dInv3;
-		    Real dCos = cos(dAngle);
-		    Real dSin = sin(dAngle);
-		    Real dRoot0 = dC2Div3 + 2.0*dMagnitude*dCos;
-		    Real dRoot1 = dC2Div3 - dMagnitude*(dCos + ms_dRoot3*dSin);
-		    Real dRoot2 = dC2Div3 - dMagnitude*(dCos - ms_dRoot3*dSin);
-
-		    // Sort in increasing order.
-		    if (dRoot1 >= dRoot0)
-		    {
-		        adRoot[0] = dRoot0;
-		        adRoot[1] = dRoot1;
-		    }
-		    else
-		    {
-		        adRoot[0] = dRoot1;
-		        adRoot[1] = dRoot0;
-		    }
-
-		    if (dRoot2 >= adRoot[1])
-		    {
-		        adRoot[2] = dRoot2;
-		    }
-		    else
-		    {
-		        adRoot[2] = adRoot[1];
-		        if (dRoot2 >= adRoot[0])
-		        {
-		            adRoot[1] = dRoot2;
-		        }
-		        else
-		        {
-		            adRoot[1] = adRoot[0];
-		            adRoot[0] = dRoot2;
-		        }
-		    }
-		}
-
-	
-		int ComputeRank (Matrix3x3<Real>& M)
-			{
-				// Compute the maximum magnitude matrix entry.
-				Real abs, save; 
-				Real max = -1;
-				int row, col, maxRow = -1, maxCol = -1;
-				for (row = 0; row < 3; row++)
-				{
-					for (col = row; col < 3; col++)
-					{
-						
-						abs = fabs (M[row][col]);
-						if (abs > max)
-						{
-							max = abs;
-							maxRow = row;
-							maxCol = col;
-						}
-					}
-				}
-				if (max == 0)
-				{
-					// The rank is 0.  The eigenvalue has multiplicity 3.
-					return 0;
-				}
-				// The rank is at least 1. Swap the row containing the maximum-magnitude
-				// entry with row 0.
-				if (maxRow != 0)
-				{
-					for (col = 0; col < 3; col++)
-					{
-						save = M[0][col];
-						M[0][col] = M[maxRow][col];
-						M[maxRow][col] = save;
-					}
-				}
-				// Row-reduce the matrix...
-				// Scale the row containing the maximum to generate a 1-valued pivot.
-				Real invMax = 1/M[maxRow][maxCol];
-				M[0][0] *= invMax;
-				M[0][1] *= invMax;
-				M[0][2] *= invMax;
-				// Eliminate the maxCol column entries in rows 1 and 2.
-				if (maxCol == 0)
-				{
-					M[1][1] -= M[1][0]*M[0][1];
-					M[1][2] -= M[1][0]*M[0][2];
-					M[2][1] -= M[2][0]*M[0][1];
-					M[2][2] -= M[2][0]*M[0][2];
-					M[1][0] = 0;
-					M[2][0] = 0;
-				}
-				else if (maxCol == 1)
-				{
-					M[1][0] -= M[1][1]*M[0][0];
-					M[1][2] -= M[1][1]*M[0][2];
-					M[2][0] -= M[2][1]*M[0][0];
-					M[2][2] -= M[2][1]*M[0][2];
-					M[1][1] = 0;
-					
-					M[2][1] = 0;
-				}
-				else
-				{
-					M[1][0] -= M[1][2]*M[0][0];
-					M[1][1] -= M[1][2]*M[0][1];
-					M[2][0] -= M[2][2]*M[0][0];
-					M[2][1] -= M[2][2]*M[0][1];
-					M[1][2] = 0;
-					M[2][2] = 0;
-				}
-				// Compute the maximum-magnitude entry of the last two rows of the
-				// row-reduced matrix.
-				max = -1;
-				maxRow = -1;
-				maxCol = -1;
-				for (row = 1; row < 3; row++)
-				{
-					for (col = 0; col < 3; col++)
-					{
-						abs = fabs (M[row][col]);
-						if (abs > max)
-						{
-							max = abs;
-							maxRow = row;
-							maxCol = col;
-						}
-					}
-				}
-				if (max == 0)
-				{
-					// The rank is 1. The eigenvalue has multiplicity 2.
-					return 1;
-				}
-				// If row 2 has the maximum-magnitude entry, swap it with row 1.
-				if (maxRow == 2)
-				{
-					for (col = 0; col < 3; col++)
-					{
-						save = M[1][col];
-						M[1][col] = M[2][col];
-						M[2][col] = save;
-					}
-				}
-				// Scale the row containing the maximum to generate a 1-valued pivot.
-				invMax = 1/M[maxRow][maxCol];
-				M[1][0] *= invMax;
-				M[1][1] *= invMax;
-				M[1][2] *= invMax;
-				
-				// The rank is 2. The eigenvalue has multiplicity 1.
-				return 2;
-			}
-		
 	};
-	
-	
-	
-	
-
-
 }/* CGL :: NAMESPACE */
 
 #endif /*POLYNOMIAL_HPP_*/
