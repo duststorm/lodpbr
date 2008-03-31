@@ -4,7 +4,8 @@ import multiarray
 import LinearAlgebra as la
 import Ellipse
 
-from Blender.Mathutils import Vector, Intersect, DotVecs, ProjectVecs, CrossVecs, LineIntersect
+from Blender.Mathutils import Vector, Matrix ,Intersect, DotVecs, ProjectVecs, CrossVecs, LineIntersect
+from Blender  import Scene, Draw, BGL, Window , Mesh ,Mathutils , Object
 
 from math           import *
 from LinearAlgebra  import *
@@ -44,6 +45,9 @@ class Merge:
       self.mEigenVector    = []
       self.mEigenValues    = []
       
+      self.mA                = 0.0
+      self.mB                = 0.0
+                 
       self.mPontosPorjetos = []
       self.CalcularCentroProgressiveSplatting()
       self.CalcularPointosPojetados()
@@ -59,6 +63,11 @@ class Merge:
 #      self.mNormal        = pNormal
 #      self.CalcularCentroProgressiveSplatting()
 #      self.CalcularPointosPojetados()
+    def A(self):
+        return self.mA
+    
+    def B(self):
+        return self.mB
         
     def Center(self):
         return self.mCenter
@@ -89,18 +98,17 @@ class Merge:
         listPoints = []
         
         for i in self.listEllipse:
-            m = Blender.Mathutils.Vector(perpendicular(i.Normal()))
+            m = i.EixoA()
             m.normalize()
             i.Normal().normalize()
-            v = CrossVecs(i.Normal(),m)
+            v = i.EixoB()
             v.normalize()
-            listPoints = i.CalculateBoundaries(0,[v,m])
+            listPoints = i.CalculateBoundaries(100,[v,m])
             
             for j in listPoints:
-                
                 self.mPontosPorjetos.append(self.project_point_plane(j,self.mNormal,self.mCenter)) 
-        
-        
+                
+          
     #! Dado dois splats calcular seu centro e normal
     def CalcularCentroProgressiveSplatting(self):
                 
@@ -124,13 +132,48 @@ class Merge:
         #print cov, "MATRIX"
                
         eigenvec = la.eigenvectors(cov)
-        eigenval = la.eigenvalues(cov)
         
         #print len(eigenvec[0]) ,' PRIMEIRO ',eigenvec[0]
                                      
         self.mEigenVector = [Blender.Mathutils.Vector(eigenvec[1][0]),Blender.Mathutils.Vector(eigenvec[1][1]),Blender.Mathutils.Vector(eigenvec[1][2])]
                
-        self.mEigenValues = [eigenvec[0][0],eigenvec[0][1],eigenvec[0][2]]   
+        self.mEigenValues = [eigenvec[0][0],eigenvec[0][1],eigenvec[0][2]]
+        
+        m = Matrix(eigenvec[1][0],eigenvec[1][1],eigenvec[1][2])
+        #m.transpose()
+        m.invert()
+        lplano = []
+        lp = []
+        
+        for i in self.mPontosPorjetos:
+            v = m*i
+            lplano.append(  (((v.x - self.mCenter.x )*(v.x - self.mCenter.x ))/ (eigenvec[0][0]) ) + (((v.y - self.mCenter.y )*(v.y - self.mCenter.y ))/(eigenvec[0][1])) )
+            lp.append(v)
+         
+        in_editmode = Window.EditMode()
+        
+        if in_editmode:
+            Window.EditMode(0)
+
+        object = Blender.Object.GetSelected()
+        
+        me = Blender.Mesh.New('felipe')
+        me.verts.extend(lp)
+       #Vertex do Centro
+        scn = Blender.Scene.GetCurrent()
+        ob = scn.objects.new(me,'oi')
+                   
+
+        print '##############################'    
+        if in_editmode:
+            Window.EditMode(1)
+ 
+         
+            
+        d = max(lplano)
+        
+        self.mA = sqrt( d / (eigenvec[0][0]))
+        self.mB = sqrt( d / (eigenvec[0][1]))
                 
     #! Calcular  a Matrix de Covariancia de um conjuntos de pontos
     def CovarianceMatrix(self,points):
