@@ -103,7 +103,7 @@ class Merge:
             i.Normal().normalize()
             v = i.EixoB()
             v.normalize()
-            listPoints = i.CalculateBoundaries(100,[v,m])
+            listPoints = i.CalculateBoundaries(8,[v,m])
             
             for j in listPoints:
                 self.mPontosPorjetos.append(self.project_point_plane(j,self.mNormal,self.mCenter)) 
@@ -139,41 +139,52 @@ class Merge:
                
         self.mEigenValues = [eigenvec[0][0],eigenvec[0][1],eigenvec[0][2]]
         
-        m = Matrix(eigenvec[1][0],eigenvec[1][1],eigenvec[1][2])
-        #m.transpose()
+        for i in range(len(self.mEigenValues)-1):
+            for j  in range(1,len(self.mEigenValues)):
+                if self.mEigenValues[i] < self.mEigenValues[j]:
+                    tmp = self.mEigenValues[i] 
+                    self.mEigenValues[i] = self.mEigenValues[j] 
+                    self.mEigenValues[j] = tmp
+                    tmpv = self.mEigenVector[i]
+                    self.mEigenVector[i] = self.mEigenVector[j]
+                    self.mEigenVector[j] = tmpv
+                
+                
+        m = Matrix(self.mEigenVector[0],self.mEigenVector[1],self.mEigenVector[2])
+        m.transpose()
         m.invert()
         lplano = []
         lp = []
         
         for i in self.mPontosPorjetos:
             v = m*i
-            lplano.append(  (((v.x - self.mCenter.x )*(v.x - self.mCenter.x ))/ (eigenvec[0][0]) ) + (((v.y - self.mCenter.y )*(v.y - self.mCenter.y ))/(eigenvec[0][1])) )
+            lplano.append( (v - self.mCenter ).magnitude )
             lp.append(v)
          
-        in_editmode = Window.EditMode()
-        
-        if in_editmode:
-            Window.EditMode(0)
-
-        object = Blender.Object.GetSelected()
-        
-        me = Blender.Mesh.New('felipe')
-        me.verts.extend(lp)
-       #Vertex do Centro
-        scn = Blender.Scene.GetCurrent()
-        ob = scn.objects.new(me,'oi')
-                   
-
-        print '##############################'    
-        if in_editmode:
-            Window.EditMode(1)
+#        in_editmode = Window.EditMode()
+#        
+#        if in_editmode:
+#            Window.EditMode(0)
+#
+#        object = Blender.Object.GetSelected()
+#        
+#        me = Blender.Mesh.New('felipe')
+#        me.verts.extend(lp)
+#       #Vertex do Centro
+#        scn = Blender.Scene.GetCurrent()
+#        ob = scn.objects.new(me,'oi')
+#                   
+#
+#        print '##############################'    
+#        if in_editmode:
+#            Window.EditMode(1)
  
          
             
         d = max(lplano)
         
-        self.mA = sqrt( d / (eigenvec[0][0]))
-        self.mB = sqrt( d / (eigenvec[0][1]))
+        self.mA = sqrt( d / (self.mEigenValues[0]))
+        self.mB = sqrt( d / (self.mEigenValues[1]))
                 
     #! Calcular  a Matrix de Covariancia de um conjuntos de pontos
     def CovarianceMatrix(self,points):
