@@ -107,6 +107,21 @@ g = [d[0],d[1],d[2]]
 print g ,"values"
 print la.eigenvectors(a)
 
+l = [1,2,3]
+m = [5,8,9]
+
+
+for i in range(len(l)-1):
+    for j  in range(1,len(l)):
+        if l[i] < l[j]:
+            tmp = l[i] 
+            l[i] = l[j] 
+            l[j] = tmp
+            
+
+
+print l,'fez ?'
+
 ve = Vector(0,232,151)
 
 m = Matrix(ve,[5,6,7],[8,9,10])

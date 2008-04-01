@@ -300,11 +300,11 @@ def buttonevents(evt):
         lambda1 = merge.EigenValues()[0]
         lambda2 = merge.EigenValues()[1]
         ratio  = sqrt (lambda1/lambda2)
-        me.verts.extend(listEllipse[-1].Center() + (w*merge.A()))
+        me.verts.extend(listEllipse[-1].Center() + (w*merge.A()*merge.EigenValues()[0]))
         
         m = merge.EigenVectors()[1]
         #m.normalize()
-        me.verts.extend(listEllipse[-1].Center() + (m*merge.B()))
+        me.verts.extend(listEllipse[-1].Center() + (m*merge.B()*merge.EigenValues()[1]))
         
         v = merge.EigenVectors()[2]
         #v.normalize()
