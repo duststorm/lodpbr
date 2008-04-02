@@ -9,6 +9,7 @@
 #include "support/atmatrix.hpp"
 
 #include "lcgOctree/ocTree.hpp"
+#include "lcgOctree/ocTreeLeafNode.hpp"
 #include "lcgOctree/ocTreeBox.hpp"
 
 #include "slal/Point3.hpp"

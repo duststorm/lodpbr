@@ -56,8 +56,8 @@ public:
 	inline void compute_box () 
 	{
 		for (surfelIterator i = surfels.begin(); i != surfels.end(); ++i)
-			box_ = box_ + CGL::BoundingBox3<Real>(i->position(0),i->position(1),i->position(2),
-												   i->position(0),i->position(1),i->position(2)); 	
+			box_ = box_ + CGL::BoundingBox3<Real>(i->Center(0),i->Center(1),i->Center(2),
+												   i->Center(0),i->Center(1),i->Center(2)); 	
 	}
 	
 	static void loadPly (const char * filename, Surfels<Real>& surfels)

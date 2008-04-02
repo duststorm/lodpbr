@@ -91,7 +91,7 @@ class Merge:
         return: the projected point (Blender.Mathutils.Vector object), or None if invalid norm.
         """
         if norm.length > EPSILON:
-            return point - ProjectVecs(point - pop, norm)
+            return point - ( (DotVecs(point - pop, norm)*norm)  * (1/(norm.magnitude*norm.magnitude)))#ProjectVecs(point - pop, norm)
         
     def CalcularPointosPojetados(self):
         
@@ -149,16 +149,19 @@ class Merge:
                     self.mEigenVector[i] = self.mEigenVector[j]
                     self.mEigenVector[j] = tmpv
                 
-                
-        m = Matrix(self.mEigenVector[0],self.mEigenVector[1],self.mEigenVector[2])
+        self.mEigenVector[0].normalize()
+        self.mEigenVector[1].normalize()       
+        self.mNormal.normalize()
+        m = Matrix(self.mEigenVector[0],self.mEigenVector[1],self.mNormal)
         m.transpose()
-        m.invert()
+        #m.invert()
         lplano = []
         lp = []
         
         for i in self.mPontosPorjetos:
             v = m*i
-            lplano.append( (v - self.mCenter ).magnitude )
+            c = m*self.mCenter
+            lplano.append( ((v.x - c.x )*(v.x - c.x ))/(self.mEigenValues[0]) + ((v.y - c.y )*(v.y - c.y ))/(self.mEigenValues[1]) )
             lp.append(v)
          
 #        in_editmode = Window.EditMode()

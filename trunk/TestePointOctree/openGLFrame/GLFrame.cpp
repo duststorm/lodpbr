@@ -18,7 +18,7 @@ GLFrame::GLFrame(QWidget *parent):QGLWidget(parent)
     
     setFocusPolicy(Qt::StrongFocus);
    
-	renderMode_A = PolygonWireFrame;
+	renderMode_A = Points;
 	show_A 	= true;
 	
 	midlePoint = CGL::Point3<double>();
@@ -128,16 +128,35 @@ void GLFrame::drawPoints() {
    glColor3f(1.0,0.0,0.0);
    glBegin(GL_POINTS);
    
-   std::vector<Surfel<double> >::iterator surf =  surfels.surfels.begin();
-   
-  
-   while ( surf != surfels.surfels.end() ) {
-	     
-      glVertex3f(surf->position(0),surf->position(1),surf->position(2));
-           
-      ++surf;
+     
+   for (OctreeIterator<double, CGL::Point3<double>*> oi = octree.begin();oi != octree.end();++oi )
+   {
+	   
+	   if ( (*oi)->isLeaf())
+	   {
+
+		   std::list< CGL::Point3<double>* > lp = (*oi)->itemList();
+
+		   for(std::list< CGL::Point3<double>* >::iterator surfe = lp.begin(); surfe != lp.end(); ++surfe )
+		   {
+			   glVertex3f((*(*surfe))[0],(*(*surfe))[1],(*(*surfe))[2]);
+		   }
+	   }
+
    }
-         
+   
+
+//   std::vector<Surfel<double> >::iterator surf =  surfels.surfels.begin();
+//   
+//  
+//   while ( surf != surfels.surfels.end() ) 
+//   {
+//	     
+//      glVertex3f(surf->Center(0),surf->Center(1),surf->Center(2));
+//           
+//      ++surf;
+//   }
+//         
    glEnd();
    
  /*  glColor3f(0.0,1.0,0.0);
@@ -174,14 +193,14 @@ void GLFrame::calLimits()
 	 
 	octree = Octree<double,CGL::Point3<double>*>(world) ;
 	
+	
 	std::vector<Surfel<double> >::iterator surf =  surfels.surfels.begin();
 	while ( surf != surfels.surfels.end() ) {
-		CGL::Point3<double> *p = new CGL::Point3<double>(surf->position(0),surf->position(1),surf->position(2));
+		CGL::Point3<double> *p = new CGL::Point3<double>(surf->Center(0),surf->Center(1),surf->Center(2));
 		octree.insert (p);
 	    ++surf;
-	    midlePoint += surf->position();
+	    midlePoint += surf->Center();
 	}
-	
 	midlePoint /= surfels.surfels.size();  
 		
     std::cout << octree.root->itemPtrCount() <<  " AAA" << std::endl;
@@ -250,11 +269,11 @@ void GLFrame::paintGL()
     	if (renderMode_A == Points)
     		drawPoints();
     	
-    	if (renderMode_A == Model)
+    	/*if (renderMode_A == Model)
     	{
     	   model();
     	   drawPoints();
-    	}
+    	}*/
     	
 		for (OctreeIterator<double, CGL::Point3<double>*> oi = octree.begin();oi != octree.end();++oi )
 		{

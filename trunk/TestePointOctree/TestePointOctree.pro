@@ -37,7 +37,7 @@ HEADERS += . \
     lcgOctree/ocTreeIterator.hpp \
     lcgOctree/ocTreeRefine.hpp \
     slal/Color.hpp \
-    slal/Polynomial.hpp \
+    slal/EigenSystem.hpp \
     slal/Eigen.hpp
 SOURCES += main.cpp \
     interface/myMainWindow.cpp \

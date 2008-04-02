@@ -31,7 +31,7 @@ struct OctreeRefine {
 template <class Real, class ItemPtr, int Max = 10, int LevelMax = 5>
 struct OverflowRefine : public OctreeRefine <Real, ItemPtr> {
     ///
-    /// Split a leaf node iff the list contains more than Max items
+    /// Split a leaf node if the list contains more than Max items
     /// @param world space of the node octant
     /// @param level node level
     /// @param items list of items inside the leaf node
