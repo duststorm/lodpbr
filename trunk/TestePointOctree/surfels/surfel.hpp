@@ -204,9 +204,9 @@ template <class Real > class Surfel
 		 while (i < 360) 
 		 {
 
-			 lAlpha = (i / 180) * PI;       
-			 lSinAlpha =  sin(lAlpha);
-			 lCosAlpha =  cos(lAlpha);
+			 lAlpha = ( i / 180 ) * PI;       
+			 lSinAlpha =  sin( lAlpha );
+			 lCosAlpha =  cos( lAlpha );
 
 
 			 lX = mMinorAxis.first * lCosAlpha;
@@ -223,7 +223,8 @@ template <class Real > class Surfel
 
 			 lPoints.push_back( mCenter + (lDirection * lFactor));
 
-			 i =  i + (360.0 / pSteps);
+			 i = i + (360.0 / pSteps);
+			 
 		 } 
 
 		 return lPoints;
