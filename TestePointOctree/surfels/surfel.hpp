@@ -10,7 +10,7 @@
  **/
 
 #include <vector>
-
+#include <cmath>
 
 #include "slal/Point3.hpp"
 #include "slal/Vector3.hpp"
@@ -25,6 +25,8 @@ extern "C"
 	#include "ply.h"
 }
 
+
+#define PI 3.1415926535897932384626433832795
 
 /**
  * Surfel class.
@@ -47,7 +49,7 @@ template <class Real > class Surfel
 			 const Vector3& normal, 
 			 const Real& 	radius, 
 			 unsigned int 	id, 
-			 const Real& 	pError ) : mPosition(position),
+			 const Real& 	pError ) : mCenter(position),
 	 								   mNormal(normal),
 	 								   mSplatRadius(radius),
 	 								   mPerpendicularError(pError),
@@ -61,7 +63,7 @@ template <class Real > class Surfel
 			 const Vector3& normal,
 			 const Color&   color,
 			 const Real& 	radius,
-			 unsigned int 	id ) : 	mPosition(position),
+			 unsigned int 	id ) : 	mCenter(position),
 			 						mNormal(normal),
 			 						mSplatRadius(radius),
 			 						mPerpendicularError(0),
@@ -74,7 +76,7 @@ template <class Real > class Surfel
 	 Surfel (const Point3& 	position, 
 			 const Vector3& normal, 
 			 const Real& 	radius, 
-			 unsigned int 	id ) : 	mPosition(position),
+			 unsigned int 	id ) : 	mCenter(position),
 			 						mNormal(normal),
 			 						mSplatRadius(radius),
 			 						mPerpendicularError(0),
@@ -86,7 +88,7 @@ template <class Real > class Surfel
 	 
 	 Surfel (const Point3& 	position)
 	 {
-		 this->mPosition 		= position;
+		 this->mCenter 		= position;
 	         
 	 };
 	
@@ -94,32 +96,32 @@ template <class Real > class Surfel
 	   
 	 ~Surfel() {};
 	
-	 const Point3 position () const 
+	 const Point3 Center () const 
 	 { 
-		 return  ( this->mPosition ) ; 
+		 return  ( this->mCenter ) ; 
 	 };
 	 
-	 Real position(const int axis)  const
+	 Real Center(const int axis)  const
 	 { 
-		 return ( this->mPosition[axis] ); 
+		 return ( this->mCenter[axis] ); 
 	 };
 	 
-	 void setPosition(const Point3& position) 
+	 void SetCenter(const Point3& pCenter) 
 	 { 
-		 this->positon = Point3(position); 
+		 this->mCenter = Point3(pCenter); 
 	 };
 	
-	 const Vector3 normal(void) const 
+	 const Vector3 Normal(void) const 
 	 { 
 		 return (this->mNormal); 
 	 };
 	 
-	 Real normal(int axis) const 
+	 Real Normal(int axis) const 
 	 { 
 		 return ( this->mNormal[axis] ); 
 	 };
 	 
-	 void setNormal (const Vector3& normal )
+	 void SetNormal (const Vector3& normal )
 	 { 
 		 this->mNormal = Vector3(normal); 
 	 };
@@ -129,44 +131,111 @@ template <class Real > class Surfel
 		 return ( this->ID_ ); 
 	 };
 	 
-	 void setID (unsigned int id) 
+	 void SetID (unsigned int id) 
 	 {	
 		 this->ID_ = id; 
 	 };
 	
-	 Real radius (void) const 
+	 Real Radius (void) const 
 	 { 
 		 return this->mSplatRadius; 
 	 };
 	 
-	 void setRadius ( const Real& radius ) 
+	 void SetRadius ( const Real& pRadius ) 
 	 { 
-		 this->mSplatRadius = radius; 
+		 this->mSplatRadius = pRadius; 
 	 };
-	  
+	  	  
 	 Real perpendicularError () const 
 	 { 
 		 return ( this->mPerpendicularError ); 
 	 };
-	
-	  /// I/O operator - output
+
+	 void SetMinorAxis( const std::pair<Real,Vector3>& pMinorAxis)
+	 {
+		 this->mMinorAxis = pMinorAxis; 
+	 }
+
+	 void SetMajorAxis( const std::pair<Real,Vector3>& pMajorAxis)
+	 {
+		 this->mMajorAxis = pMajorAxis; 
+	 }
+	 
+	 /// I/O operator - output
 	 inline friend std::ostream& operator << (std::ostream& out, const Surfel &s) 
 	 {
-	    out << s.perpendicularError() << " " << s.position.x() << " " 
-	    	<< s.position.y() 	<< " " << s.position.z() << " " 
-	       	<< s.radius() 		<< " " << s.normal.x() << " " 
-	       	<< s.normal.y() 	<< " " << s.normla.z();
+	    out << s.perpendicularError() << " " << s.Center.x() << " " 
+	    	<< s.Center.y() 	<< " " << s.Center.z() << " " 
+	       	<< s.radius() 		<< " " << s.Normal.x() << " " 
+	       	<< s.Normal.y() 	<< " " << s.Normal.z();
 	    
 	    return out;
 	 };
+	 
+	 Real Area() const
+	 {
+		 return (  (PI * mMinorAxis.first) * (PI * mMajorAxis.first) );
+	 }
+	 
+	 std::vector<Point3> BoundariesSamples(const unsigned int pSteps) const
+	 { 
 
- 
+		 if (pSteps == 0)
+		 {
+			 pSteps = 8;
+		 }
+		 	 
+		 std::vector<Point3> lPoints;
+
+		 Real lAlpha 		= 0.0;     
+		 Real lSinAlpha 	= 0.0;
+		 Real lCosAlpha 	= 0.0;
+
+		 Real lX 			= 0.0;
+		 Real lY 			= 0.0;
+		 Real lFactor 		= 0.0;
+
+		 Real lCos			= 0.0;
+		 Real lSin			= 0.0;
+		 Real lDirection    = 0.0;
+		 
+		 int i = 0;
+
+		 while (i < 360) 
+		 {
+
+			 lAlpha = (i / 180) * PI;       
+			 lSinAlpha =  sin(lAlpha);
+			 lCosAlpha =  cos(lAlpha);
+
+
+			 lX = mMinorAxis.first * lCosAlpha;
+
+			 lY = mMajorAxis.first * lSinAlpha;
+
+			 lFactor = sqrt( lX*lX + lY*lY );
+
+			 lCos = lX / lFactor;
+			 lSin = lY / lFactor;
+
+			 lDirection = (mMinorAxis.second * lCos) + (mMajorAxis.second * lSin);
+
+
+			 lPoints.push_back( mCenter + (lDirection * lFactor));
+
+			 i =  i + (360.0 / pSteps);
+		 } 
+
+		 return lPoints;
+
+	 }
+
  private:
+	 
 	  /// Point coordinates
-	  Point3 mPosition;
+	  Point3 mCenter;
 
 	  /// Estimated surface normal at point sample
-
 	  Vector3 mNormal;
 	  
 	  Color mColor;
@@ -174,14 +243,18 @@ template <class Real > class Surfel
 	  /// Splat radius
 	  Real mSplatRadius;
 
+	  /// Minor Axis
+	  std::pair<Real,Vector3> mMinorAxis;
+	  
+	  /// Major Axis
+	  std::pair<Real,Vector3> mMajorAxis;
+	  
 	  /// Perpendicular error
 	  Real mPerpendicularError;
 	  
 	  /// An identification number for the surfel
 	  unsigned int mID;
-	  
-  
-	  
+	   
 
 };
 

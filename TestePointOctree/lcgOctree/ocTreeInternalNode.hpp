@@ -114,7 +114,7 @@ public:
     virtual void split (const Box3& world, int level, OctreeNode*& fatherPtr) 
     {
         for (int index = 0; index < 8; ++index) {
-        	 Box3 suboctant = world.coords(index,mean_);
+        	Box3 suboctant = world.coords(index,mean_);
         	son[index]->split(suboctant,level + 1,son[index]);
         }
     }

@@ -12,7 +12,7 @@
 #include "ocTreeBox.hpp"
 #include "ocTreeIntersection.hpp"
 
-#include "slal/Polynomial.hpp"
+#include "slal/EigenSystem.hpp"
 #include "slal/Eigen.hpp"
 
 // Forward declaration of OctreeIterator
@@ -77,33 +77,39 @@ public:
 
     void PCA()
     {
-        for (listItemPtrIterator pi = PtrList.begin (); pi != PtrList.end(); ++pi) m += *(*pi);
-           
-         m /= PtrList.size();
+    	Point3 m;
+    	
+    	for (listItemPtrIterator pi = PtrList.begin (); pi != PtrList.end(); ++pi)
+    	{
+    		m += *(*pi);
+    	}
+
+        m /= PtrList.size();
                        
-         eigenSystem = EigenSystem(PtrList,m);
+        eigenSystem = EigenSystem(PtrList,m);
     	             
-         setEigenVector(covariance.mEigenvector) ;
+        setEigenVector(eigenSystem.mEigenvector) ;
     }
     
     virtual void split (const Box3& world, int level, OctreeNode*& fatherPtr) 
     {
         // A maximum of elements, MaxItems, must be declared
-        if (Refine::split (world, level, PtrList)) {
-            // Overflow! Redistribute the list
+        if (Refine::split (world, level, PtrList)) 
+        {
+        	// Overflow! Redistribute the list
             OctreeInternalNode * newOctreeInternalNode = new OctreeInternalNode ();
             fatherPtr = newOctreeInternalNode;
             newOctreeInternalNode->son[0] = this;
-            for (int i = 1; i < 8; i++) newOctreeInternalNode->son[i] = new OctreeLeafNode ();
+            for (int i = 0; i < 8; i++) newOctreeInternalNode->son[i] = new OctreeLeafNode ();
             std::list<ItemPtr> oldPtrList = PtrList;
             
-            //Point3 m;
+            Point3 m;
             
-            //for (listItemPtrIterator pi = oldPtrList.begin (); pi != oldPtrList.end(); ++pi) m += *(*pi);
+            for (listItemPtrIterator pi = oldPtrList.begin (); pi != oldPtrList.end(); ++pi) m += *(*pi);
             
-            //m /= PtrList.size();
+            m /= PtrList.size();
                         
-            //newOctreeInternalNode->setMean(m);
+            newOctreeInternalNode->setMean(m);
             
             //covariance = EigenSystem(PtrList,m);
      	
@@ -213,6 +219,7 @@ public:
     	mEigenValues[1] = pEigenValues[1];
     	mEigenValues[2] = pEigenValues[2];
     }
+    
     
 private:
 	
