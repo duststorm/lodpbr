@@ -136,14 +136,6 @@ class Ellipse:
         
         Y = self.mB * sinalpha
         
-        
-                
-        print X, 'X'
-        print Y, 'Y'     
-        print X*X,'X*X'
-        print Y*Y,'Y*Y'
-        print sqrt(X*X+Y*Y),'tamanho'
-        
         factor = sqrt(X*X+Y*Y)
         
         angle_c = X/factor

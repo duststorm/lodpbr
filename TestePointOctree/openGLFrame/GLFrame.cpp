@@ -1,6 +1,8 @@
 #include <QtGui>
 #include <QtOpenGL>
 
+#include <limits>
+
 #include "GLFrame.hpp"
 
 
@@ -121,6 +123,12 @@ void GLFrame::model()
 	
 }
 
+const CGL::Point3<double>  ProjectPointToPlane(const CGL::Vector3<double>& pNormal,const CGL::Point3<double>& pCenter,const CGL::Point3<double>& pPoint)
+{
+	
+	return  CGL::Point3<double> (  pPoint - ( (  (pPoint - pCenter) * pNormal  ) * pNormal)  );
+}
+
 void GLFrame::drawPoints() {
    
    glDisable(GL_LIGHTING);		
@@ -142,6 +150,49 @@ void GLFrame::drawPoints() {
 			   glVertex3f((*(*surfe))[0],(*(*surfe))[1],(*(*surfe))[2]);
 		   }
 	   }
+	   
+#if 1
+		Surfel<double> s = Surfel<double>(CGL::Point3<double>(3.155976,2.552382,-0.16279),
+										  CGL::Vector3<double>(0.575179,0.617508,0.53652),1.0,1.0,0.0);
+		
+		s.SetMinorAxis(std::make_pair(1.0,CGL::Vector3<double>(-0.664365,0.73529,-0.134046)));
+		s.SetMajorAxis(std::make_pair(1.5,CGL::Vector3<double>(0.477272,0.279344,-0.833173)));
+		
+//	    Surfel<double> s = Surfel<double>(CGL::Point3<double>(0.0,0.0,0.0),
+//	   										  CGL::Vector3<double>(0.0,0.0,1.0),1.0,1.0,0.0);
+//	   		
+//	    s.SetMinorAxis(std::make_pair(1.5,CGL::Vector3<double>(1.0,0.0,0.0)));
+//	    s.SetMajorAxis(std::make_pair(1.0,CGL::Vector3<double>(0.0,1.0,0.0)));
+	   
+		
+		std::list<CGL::Point3<double>> points = s.BoundariesSamples(800);
+		
+		CGL::Point3<double> c  = CGL::Point3<double>(0.0,0.0,0.0);
+		CGL::Vector3<double> n = CGL::Vector3<double>(0.0,0.0,1.0);
+	
+		for(std::list<CGL::Point3<double> >::iterator it = points.begin();it != points.end();++it)
+		{
+			if (n.length() > numeric_limits<float>::epsilon())
+			{
+				glColor3f(0.0,1.0,0.0);
+				CGL::Point3<double> point = (*it);
+				
+				CGL::Vector3<double> v1 = point - c;
+				
+				double xpp = v1 * n;
+				
+				v1 = xpp * n;
+				
+				point =  point - v1;
+				
+				point = ProjectPointToPlane(n,c, (*it));
+				
+			 	glVertex3f(point[0],point[1],point[2]); 
+			 	
+			}
+		}
+			
+#endif	   
 
    }
    
@@ -201,7 +252,7 @@ void GLFrame::calLimits()
 	    ++surf;
 	    midlePoint += surf->Center();
 	}
-	midlePoint /= surfels.surfels.size();  
+	//midlePoint /= surfels.surfels.size();  
 		
     std::cout << octree.root->itemPtrCount() <<  " AAA" << std::endl;
     
