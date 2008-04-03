@@ -161,6 +161,16 @@ template <class Real > class Surfel
 		 this->mMajorAxis = pMajorAxis; 
 	 }
 	 
+	 std::pair<Real,Vector3> MinorAxis() 
+	 {
+		 return (this->mMinorAxis); 
+	 }
+
+	 std::pair<Real,Vector3> MajorAxis() 
+	 {
+		 return (this->mMajorAxis); 
+	 }
+	 
 	 /// I/O operator - output
 	 inline friend std::ostream& operator << (std::ostream& out, const Surfel &s) 
 	 {
@@ -177,29 +187,29 @@ template <class Real > class Surfel
 		 return (  (PI * mMinorAxis.first) * (PI * mMajorAxis.first) );
 	 }
 	 
-	 std::vector<Point3> BoundariesSamples(const unsigned int pSteps) const
+	 std::list<Point3* > BoundariesSamples(unsigned int pSteps) const
 	 { 
 
 		 if (pSteps == 0)
 		 {
-			 pSteps = 8;
+			 pSteps = 4;
 		 }
 		 	 
-		 std::vector<Point3> lPoints;
+		 std::list<Point3* > lPoints;
 
-		 Real lAlpha 		= 0.0;     
-		 Real lSinAlpha 	= 0.0;
-		 Real lCosAlpha 	= 0.0;
+		 Real lAlpha 			= 0.0;     
+		 Real lSinAlpha 		= 0.0;
+		 Real lCosAlpha 		= 0.0;
 
-		 Real lX 			= 0.0;
-		 Real lY 			= 0.0;
-		 Real lFactor 		= 0.0;
+		 Real lX 				= 0.0;
+		 Real lY 				= 0.0;
+		 Real lFactor 			= 0.0;
 
-		 Real lCos			= 0.0;
-		 Real lSin			= 0.0;
-		 Real lDirection    = 0.0;
+		 Real lCos				= 0.0;
+		 Real lSin				= 0.0;
+		 Vector3 lDirection     = Vector3();
 		 
-		 int i = 0;
+		 Real i = 0;
 
 		 while (i < 360) 
 		 {
@@ -219,9 +229,8 @@ template <class Real > class Surfel
 			 lSin = lY / lFactor;
 
 			 lDirection = (mMinorAxis.second * lCos) + (mMajorAxis.second * lSin);
-
-
-			 lPoints.push_back( mCenter + (lDirection * lFactor));
+		 
+			 lPoints.push_back( new Point3( (mCenter + (lDirection * lFactor)) ) );
 
 			 i = i + (360.0 / pSteps);
 			 

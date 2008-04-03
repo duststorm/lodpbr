@@ -103,7 +103,7 @@ class Merge:
             i.Normal().normalize()
             v = i.EixoB()
             v.normalize()
-            listPoints = i.CalculateBoundaries(8,[v,m])
+            listPoints = i.CalculateBoundaries(8,[m,v])
             
             for j in listPoints:
                 self.mPontosPorjetos.append(self.project_point_plane(j,self.mNormal,self.mCenter)) 

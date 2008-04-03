@@ -21,6 +21,8 @@ int main(int argc, char *argv[])
 	
 	CGL::Point3<double> p(10.0,22.65,26.89);
 	CGL::Point3<double> q;
+	
+	CGL::Vector3<double> v(4.0,4.0,4.0);
 	CGL::Color  c(p);
 	
 	double  b[3] = {0,0,0};
@@ -29,7 +31,10 @@ int main(int argc, char *argv[])
 	//CGL::Vector3<double> v(b);
 	
 	//v = v.norm();
-		
+	
+	q = v - p; 
+	
+	std::cout << q << std::endl;
 	
 	CGL::Matrix3x3<double> A (1.0,-5.0,-4.0,
 								3.0,4.0,-3.0,
@@ -44,6 +49,26 @@ int main(int argc, char *argv[])
 								0.75,0.25,0.5);
 	
 	
+	
+	Surfel<double> s = Surfel<double>(CGL::Point3<double>(3.155976,2.552382,-0.16279),
+									  CGL::Vector3<double>(0.575179,0.617508,0.53652),1.0,1.0,0.0);
+	
+	s.SetMinorAxis(std::make_pair(1.5,CGL::Vector3<double>(-0.664365,0.73529,-0.134046)));
+	s.SetMajorAxis(std::make_pair(1.0,CGL::Vector3<double>(0.477272,0.279344,-0.833173)));
+	
+	
+	std::list<CGL::Point3<double>* > points = s.BoundariesSamples(8);
+	
+	CGL::EigenSystem<double> eigen(points,s.Center());
+		
+	std::cout << " Values  " << eigen.MinorAxis().first << " Vector " << eigen.MinorAxis().second << std::endl;
+	std::cout << " Values  " << eigen.MajorAxis().first << " Vector " << eigen.MajorAxis().second << std::endl;
+	std::cout << " Values  " << eigen.Normal().first 	<< " Vector " << eigen.Normal().second << std::endl;
+	
+	
+	for(std::list<CGL::Point3<double>* >::iterator it = points.begin();it != points.end();++it)
+		std::cout << *(*(it)) << std::endl;
+
 	CGL::Vector3<double> v1(18,6.5,7);
 	CGL::Vector3<double> v2(-7,0,18);
 	

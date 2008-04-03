@@ -216,15 +216,6 @@ public:
 			   );
 	};
 	
-	inline Vector3<Real>  operator- ( ) const
-	{
-		 		
-		return ( Vector3 (-this->mX, -this->mY, -this->mZ) );
-		
-	};
-	
-
-	
 	inline Vector3<Real>  operator+ ( const Vector3<Real>& u)	const
 	{
 	 	
@@ -242,12 +233,7 @@ public:
 			
 	};
 
-	
-	inline Vector3<Real>  operator+ ( ) const
-	{
-		return ( *this );
-	};
-	
+
 	friend inline Vector3<Real> operator* ( const Vector3<Real>& u,const Real& factor ) 	
 	{
 	 		
