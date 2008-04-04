@@ -4,7 +4,7 @@
 #include <limits>
 
 #include "GLFrame.hpp"
-
+#include "surfels/MergeEllipses.hpp"
 
 #define DA_APLICACAO_PASSADA 0
 
@@ -152,45 +152,57 @@ void GLFrame::drawPoints() {
 	   }
 	   
 #if 1
-		Surfel<double> s = Surfel<double>(CGL::Point3<double>(3.155976,2.552382,-0.16279),
-										  CGL::Vector3<double>(0.575179,0.617508,0.53652),1.0,1.0,0.0);
+
 		
-		s.SetMinorAxis(std::make_pair(1.0,CGL::Vector3<double>(-0.664365,0.73529,-0.134046)));
-		s.SetMajorAxis(std::make_pair(1.5,CGL::Vector3<double>(0.477272,0.279344,-0.833173)));
+		Surfel<double> s = Surfel<double>(CGL::Point3<double>(2.127096,-0.876474,1.482297),
+										  CGL::Vector3<double>(-0.291764,-0.174345,0.940467),1.0,1.0,0.0);
 		
-//	    Surfel<double> s = Surfel<double>(CGL::Point3<double>(0.0,0.0,0.0),
-//	   										  CGL::Vector3<double>(0.0,0.0,1.0),1.0,1.0,0.0);
-//	   		
-//	    s.SetMinorAxis(std::make_pair(1.5,CGL::Vector3<double>(1.0,0.0,0.0)));
-//	    s.SetMajorAxis(std::make_pair(1.0,CGL::Vector3<double>(0.0,1.0,0.0)));
-	   
+		s.SetMinorAxis(std::make_pair(1.0,CGL::Vector3<double>(0.807313, 0.482415, 0.339886)));
+		s.SetMajorAxis(std::make_pair(2.0,CGL::Vector3<double>(-0.512952, 0.858417, 0.000000)));
+
+		std::list<Surfel<double> > sl;
 		
-		std::list<CGL::Point3<double>> points = s.BoundariesSamples(800);
+		sl.push_back(s);
+
+		s = Surfel<double>(CGL::Point3<double>(0.459231, 0.489174, 1.334823),
+						   CGL::Vector3<double>(0.444927, -0.059414, 0.893594),1.0,1.0,0.0);
 		
-		CGL::Point3<double> c  = CGL::Point3<double>(0.0,0.0,0.0);
-		CGL::Vector3<double> n = CGL::Vector3<double>(0.0,0.0,1.0);
-	
-		for(std::list<CGL::Point3<double> >::iterator it = points.begin();it != points.end();++it)
-		{
-			if (n.length() > numeric_limits<float>::epsilon())
-			{
-				glColor3f(0.0,1.0,0.0);
-				CGL::Point3<double> point = (*it);
-				
-				CGL::Vector3<double> v1 = point - c;
-				
-				double xpp = v1 * n;
-				
-				v1 = xpp * n;
-				
-				point =  point - v1;
-				
-				point = ProjectPointToPlane(n,c, (*it));
-				
-			 	glVertex3f(point[0],point[1],point[2]); 
-			 	
-			}
-		}
+		s.SetMinorAxis(std::make_pair(1.0,CGL::Vector3<double>(0.879801, -0.157404, -0.448525)));
+		s.SetMajorAxis(std::make_pair(2.0,CGL::Vector3<double>(0.167304, 0.985745, -0.017761)));
+		
+		sl.push_back(s);
+						
+		MergeEllipses<double> me(sl);
+		
+		
+		for(std::list<CGL::Point3<double>* >::iterator it = me.mProjectedPoint.begin();it != me.mProjectedPoint.end();++it)
+		{		
+			glColor3f(0.0,1.0,0.0);
+			CGL::Point3<double> point = (*(*it));
+		 	glVertex3f(point[0],point[1],point[2]);
+		}	
+		
+//		for(std::list<CGL::Point3<double>* >::iterator it = points.begin();it != points.end();++it)
+//		{
+//			if (n.length() > numeric_limits<float>::epsilon())
+//			{
+//				glColor3f(0.0,1.0,0.0);
+//				CGL::Point3<double> point = (*(*it));
+//				
+//				CGL::Vector3<double> v1 = point - c;
+//				
+//				double xpp = v1 * n;
+//				
+//				v1 = xpp * n;
+//				
+//				point =  point - v1;
+//				
+//				point = ProjectPointToPlane(n,c, (*(*it)) );
+//				
+//			 	glVertex3f(point[0],point[1],point[2]); 
+//			 	
+//			}
+//		}
 			
 #endif	   
 

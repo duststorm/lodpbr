@@ -1,8 +1,9 @@
 #include <QApplication>
+
 #include <iostream>
 #include <cmath>
 #include <list>
-
+#include <algorithm>
 
 #include "interface/myMainWindow.hpp"
 //#include <cpplapack.h>
@@ -13,8 +14,10 @@
 #include "slal/Color.hpp"
 #include "slal/EigenSystem.hpp"
 #include "slal/Eigen.hpp"
+#include "surfels/MergeEllipses.hpp"
 
 using namespace std;
+
 
 int main(int argc, char *argv[])
 {
@@ -27,13 +30,11 @@ int main(int argc, char *argv[])
 	
 	double  b[3] = {0,0,0};
 	double result[3];
-		
-	//CGL::Vector3<double> v(b);
 	
 	//v = v.norm();
-	
 	q = v - p; 
-	
+
+
 	std::cout << q << std::endl;
 	
 	CGL::Matrix3x3<double> A (1.0,-5.0,-4.0,
@@ -50,15 +51,24 @@ int main(int argc, char *argv[])
 	
 	
 	
-	Surfel<double> s = Surfel<double>(CGL::Point3<double>(3.155976,2.552382,-0.16279),
-									  CGL::Vector3<double>(0.575179,0.617508,0.53652),1.0,1.0,0.0);
+	Surfel<double> s = Surfel<double>(CGL::Point3<double>(0.76880,-1.250622,2.352241),
+									  CGL::Vector3<double>(0.0,-0.547623,0.836725),1.0,1.0,0.0);
 	
-	s.SetMinorAxis(std::make_pair(1.5,CGL::Vector3<double>(-0.664365,0.73529,-0.134046)));
-	s.SetMajorAxis(std::make_pair(1.0,CGL::Vector3<double>(0.477272,0.279344,-0.833173)));
+	s.SetMinorAxis(std::make_pair(1.0,CGL::Vector3<double>(1.0,0.0,0.0)));
+	s.SetMajorAxis(std::make_pair(1.0,CGL::Vector3<double>(0.0,0.836725,0.547623)));
 	
+	
+	std::list<Surfel<double> > sl;
+	
+	sl.push_back(s);
 	
 	std::list<CGL::Point3<double>* > points = s.BoundariesSamples(8);
 	
+	
+	
+	MergeEllipses<double> me(sl,CGL::Point3<double>(0.0,0.0,0.0),CGL::Vector3<double>(0.0,0.0,1.0));
+	me.ProjectPoints();
+		
 	CGL::EigenSystem<double> eigen(points,s.Center());
 		
 	std::cout << " Values  " << eigen.MinorAxis().first << " Vector " << eigen.MinorAxis().second << std::endl;
