@@ -4,6 +4,7 @@
 #include <iostream>
 
 #include "Vector3.hpp" 
+#include "Point3.hpp"
 /*
  * 
 template<class Real> class Matrix3x3
@@ -60,6 +61,7 @@ private:
 public:
 	
 	friend class Vector3<Real>;
+	friend class Point3<Real>;
 	
 	Matrix3x3()
 	{
@@ -74,6 +76,20 @@ public:
 		this->a[1][0] = a21; this->a[1][1] = a22; this->a[1][2] = a23;
 		this->a[2][0] = a31; this->a[2][1] = a32; this->a[2][2] = a33;
 	};
+	
+	Matrix3x3(const Vector3<Real>& u, const Vector3<Real>& q, const Vector3<Real>& r )
+	{
+		this->a[0][0] = u.mX; this->a[0][1] = u.mY; this->a[0][2] = u.mZ; 
+		this->a[1][0] = q.mX; this->a[1][1] = q.mY; this->a[1][2] = q.mZ;
+		this->a[2][0] = r.mX; this->a[2][1] = r.mY; this->a[2][2] = r.mZ;
+	};
+	
+	Matrix3x3(const Point3<Real>& u, const Point3<Real>& q, const Point3<Real>& r )
+	{
+		this->a[0][0] = u.mX; this->a[0][1] = u.mY; this->a[0][2] = u.mZ; 
+		this->a[1][0] = q.mX; this->a[1][1] = q.mY; this->a[1][2] = q.mZ;
+		this->a[2][0] = r.mX; this->a[2][1] = r.mY; this->a[2][2] = r.mZ;
+	};
 
 	// transpose
 	inline Matrix3x3<Real> operator~ () const
@@ -84,6 +100,7 @@ public:
 			   );
 						
 	};
+	
 	
 	inline operator const Real* () const
 	{
@@ -315,6 +332,18 @@ public:
 							   	A.a[1][0] * u.mX + A.a[1][1] * u.mY + A.a[1][2] * u.mZ,
 							   		
 							   	A.a[2][0] * u.mX + A.a[2][1] * u.mY + A.a[2][2] * u.mZ )
+		
+				); 
+		
+	};
+	
+	friend inline Point3<Real> operator* ( const Matrix3x3<Real>& A, const Point3<Real>& p)
+	{
+		return ( Point3<Real>( A.a[0][0] * p.mX + A.a[0][1] * p.mY + A.a[0][2] * p.mZ,
+							   							   
+							   	A.a[1][0] * p.mX + A.a[1][1] * p.mY + A.a[1][2] * p.mZ,
+							   		
+							   	A.a[2][0] * p.mX + A.a[2][1] * p.mY + A.a[2][2] * p.mZ )
 		
 				); 
 		

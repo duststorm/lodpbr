@@ -38,7 +38,8 @@ HEADERS += . \
     lcgOctree/ocTreeRefine.hpp \
     slal/Color.hpp \
     slal/EigenSystem.hpp \
-    slal/Eigen.hpp
+    slal/Eigen.hpp \
+    surfels/MergeEllipses.hpp
 SOURCES += main.cpp \
     interface/myMainWindow.cpp \
     openGLFrame/GLFrame.cpp \

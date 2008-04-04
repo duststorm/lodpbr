@@ -104,7 +104,6 @@ class Merge:
             v = i.EixoB()
             v.normalize()
             listPoints = i.CalculateBoundaries(8,[m,v])
-            
             for j in listPoints:
                 self.mPontosPorjetos.append(self.project_point_plane(j,self.mNormal,self.mCenter)) 
                 
@@ -153,7 +152,7 @@ class Merge:
         self.mEigenVector[1].normalize()       
         self.mNormal.normalize()
         m = Matrix(self.mEigenVector[0],self.mEigenVector[1],self.mNormal)
-        m.transpose()
+        #m.transpose()
         #m.invert()
         lplano = []
         lp = []

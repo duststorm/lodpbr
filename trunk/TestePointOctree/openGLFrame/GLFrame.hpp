@@ -20,6 +20,7 @@
 #include "surfels/surfels.hpp"
 
 
+
 class GLFrame : public QGLWidget
 {
     Q_OBJECT

@@ -282,8 +282,8 @@ namespace CGL
            * @details For debug
            */
          
-          inline  Point3<Real> operator/ ( const Real& factor ) const;
-          inline  Point3<Real> operator* ( const Real& factor ) const;  
+          inline  Point3<Real> operator/ ( const Real& factor ) ;
+          inline  Point3<Real> operator* ( const Real& factor ) ;  
          
           template <class T>
           inline friend std::ostream& operator<< (std::ostream & s, const Point3<T>& p);
@@ -324,17 +324,17 @@ namespace CGL
        *  @details Initialize all abscissas of any. Try cast to the Real type of the class
        *  @param[in] array of any type.
        */                                              
-      template<class Real>    
-      template < typename P >
-      Point3<Real>::Point3 (const P* p)
-      {
-          assert(p);
-
-          this->mX = static_cast< Real > ( p[0] );
-          this->mY = static_cast< Real > ( p[1] );
-          this->mZ = static_cast< Real > ( p[2] );
-
-      };
+//      template<class Real>    
+//      template < typename P >
+//      Point3<Real>::Point3 (const P* p)
+//      {
+//          assert(p);
+//
+//          this->mX = static_cast< Real > ( p[0] );
+//          this->mY = static_cast< Real > ( p[1] );
+//          this->mZ = static_cast< Real > ( p[2] );
+//
+//      };
       /*!@brief Constructor with X, Y and Z initialization with vector paramenter.
        * @param[in] u Vector of Real.
        */  
@@ -762,7 +762,7 @@ namespace CGL
           * @see operator+
           * @return Point3
           */
-          template<class Real>
+         template<class Real>
          inline   const Point3<Real> operator+ (const Vector3<Real> u,const Point3<Real> p )  
          {
                   return ( Point3<Real> ( p.mX + u.mX,
@@ -778,15 +778,29 @@ namespace CGL
          * @return Point3
          */
          template<class Real>
-         inline  Point3<Real> Point3<Real>::operator/ ( const Real& factor ) const  
+         inline  Point3<Real> Point3<Real>::operator/ ( const Real& factor )   
          {
-               return ( Point3<Real> ( this->mX /= factor,
-                               this->mY /= factor,
-                               this->mZ /= factor )
+               return ( Point3<Real> ( 	mX /= factor,
+                               			mY /= factor,
+                               			mZ /= factor )
                );
 
          };
 
+         /*!@brief operator*
+         * @details Binary operator tha multi the value of the second operand to the value of the all abscissa of the point.
+         * @param[in] factor Real
+         * @return Point3
+         */
+         template<class Real>
+         inline  Point3<Real> Point3<Real>::operator* ( const Real& factor )   
+         {
+               return ( Point3<Real> ( 	mX *= factor,
+                               			mY *= factor,
+                               			mZ *= factor )
+               );
+
+         };
          
          /*!@brief operator<<
           * @details For debug

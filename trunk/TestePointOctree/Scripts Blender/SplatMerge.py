@@ -275,7 +275,7 @@ def buttonevents(evt):
         index += 1
         #Vertex do Centro
         
-        polyline1 =  listEllipse[-1].CalculateBoundaries(8,[merge.EigenVectors()[0],merge.EigenVectors()[1]])
+        polyline1 =  listEllipse[-1].CalculateBoundaries(100,[merge.EigenVectors()[0],merge.EigenVectors()[1]])
         
         #Make a new mesh and add the truangles into it
         #me= Blender.Mesh.New(listEllipse[-1].Name())
@@ -322,10 +322,20 @@ def buttonevents(evt):
         print 'EixoB ' ,listEllipse[0].EixoB()
         print 'B ' ,listEllipse[0].B()
         
+        print 'normal' ,listEllipse[1].Normal()
+        print 'center' ,listEllipse[1].Center()
+        print 'EixoA ' ,listEllipse[1].EixoA()
+        print 'A ' ,listEllipse[1].A()
+        print 'EixoB ' ,listEllipse[1].EixoB()
+        print 'B ' ,listEllipse[1].B()
+        
+        #print 'Pontos Projetados',merge.PontosProjetados()
+        
+        
         print "Eigen values [0] ", merge.EigenValues()[0], "EigenVectors()[0] ", merge.EigenVectors()[0]
         print "Eigen values [1] ", merge.EigenValues()[1], "EigenVectors()[1] ", merge.EigenVectors()[1]
         print "Eigen values [2] ", merge.EigenValues()[2], "EignVectors()[2] ", merge.EigenVectors()[2]
-        print listEllipse[-1].CalculateBoundaries(8,[merge.listEllipse[0].EixoA(),listEllipse[0].EixoB()])
+        #print listEllipse[-1].CalculateBoundaries(8,[merge.listEllipse[0].EixoA(),listEllipse[0].EixoB()])
         
         
         scn = Blender.Scene.GetCurrent()
@@ -382,22 +392,23 @@ def buttonevents(evt):
         if in_editmode:
             Window.EditMode(0)
 
+           
         object = Blender.Object.GetSelected()
-        
+               
         for i in object:
-          for j in listEllipse:
-            if j.Name() == i.getName():
-                j.SetCenter(i.getData(False, True).verts[-1].co)
-                j.SetNormal(i.getData(False, True).faces[0].no)
+            
+            for j in listEllipse:
+                if j.Name() == i.getName():
+                    j.SetCenter(i.getData(False, True).verts[-1].co)
+                    j.SetNormal(i.getData(False, True).faces[0].no)
+                    j.SetEixoA(Vector(i.getData(False, True).edges[j.AIndex()].v1.co - i.getData(False, True).edges[j.AIndex()].v2.co ))
+                    j.SetEixoB(Vector(i.getData(False, True).edges[j.BIndex()].v1.co - i.getData(False, True).edges[j.BIndex()].v2.co ))
         
         me = Blender.Mesh.New('felipe')
        
-       
         merge = Merge(listEllipse)
                       
-        lambda1 = merge.EigenValues()[0]
-        lambda2 = merge.EigenValues()[1]
-               
+                  
         listEllipse.append(Ellipse(merge.Center(),merge.A()*merge.EigenValues()[0],merge.B()*merge.EigenValues()[1],45.0,"Ellipse"+str(index)))
 
         listEllipse[-1].SetNormal(merge.EigenVectors()[2])
@@ -407,6 +418,8 @@ def buttonevents(evt):
       
         polyline1 =  listEllipse[-1].CalculateBoundaries(8,[merge.EigenVectors()[0],merge.EigenVectors()[1]])
        
+       
+        print 'Pontinhos', merge.PontosProjetados()
         
         print merge.EigenVectors()[0],'minor'
         print merge.EigenVectors()[1],'major'
@@ -418,8 +431,9 @@ def buttonevents(evt):
         
         print polyline1 
         
-        me.verts.extend(polyline1)
-        
+        w = merge.EigenVectors()[0]
+        #w.normalize()
+
         me.verts.extend(listEllipse[-1].Center() + (w*merge.A()*merge.EigenValues()[0]))
         
         m = merge.EigenVectors()[1]
