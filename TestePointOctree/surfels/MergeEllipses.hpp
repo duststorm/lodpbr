@@ -38,9 +38,9 @@ public:
 	MergeEllipses( const SurfelContainer& pEllipses )
 	: mEllipses(pEllipses) 
 	{
-		NewCenterAndNormal ();
-		ProjectPoints ();
-		NewAxis ();
+		NewCenterAndNormal();
+		ProjectPoints();
+		NewAxis();
 	};
 		
 	// functions
@@ -117,7 +117,7 @@ public:
 			lPoint = m*(*(*it));
 
 			lFactor = ( ( ( lPoint.x() - lCenter.x() ) * (lPoint.x() - lCenter.x() ) ) / (mNewMinorAxis.first) + 
-					( ( lPoint.y() - lCenter.y() ) * (lPoint.x() - lCenter.x() ) ) / (mNewMajorAxis.first) );
+						( ( lPoint.y() - lCenter.y() ) * (lPoint.y() - lCenter.y() ) ) / (mNewMajorAxis.first) );
 
 			lFactors.push_back(lFactor);
 
