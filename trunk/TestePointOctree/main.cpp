@@ -18,6 +18,43 @@
 
 using namespace std;
 
+CGL::Vector3<double> Perpendicular( const CGL::Vector3<double>& pVector)
+	 {
+		 //select the shortest of projections of axes on v
+		 //(the closest to perpendicular to v),
+		 //and project it to the plane defined by v
+		 if ( fabs( pVector.x()) < fabs( pVector.y()) ) // x < y 
+		 {
+
+			 if ( fabs( pVector.x()) < fabs( pVector.z()) )
+			 {  // x < y && x < z
+				 CGL::Vector3<double> lPerpendicularX (1.0 - (pVector.x() * pVector.x()),
+						 -pVector.x() * pVector.y(),
+						 -pVector.x() * pVector.z() );
+				 return lPerpendicularX;
+			 }
+		 }  
+		 else
+		 { //y <= x
+
+			 if (fabs(pVector.y()) < fabs(pVector.z()) )
+			 {  // y <= x && y < z
+				 CGL::Vector3<double> lPerpendicularY( -pVector.y() * pVector.x(), 
+						 1.0 - (pVector.y() * pVector.y()), 
+						 -pVector.y() * pVector.z() );
+				 
+				 return lPerpendicularY;
+
+			 }
+		 }
+		 // z <= x && z <= y
+		 CGL::Vector3<double> lPerpendicularZ(-pVector.z() * pVector.x(), 
+				 				 -pVector.z() * pVector.y(), 
+				 				 1.0 - (pVector.z() * pVector.z()));
+		 return lPerpendicularZ;
+
+	 }
+	   
 
 int main(int argc, char *argv[])
 {
@@ -34,6 +71,11 @@ int main(int argc, char *argv[])
 	//v = v.norm();
 	q = v - p; 
 
+	CGL::Vector3<double> v4(1.0,0.0,0.0);
+	
+	CGL::Vector3<double> v5 = Perpendicular(v4);
+	
+	std::cout << " É 1 ? "<< v5 << v5*v4 << std::endl;
 
 	std::cout << q << std::endl;
 	
@@ -79,12 +121,52 @@ int main(int argc, char *argv[])
 	for(std::list<CGL::Point3<double>* >::iterator it = points.begin();it != points.end();++it)
 		std::cout << *(*(it)) << std::endl;
 
-	CGL::Vector3<double> v1(18,6.5,7);
-	CGL::Vector3<double> v2(-7,0,18);
+	CGL::Vector3<double> v1(1.0,1.0,1.0);
+	CGL::Vector3<double> v2(-1.0,-1.0,-1.0);
+	CGL::Vector3<double> v3(0.0,0.0,0.0);
+
+	v3 = v1 + v2;
+	std::cout << v3.x() << v3.y() << v3.z() << "#v1+v2 (0,0,0)#"<<std::endl;
+	v3 = v1 - v2;
+	std::cout << v3.x() << v3.y() << v3.z() << "#v1-v2 (2,2,2)#"<<std::endl;
+	v3 = -v1 - v2;
+	std::cout << v3.x() << v3.y() << v3.z() << "#-v1-v2 (0,0,0)#"<<std::endl;
+	v3 = -v1 + v2;
+	std::cout << v3.x() << v3.y() << v3.z() << "#-v1+v2# (-2,-2,-2)"<<std::endl;
+	v3 = + v1 - v2;
+	std::cout << v3.x() << v3.y() << v3.z() << "#+v1-v2# (2,2,2)"<<std::endl;
+	v3 = + v1 + v2;
+	std::cout << v3.x() << v3.y() << v3.z() << "#+v1+v2# (0,0,0)"<<std::endl;
+
+
+	//Teste operator*
+	v1 = CGL::Vector3<double>(1.0,1.0,1.0);
+	v3 = CGL::Vector3<double>(0.0,0.0,0.0);
+		
+	v3 = 3.0 * v1;
+	std::cout << v3.x() << v3.y() << v3.z() << "#3*v1# (3,3,3)"<<std::endl;
+	v3 = 3.0 * (-v1);
+	std::cout << v3.x() << v3.y() << v3.z() << "#3*(-v1)# (-3,-3,-3)"<<std::endl;
+	v3 = 3.0 * (+v1);
+	std::cout << v3.x() << v3.y() << v3.z() << "#3*(+v1)# (3,3,3)"<<std::endl;
+	v3 = (-v1) * 3.0;
+	std::cout << v3.x() << v3.y() << v3.z() << "#(-v1)*3# (-3,-3,-3)"<<std::endl;
+	v3 = (+v1) * 3.0;
+	std::cout << v3.x() << v3.y() << v3.z() << "#(+v1)*3# (3,3,3)"<<std::endl;
+	v3 = (+v1) * 0.0;
+	std::cout << v3.x() << v3.y() << v3.z() << "#(+v1)*0.0# (0,0,0) "<<std::endl;
+	v3 = (+v1) * v2[1];
+	std::cout << v3.x() << v3.y() << v3.z() << "#(+v1)*0.0# (0,0,0)"<<std::endl;
 	
-	CGL::Vector3<double> v3 = v1 ^ v2; 
-	
-	std::cout <<" UI "<< v1*v2;
+
+//	Teste operator* (puduto interno ou  produto escalar) 
+	v1 = CGL::Vector3<double> (6.0,-1.0,0.0);
+	v2 = CGL::Vector3<double> (0.5,-4.0,0.0);
+	double t = 0.0 ;
+	t = v1 * v2;
+	std::cout << t << "#(v1)*(v2)#"<<std::endl;
+	v1[1] = v1*(-v2);
+	std::cout << v1[1] << "#(v1)*(v2)#"<<std::endl;
 
     QApplication app(argc, argv);
     if (!QGLFormat::hasOpenGL()) {

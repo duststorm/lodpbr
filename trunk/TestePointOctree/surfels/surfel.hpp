@@ -56,6 +56,8 @@ template <class Real > class Surfel
 	 								   mID(id)
 	 	  {
 		 	mColor = Color(0.0,0.0,0.0); 
+		 	
+		 	//mMinorAxis = std::make_pair(mSplatRadius,Vector)
 	 	  };	
 	
 	
@@ -187,6 +189,46 @@ template <class Real > class Surfel
 		 return (  (PI * mMinorAxis.first) * (PI * mMajorAxis.first) );
 	 }
 	 
+	 
+	 
+	 Vector3 Perpendicular( const Vector3& pVector)
+	 {
+		 //select the shortest of projections of axes on v
+		 //(the closest to perpendicular to v),
+		 //and project it to the plane defined by v
+		 if ( fabs( pVector.x()) < fabs( pVector.y()) ) // x < y 
+		 {
+
+			 if ( fabs( pVector.x()) < fabs( pVector.z()) )
+			 {  // x < y && x < z
+				 Vector3 lPerpendicularX (1.0 - (pVector.x() * pVector.x()),
+						 -pVector.x() * pVector.y(),
+						 -pVector.x() * pVector.z() );
+				 return lPerpendicularX;
+			 }
+		 }  
+		 else
+		 { //y <= x
+
+			 if ( fabs(pVector.y()) < fabs(pVector.z()) )
+			 {  // y <= x && y < z
+				 Vector3 lPerpendicularY( -pVector.y() * pVector.x(), 
+						 1.0 - (pVector.y() * pVector.y()), 
+						 -pVector.y() * pVector.z() );
+				 
+				 return lPerpendicularY;
+
+			 }
+		 }
+		 // z <= x && z <= y
+		 Vector3 lPerpendicularZ(-pVector.z() * pVector.x(), 
+				 				 -pVector.z() * pVector.y(), 
+				 				 1.0 - (pVector.z() * pVector.z()));
+		 return lPerpendicularZ;
+
+	 }
+	   
+	   	 
 	 std::list<Point3* > BoundariesSamples(unsigned int pSteps) const
 	 { 
 
