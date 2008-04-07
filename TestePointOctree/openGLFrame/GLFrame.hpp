@@ -41,7 +41,7 @@ public:
        
     Surfels<double> surfels;
     
-    Octree<double,CGL::Point3<double>*> octree;
+    Octree<double,Surfel<double>* > octree;
     
     CGL::Point3<double> midlePoint;
                       

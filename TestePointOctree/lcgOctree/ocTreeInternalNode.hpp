@@ -50,10 +50,6 @@ public:
 		return this->mean_;
 	}
 	
-	Vector3 EigenVector[3];
-	
-	Real 	EigenValues[3];
-	
 	/// constructor
     OctreeInternalNode () {
        son [0] = son [1] = son [2] = son [3] =
@@ -203,7 +199,7 @@ public:
     virtual bool isLeaf () const { return false; }
     
     
-    /// FUNCOES QUE EU CRIEI
+    /// FUNCOES QUE EU CRIEI Otimizar isso
     
     virtual ItemPtrList itemList () const
     {
@@ -224,34 +220,7 @@ public:
     	return leafList;
     }
     
-    virtual Vector3 eigenVector ( int i) const
-    {
-    	return mEigenVector[i];    
-    	                    
-    }
-    
-    virtual Real eigenValues ( int i) const
-    {
-    	return mEigenValues[i];    
-    	                    
-    }
-    
-    virtual void setEigenVector (const Vector3 pEigenVector[3] ) 
-    {
-    	mEigenVector[0] = pEigenVector[0];    
-    	mEigenVector[1] = pEigenVector[1];
-    	mEigenVector[2] = pEigenVector[2];
-
-    }
-
-    virtual void setEigenValues ( const Real pEigenValues[3] ) 
-    {
-    	mEigenValues[0] = pEigenValues[0];    
-    	mEigenValues[1] = pEigenValues[1];
-    	mEigenValues[2] = pEigenValues[2];
-    }
-        
-    
+       
 private:
 	
 	  Point3 	mean_;

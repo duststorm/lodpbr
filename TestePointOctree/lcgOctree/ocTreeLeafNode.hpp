@@ -12,8 +12,7 @@
 #include "ocTreeBox.hpp"
 #include "ocTreeIntersection.hpp"
 
-#include "slal/EigenSystem.hpp"
-#include "slal/Eigen.hpp"
+#include "surfels/MergeEllipses.hpp"
 
 // Forward declaration of OctreeIterator
 //
@@ -32,9 +31,7 @@ public:
 
     typedef OctreeNode<Real, ItemPtr, Refine>  			OctreeNode;          
     typedef OctreeInternalNode<Real, ItemPtr, Refine> 	OctreeInternalNode;
-    
-    typedef CGL::EigenSystem<Real>						EigenSystem;
-    typedef CGL::Eigen<Real>							Eigen;
+       
     typedef CGL::Vector3<Real> 							Vector3;  ///< A Point in 3D
     typedef CGL::Point3<Real> 							Point3;  ///< A Point in 3D
     typedef Box_3<Real> 								Box3;    ///< Octant box type
@@ -75,22 +72,6 @@ public:
 
     }
 
-    void PCA()
-    {
-    	Point3 m;
-    	
-    	for (listItemPtrIterator pi = PtrList.begin (); pi != PtrList.end(); ++pi)
-    	{
-    		m += *(*pi);
-    	}
-
-        m /= PtrList.size();
-                       
-        eigenSystem = EigenSystem(PtrList,m);
-    	             
-        setEigenVector(eigenSystem.mEigenvector) ;
-    }
-    
     virtual void split (const Box3& world, int level, OctreeNode*& fatherPtr) 
     {
         // A maximum of elements, MaxItems, must be declared
@@ -105,18 +86,14 @@ public:
             
             Point3 m;
             
-            for (listItemPtrIterator pi = oldPtrList.begin (); pi != oldPtrList.end(); ++pi) m += *(*pi);
-            
+            for (listItemPtrIterator pi = oldPtrList.begin (); pi != oldPtrList.end(); ++pi)
+            {
+            	m += (*pi)->Center();
+            }
             m /= PtrList.size();
                         
             newOctreeInternalNode->setMean(m);
-            
-            //covariance = EigenSystem(PtrList,m);
-     	
-            //newOctreeInternalNode->setEigenVector (covariance.mEigenvector);
-           
-            //setEigenVector(covariance.mEigenvector) ;
-            
+      
            
             PtrList.clear();
             
@@ -192,40 +169,9 @@ public:
     {
     	return PtrList;
     }
-    
-    virtual Vector3 eigenVector ( int i) const
-    {
-    	return mEigenVector[i];    
-    	                    
-    }
-    
-    virtual Real eigenValues ( int i) const
-    {
-    	return mEigenValues[i];    
-    	                    
-    }
-    
-    virtual void setEigenVector (const Vector3 pEigenVector[3] ) 
-    {
-    	mEigenVector[0] = pEigenVector[0];    
-    	mEigenVector[1] = pEigenVector[1];
-    	mEigenVector[2] = pEigenVector[2];
-    	                    
-    }
-    
-    virtual void  setEigenValues ( const Real pEigenValues[3] ) 
-    {
-    	mEigenValues[0] = pEigenValues[0];    
-    	mEigenValues[1] = pEigenValues[1];
-    	mEigenValues[2] = pEigenValues[2];
-    }
-    
-    
+   
 private:
 	
-	EigenSystem 	eigenSystem;
-	Vector3 		mEigenVector[3];
-	Real    		mEigenValues[3];
  
 };
 

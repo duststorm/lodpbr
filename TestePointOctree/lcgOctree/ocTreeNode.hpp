@@ -83,17 +83,7 @@ class OctreeNode {
     virtual bool isLeaf () const = 0;
     
     virtual ItemPtrList itemList () const = 0; 
-    
-    virtual Vector3 eigenVector (int i) const =0;
-    
-    virtual Real    eigenValues (int i) const =0;
-    
-    virtual void 	setEigenVector (const Vector3 pEigenVector[3] ) = 0; 
-        
-    virtual void 	setEigenValues ( const Real pEigenValues[3] ) = 0;
-        
-        
-    
+   
     // Virtual destructor 
     virtual ~OctreeNode(){};
     

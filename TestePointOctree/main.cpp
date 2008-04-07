@@ -18,6 +18,30 @@
 
 using namespace std;
 
+CGL::Vector3<double> perpendicular( const CGL::Vector3<double>& v ) {
+	CGL::Vector3<double> t;
+  // select the shortest of projections of axes on v
+  // (the closest to perpendicular to v),
+  // and project it to the plane defined by v
+
+  if( fabs(v.x()) < fabs(v.y()) ) { // x < y
+    if( fabs(v.x()) < fabs(v.z()) ) { // x < y && x < z
+      t = CGL::Vector3<double> (1.0f - v.x() * v.x(), -v.x() * v.y(), -v.x() * v.z());
+      return t;
+    }
+  }
+  else { // y <= x
+    if( fabs(v.y()) < fabs(v.z()) ) { // y <= x && y < z
+      t = CGL::Vector3<double>( -v.y() * v.x(), 1.0f - v.y() * v.y(), -v.y() * v.z());
+      return t;
+    }
+  }
+
+  // z <= x && z <= y
+  t = CGL::Vector3<double>(-v.z() * v.x(), -v.z() * v.y(), 1.0f - v.z() * v.z());
+  return t;
+}
+
 CGL::Vector3<double> Perpendicular( const CGL::Vector3<double>& pVector)
 	 {
 		 //select the shortest of projections of axes on v
@@ -31,7 +55,7 @@ CGL::Vector3<double> Perpendicular( const CGL::Vector3<double>& pVector)
 				 CGL::Vector3<double> lPerpendicularX (1.0 - (pVector.x() * pVector.x()),
 						 -pVector.x() * pVector.y(),
 						 -pVector.x() * pVector.z() );
-				 return lPerpendicularX;
+				 return lPerpendicularX.norm();
 			 }
 		 }  
 		 else
@@ -43,7 +67,7 @@ CGL::Vector3<double> Perpendicular( const CGL::Vector3<double>& pVector)
 						 1.0 - (pVector.y() * pVector.y()), 
 						 -pVector.y() * pVector.z() );
 				 
-				 return lPerpendicularY;
+				 return lPerpendicularY.norm();
 
 			 }
 		 }
@@ -51,7 +75,7 @@ CGL::Vector3<double> Perpendicular( const CGL::Vector3<double>& pVector)
 		 CGL::Vector3<double> lPerpendicularZ(-pVector.z() * pVector.x(), 
 				 				 -pVector.z() * pVector.y(), 
 				 				 1.0 - (pVector.z() * pVector.z()));
-		 return lPerpendicularZ;
+		 return lPerpendicularZ.norm();
 
 	 }
 	   
@@ -71,11 +95,12 @@ int main(int argc, char *argv[])
 	//v = v.norm();
 	q = v - p; 
 
-	CGL::Vector3<double> v4(1.0,0.0,0.0);
-	
-	CGL::Vector3<double> v5 = Perpendicular(v4);
-	
-	std::cout << " É 1 ? "<< v5 << v5*v4 << std::endl;
+	CGL::Vector3<double> v4(4.0,10.0,8.0);
+	v4.normalize();
+	CGL::Vector3<double> v5 = perpendicular(v4);
+	v5.normalize();
+	CGL::Vector3<double> v6 = v5 ^v4;
+	std::cout << " É 1 ? "<< v5 << " v5*v4 " << v5*v4 << " v6*v4 " << v6*v4 << " v6*v5 " <<  v6*v5 << std::endl;
 
 	std::cout << q << std::endl;
 	
@@ -160,8 +185,8 @@ int main(int argc, char *argv[])
 	
 
 //	Teste operator* (puduto interno ou  produto escalar) 
-	v1 = CGL::Vector3<double> (6.0,-1.0,0.0);
-	v2 = CGL::Vector3<double> (0.5,-4.0,0.0);
+	v1 = CGL::Vector3<double> (2.0,-1.0,1.0);
+	v2 = CGL::Vector3<double> (1.0,1.0,2.0);
 	double t = 0.0 ;
 	t = v1 * v2;
 	std::cout << t << "#(v1)*(v2)#"<<std::endl;

@@ -25,7 +25,8 @@ public:
 	typedef std::list<Point3* >       			ListPtrPoint3;
 	typedef typename ListPtrPoint3::iterator   	ListPtrPoint3Iterator;
 	
-	typedef std::list<Surfel<Real> > 			SurfelContainer;
+	typedef Surfel<Real>						Surfel;
+	typedef std::list<Surfel> 			SurfelContainer;
 	typedef typename SurfelContainer::iterator 	SurfelIterator;
 		
 	MergeEllipses( const SurfelContainer& pEllipses , const Point3& pNewCenter , const Vector3& pNewNormal)
@@ -43,6 +44,11 @@ public:
 		NewAxis();
 	};
 		
+	Surfel NewSurfel()
+	{
+		return ( Surfel(mNewCenter,mNewNormal,mNewMinorAxis,mNewMajorAxis,1) );
+	}
+	
 	// functions
 	void NewCenterAndNormal ()
 	{
@@ -79,8 +85,8 @@ public:
 			for(ListPtrPoint3Iterator it = lBoundariesPoints.begin();it != lBoundariesPoints.end();++it)
 			{
 
-				cout << mNewNormal;
-				cout << mNewCenter;
+				std::cout << mNewNormal;
+				std::cout << mNewCenter;
 				lPoint = ProjectPointToPlane(mNewNormal,mNewCenter,(*(*it)) );
 				lPoints.push_back ( lPoint );
 
@@ -154,13 +160,33 @@ public:
 		return  (new Point3 (  pPoint - ( (  (pPoint - pCenter) * pNormal  ) * pNormal)  ));
 	}	
 
+	 const Point3 Center () const 
+	 { 
+		 return  ( this->mNewCenter ) ; 
+	 };
+	 
+	 const Vector3 Normal() const 
+	 { 
+		 return (this->mNewNormal); 
+	 };
+	 
+	 std::pair<Real,Vector3> MinorAxis() const
+	 {
+		 return (this->mNewMinorAxis); 
+	 }
+
+	 std::pair<Real,Vector3> MajorAxis() const
+	 {
+		 return (this->mNewMajorAxis); 
+	 }
+	
 	virtual ~MergeEllipses(){};
 	std::list<Point3* > 		mProjectedPoint;
 	
 private:
 	
 	// Lista de Ellipses a sofrem "merge"
-	std::list<Surfel<Real> > 	mEllipses;
+	std::list<Surfel> 			mEllipses;
 
 	Point3	 					mNewCenter;
 	

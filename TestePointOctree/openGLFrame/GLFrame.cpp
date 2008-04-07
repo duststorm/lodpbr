@@ -72,7 +72,7 @@ void GLFrame::initializeGL()
 void GLFrame::model()
 {
 	
-	for (OctreeIterator<double, CGL::Point3<double>*> oi = octree.begin();oi != octree.end();++oi )
+	for (OctreeIterator<double, Surfel<double>* > oi = octree.begin();oi != octree.end();++oi )
 	{
 		if ( (*oi)->isLeaf())
 		{
@@ -80,18 +80,10 @@ void GLFrame::model()
 		   glColor3f(0.0,0.0,1.0);
 		   glBegin(GL_LINES);
 
-		   std::list< CGL::Point3<double>* > lp = (*oi)->itemList();
-		   
-		   std::cout << "SIZE" << lp.size() << std::endl;
-		   
-		   std::list< CGL::Point3<double>* >::iterator surfe = lp.begin();
-		   
+		   	   
+#if 0		   
 		   while ( surfe != lp.end() )
 		   {
-			   std::cout << "---------" << std::endl;
-			   std::cout << (*oi)->eigenVector(0);
-			   std::cout << (*oi)->eigenVector(1);
-			   std::cout << (*oi)->eigenVector(2);
 
 			   CGL::Point3<double> p0 = *(*surfe) + (*oi)->eigenVector(0)*1.25;
 			   glColor3f(1.0,0.0,0.0);
@@ -112,7 +104,7 @@ void GLFrame::model()
 
 			   ++surfe;
 		   }
-		   
+#endif		   
 		   glEnd();
 		   glEnable(GL_LIGHTING);
 		   glPointSize(1.0);
@@ -123,11 +115,6 @@ void GLFrame::model()
 	
 }
 
-const CGL::Point3<double>  ProjectPointToPlane(const CGL::Vector3<double>& pNormal,const CGL::Point3<double>& pCenter,const CGL::Point3<double>& pPoint)
-{
-	
-	return  CGL::Point3<double> (  pPoint - ( (  (pPoint - pCenter) * pNormal  ) * pNormal)  );
-}
 
 void GLFrame::drawPoints() {
    
@@ -137,113 +124,115 @@ void GLFrame::drawPoints() {
    glBegin(GL_POINTS);
    
      
-   for (OctreeIterator<double, CGL::Point3<double>*> oi = octree.begin();oi != octree.end();++oi )
+   for (OctreeIterator<double, Surfel<double>* > oi = octree.begin();oi != octree.end();++oi )
    {
 	   
 	   if ( (*oi)->isLeaf())
 	   {
 
-		   std::list< CGL::Point3<double>* > lp = (*oi)->itemList();
+		   std::list< Surfel<double>* > lp = (*oi)->itemList();
 
-		   for(std::list< CGL::Point3<double>* >::iterator surfe = lp.begin(); surfe != lp.end(); ++surfe )
+		   for(std::list< Surfel<double>* >::iterator surfe = lp.begin(); surfe != lp.end(); ++surfe )
 		   {
-			   glVertex3f((*(*surfe))[0],(*(*surfe))[1],(*(*surfe))[2]);
+			   (*surfe)->draw();
 		   }
 	   }
 	   
-#if 1
-
+#if 0 // dois splats no meio
+	
+		Surfel<double> s = Surfel<double>(CGL::Point3<double>(1.878106, 0.000000, 0.000000),
+										  CGL::Vector3<double>(-0.000000, 0.000000, 1.000000),1.0,1.0,0.0);
 		
-		Surfel<double> s = Surfel<double>(CGL::Point3<double>(2.127096,-0.876474,1.482297),
-										  CGL::Vector3<double>(-0.291764,-0.174345,0.940467),1.0,1.0,0.0);
-		
-		s.SetMinorAxis(std::make_pair(1.0,CGL::Vector3<double>(0.807313, 0.482415, 0.339886)));
-		s.SetMajorAxis(std::make_pair(2.0,CGL::Vector3<double>(-0.512952, 0.858417, 0.000000)));
+		s.SetMinorAxis(std::make_pair(1.0,CGL::Vector3<double>(1.000000, 0.000000, 0.000000)));
+		s.SetMajorAxis(std::make_pair(2.0,CGL::Vector3<double>(0.000000, 1.000000, 0.000000)));
 
 		std::list<Surfel<double> > sl;
 		
 		sl.push_back(s);
 
-		s = Surfel<double>(CGL::Point3<double>(0.459231, 0.489174, 1.334823),
-						   CGL::Vector3<double>(0.444927, -0.059414, 0.893594),1.0,1.0,0.0);
+		Surfel<double> s1 = Surfel<double>(CGL::Point3<double>(-1.721011, 0.000000, 0.000000),
+						   				   CGL::Vector3<double>(-0.000000, 0.000000, 1.000000),1.0,1.0,0.0);
 		
-		s.SetMinorAxis(std::make_pair(1.0,CGL::Vector3<double>(0.879801, -0.157404, -0.448525)));
-		s.SetMajorAxis(std::make_pair(2.0,CGL::Vector3<double>(0.167304, 0.985745, -0.017761)));
+		s1.SetMinorAxis(std::make_pair(1.0,CGL::Vector3<double>(1.000000, 0.000000, 0.000000)));
+		s1.SetMajorAxis(std::make_pair(2.0,CGL::Vector3<double>(0.000000, 1.000000, 0.000000)));
 		
-		sl.push_back(s);
+		sl.push_back(s1);
 						
 		MergeEllipses<double> me(sl);
 		
+		Surfel<double> sr = Surfel<double>(CGL::Point3<double>(me.Center()),
+				   						  CGL::Vector3<double>(me.Normal()),1.0,1.0,0.0);
 		
+		sr.SetMinorAxis(me.MinorAxis());
+		sr.SetMajorAxis(me.MajorAxis());
+		
+		std::list< CGL::Point3<double>* > newE = sr.BoundariesSamples(100);
+#endif	
+		
+#if 0 // dois splats no meio
+	
+		Surfel<double> s = Surfel<double>(CGL::Point3<double>(0.660652, 0.416949, 1.471741),
+										  CGL::Vector3<double>(-0.723338, -0.047630, 0.688850),1.0,1.0,0.0);
+		
+		s.SetMinorAxis(std::make_pair(1.0,CGL::Vector3<double>(0.642318, 0.319691, 0.696581)));
+		s.SetMajorAxis(std::make_pair(2.0,CGL::Vector3<double>(-0.253398, 0.946324, -0.200651)));
+
+		std::list< CGL::Point3<double>* > newE1 = s.BoundariesSamples(100);
+		
+		std::list<Surfel<double> > sl;
+		
+		sl.push_back(s);
+
+		Surfel<double> s1 = Surfel<double>(CGL::Point3<double>(-0.621054, 0.556120, -0.106632),
+						   				   CGL::Vector3<double>(0.516305, -0.156048, 0.842068),1.0,1.0,0.0);
+		
+		s1.SetMinorAxis(std::make_pair(1.0,CGL::Vector3<double>(0.782782, -0.312861, -0.537932)));
+		s1.SetMajorAxis(std::make_pair(2.0,CGL::Vector3<double>(0.347393, 0.936892, -0.039380)));
+		std::list< CGL::Point3<double>* > newE2 = s1.BoundariesSamples(100);
+		sl.push_back(s1);
+						
+		MergeEllipses<double> me(sl);
+		
+		Surfel<double> sr = Surfel<double>(CGL::Point3<double>(me.Center()),
+				   						  CGL::Vector3<double>(me.Normal()),1.0,1.0,0.0);
+		
+		sr.SetMinorAxis(me.MinorAxis());
+		sr.SetMajorAxis(me.MajorAxis());
+		
+		std::list< CGL::Point3<double>* > newE = sr.BoundariesSamples(100);
+
 		for(std::list<CGL::Point3<double>* >::iterator it = me.mProjectedPoint.begin();it != me.mProjectedPoint.end();++it)
 		{		
 			glColor3f(0.0,1.0,0.0);
 			CGL::Point3<double> point = (*(*it));
 		 	glVertex3f(point[0],point[1],point[2]);
-		}	
+		}
+		for(std::list<CGL::Point3<double>* >::iterator it = newE.begin();it != newE.end();++it)
+		{
+			glColor3f(0.0,0.0,1.0);
+			CGL::Point3<double> point = (*(*it));
+		 	glVertex3f(point[0],point[1],point[2]);
+		}
+		for(std::list<CGL::Point3<double>* >::iterator it = newE1.begin();it != newE1.end();++it)
+		{
+			glColor3f(0.0,0.0,1.0);
+			CGL::Point3<double> point = (*(*it));
+		 	glVertex3f(point[0],point[1],point[2]);
+		}
+		for(std::list<CGL::Point3<double>* >::iterator it = newE2.begin();it != newE2.end();++it)
+		{
+			glColor3f(0.0,0.0,1.0);
+			CGL::Point3<double> point = (*(*it));
+		 	glVertex3f(point[0],point[1],point[2]);
+		}
 		
-//		for(std::list<CGL::Point3<double>* >::iterator it = points.begin();it != points.end();++it)
-//		{
-//			if (n.length() > numeric_limits<float>::epsilon())
-//			{
-//				glColor3f(0.0,1.0,0.0);
-//				CGL::Point3<double> point = (*(*it));
-//				
-//				CGL::Vector3<double> v1 = point - c;
-//				
-//				double xpp = v1 * n;
-//				
-//				v1 = xpp * n;
-//				
-//				point =  point - v1;
-//				
-//				point = ProjectPointToPlane(n,c, (*(*it)) );
-//				
-//			 	glVertex3f(point[0],point[1],point[2]); 
-//			 	
-//			}
-//		}
-			
-#endif	   
+#endif
 
    }
    
 
-//   std::vector<Surfel<double> >::iterator surf =  surfels.surfels.begin();
-//   
-//  
-//   while ( surf != surfels.surfels.end() ) 
-//   {
-//	     
-//      glVertex3f(surf->Center(0),surf->Center(1),surf->Center(2));
-//           
-//      ++surf;
-//   }
-//         
+   
    glEnd();
-   
- /*  glColor3f(0.0,1.0,0.0);
-   glBegin(GL_LINES);
-   
-   std::vector<Surfel<double> >::iterator surfe =  surfels.surfels.begin();
-   
-  
-   while ( surfe != surfels.surfels.end() ) {
-	     
-	   CGL::Point3<double> p = surfe->position() + surfe->normal();
-	   p *= 1.25;
-	   glVertex3f(surfe->position(0),surfe->position(1),surfe->position(2));
-	   glVertex3f(p.x(),p.y(),p.z());
-           
-      ++surfe;
-   }
-         
-   glEnd();*/
-   
-         	
-
-   
-   
    glEnable(GL_LIGHTING);
    glPointSize(1.0);
 }
@@ -254,17 +243,16 @@ void GLFrame::calLimits()
 	Box_3<double> world = Box_3<double>( CGL::Point3<double>(surfels.box().xmin(),surfels.box().ymin(),surfels.box().zmin()),
 				   						 CGL::Point3<double>(surfels.box().xmax(),surfels.box().ymax(),surfels.box().zmax()));
 	 
-	octree = Octree<double,CGL::Point3<double>*>(world) ;
+	octree = Octree<double,Surfel<double>* >(world) ;
 	
-	
-	std::vector<Surfel<double> >::iterator surf =  surfels.surfels.begin();
-	while ( surf != surfels.surfels.end() ) {
-		CGL::Point3<double> *p = new CGL::Point3<double>(surf->Center(0),surf->Center(1),surf->Center(2));
-		octree.insert (p);
-	    ++surf;
+	for (std::vector<Surfel<double> >::iterator surf =  surfels.surfels.begin();surf != surfels.surfels.end(); ++ surf ) 
+	{
+		
+		octree.insert (new Surfel<double>(*surf));
 	    midlePoint += surf->Center();
+	    
 	}
-	//midlePoint /= surfels.surfels.size();  
+	midlePoint /= surfels.surfels.size();  
 		
     std::cout << octree.root->itemPtrCount() <<  " AAA" << std::endl;
     
@@ -338,7 +326,7 @@ void GLFrame::paintGL()
     	   drawPoints();
     	}*/
     	
-		for (OctreeIterator<double, CGL::Point3<double>*> oi = octree.begin();oi != octree.end();++oi )
+		for (OctreeIterator<double, Surfel<double>* > oi = octree.begin();oi != octree.end();++oi )
 		{
 		   			  
 	       drawBox(octree.box(oi));

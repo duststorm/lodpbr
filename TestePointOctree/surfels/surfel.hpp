@@ -12,6 +12,9 @@
 #include <vector>
 #include <cmath>
 
+#include <GL/gl.h>
+#include <GL/glu.h>
+
 #include "slal/Point3.hpp"
 #include "slal/Vector3.hpp"
 #include "slal/Color.hpp"
@@ -44,7 +47,34 @@ template <class Real > class Surfel
 	 typedef CGL::Point3<Real>  Point3; 
 	 typedef CGL::Vector3<Real> Vector3;
 	 typedef CGL::Color         Color;
-		 
+
+
+	 typedef std::list<Point3* >       			ListPtrPoint3;
+	 typedef typename ListPtrPoint3::iterator  	ListPtrPoint3Iterator;
+
+	 Surfel (const Surfel<Real>& pSurfel)
+	 {
+		 mCenter    = pSurfel.Center();
+		 mNormal    = pSurfel.Normal();
+		 mMinorAxis = pSurfel.MinorAxis();
+		 mMajorAxis = pSurfel.MajorAxis();
+
+	 }
+	 
+	 Surfel (const Point3& 	center, 
+			 const Vector3& normal,
+			 const std::pair<Real,Vector3>& pMinorAxis,
+	 		 const std::pair<Real,Vector3>& pMajorAxis,
+			 unsigned int 	id ) : mCenter(center),
+	 							   mNormal(normal),
+	 							   mMinorAxis(pMinorAxis),
+	 							   mMajorAxis(pMajorAxis),
+	 							   mID(id)
+	 	  {
+		 	mColor = Color(0.0,0.0,0.0); 
+
+	 	  };	
+	 
 	 Surfel (const Point3& 	position, 
 			 const Vector3& normal, 
 			 const Real& 	radius, 
@@ -56,8 +86,12 @@ template <class Real > class Surfel
 	 								   mID(id)
 	 	  {
 		 	mColor = Color(0.0,0.0,0.0); 
-		 	
-		 	//mMinorAxis = std::make_pair(mSplatRadius,Vector)
+		 	mNormal.normalize();
+		 	Vector3 lV = Perpendicular(mNormal);
+		 	Vector3 lU = mNormal ^ lV;
+		 	lU.normalize();
+		 	mMinorAxis = std::make_pair(mSplatRadius,lV);
+		 	mMajorAxis = std::make_pair(mSplatRadius,lU);
 	 	  };	
 	
 	
@@ -72,7 +106,13 @@ template <class Real > class Surfel
 			 						mColor(color),
 			 						mID(id)
 		  {
-		 
+		 	mNormal.normalize();
+		 	Vector3 lV = Perpendicular(mNormal);
+		 	Vector3 lU = mNormal ^ lV;
+		 	lU.normalize();
+		 	mMinorAxis = std::make_pair(mSplatRadius,lV);
+		 	mMajorAxis = std::make_pair(mSplatRadius,lU);
+		 	//std::cout << " Value " << mMajorAxis.first << " Vector " << mMajorAxis.second << std::endl; 
 		  };
 	  
 	 Surfel (const Point3& 	position, 
@@ -85,6 +125,12 @@ template <class Real > class Surfel
 			 						mID(id)
 		  {
 		 	mColor = Color(0.0,0.0,0.0);
+		 	mNormal.normalize();
+		 	Vector3 lV = Perpendicular(mNormal);
+		 	Vector3 lU = mNormal ^ lV;
+		 	lU.normalize();
+		 	mMinorAxis = std::make_pair(mSplatRadius,lV);
+		 	mMajorAxis = std::make_pair(mSplatRadius,lU);
 		  };
 	
 	 
@@ -163,12 +209,12 @@ template <class Real > class Surfel
 		 this->mMajorAxis = pMajorAxis; 
 	 }
 	 
-	 std::pair<Real,Vector3> MinorAxis() 
+	 std::pair<Real,Vector3> MinorAxis() const
 	 {
 		 return (this->mMinorAxis); 
 	 }
 
-	 std::pair<Real,Vector3> MajorAxis() 
+	 std::pair<Real,Vector3> MajorAxis() const 
 	 {
 		 return (this->mMajorAxis); 
 	 }
@@ -202,21 +248,22 @@ template <class Real > class Surfel
 			 if ( fabs( pVector.x()) < fabs( pVector.z()) )
 			 {  // x < y && x < z
 				 Vector3 lPerpendicularX (1.0 - (pVector.x() * pVector.x()),
-						 -pVector.x() * pVector.y(),
-						 -pVector.x() * pVector.z() );
-				 return lPerpendicularX;
+						 				  -pVector.x() * pVector.y(),
+						 				  -pVector.x() * pVector.z() );
+				 
+				 return lPerpendicularX.norm();
 			 }
 		 }  
 		 else
 		 { //y <= x
 
-			 if ( fabs(pVector.y()) < fabs(pVector.z()) )
+			 if (fabs(pVector.y()) < fabs(pVector.z()) )
 			 {  // y <= x && y < z
 				 Vector3 lPerpendicularY( -pVector.y() * pVector.x(), 
-						 1.0 - (pVector.y() * pVector.y()), 
-						 -pVector.y() * pVector.z() );
+						 				  1.0 - (pVector.y() * pVector.y()), 
+						 				  -pVector.y() * pVector.z() );
 				 
-				 return lPerpendicularY;
+				 return lPerpendicularY.norm();
 
 			 }
 		 }
@@ -224,10 +271,10 @@ template <class Real > class Surfel
 		 Vector3 lPerpendicularZ(-pVector.z() * pVector.x(), 
 				 				 -pVector.z() * pVector.y(), 
 				 				 1.0 - (pVector.z() * pVector.z()));
-		 return lPerpendicularZ;
+		 
+		 return lPerpendicularZ.norm();
 
-	 }
-	   
+	 }	   
 	   	 
 	 std::list<Point3* > BoundariesSamples(unsigned int pSteps) const
 	 { 
@@ -280,6 +327,27 @@ template <class Real > class Surfel
 
 		 return lPoints;
 
+	 }
+	 
+	 void draw()
+	 {
+		 
+		 	ListPtrPoint3 lBoundaries = this->BoundariesSamples(10);
+	
+		    glDisable(GL_LIGHTING);		
+		    glPointSize(2.0);
+		    glColor3f(0.25,1.0,0.5);
+		    glBegin(GL_POINTS);
+		 	
+			for(ListPtrPoint3Iterator it = lBoundaries.begin();it != lBoundaries.end();++it)
+			{		
+				Point3 point = (*(*it));
+			 	glVertex3f(point[0],point[1],point[2]);
+			}
+			
+			glEnd();
+			glEnable(GL_LIGHTING);
+			glPointSize(1.0);
 	 }
 
  private:
