@@ -4,6 +4,7 @@
 
 #include <list>
 #include <algorithm>
+#include <cassert>
 
 #include "surfel.hpp"
 
@@ -25,28 +26,39 @@ public:
 	typedef std::list<Point3* >       			ListPtrPoint3;
 	typedef typename ListPtrPoint3::iterator   	ListPtrPoint3Iterator;
 	
-	typedef Surfel<Real>						Surfel;
-	typedef std::list<Surfel> 			SurfelContainer;
-	typedef typename SurfelContainer::iterator 	SurfelIterator;
+	typedef Surfel<Real>						  Surfel;
+	typedef Surfel*								  PtrSurfel;
+	typedef std::list<Surfel> 					  SurfelContainer;
+	typedef std::list<PtrSurfel>				  PtrSurfelContainer;
+	typedef typename SurfelContainer::iterator 	  SurfelIterator;
+	typedef typename PtrSurfelContainer::iterator PtrSurfelIterator;
 		
-	MergeEllipses( const SurfelContainer& pEllipses , const Point3& pNewCenter , const Vector3& pNewNormal)
+	MergeEllipses( const PtrSurfelContainer& pEllipses , const Point3& pNewCenter , const Vector3& pNewNormal)
 	: mEllipses(pEllipses)
 	{
 		mNewCenter = pNewCenter;
 		mNewNormal = pNewNormal;
 	};
 	
-	MergeEllipses( const SurfelContainer& pEllipses )
+	MergeEllipses( const PtrSurfelContainer& pEllipses )
 	: mEllipses(pEllipses) 
 	{
+		
 		NewCenterAndNormal();
 		ProjectPoints();
 		NewAxis();
+					
 	};
 		
 	Surfel NewSurfel()
 	{
 		return ( Surfel(mNewCenter,mNewNormal,mNewMinorAxis,mNewMajorAxis,1) );
+	}
+	
+	Surfel * NewPtrSurfel()
+	{
+
+		return ( new Surfel(mNewCenter,mNewNormal,mNewMinorAxis,mNewMajorAxis,1) );
 	}
 	
 	// functions
@@ -55,18 +67,22 @@ public:
 		Point3  lSomaCenterAreas;
 		Vector3 lSomaNormalAreas;
 		Real    lSomaAreas = 0.0;
-
-		for (SurfelIterator itEllipse = mEllipses.begin(); itEllipse != mEllipses.end(); ++itEllipse)
+		
+			
+		for (PtrSurfelIterator itEllipse = mEllipses.begin(); itEllipse != mEllipses.end(); ++itEllipse)
 		{
-			lSomaCenterAreas += itEllipse->Area() * itEllipse->Center();
-			lSomaNormalAreas += itEllipse->Area() * itEllipse->Normal();
-			lSomaAreas       += itEllipse->Area();           
+			lSomaCenterAreas += (*itEllipse)->Area() * (*itEllipse)->Center();
+			lSomaNormalAreas += (*itEllipse)->Area() * (*itEllipse)->Normal();
+			lSomaAreas       += (*itEllipse)->Area();
+			
 		}
-
-
-		mNewCenter = lSomaCenterAreas / lSomaAreas;
-		mNewNormal = lSomaNormalAreas / lSomaAreas;
-		mNewNormal.normalize();
+		
+		if (lSomaAreas != 0)
+		{
+			mNewCenter = lSomaCenterAreas / lSomaAreas;
+			mNewNormal = lSomaNormalAreas / lSomaAreas;
+			mNewNormal.normalize();
+		}
 	};
 
 	void ProjectPoints()
@@ -78,15 +94,13 @@ public:
 		PtrPoint3 			lPoint;
 
 
-		for (SurfelIterator itEllipse = mEllipses.begin(); itEllipse != mEllipses.end(); ++itEllipse)
+		for (PtrSurfelIterator itEllipse = mEllipses.begin(); itEllipse != mEllipses.end(); ++itEllipse)
 		{
-			lBoundariesPoints = itEllipse->BoundariesSamples(8);
+			lBoundariesPoints = (*itEllipse)->BoundariesSamples(8);
 
 			for(ListPtrPoint3Iterator it = lBoundariesPoints.begin();it != lBoundariesPoints.end();++it)
 			{
 
-				std::cout << mNewNormal;
-				std::cout << mNewCenter;
 				lPoint = ProjectPointToPlane(mNewNormal,mNewCenter,(*(*it)) );
 				lPoints.push_back ( lPoint );
 
@@ -186,7 +200,7 @@ public:
 private:
 	
 	// Lista de Ellipses a sofrem "merge"
-	std::list<Surfel> 			mEllipses;
+	PtrSurfelContainer 			mEllipses;
 
 	Point3	 					mNewCenter;
 	

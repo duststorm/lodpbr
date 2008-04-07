@@ -35,6 +35,7 @@ public:
     typedef CGL::Vector3<Real> 							Vector3;  ///< A Point in 3D
     typedef CGL::Point3<Real> 							Point3;  ///< A Point in 3D
     typedef Box_3<Real> 								Box3;    ///< Octant box type
+    typedef MergeEllipses<Real> 						MergeEllipses;
     
 //    friend class OctreeIterator<Real, ItemPtr, Refine>; ///< Octree iterators are friends
     
@@ -48,6 +49,7 @@ public:
 
     /// constructor
     OctreeLeafNode () {
+
     }
 
     /// destructor
@@ -169,10 +171,32 @@ public:
     {
     	return PtrList;
     }
-   
+    
+    virtual ItemPtr MeanItem() const
+    {
+    	return mMean;
+    }
+    
+    virtual ItemPtr Merge() 
+    {
+    	if (PtrList.size() > 0)
+    	{
+    		MergeEllipses lMerge = MergeEllipses(PtrList);
+    		mMean = lMerge.NewPtrSurfel();
+    	}
+    	else
+    	{
+    		mMean = NULL;
+    	}
+    	
+    	
+    	return mMean;
+    }
+    
 private:
 	
- 
+	ItemPtr mMean;
+	
 };
 
 

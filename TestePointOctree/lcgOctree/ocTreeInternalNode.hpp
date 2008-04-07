@@ -14,7 +14,7 @@
 #include "ocTreeNode.hpp"
 #include "ocTreeLeafNode.hpp"
 
-
+#include "surfels/MergeEllipses.hpp"
 
 ///
 /// This represents an internal Octree Node. These point to eight 
@@ -25,8 +25,10 @@ class OctreeInternalNode : public OctreeNode<Real, ItemPtr, Refine> {
 
     typedef OctreeNode<Real, ItemPtr, Refine> OctreeNode;      
 
-    typedef typename CGL::Point3<Real> Point3;  ///< A Point in 3D
-    typedef typename CGL::Vector3<Real> Vector3;  ///< A Point in 3D
+    typedef  CGL::Point3<Real>   Point3;  ///< A Point in 3D
+    typedef  CGL::Vector3<Real>  Vector3;  ///< A Point in 3D
+    typedef  MergeEllipses<Real> MergeEllipses; 
+    
     typedef Box_3<Real> Box3; ///< Octant box type
     typedef std::list<ItemPtr> ItemPtrList; ///< List of items stored inside leaf nodes
     typedef std::set<ItemPtr> ItemPtrSet;   ///< Return type of overlap
@@ -220,12 +222,38 @@ public:
     	return leafList;
     }
     
-       
+    virtual ItemPtr MeanItem() const
+    {
+    	return mMean;
+    }
+    
+    virtual ItemPtr Merge() 
+    {
+    	ItemPtrList lLeafSurfel;
+    	
+        for (int index = 0; index < 8; ++index) 
+        {
+        	if (son[index]->Merge() != NULL)
+        		lLeafSurfel.push_back( son[index]->MeanItem() );
+        	
+        }
+        
+        if (lLeafSurfel.size() > 0)
+        {
+        	MergeEllipses lMerge = MergeEllipses(lLeafSurfel);
+    		mMean = lMerge.NewPtrSurfel();
+        }else
+        {
+        	mMean = NULL;
+        }
+        	
+    	return mMean;
+    }
+    
 private:
 	
 	  Point3 	mean_;
-	  Vector3 	mEigenVector[3];
-	  Real   	mEigenValues[3];
+	  ItemPtr 	mMean;
 };
 
 
