@@ -127,15 +127,21 @@ void GLFrame::drawPoints() {
    for (OctreeIterator<double, Surfel<double>* > oi = octree.begin();oi != octree.end();++oi )
    {
 	   
-	   if ( (*oi)->isLeaf())
+	   if( ( (*oi)->isLeaf()   and (oi.level() < 3) ) or ((oi.level() == 3)) )
 	   {
 
-		   std::list< Surfel<double>* > lp = (*oi)->itemList();
-
-		   for(std::list< Surfel<double>* >::iterator surfe = lp.begin(); surfe != lp.end(); ++surfe )
-		   {
-			   (*surfe)->draw();
-		   }
+//		   std::list< Surfel<double>* > lp = (*oi)->itemList();
+//
+//		   for(std::list< Surfel<double>* >::iterator surfe = lp.begin(); surfe != lp.end(); ++surfe )
+//		   {
+//			    CGL::Point3<double> point = (*surfe)->Center();
+//			    glPointSize(3.0);
+//			    glColor3f(1.0,0.0,0.0);
+//				glVertex3f(point[0],point[1],point[2]);
+		   if ((*oi)->MeanItem() != NULL)
+				(*oi)->MeanItem()->draw();
+				
+		  
 	   }
 	   
 #if 0 // dois splats no meio
@@ -257,6 +263,7 @@ void GLFrame::calLimits()
     std::cout << octree.root->itemPtrCount() <<  " AAA" << std::endl;
     
     octree.split();
+    octree.Merge();
     
 }
 
@@ -329,13 +336,13 @@ void GLFrame::paintGL()
 		for (OctreeIterator<double, Surfel<double>* > oi = octree.begin();oi != octree.end();++oi )
 		{
 		   			  
-	       drawBox(octree.box(oi));
+	      // drawBox(octree.box(oi));
 		   glDisable(GL_LIGHTING);		
 		   glPointSize(5.0);
 		   glColor3f(0.0,0.0,1.0);
 		   glBegin(GL_POINTS);
 		   			   		   		        
-		   glVertex3f(oi.mean()[0],oi.mean()[1],oi.mean()[2]);
+		   //glVertex3f(oi.mean()[0],oi.mean()[1],oi.mean()[2]);
 		   		   
 		   glEnd();
 		   glEnable(GL_LIGHTING);

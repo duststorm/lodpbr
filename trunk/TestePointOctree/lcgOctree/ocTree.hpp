@@ -78,6 +78,11 @@ public :
     	root->split(world, 0,root);
     }
     
+    void Merge ()
+    {
+    	root->Merge();
+    }
+    
     /// Returns the number of pointers to items inserted into this octree
     virtual int itemPtrCount () const {
       return root->itemPtrCount();

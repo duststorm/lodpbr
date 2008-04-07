@@ -31,7 +31,10 @@ class OctreeNode {
 
     typedef CGL::Point3<Real>                 			Point3;  ///< A Point in 3D
     typedef CGL::Vector3<Real>                 			Vector3;  ///< A Point in 3D
-    typedef Box_3<Real>                                 Box3; ///< Octant box type    
+    typedef Box_3<Real>                                 Box3; ///< Octant box type
+    
+	typedef Surfel<Real>  								Surfel;
+		
     typedef std::list<ItemPtr>                          ItemPtrList; ///< List of items stored inside leaf nodes
     typedef std::set<ItemPtr>                           ItemPtrSet;   ///< Return type of overlap
     
@@ -83,7 +86,12 @@ class OctreeNode {
     virtual bool isLeaf () const = 0;
     
     virtual ItemPtrList itemList () const = 0; 
-   
+    
+    
+    virtual ItemPtr MeanItem() 	const = 0;
+        
+    virtual ItemPtr Merge() = 0;
+    
     // Virtual destructor 
     virtual ~OctreeNode(){};
     

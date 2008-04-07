@@ -125,9 +125,9 @@ int main(int argc, char *argv[])
 	s.SetMajorAxis(std::make_pair(1.0,CGL::Vector3<double>(0.0,0.836725,0.547623)));
 	
 	
-	std::list<Surfel<double> > sl;
+	std::list<Surfel<double>* > sl;
 	
-	sl.push_back(s);
+	sl.push_back(new Surfel<double>(s));
 	
 	std::list<CGL::Point3<double>* > points = s.BoundariesSamples(8);
 	

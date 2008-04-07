@@ -52,12 +52,23 @@ template <class Real > class Surfel
 	 typedef std::list<Point3* >       			ListPtrPoint3;
 	 typedef typename ListPtrPoint3::iterator  	ListPtrPoint3Iterator;
 
+	 Surfel ()
+	 {
+   	     mCenter = Point3();
+ 		 mNormal = Vector3();
+
+		 mMinorAxis = std::make_pair(0.0,Vector3());
+		 mMajorAxis = std::make_pair(0.0,Vector3());
+		 
+	 }
+	 
 	 Surfel (const Surfel<Real>& pSurfel)
 	 {
 		 mCenter    = pSurfel.Center();
 		 mNormal    = pSurfel.Normal();
 		 mMinorAxis = pSurfel.MinorAxis();
 		 mMajorAxis = pSurfel.MajorAxis();
+		 mColor     = pSurfel.color(); 
 
 	 }
 	 
@@ -71,7 +82,7 @@ template <class Real > class Surfel
 	 							   mMajorAxis(pMajorAxis),
 	 							   mID(id)
 	 	  {
-		 	mColor = Color(0.0,0.0,0.0); 
+		 	mColor = Color(1.0,0.0,0.0); 
 
 	 	  };	
 	 
@@ -132,7 +143,17 @@ template <class Real > class Surfel
 		 	mMinorAxis = std::make_pair(mSplatRadius,lV);
 		 	mMajorAxis = std::make_pair(mSplatRadius,lU);
 		  };
-	
+		  
+	 inline const Surfel<Real>& operator= ( const Surfel<Real>& pSurfel)
+	 {
+		 this->mCenter    = pSurfel.Center();
+		 this->mNormal    = pSurfel.Normal();
+		 this->mMinorAxis = pSurfel.MinorAxis();
+		 this->mMajorAxis = pSurfel.MajorAxis();
+		 this->mColor     = pSurfel.color();
+		 
+   	  	return ( *this );
+	 }
 	 
 	 Surfel (const Point3& 	position)
 	 {
@@ -192,6 +213,16 @@ template <class Real > class Surfel
 	 void SetRadius ( const Real& pRadius ) 
 	 { 
 		 this->mSplatRadius = pRadius; 
+	 };
+	 
+	 Color color (void) const 
+	 { 
+		 return this->mColor; 
+	 };
+	 
+	 void SetColor ( const Color& pColor ) 
+	 { 
+		 this->mColor = pColor; 
 	 };
 	  	  
 	 Real perpendicularError () const 
@@ -332,22 +363,18 @@ template <class Real > class Surfel
 	 void draw()
 	 {
 		 
-		 	ListPtrPoint3 lBoundaries = this->BoundariesSamples(10);
-	
-		    glDisable(GL_LIGHTING);		
-		    glPointSize(2.0);
-		    glColor3f(0.25,1.0,0.5);
-		    glBegin(GL_POINTS);
-		 	
+		 	ListPtrPoint3 lBoundaries = this->BoundariesSamples(50);
+ 		 	
 			for(ListPtrPoint3Iterator it = lBoundaries.begin();it != lBoundaries.end();++it)
 			{		
 				Point3 point = (*(*it));
+				glPointSize(1.5);
+				glColor3f(0.0,1.0,0.25);
+				
 			 	glVertex3f(point[0],point[1],point[2]);
 			}
 			
-			glEnd();
-			glEnable(GL_LIGHTING);
-			glPointSize(1.0);
+
 	 }
 
  private:
