@@ -146,7 +146,7 @@ public:
 		      Vector3 	n (v.nx, v.ny, v.nz);
 		      Color 	c (v.r/255.0, v.g/255.0, v.b/255.0);
 			
-		      surfels.surfels.push_back ( Surfel<Real> (p,n,c, static_cast<Real> (v.radius), j) );
+		      surfels.surfels.push_back ( Surfel<Real> (p,n,c, static_cast<Real> (0.5), j) );
 		        
 		     }
 		    

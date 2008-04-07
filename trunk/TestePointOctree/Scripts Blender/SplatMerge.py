@@ -313,17 +313,16 @@ def buttonevents(evt):
         me.edges.extend(me.verts[-4],me.verts[-1])
         me.edges.extend(me.verts[-4],me.verts[-2])
         me.edges.extend(me.verts[-4],me.verts[-3])
-        
-        
-        print 'normal' ,listEllipse[0].Normal()
+
         print 'center' ,listEllipse[0].Center()
+        print 'normal' ,listEllipse[0].Normal()
         print 'EixoA ' ,listEllipse[0].EixoA()
         print 'A ' ,listEllipse[0].A()
         print 'EixoB ' ,listEllipse[0].EixoB()
         print 'B ' ,listEllipse[0].B()
-        
+
+        print 'center' ,listEllipse[1].Center()        
         print 'normal' ,listEllipse[1].Normal()
-        print 'center' ,listEllipse[1].Center()
         print 'EixoA ' ,listEllipse[1].EixoA()
         print 'A ' ,listEllipse[1].A()
         print 'EixoB ' ,listEllipse[1].EixoB()
