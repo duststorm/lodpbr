@@ -62,15 +62,17 @@ template <class Real > class Surfel
 		 
 	 }
 	 
-	 Surfel (const Surfel<Real>& pSurfel)
+	 Surfel (const Surfel<Real>& pSurfel) :  mCenter(pSurfel.mCenter),
+	   										 mNormal(pSurfel.mNormal),
+	   									 	 mColor(pSurfel.mColor),
+	   									 	 mSplatRadius(pSurfel.mSplatRadius),
+	   										 mMinorAxis(pSurfel.mMinorAxis),
+	   										 mMajorAxis(pSurfel.mMajorAxis),
+	   										 mPerpendicularError(0),
+	   										 mID(pSurfel.mID)
 	 {
-		 mCenter    = pSurfel.Center();
-		 mNormal    = pSurfel.Normal();
-		 mMinorAxis = pSurfel.MinorAxis();
-		 mMajorAxis = pSurfel.MajorAxis();
-		 mColor     = pSurfel.color(); 
 
-	 }
+	 };
 	 
 	 Surfel (const Point3& 	center, 
 			 const Vector3& normal,
@@ -112,10 +114,12 @@ template <class Real > class Surfel
 			 const Real& 	radius,
 			 unsigned int 	id ) : 	mCenter(position),
 			 						mNormal(normal),
+			 						mColor(color),
 			 						mSplatRadius(radius),
 			 						mPerpendicularError(0),
-			 						mColor(color),
 			 						mID(id)
+			 						
+			 						
 		  {
 		 	mNormal.normalize();
 		 	Vector3 lV = Perpendicular(mNormal);
@@ -197,12 +201,12 @@ template <class Real > class Surfel
 	
 	 unsigned int ID () const 
 	 { 
-		 return ( this->ID_ ); 
+		 return ( this->mID ); 
 	 };
 	 
 	 void SetID (unsigned int id) 
 	 {	
-		 this->ID_ = id; 
+		 this->mID = id; 
 	 };
 	
 	 Real Radius (void) const 

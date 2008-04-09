@@ -138,7 +138,7 @@ public:
         for (const_listItemPtrIterator pi = PtrList.begin (); pi != PtrList.end(); ++pi)
         {
             Real thisDistance = lcgOctree::distance2Item (*pi, p, c);
-            if (abs(thisDistance) < abs(best)) 
+            if (fabs(thisDistance) < fabs(best)) 
             {
                 best = thisDistance;
                 clsPt = c;
