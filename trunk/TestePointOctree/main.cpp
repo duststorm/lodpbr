@@ -119,7 +119,7 @@ int main(int argc, char *argv[])
 	
 	
 	Surfel<double> s = Surfel<double>(CGL::Point3<double>(0.76880,-1.250622,2.352241),
-									  CGL::Vector3<double>(0.0,-0.547623,0.836725),1.0,1.0,0.0);
+									  CGL::Vector3<double>(0.0,-0.547623,0.836725),1.0,1.0,0);
 	
 	s.SetMinorAxis(std::make_pair(1.0,CGL::Vector3<double>(1.0,0.0,0.0)));
 	s.SetMajorAxis(std::make_pair(1.0,CGL::Vector3<double>(0.0,0.836725,0.547623)));

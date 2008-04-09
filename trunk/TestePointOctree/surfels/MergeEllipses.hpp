@@ -33,6 +33,23 @@ public:
 	typedef typename SurfelContainer::iterator 	  SurfelIterator;
 	typedef typename PtrSurfelContainer::iterator PtrSurfelIterator;
 		
+	MergeEllipses( const MergeEllipses<Real>& mMerge)
+	{
+		mEllipses 		= mMerge.mEllipses;
+
+		mNewCenter 		= mMerge.mNewCenter;
+
+		mNewNormal 		= mMerge.mNewNormal;
+
+		mNewMinorAxis 	= mMerge.mNewMinorAxis;
+
+		mNewMajorAxis 	= mMerge.mNewMajorAxis;
+
+		mNewMinorValue 	= mMerge.mNewMinorValue;
+
+		mNewMajorValue 	= mMerge.mNewMajorValue;
+	}
+	
 	MergeEllipses( const PtrSurfelContainer& pEllipses , const Point3& pNewCenter , const Vector3& pNewNormal)
 	: mEllipses(pEllipses)
 	{
