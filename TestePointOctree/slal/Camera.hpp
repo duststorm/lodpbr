@@ -68,10 +68,11 @@ namespace CGL{
         {
             
                 // Get the inverse of the arcball's rotation matrix
-        		CGL::Quaternion<float> cameraRotation = mTrackball.Orientation();
+        		CGL::Quaternion<float> cameraRotation = ~mTrackball.Orientation();
            		
+        		       		
                 // Transform vectors based on camera's rotation matrix
-                //mUp   = cameraRotation.Rotate(Vector3(0,1,0));
+                mUp   = cameraRotation.Rotate(Vector3(0,1,0));
                 mEyes = cameraRotation.Rotate(Vector3(0,0,1)); 
                                
                 mEyes =    mPosition - (mEyes * mZoomRadius);

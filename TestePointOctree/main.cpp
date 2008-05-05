@@ -4,194 +4,19 @@
 #include <cmath>
 #include <list>
 #include <algorithm>
+#include "slal/Vector3.hpp"
+
 
 #include "interface/myMainWindow.hpp"
-//#include <cpplapack.h>
-
-#include "slal/Vector3.hpp"
-#include "slal/Point3.hpp"
-#include "slal/Matrix3x3.hpp"
-#include "slal/Color.hpp"
-#include "slal/EigenSystem.hpp"
-#include "surfels/MergeEllipses.hpp"
-
-using namespace std;
-
-CGL::Vector3<double> perpendicular( const CGL::Vector3<double>& v ) {
-	CGL::Vector3<double> t;
-  // select the shortest of projections of axes on v
-  // (the closest to perpendicular to v),
-  // and project it to the plane defined by v
-
-  if( fabs(v.x()) < fabs(v.y()) ) { // x < y
-    if( fabs(v.x()) < fabs(v.z()) ) { // x < y && x < z
-      t = CGL::Vector3<double> (1.0f - v.x() * v.x(), -v.x() * v.y(), -v.x() * v.z());
-      return t;
-    }
-  }
-  else { // y <= x
-    if( fabs(v.y()) < fabs(v.z()) ) { // y <= x && y < z
-      t = CGL::Vector3<double>( -v.y() * v.x(), 1.0f - v.y() * v.y(), -v.y() * v.z());
-      return t;
-    }
-  }
-
-  // z <= x && z <= y
-  t = CGL::Vector3<double>(-v.z() * v.x(), -v.z() * v.y(), 1.0f - v.z() * v.z());
-  return t;
-}
-
-CGL::Vector3<double> Perpendicular( const CGL::Vector3<double>& pVector)
-	 {
-		 //select the shortest of projections of axes on v
-		 //(the closest to perpendicular to v),
-		 //and project it to the plane defined by v
-		 if ( fabs( pVector.x()) < fabs( pVector.y()) ) // x < y 
-		 {
-
-			 if ( fabs( pVector.x()) < fabs( pVector.z()) )
-			 {  // x < y && x < z
-				 CGL::Vector3<double> lPerpendicularX (1.0 - (pVector.x() * pVector.x()),
-						 -pVector.x() * pVector.y(),
-						 -pVector.x() * pVector.z() );
-				 return lPerpendicularX.norm();
-			 }
-		 }  
-		 else
-		 { //y <= x
-
-			 if (fabs(pVector.y()) < fabs(pVector.z()) )
-			 {  // y <= x && y < z
-				 CGL::Vector3<double> lPerpendicularY( -pVector.y() * pVector.x(), 
-						 1.0 - (pVector.y() * pVector.y()), 
-						 -pVector.y() * pVector.z() );
-				 
-				 return lPerpendicularY.norm();
-
-			 }
-		 }
-		 // z <= x && z <= y
-		 CGL::Vector3<double> lPerpendicularZ(-pVector.z() * pVector.x(), 
-				 				 -pVector.z() * pVector.y(), 
-				 				 1.0 - (pVector.z() * pVector.z()));
-		 return lPerpendicularZ.norm();
-
-	 }
-	   
 
 int main(int argc, char *argv[])
 {
-	
-	CGL::Point3<double> p(10.0,22.65,26.89);
-	CGL::Point3<double> q;
-	
-	CGL::Vector3<double> v(4.0,4.0,4.0);
-	CGL::Color  c(p);
-	
-	double  b[3] = {0,0,0};
-	double result[3];
-	
-	//v = v.norm();
-	q = v - p; 
 
-	CGL::Vector3<double> v4(4.0,10.0,8.0);
-	v4.normalize();
-	CGL::Vector3<double> v5 = perpendicular(v4);
-	v5.normalize();
-	CGL::Vector3<double> v6 = v5 ^v4;
-	std::cout << " É 1 ? "<< v5 << " v5*v4 " << v5*v4 << " v6*v4 " << v6*v4 << " v6*v5 " <<  v6*v5 << std::endl;
-
-	std::cout << q << std::endl;
+	CGL::Vector3<float> v(1.0,1.0,0.0);
+	CGL::Vector3<float> u(1.0,0.0,0.0);
 	
-	CGL::Matrix3x3<double> A (1.0,-5.0,-4.0,
-								3.0,4.0,-3.0,
-								0.0,2.0,0.0);
+	std::cout << std::sqrt(2)*0.5 << "  =  " << u.norm() * v.norm() << std::endl;
 	
-	CGL::Matrix3x3<double> B (1.0,0.0,0.0,
-							  1.0,1.0,0.0,
-							  1.0,1.0,1.0);
-		
-	CGL::Matrix3x3<double> C  (	1.5,0.5,0.75,
-								0.5,0.5,0.25,
-								0.75,0.25,0.5);
-	
-	
-	
-	Surfel<double> s = Surfel<double>(CGL::Point3<double>(0.76880,-1.250622,2.352241),
-									  CGL::Vector3<double>(0.0,-0.547623,0.836725),1.0,1.0,0);
-	
-	s.SetMinorAxis(std::make_pair(1.0,CGL::Vector3<double>(1.0,0.0,0.0)));
-	s.SetMajorAxis(std::make_pair(1.0,CGL::Vector3<double>(0.0,0.836725,0.547623)));
-	
-	
-	std::list<Surfel<double>* > sl;
-	
-	sl.push_back(new Surfel<double>(s));
-	
-	std::list<CGL::Point3<double>* > points = s.BoundariesSamples(8);
-	
-	
-	
-	MergeEllipses<double> me(sl,CGL::Point3<double>(0.0,0.0,0.0),CGL::Vector3<double>(0.0,0.0,1.0));
-	me.ProjectPoints();
-		
-	CGL::EigenSystem<double> eigen(points,s.Center());
-		
-	std::cout << " Values  " << eigen.MinorAxis().first << " Vector " << eigen.MinorAxis().second << std::endl;
-	std::cout << " Values  " << eigen.MajorAxis().first << " Vector " << eigen.MajorAxis().second << std::endl;
-	std::cout << " Values  " << eigen.Normal().first 	<< " Vector " << eigen.Normal().second << std::endl;
-	
-	
-	for(std::list<CGL::Point3<double>* >::iterator it = points.begin();it != points.end();++it)
-		std::cout << *(*(it)) << std::endl;
-
-	CGL::Vector3<double> v1(1.0,1.0,1.0);
-	CGL::Vector3<double> v2(-1.0,-1.0,-1.0);
-	CGL::Vector3<double> v3(0.0,0.0,0.0);
-
-	v3 = v1 + v2;
-	std::cout << v3.x() << v3.y() << v3.z() << "#v1+v2 (0,0,0)#"<<std::endl;
-	v3 = v1 - v2;
-	std::cout << v3.x() << v3.y() << v3.z() << "#v1-v2 (2,2,2)#"<<std::endl;
-	v3 = -v1 - v2;
-	std::cout << v3.x() << v3.y() << v3.z() << "#-v1-v2 (0,0,0)#"<<std::endl;
-	v3 = -v1 + v2;
-	std::cout << v3.x() << v3.y() << v3.z() << "#-v1+v2# (-2,-2,-2)"<<std::endl;
-	v3 = + v1 - v2;
-	std::cout << v3.x() << v3.y() << v3.z() << "#+v1-v2# (2,2,2)"<<std::endl;
-	v3 = + v1 + v2;
-	std::cout << v3.x() << v3.y() << v3.z() << "#+v1+v2# (0,0,0)"<<std::endl;
-
-
-	//Teste operator*
-	v1 = CGL::Vector3<double>(1.0,1.0,1.0);
-	v3 = CGL::Vector3<double>(0.0,0.0,0.0);
-		
-	v3 = 3.0 * v1;
-	std::cout << v3.x() << v3.y() << v3.z() << "#3*v1# (3,3,3)"<<std::endl;
-	v3 = 3.0 * (-v1);
-	std::cout << v3.x() << v3.y() << v3.z() << "#3*(-v1)# (-3,-3,-3)"<<std::endl;
-	v3 = 3.0 * (+v1);
-	std::cout << v3.x() << v3.y() << v3.z() << "#3*(+v1)# (3,3,3)"<<std::endl;
-	v3 = (-v1) * 3.0;
-	std::cout << v3.x() << v3.y() << v3.z() << "#(-v1)*3# (-3,-3,-3)"<<std::endl;
-	v3 = (+v1) * 3.0;
-	std::cout << v3.x() << v3.y() << v3.z() << "#(+v1)*3# (3,3,3)"<<std::endl;
-	v3 = (+v1) * 0.0;
-	std::cout << v3.x() << v3.y() << v3.z() << "#(+v1)*0.0# (0,0,0) "<<std::endl;
-	v3 = (+v1) * v2[1];
-	std::cout << v3.x() << v3.y() << v3.z() << "#(+v1)*0.0# (0,0,0)"<<std::endl;
-	
-
-//	Teste operator* (puduto interno ou  produto escalar) 
-	v1 = CGL::Vector3<double> (2.0,-1.0,1.0);
-	v2 = CGL::Vector3<double> (1.0,1.0,2.0);
-	double t = 0.0 ;
-	t = v1 * v2;
-	std::cout << t << "#(v1)*(v2)#"<<std::endl;
-	v1[1] = v1*(-v2);
-	std::cout << v1[1] << "#(v1)*(v2)#"<<std::endl;
-
     QApplication app(argc, argv);
     if (!QGLFormat::hasOpenGL()) {
         cerr << "This system has no OpenGL support" << endl;

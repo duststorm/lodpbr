@@ -227,6 +227,68 @@ public:
     	return mMean;
     }
     
+    void CalularPerpendicularError ()
+    {
+    	std::list<Real> lEpMin;
+    	std::list<Real> lEpMax;
+
+    	Real epMax = static_cast<Real>(0);
+    	Real epMin = static_cast<Real>(0);
+    	
+    	Real di	   = static_cast<Real>(0);
+
+    	for (int index = 0; index < 8; ++index) 
+    	{
+
+    		if (son[index]->MeanItem() != NULL)
+    		{
+    			di = mMean->MajorAxis().first * (std::sqrt(1.0 - (mMean->Normal()*son[index]->MeanItem()->Normal())  ) );
+    		
+
+    			epMax = ( ( mMean->Center() - son[index]->MeanItem()->Center() ) * mMean->Normal() + di );
+    			epMin =	( ( mMean->Center() - son[index]->MeanItem()->Center() ) * mMean->Normal() - di );
+
+    			lEpMin.push_back(epMin);
+    			lEpMax.push_back(epMax);
+    		
+    		}
+
+    	}
+
+    	ep = *(std::max_element(lEpMax.begin(),lEpMax.end())) - (*std::min_element(lEpMin.begin(),lEpMin.end())) ;
+    	
+    }
+      
+        
+    // Por que passando como const VEctor3& eye , da error de disqualified  ....
+    
+    virtual Real PerpendicularError (Vector3 eye) const
+    {
+    	
+
+    	
+    	if (mMean != NULL) 
+    	{
+    		Real cos = mMean->Normal().norm() * eye.norm();
+    	
+    		Real ImageError = (ep*(1- cos*cos))/eye.length();
+    	
+    		return ImageError;
+    	}
+    	
+    	return HUGE_VAL;
+    }
+    
+    virtual Real TangencialError (const Vector3& eye) const
+    {
+    	return 1.0;
+    }
+    
+    virtual Real GeometricError (const Vector3& eye) const
+    {
+    	return 1.0;
+    }
+    
     virtual ItemPtr Merge() 
     {
     	ItemPtrList lLeafSurfel;
@@ -242,10 +304,15 @@ public:
         {
         	MergeEllipses lMerge = MergeEllipses(lLeafSurfel);
     		mMean = lMerge.NewPtrSurfel();
+    		
+    		CalularPerpendicularError();
+    		
         }else
         {
         	mMean = NULL;
         }
+        
+        
         	
     	return mMean;
     }
@@ -254,6 +321,8 @@ private:
 	
 	  Point3 	mean_;
 	  ItemPtr 	mMean;
+	  
+	  Real ep;
 };
 
 

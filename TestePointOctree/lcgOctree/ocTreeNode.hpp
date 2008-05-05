@@ -89,8 +89,14 @@ class OctreeNode {
     
     
     virtual ItemPtr MeanItem() 	const = 0;
-        
+            
     virtual ItemPtr Merge() = 0;
+    
+    virtual Real PerpendicularError ( Vector3 eye) const = 0;
+    
+    virtual Real TangencialError 	(const Vector3& eye) const = 0;
+    
+    virtual Real GeometricError  	(const Vector3& eye) const = 0;
     
     // Virtual destructor 
     virtual ~OctreeNode(){};
