@@ -12,22 +12,10 @@ MyMainWindow::MyMainWindow (QMainWindow *parent): QMainWindow(parent)
    
 }
 
-void MyMainWindow::on_action_Wireframe_A_triggered()
+void MyMainWindow::on_doubleSpinBoxThreshold_valueChanged(double d)
 {
-	glFrame->renderMode_A = GLFrame::WireFrame;
-	glFrame->updateGL();
-}
-
-void MyMainWindow::on_action_Smooth_A_triggered()
-{
-	glFrame->renderMode_A = GLFrame::PolygonWireFrame;
-	glFrame->updateGL();
-}
-
-void MyMainWindow::on_action_Points_A_triggered()
-{
-	glFrame->renderMode_A = GLFrame::Points;
-	glFrame->updateGL();
+	
+	std::cout << d << std::endl;
 }
 
 void MyMainWindow::on_action_Model_triggered()
@@ -61,7 +49,7 @@ void MyMainWindow::open(QString filename,bool who) {
    }
 }
 
-void MyMainWindow::on_action_Open_Surface_A_triggered()
+void MyMainWindow::on_action_Open_File_triggered()
 {
     // Asks for a file name to open.
     QString filename = QFileDialog::getOpenFileName (
@@ -79,15 +67,6 @@ void MyMainWindow::on_action_Open_Surface_A_triggered()
 
 
 
-
-void MyMainWindow::on_action_Show_A_triggered()
-{
-	if(true){}
-	
-		
-	glFrame->updateGL();
-
-}
 
 
 

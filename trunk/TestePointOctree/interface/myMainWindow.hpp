@@ -15,16 +15,10 @@ public:
     
 public slots:
 	
-	void on_action_Wireframe_A_triggered();
-
-	void on_action_Smooth_A_triggered();
+	void on_action_Open_File_triggered();
 	
-	void on_action_Points_A_triggered();
-
-	void on_action_Open_Surface_A_triggered();
+	void on_doubleSpinBoxThreshold_valueChanged(double);
 	
-	void on_action_Show_A_triggered();
-
 	void on_action_Model_triggered();
 	
 	void on_action_Quit_MainWin_triggered();
