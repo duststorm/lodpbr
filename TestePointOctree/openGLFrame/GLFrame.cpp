@@ -306,12 +306,14 @@ void GLFrame::resizeGL(int width, int height)
     glLoadIdentity();
     GLfloat x = GLfloat(width) / height;
     //glOrtho(-1,1,-1,1,-2,2);
-    gluPerspective(45.0,x,1.0,200);
+    //gluPerspective(45.0,x,1.0,200);
+    camera.SetProjectionMatrix(90.0,x,0.1,1000);
+    glLoadMatrixf(~camera.ProjectionMatrix());
     //glFrustum(-x, x, -1.0, 1.0, 4.0, 15.0);
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
     arcball.setBounds(width, height);
-    
+    camera.SetWindowSize(width,height);
 }
 
 void GLFrame::paintGL()
@@ -320,7 +322,9 @@ void GLFrame::paintGL()
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
     glTranslated(0.0,0.0,-3.0);
-    glMultMatrixf(&sceneTransformation);
+    
+    //glMultMatrixf(&sceneTransformation);
+    glLoadMatrixf(~camera.ViewMatrix());
     
     if ( surfels.surfels.size() != 0 )
     {
@@ -373,16 +377,35 @@ void GLFrame::paintGL()
 #endif
 }
 
-void GLFrame::keyPressEvent ( QKeyEvent * event)
+void GLFrame::keyPressEvent(QKeyEvent * event)
 {
-	if (event->key() == Qt::Key_R)
-	{ 
-		zoomFactor = 1.0;
-	}            
-	updateGL();	     
-	  
-}
+//	QMessageBox::information( 0, "MessageBox", "Key pressed" );
+	if (event->key() == Qt::Key_W)
+	{
+		camera.MoveForward(0.2);	
+		
+	}
+	else if (event->key() == Qt::Key_S){
+		camera.MoveForward(-0.2);
+	 	
+	}
+	else if (event->key() == Qt::Key_A){
+		camera.StrafeRight(-0.2f);   	
+	
+	}
+	else if (event->key() == Qt::Key_D){
+		camera.StrafeRight(0.2f);   	
+	
+	}
+	else if (event->key() == Qt::Key_R){
+	
+		camera.Reset();
+	}
+	else {}
+	updateGL();
 
+		
+}
 
 void GLFrame::mousePressEvent(QMouseEvent *event)
 {
@@ -390,11 +413,13 @@ void GLFrame::mousePressEvent(QMouseEvent *event)
     if (event->button() == Qt::MidButton) 
     {
     	arcball.click(event->x(),height() - event->y());
+    	camera.OnRotationBegin(event->x(),event->y());
     	updateGL(); 
     }
     else if (event->button() == Qt::RightButton) 
     {
     	screenToWorld(event->x(),height() - event->y(), mousePositionX, mousePositionY, mousePositionZ);
+    	
     	
     }
     
@@ -404,12 +429,13 @@ void GLFrame::mousePressEvent(QMouseEvent *event)
 
 void GLFrame::wheelEvent(QWheelEvent *e) 
 {
-   
-   if (e->delta()>0)
-	   zoomIn();
-   else              
-      zoomOut();
+//   
+//   if (e->delta()>0)
+//	   zoomIn();
+//   else              
+//      zoomOut();
       
+   camera.Zoom(e->delta()/120.0);
    updateGL();
 }
 
@@ -428,6 +454,9 @@ void GLFrame::mouseMoveEvent(QMouseEvent *event)
     	matrixTransformation.identity();
     	matrixTransformation.translation(xWorld - mousePositionX, yWorld - mousePositionY, zWorld - mousePositionZ);
     	sceneTransformation = matrixTransformation * sceneInitialTransformation;
+        GLfloat dx = GLfloat(event->x() - lastPos.x()) / width();
+        GLfloat dy = GLfloat(event->y() - lastPos.y()) / height();
+    	camera.Translate(-dx,dy,0.0f);
     	updateGL();
        
     }else if (event->buttons() & Qt::MidButton)  {
@@ -435,6 +464,7 @@ void GLFrame::mouseMoveEvent(QMouseEvent *event)
 	    AMatrix<float> matrixTransformation;
 	    arcball.drag(event->x(), height() - event->y(), &matrixTransformation);
 	    sceneTransformation = matrixTransformation * sceneInitialTransformation;
+	    camera.OnRotationMove(event->x(), event->y());
     	updateGL();
      }
     lastPos = event->pos();

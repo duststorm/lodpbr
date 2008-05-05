@@ -19,6 +19,8 @@
 #include "surfels/surfel.hpp"
 #include "surfels/surfels.hpp"
 
+#include "slal/Camera.hpp"
+
 
 
 class GLFrame : public QGLWidget
@@ -85,6 +87,7 @@ private:
     ArcBall 			arcball;
    
 
+    CGL::Camera camera;
     
 	bool show_A;
     

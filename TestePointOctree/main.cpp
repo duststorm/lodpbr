@@ -13,7 +13,6 @@
 #include "slal/Matrix3x3.hpp"
 #include "slal/Color.hpp"
 #include "slal/EigenSystem.hpp"
-#include "slal/Eigen.hpp"
 #include "surfels/MergeEllipses.hpp"
 
 using namespace std;
