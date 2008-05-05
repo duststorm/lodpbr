@@ -5,9 +5,6 @@
 #include <QGLWidget>
 #include <vector>
 
-#include "support/arcball.hpp"
-#include "support/atmatrix.hpp"
-
 #include "lcgOctree/ocTree.hpp"
 #include "lcgOctree/ocTreeLeafNode.hpp"
 #include "lcgOctree/ocTreeBox.hpp"
@@ -35,10 +32,10 @@ public:
     
     void calLimits();
         
-    void zoomIn();
-   	void zoomOut();
     typedef enum RenderMode {WireFrame=0, PolygonWireFrame, Smooth, Points,Model};   
        
+    void DrawGroud();
+    
     RenderMode renderMode_A;
        
     Surfels<double> surfels;
@@ -64,29 +61,14 @@ private:
     void draw();
     void drawPoints();
     void model();
-    void screenToWorld(int x, int y, double &xw, double &yw, double &zw);
     
     template < class T>
     CGL::BoundingBox3<T> limits();
     template < class T>
     void drawBox(CGL::BoundingBox3<T> BBox);
-
-    GLfloat 			rotationX;
-    GLfloat 			rotationY;
-    GLfloat 			rotationZ;
-    
+  
     QPoint 				lastPos;
-    GLfloat 			zoomFactor;
-       
-    double  			mousePositionX; 
-    double  			mousePositionY; 
-    double				mousePositionZ;
     
-    AMatrix<GLfloat> 	sceneTransformation;
-    AMatrix<GLfloat> 	sceneInitialTransformation; 
-    ArcBall 			arcball;
-   
-
     CGL::Camera camera;
     
 	bool show_A;

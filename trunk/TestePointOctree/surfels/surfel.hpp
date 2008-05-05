@@ -184,7 +184,7 @@ template <class Real > class Surfel
 		 this->mCenter = Point3(pCenter); 
 	 };
 	
-	 const Vector3 Normal(void) const 
+	 Vector3 Normal(void) const 
 	 { 
 		 return (this->mNormal); 
 	 };

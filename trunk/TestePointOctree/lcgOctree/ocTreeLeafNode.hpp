@@ -167,6 +167,30 @@ public:
     
     /// FUNCOES CRIADAS POR MIN
     
+    virtual Real PerpendicularError (Vector3 eye) const
+    {
+    	if (mMean != NULL) 
+    	{
+    		Real cos = mMean->Normal().norm() * eye.norm();
+    	
+    		Real ImageError = (ep*(1- cos*cos))/eye.length();
+    	
+    		return ImageError;
+    	}
+    	
+    	return HUGE_VAL;
+    }
+    
+    virtual Real TangencialError (const Vector3& eye) const
+    {
+    	return 1.0;
+    }
+    
+    virtual Real GeometricError (const Vector3& eye) const
+    {
+    	return 1.0;
+    }
+    
     virtual ItemPtrList itemList () const
     {
     	return PtrList;
@@ -183,6 +207,7 @@ public:
     	{
     		MergeEllipses lMerge = MergeEllipses(PtrList);
     		mMean = lMerge.NewPtrSurfel();
+    		CalularPerpendicularError ();
     	}
     	else
     	{
@@ -193,10 +218,40 @@ public:
     	return mMean;
     }
     
+    
+    void CalularPerpendicularError ()
+    {
+    	std::list<Real> lEpMin;
+    	std::list<Real> lEpMax;
+
+    	Real epMax = static_cast<Real>(0);
+    	Real epMin = static_cast<Real>(0);
+    	
+    	Real di	   = static_cast<Real>(0);
+
+    	for (const_listItemPtrIterator it = PtrList.begin (); it != PtrList.end(); ++it)
+    	{
+    		
+    			di = mMean->MajorAxis().first * (std::sqrt(1.0 - (mMean->Normal() * (*it)->Normal())  ) );
+   		
+
+    			epMax = ( ( mMean->Center() - (*it)->Center() ) * mMean->Normal() + di );
+    			epMin =	( ( mMean->Center() - (*it)->Center() ) * mMean->Normal() - di );
+
+    			lEpMin.push_back(epMin);
+    			lEpMax.push_back(epMax);
+    		
+    	}
+
+    	ep = *(std::max_element(lEpMax.begin(),lEpMax.end())) - (*std::min_element(lEpMin.begin(),lEpMin.end())) ;
+    	std::cout << "OIIIIIIIIIIIII" << ep << std::endl;
+    }
+      
+    
 private:
 	
 	ItemPtr mMean;
-	
+	Real ep;
 };
 
 

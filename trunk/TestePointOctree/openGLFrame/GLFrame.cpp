@@ -12,11 +12,7 @@ GLFrame::GLFrame(QWidget *parent):QGLWidget(parent)
 {
 	
     setFormat(QGLFormat(QGL::DoubleBuffer | QGL::DepthBuffer));
-    
-    rotationX = -21.0;
-    rotationY = -57.0;
-    rotationZ = 0.0;
-    zoomFactor = 1.0;
+
     
     setFocusPolicy(Qt::StrongFocus);
    
@@ -27,11 +23,33 @@ GLFrame::GLFrame(QWidget *parent):QGLWidget(parent)
 	
 	surfels = Surfels<double>();
 	
-	mousePositionX = 0.0;
-	mousePositionY = 0.0;
-	mousePositionZ = 0.0;
+
     
 }
+
+void GLFrame::DrawGroud()
+{
+	glDisable(GL_LIGHTING);  
+	glColor3f(0.2f, 0.2f, 0.2f);
+
+	// draw the lines
+	glBegin(GL_LINES);
+
+	
+	for (int x = -250; x < 250; x += 6)
+	{
+		glVertex3i(x, 0, -250);
+		glVertex3i(x, 0, 250);
+	}
+
+	for (int z = -250; z < 250; z += 6)
+	{
+		glVertex3i(-250, 0, z);
+		glVertex3i(250, 0, z);
+	}
+	glEnd();
+	glEnable(GL_LIGHTING);  
+} 
 
 void GLFrame::initializeGL()
 {
@@ -62,9 +80,6 @@ void GLFrame::initializeGL()
 	glEnable(GL_DEPTH_TEST);      //depth-buffering
 
 	glEnable(GL_NORMALIZE);
-	
-	sceneTransformation.identity();
-
 	
 
 }
@@ -123,121 +138,53 @@ void GLFrame::drawPoints() {
    glColor3f(1.0,0.0,0.0);
    glBegin(GL_POINTS);
    
-     
+   int cont = 0;
    for (OctreeIterator<double, Surfel<double>* > oi = octree.begin();oi != octree.end();++oi )
    {
-	   
-	   if( ( (*oi)->isLeaf()   and (oi.level() < 3) ) or ((oi.level() == 3)) )
+	   CGL::Vector3<double> v (camera.Eyes());
+	   if ((*oi)->PerpendicularError(v) > 0.01)
 	   {
 
-//		   std::list< Surfel<double>* > lp = (*oi)->itemList();
-//
-//		   for(std::list< Surfel<double>* >::iterator surfe = lp.begin(); surfe != lp.end(); ++surfe )
-//		   {
-//			    CGL::Point3<double> point = (*surfe)->Center();
-//			    glPointSize(3.0);
-//			    glColor3f(1.0,0.0,0.0);
-//				glVertex3f(point[0],point[1],point[2]);
-		   if ((*oi)->MeanItem() != NULL)
-				(*oi)->MeanItem()->draw();
-				
-		  
+		   //	   CGL::Vector3<double> v(camera.Eyes()[0],camera.Eyes()[1],camera.Eyes()[2]);
+		   //	   
+		   //	   std::cout << "Tamanho =  " << camera.Eyes().length() << std::endl;
+		   //	   
+		   //	   std::cout << "Perpendicu ... " << (*oi)->PerpendicularError(v) << std::endl;
+		   //	   
+		   //	   	    
+
+
+		   if(  (*oi)->isLeaf() )  //  and (oi.level() < 3) ) or ((oi.level() == 3))
+		   {
+
+			   std::list< Surfel<double>* > lp = (*oi)->itemList();
+
+			   for(std::list< Surfel<double>* >::iterator surfe = lp.begin(); surfe != lp.end(); ++surfe )
+			   {
+				   CGL::Point3<double> point = (*surfe)->Center();
+				   glPointSize(3.0);
+				   glColor3f(1.0,0.0,0.0);
+				   glVertex3f(point[0],point[1],point[2]);
+
+				   //		   if ((*oi)->MeanItem() != NULL)
+				   //				(*oi)->MeanItem()->draw();
+				   cont++;
+			   }	
+
+		   }
+		   else
+		   {
+			   glPointSize(3.0);
+			   glColor3f(0.0,1.0,0.0);
+			   CGL::Point3<double> p = (*oi)->MeanItem()->Center();
+			   glVertex3f(p[0],p[1],p[2]);
+			   cont++;
+		   }
 	   }
-	   
-#if 0 // dois splats no meio
-	
-		Surfel<double> s = Surfel<double>(CGL::Point3<double>(1.878106, 0.000000, 0.000000),
-										  CGL::Vector3<double>(-0.000000, 0.000000, 1.000000),1.0,1.0,0.0);
-		
-		s.SetMinorAxis(std::make_pair(1.0,CGL::Vector3<double>(1.000000, 0.000000, 0.000000)));
-		s.SetMajorAxis(std::make_pair(2.0,CGL::Vector3<double>(0.000000, 1.000000, 0.000000)));
-
-		std::list<Surfel<double> > sl;
-		
-		sl.push_back(s);
-
-		Surfel<double> s1 = Surfel<double>(CGL::Point3<double>(-1.721011, 0.000000, 0.000000),
-						   				   CGL::Vector3<double>(-0.000000, 0.000000, 1.000000),1.0,1.0,0.0);
-		
-		s1.SetMinorAxis(std::make_pair(1.0,CGL::Vector3<double>(1.000000, 0.000000, 0.000000)));
-		s1.SetMajorAxis(std::make_pair(2.0,CGL::Vector3<double>(0.000000, 1.000000, 0.000000)));
-		
-		sl.push_back(s1);
-						
-		MergeEllipses<double> me(sl);
-		
-		Surfel<double> sr = Surfel<double>(CGL::Point3<double>(me.Center()),
-				   						  CGL::Vector3<double>(me.Normal()),1.0,1.0,0.0);
-		
-		sr.SetMinorAxis(me.MinorAxis());
-		sr.SetMajorAxis(me.MajorAxis());
-		
-		std::list< CGL::Point3<double>* > newE = sr.BoundariesSamples(100);
-#endif	
-		
-#if 0 // dois splats no meio
-	
-		Surfel<double> s = Surfel<double>(CGL::Point3<double>(0.660652, 0.416949, 1.471741),
-										  CGL::Vector3<double>(-0.723338, -0.047630, 0.688850),1.0,1.0,0.0);
-		
-		s.SetMinorAxis(std::make_pair(1.0,CGL::Vector3<double>(0.642318, 0.319691, 0.696581)));
-		s.SetMajorAxis(std::make_pair(2.0,CGL::Vector3<double>(-0.253398, 0.946324, -0.200651)));
-
-		std::list< CGL::Point3<double>* > newE1 = s.BoundariesSamples(100);
-		
-		std::list<Surfel<double> > sl;
-		
-		sl.push_back(s);
-
-		Surfel<double> s1 = Surfel<double>(CGL::Point3<double>(-0.621054, 0.556120, -0.106632),
-						   				   CGL::Vector3<double>(0.516305, -0.156048, 0.842068),1.0,1.0,0.0);
-		
-		s1.SetMinorAxis(std::make_pair(1.0,CGL::Vector3<double>(0.782782, -0.312861, -0.537932)));
-		s1.SetMajorAxis(std::make_pair(2.0,CGL::Vector3<double>(0.347393, 0.936892, -0.039380)));
-		std::list< CGL::Point3<double>* > newE2 = s1.BoundariesSamples(100);
-		sl.push_back(s1);
-						
-		MergeEllipses<double> me(sl);
-		
-		Surfel<double> sr = Surfel<double>(CGL::Point3<double>(me.Center()),
-				   						  CGL::Vector3<double>(me.Normal()),1.0,1.0,0.0);
-		
-		sr.SetMinorAxis(me.MinorAxis());
-		sr.SetMajorAxis(me.MajorAxis());
-		
-		std::list< CGL::Point3<double>* > newE = sr.BoundariesSamples(100);
-
-		for(std::list<CGL::Point3<double>* >::iterator it = me.mProjectedPoint.begin();it != me.mProjectedPoint.end();++it)
-		{		
-			glColor3f(0.0,1.0,0.0);
-			CGL::Point3<double> point = (*(*it));
-		 	glVertex3f(point[0],point[1],point[2]);
-		}
-		for(std::list<CGL::Point3<double>* >::iterator it = newE.begin();it != newE.end();++it)
-		{
-			glColor3f(0.0,0.0,1.0);
-			CGL::Point3<double> point = (*(*it));
-		 	glVertex3f(point[0],point[1],point[2]);
-		}
-		for(std::list<CGL::Point3<double>* >::iterator it = newE1.begin();it != newE1.end();++it)
-		{
-			glColor3f(0.0,0.0,1.0);
-			CGL::Point3<double> point = (*(*it));
-		 	glVertex3f(point[0],point[1],point[2]);
-		}
-		for(std::list<CGL::Point3<double>* >::iterator it = newE2.begin();it != newE2.end();++it)
-		{
-			glColor3f(0.0,0.0,1.0);
-			CGL::Point3<double> point = (*(*it));
-		 	glVertex3f(point[0],point[1],point[2]);
-		}
-		
-#endif
-
    }
    
-
-   
+   std::cout << "Total = " << cont << std::endl;
+     
    glEnd();
    glEnable(GL_LIGHTING);
    glPointSize(1.0);
@@ -305,14 +252,11 @@ void GLFrame::resizeGL(int width, int height)
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
     GLfloat x = GLfloat(width) / height;
-    //glOrtho(-1,1,-1,1,-2,2);
-    //gluPerspective(45.0,x,1.0,200);
     camera.SetProjectionMatrix(90.0,x,0.1,1000);
     glLoadMatrixf(~camera.ProjectionMatrix());
-    //glFrustum(-x, x, -1.0, 1.0, 4.0, 15.0);
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
-    arcball.setBounds(width, height);
+
     camera.SetWindowSize(width,height);
 }
 
@@ -323,7 +267,7 @@ void GLFrame::paintGL()
     glLoadIdentity();
     glTranslated(0.0,0.0,-3.0);
     
-    //glMultMatrixf(&sceneTransformation);
+  
     glLoadMatrixf(~camera.ViewMatrix());
     
     if ( surfels.surfels.size() != 0 )
@@ -336,6 +280,8 @@ void GLFrame::paintGL()
     	   model();
     	   drawPoints();
     	}*/
+    	
+    	DrawGroud();
     	
 		for (OctreeIterator<double, Surfel<double>* > oi = octree.begin();oi != octree.end();++oi )
 		{
@@ -356,25 +302,7 @@ void GLFrame::paintGL()
 		
     }
 
-#if DA_APLICACAO_PASSADA    
-    /*
-	if( A  and  isVisible_A()  )
-	{
-		
-		   for (OctreeIterator<double, CGL::Point3<double>*> oi = octree.begin();oi != octree.end();++oi )
-		   {
-			   if ((*oi)->isLeaf())
-				   drawBox(octree.box(oi));
-		   }
-		
-		if (renderMode_A == PolygonWireFrame)
-			A->drawPolygonWireframe(true);
-		else if (renderMode_A == WireFrame)
-			A->drawWireframe(true);
-		else 
-			A->drawPoints();
-	}*/
-#endif
+
 }
 
 void GLFrame::keyPressEvent(QKeyEvent * event)
@@ -412,29 +340,20 @@ void GLFrame::mousePressEvent(QMouseEvent *event)
 	 
     if (event->button() == Qt::MidButton) 
     {
-    	arcball.click(event->x(),height() - event->y());
     	camera.OnRotationBegin(event->x(),event->y());
     	updateGL(); 
     }
     else if (event->button() == Qt::RightButton) 
     {
-    	screenToWorld(event->x(),height() - event->y(), mousePositionX, mousePositionY, mousePositionZ);
-    	
-    	
+    	    	
     }
     
-    sceneInitialTransformation = sceneTransformation;
+
     lastPos = event->pos();
 }
 
 void GLFrame::wheelEvent(QWheelEvent *e) 
 {
-//   
-//   if (e->delta()>0)
-//	   zoomIn();
-//   else              
-//      zoomOut();
-      
    camera.Zoom(e->delta()/120.0);
    updateGL();
 }
@@ -443,61 +362,18 @@ void GLFrame::wheelEvent(QWheelEvent *e)
 void GLFrame::mouseMoveEvent(QMouseEvent *event)
 {
 
-     if (event->buttons() & Qt::LeftButton) {
+    if (event->buttons() & Qt::LeftButton) 
+    {
 
-        updateGL();
-    } else if (event->buttons() & Qt::RightButton) {
-        //Translation
-    	double xWorld, yWorld, zWorld;
-    	screenToWorld(event->x(), height() - event->y(), xWorld, yWorld, zWorld);
-    	AMatrix<float> matrixTransformation;
-    	matrixTransformation.identity();
-    	matrixTransformation.translation(xWorld - mousePositionX, yWorld - mousePositionY, zWorld - mousePositionZ);
-    	sceneTransformation = matrixTransformation * sceneInitialTransformation;
-        GLfloat dx = GLfloat(event->x() - lastPos.x()) / width();
-        GLfloat dy = GLfloat(event->y() - lastPos.y()) / height();
-    	camera.Translate(-dx,dy,0.0f);
-    	updateGL();
-       
+    }else if (event->buttons() & Qt::RightButton) {
+        
+      
     }else if (event->buttons() & Qt::MidButton)  {
-    	//Rotation
-	    AMatrix<float> matrixTransformation;
-	    arcball.drag(event->x(), height() - event->y(), &matrixTransformation);
-	    sceneTransformation = matrixTransformation * sceneInitialTransformation;
-	    camera.OnRotationMove(event->x(), event->y());
-    	updateGL();
-     }
+ 	
+    	camera.OnRotationMove(event->x(), event->y());
+    }
+ 	updateGL();
     lastPos = event->pos();
 }
 
-void GLFrame::screenToWorld(int x, int y, double &xw, double &yw, double &zw) {
-   
-   GLdouble mMtx[16], pMtx[16];  /// modelview/projection matrix
-   GLint viewport[4];         /// the viewport
-    
-   glGetIntegerv(GL_VIEWPORT, viewport);
-   
-   glMatrixMode(GL_MODELVIEW);
-   glGetDoublev(GL_MODELVIEW_MATRIX, mMtx);
-   glGetDoublev (GL_PROJECTION_MATRIX, pMtx);
-     
-   gluUnProject(x, y, 1.0, mMtx, pMtx, viewport, &xw, &yw, &zw);
-}
 
-void GLFrame::zoomIn() {
-   
-   AMatrix<float> matrixTransformation;
-   matrixTransformation.identity();
-   matrixTransformation.scaling(1.2);
-   sceneTransformation  = matrixTransformation*sceneTransformation;
-}
-
-/// Implements the "zoomout" operation. Enlarges the view of the scene.
-void GLFrame::zoomOut() {
-	   
-   AMatrix<float> matrixTransformation;
-   matrixTransformation.identity();
-   matrixTransformation.scaling(1.0/1.2);
-   sceneTransformation  = matrixTransformation*sceneTransformation;
-   
-}
