@@ -38,13 +38,26 @@ HEADERS += . \
     lcgOctree/ocTreeRefine.hpp \
     slal/Color.hpp \
     slal/EigenSystem.hpp \
-    slal/Eigen.hpp \
-    surfels/MergeEllipses.hpp
+    surfels/MergeEllipses.hpp \
+    slal/Matrix4x4.hpp \
+    slal/Vector4.hpp \
+    slal/Camera.hpp \
+    slal/Trackball.hpp \
+    slal/Trackball.inline.hpp \
+    slal/Quaternion.hpp \
+    slal/Quaternion.inline.hpp \
+    slal/Math.hpp \
+    slal/Vector2.hpp \
+    slal/Point2.hpp
 SOURCES += main.cpp \
     interface/myMainWindow.cpp \
     openGLFrame/GLFrame.cpp \
     openGLFrame/support/arcball.cpp \
-    surfels/ply.c
+    surfels/ply.c \
+    slal/Camera.cpp \
+    slal/Quaternion.cpp \
+    slal/Trackball.cpp \
+    slal/Math.cpp
 QT += opengl
 FORMS += ui/interface.ui
 
