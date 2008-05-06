@@ -37,6 +37,7 @@ public:
        
     void SetThreshold(const double&);
     void SetCameraStep(const double&);
+    void SetMode(bool);
     
     Surfels<double> surfels;
     
@@ -74,6 +75,7 @@ private:
     
     double Threshold;
     double CameraStep;
+    bool mode;
     
 	bool show_A;
     

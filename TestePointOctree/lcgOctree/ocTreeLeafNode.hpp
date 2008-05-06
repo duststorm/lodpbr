@@ -201,13 +201,13 @@ public:
     	return mMean;
     }
     
-    virtual ItemPtr Merge() 
+    virtual ItemPtr Merge(bool mode) 
     {
     	if (PtrList.size() > 0)
     	{
     		MergeEllipses lMerge = MergeEllipses(PtrList);
     		mMean = lMerge.NewPtrSurfel();
-    		CalularPerpendicularError ();
+    		//CalularPerpendicularError (mode);
     	}
     	else
     	{
@@ -219,7 +219,7 @@ public:
     }
     
     
-    void CalularPerpendicularError ()
+    void CalularPerpendicularError (bool mode)
     {
     	std::list<Real> lEpMin;
     	std::list<Real> lEpMax;

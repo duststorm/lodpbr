@@ -34,7 +34,7 @@ class OctreeInternalNode : public OctreeNode<Real, ItemPtr, Refine> {
     typedef std::set<ItemPtr> ItemPtrSet;   ///< Return type of overlap
     typedef typename std::set<ItemPtr>::iterator ItemPtrSetIterator;
     typedef typename std::list<ItemPtr>::iterator ItemPtrListIterator;
-    
+    typedef typename std::list<ItemPtr>::iterator 		listItemPtrIterator;
        
     friend class OctreeLeafNode<Real, ItemPtr, Refine>; ///< Leaf nodes are friends
     friend class OctreeIterator<Real, ItemPtr, Refine>; ///< Octree iterators are friends
@@ -228,7 +228,7 @@ public:
     	return mMean;
     }
     
-    void CalularPerpendicularError ()
+    void CalularPerpendicularError (bool mode)
     {
     	std::list<Real> lEpMin;
     	std::list<Real> lEpMax;
@@ -238,23 +238,49 @@ public:
     	
     	Real di	   = static_cast<Real>(0);
 
-    	for (int index = 0; index < 8; ++index) 
+    	if (mode  == true)
+    	{
+    	
+    		for (int index = 0; index < 8; ++index) 
+    		{
+
+    			if (son[index]->MeanItem() != NULL)
+    			{
+    				di = mMean->MajorAxis().first * (std::sqrt(1.0 - (mMean->Normal()*son[index]->MeanItem()->Normal())  ) );
+
+
+    				epMax = ( ( mMean->Center() - son[index]->MeanItem()->Center() ) * mMean->Normal() + di );
+    				epMin =	( ( mMean->Center() - son[index]->MeanItem()->Center() ) * mMean->Normal() - di );
+
+    				lEpMin.push_back(epMin);
+    				lEpMax.push_back(epMax);
+
+    			}
+
+    		}
+    		
+    	}else
     	{
 
-    		if (son[index]->MeanItem() != NULL)
+    		ItemPtrList lp = this->itemList();
+
+    		
+    		for (listItemPtrIterator it = lp.begin (); it != lp.end(); ++it)
     		{
-    			di = mMean->MajorAxis().first * (std::sqrt(1.0 - (mMean->Normal()*son[index]->MeanItem()->Normal())  ) );
-    		
+    			
+    				di = (*it)->Radius() * (std::sqrt(1.0 - (mMean->Normal()*(*it)->Normal() )  ) );
 
-    			epMax = ( ( mMean->Center() - son[index]->MeanItem()->Center() ) * mMean->Normal() + di );
-    			epMin =	( ( mMean->Center() - son[index]->MeanItem()->Center() ) * mMean->Normal() - di );
 
-    			lEpMin.push_back(epMin);
-    			lEpMax.push_back(epMax);
-    		
+    				epMax = ( ( mMean->Center() - (*it)->Center() ) * mMean->Normal() + di );
+    				epMin =	( ( mMean->Center() - (*it)->Center() ) * mMean->Normal() - di );
+
+    				lEpMin.push_back(epMin);
+    				lEpMax.push_back(epMax);
+
     		}
 
     	}
+    		
 
     	ep = *(std::max_element(lEpMax.begin(),lEpMax.end())) - (*std::min_element(lEpMin.begin(),lEpMin.end())) ;
     	
@@ -265,8 +291,6 @@ public:
     
     virtual Real PerpendicularError (Vector3 eye) const
     {
-    	
-
     	
     	if (mMean != NULL) 
     	{
@@ -290,13 +314,13 @@ public:
     	return 1.0;
     }
     
-    virtual ItemPtr Merge() 
+    virtual ItemPtr Merge(bool mode) 
     {
     	ItemPtrList lLeafSurfel;
     	
         for (int index = 0; index < 8; ++index) 
         {
-        	if (son[index]->Merge() != NULL)
+        	if (son[index]->Merge(mode) != NULL)
         		lLeafSurfel.push_back( son[index]->MeanItem() );
         	
         }
@@ -306,7 +330,7 @@ public:
         	MergeEllipses lMerge = MergeEllipses(lLeafSurfel);
     		mMean = lMerge.NewPtrSurfel();
     		
-    		CalularPerpendicularError();
+    		CalularPerpendicularError(mode);
     		
         }else
         {

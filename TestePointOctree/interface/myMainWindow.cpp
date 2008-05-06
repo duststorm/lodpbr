@@ -26,6 +26,17 @@ void MyMainWindow::on_doubleSpinBoxCameraStep_valueChanged(double d)
 	glFrame->updateGL();
 }
 
+void MyMainWindow::on_action_Apenas_Filhos_triggered()
+{
+	action_Todos_Abaixo->setChecked(false);
+	glFrame->SetMode(true);
+}
+
+void MyMainWindow::on_action_Todos_Abaixo_triggered()
+{
+	action_Apenas_Filhos->setChecked(false);
+	glFrame->SetMode(false);
+}
 
 void MyMainWindow::on_action_Model_triggered()
 {

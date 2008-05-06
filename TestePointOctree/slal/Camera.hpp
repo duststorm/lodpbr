@@ -72,7 +72,7 @@ namespace CGL{
            		
         		       		
                 // Transform vectors based on camera's rotation matrix
-                mUp   = cameraRotation.Rotate(Vector3(0,1,0));
+               // mUp   = cameraRotation.Rotate(Vector3(0,1,0));
                 mEyes = cameraRotation.Rotate(Vector3(0,0,1)); 
                                
                 mEyes =    mPosition - (mEyes * mZoomRadius);
