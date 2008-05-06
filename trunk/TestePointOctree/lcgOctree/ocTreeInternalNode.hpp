@@ -34,13 +34,14 @@ class OctreeInternalNode : public OctreeNode<Real, ItemPtr, Refine> {
     typedef std::set<ItemPtr> ItemPtrSet;   ///< Return type of overlap
     typedef typename std::set<ItemPtr>::iterator ItemPtrSetIterator;
     typedef typename std::list<ItemPtr>::iterator ItemPtrListIterator;
-
-    OctreeNode* son[8];    
+    
        
     friend class OctreeLeafNode<Real, ItemPtr, Refine>; ///< Leaf nodes are friends
     friend class OctreeIterator<Real, ItemPtr, Refine>; ///< Octree iterators are friends
     
 public:
+	
+	OctreeNode* son[8];
 
 	virtual void setMean ( const Point3& m)
 	{

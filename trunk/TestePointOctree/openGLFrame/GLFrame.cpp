@@ -23,8 +23,59 @@ GLFrame::GLFrame(QWidget *parent):QGLWidget(parent)
 	
 	surfels = Surfels<double>();
 	
+	Threshold = 0.01;
 
     
+}
+
+void GLFrame::SetThreshold(const double& t)
+{
+	Threshold = t;
+}
+
+void GLFrame::LODSelection( OctreeNode<double,Surfel<double>* > * pNode, int& cont)
+{0.50
+	if ( pNode->isLeaf() == true )
+	{
+
+		std::list< Surfel<double>* > lp = pNode->itemList();
+
+		for(std::list< Surfel<double>* >::iterator surfe = lp.begin(); surfe != lp.end(); ++surfe )
+		{
+			CGL::Point3<double> point = (*surfe)->Center();
+			glPointSize(3.0);
+			glColor3f(1.0,0.0,0.0);
+			glVertex3f(point[0],point[1],point[2]);
+
+			cont++;
+		}	
+
+		
+	}else
+	{
+		
+		OctreeInternalNode<double,Surfel<double>* > * lInternalNode = dynamic_cast<OctreeInternalNode< double,Surfel<double>* >* >(pNode);
+			
+		CGL::Vector3<double> v (camera.Eyes());
+		   
+		std::cout << " - " << lInternalNode->PerpendicularError(v) << " - " <<  Threshold << std::endl;
+		
+		if (lInternalNode->PerpendicularError(v) < Threshold)
+		{
+			glPointSize(3.0);
+			glColor3f(0.0,1.0,0.0);
+			CGL::Point3<double> p = lInternalNode->MeanItem()->Center();
+			glVertex3f(p[0],p[1],p[2]);
+			cont++;
+			
+		}else
+		{
+			for(int i = 0; i < 8; ++i)
+				LODSelection(lInternalNode->son[i],cont);
+		}
+
+			   
+	}
 }
 
 void GLFrame::DrawGroud()
@@ -139,49 +190,8 @@ void GLFrame::drawPoints() {
    glBegin(GL_POINTS);
    
    int cont = 0;
-   for (OctreeIterator<double, Surfel<double>* > oi = octree.begin();oi != octree.end();++oi )
-   {
-	   CGL::Vector3<double> v (camera.Eyes());
-	   if ((*oi)->PerpendicularError(v) > 0.01)
-	   {
-
-		   //	   CGL::Vector3<double> v(camera.Eyes()[0],camera.Eyes()[1],camera.Eyes()[2]);
-		   //	   
-		   //	   std::cout << "Tamanho =  " << camera.Eyes().length() << std::endl;
-		   //	   
-		   //	   std::cout << "Perpendicu ... " << (*oi)->PerpendicularError(v) << std::endl;
-		   //	   
-		   //	   	    
-
-
-		   if(  (*oi)->isLeaf() )  //  and (oi.level() < 3) ) or ((oi.level() == 3))
-		   {
-
-			   std::list< Surfel<double>* > lp = (*oi)->itemList();
-
-			   for(std::list< Surfel<double>* >::iterator surfe = lp.begin(); surfe != lp.end(); ++surfe )
-			   {
-				   CGL::Point3<double> point = (*surfe)->Center();
-				   glPointSize(3.0);
-				   glColor3f(1.0,0.0,0.0);
-				   glVertex3f(point[0],point[1],point[2]);
-
-				   //		   if ((*oi)->MeanItem() != NULL)
-				   //				(*oi)->MeanItem()->draw();
-				   cont++;
-			   }	
-
-		   }
-		   else
-		   {
-			   glPointSize(3.0);
-			   glColor3f(0.0,1.0,0.0);
-			   CGL::Point3<double> p = (*oi)->MeanItem()->Center();
-			   glVertex3f(p[0],p[1],p[2]);
-			   cont++;
-		   }
-	   }
-   }
+   
+   LODSelection(octree.root,cont);
    
    std::cout << "Total = " << cont << std::endl;
      
