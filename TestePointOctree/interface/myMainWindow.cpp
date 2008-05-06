@@ -19,6 +19,14 @@ void MyMainWindow::on_doubleSpinBoxThreshold_valueChanged(double d)
 	glFrame->updateGL();
 }
 
+void MyMainWindow::on_doubleSpinBoxCameraStep_valueChanged(double d)
+{
+	
+	glFrame->SetCameraStep(d);
+	glFrame->updateGL();
+}
+
+
 void MyMainWindow::on_action_Model_triggered()
 {
 	glFrame->renderMode_A = GLFrame::Model;

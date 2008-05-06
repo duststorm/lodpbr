@@ -24,6 +24,7 @@ GLFrame::GLFrame(QWidget *parent):QGLWidget(parent)
 	surfels = Surfels<double>();
 	
 	Threshold = 0.01;
+	CameraStep = 0.01;
 
     
 }
@@ -33,8 +34,13 @@ void GLFrame::SetThreshold(const double& t)
 	Threshold = t;
 }
 
+void GLFrame::SetCameraStep(const double& t)
+{
+	CameraStep = t;
+}
+
 void GLFrame::LODSelection( OctreeNode<double,Surfel<double>* > * pNode, int& cont)
-{0.50
+{
 	if ( pNode->isLeaf() == true )
 	{
 
@@ -58,7 +64,7 @@ void GLFrame::LODSelection( OctreeNode<double,Surfel<double>* > * pNode, int& co
 			
 		CGL::Vector3<double> v (camera.Eyes());
 		   
-		std::cout << " - " << lInternalNode->PerpendicularError(v) << " - " <<  Threshold << std::endl;
+		//std::cout << " - " << lInternalNode->PerpendicularError(v) << " - " <<  Threshold << std::endl;
 		
 		if (lInternalNode->PerpendicularError(v) < Threshold)
 		{
@@ -320,19 +326,19 @@ void GLFrame::keyPressEvent(QKeyEvent * event)
 //	QMessageBox::information( 0, "MessageBox", "Key pressed" );
 	if (event->key() == Qt::Key_W)
 	{
-		camera.MoveForward(0.2);	
+		camera.MoveForward(CameraStep);	
 		
 	}
 	else if (event->key() == Qt::Key_S){
-		camera.MoveForward(-0.2);
+		camera.MoveForward(-CameraStep);
 	 	
 	}
 	else if (event->key() == Qt::Key_A){
-		camera.StrafeRight(-0.2f);   	
+		camera.StrafeRight(CameraStep);   	
 	
 	}
 	else if (event->key() == Qt::Key_D){
-		camera.StrafeRight(0.2f);   	
+		camera.StrafeRight(-CameraStep);   	
 	
 	}
 	else if (event->key() == Qt::Key_R){

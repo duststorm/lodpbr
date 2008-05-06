@@ -18,6 +18,7 @@ public slots:
 	void on_action_Open_File_triggered();
 	
 	void on_doubleSpinBoxThreshold_valueChanged(double);
+	void on_doubleSpinBoxCameraStep_valueChanged(double);
 	
 	void on_action_Model_triggered();
 	
