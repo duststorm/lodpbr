@@ -90,7 +90,7 @@ class OctreeNode {
     
     virtual ItemPtr MeanItem() 	const = 0;
             
-    virtual ItemPtr Merge() = 0;
+    virtual ItemPtr Merge(bool mode = true) = 0;
     
     virtual Real PerpendicularError ( Vector3 eye) const = 0;
     

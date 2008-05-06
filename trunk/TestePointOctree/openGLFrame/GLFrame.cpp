@@ -25,6 +25,7 @@ GLFrame::GLFrame(QWidget *parent):QGLWidget(parent)
 	
 	Threshold = 0.01;
 	CameraStep = 0.01;
+	mode = true;
 
     
 }
@@ -37,6 +38,10 @@ void GLFrame::SetThreshold(const double& t)
 void GLFrame::SetCameraStep(const double& t)
 {
 	CameraStep = t;
+}
+void GLFrame::SetMode(bool t)
+{
+	mode = t;
 }
 
 void GLFrame::LODSelection( OctreeNode<double,Surfel<double>* > * pNode, int& cont)
@@ -199,7 +204,7 @@ void GLFrame::drawPoints() {
    
    LODSelection(octree.root,cont);
    
-   std::cout << "Total = " << cont << std::endl;
+   std::cout << "Total " <<  mode << " = " << cont << std::endl;
      
    glEnd();
    glEnable(GL_LIGHTING);
@@ -212,7 +217,7 @@ void GLFrame::calLimits()
 	Box_3<double> world = Box_3<double>( CGL::Point3<double>(surfels.box().xmin(),surfels.box().ymin(),surfels.box().zmin()),
 				   						 CGL::Point3<double>(surfels.box().xmax(),surfels.box().ymax(),surfels.box().zmax()));
 	 
-	octree = Octree<double,Surfel<double>* >(world) ;
+	octree = Octree<double,Surfel<double>* >(world,mode) ;
 	
 	for (std::vector<Surfel<double> >::iterator surf =  surfels.surfels.begin();surf != surfels.surfels.end(); ++ surf ) 
 	{

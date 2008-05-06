@@ -130,31 +130,6 @@
    <addaction name="menuSair" />
    <addaction name="menuHelp" />
   </widget>
-  <widget class="QToolBar" name="toolBar_A" >
-   <property name="windowTitle" >
-    <string>toolBar</string>
-   </property>
-   <property name="toolButtonStyle" >
-    <enum>Qt::ToolButtonTextBesideIcon</enum>
-   </property>
-   <attribute name="toolBarArea" >
-    <enum>TopToolBarArea</enum>
-   </attribute>
-   <attribute name="toolBarBreak" >
-    <bool>false</bool>
-   </attribute>
-  </widget>
-  <widget class="QToolBar" name="toolBar" >
-   <property name="windowTitle" >
-    <string>toolBar</string>
-   </property>
-   <attribute name="toolBarArea" >
-    <enum>TopToolBarArea</enum>
-   </attribute>
-   <attribute name="toolBarBreak" >
-    <bool>false</bool>
-   </attribute>
-  </widget>
   <widget class="QToolBar" name="toolBar_2" >
    <property name="windowTitle" >
     <string>toolBar_2</string>
@@ -165,6 +140,8 @@
    <attribute name="toolBarBreak" >
     <bool>false</bool>
    </attribute>
+   <addaction name="action_Todos_Abaixo" />
+   <addaction name="action_Apenas_Filhos" />
   </widget>
   <action name="action_Open_File" >
    <property name="text" >
@@ -190,12 +167,21 @@
     <string>Wireframe</string>
    </property>
   </action>
-  <action name="action_Smooth_A" >
+  <action name="action_Todos_Abaixo" >
+   <property name="checkable" >
+    <bool>true</bool>
+   </property>
+   <property name="checked" >
+    <bool>false</bool>
+   </property>
    <property name="text" >
-    <string>Smooth</string>
+    <string>Todos Abaixo-False</string>
+   </property>
+   <property name="toolTip" >
+    <string>Usa todos abaixo para o cálculo do erro perpendicular</string>
    </property>
   </action>
-  <action name="action_Show_A" >
+  <action name="action_Apenas_Filhos" >
    <property name="checkable" >
     <bool>true</bool>
    </property>
@@ -206,7 +192,13 @@
     <bool>true</bool>
    </property>
    <property name="text" >
-    <string>Show A</string>
+    <string>Apenas Filhos-True</string>
+   </property>
+   <property name="toolTip" >
+    <string>Usa apenas os filhos para o cálculo do erro perpendicular</string>
+   </property>
+   <property name="shortcutContext" >
+    <enum>Qt::WidgetShortcut</enum>
    </property>
   </action>
   <action name="action_Points_A" >

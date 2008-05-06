@@ -47,7 +47,7 @@ public:
     /// World covered by this octree
     ///
     Box3 world;
-    
+    bool mode;
     ///
     /// Main OctreeNode pointer
     ///
@@ -60,7 +60,7 @@ public :
     Octree() : world (Box3(Point3(-1,-1,-1), Point3(1,1,1))), root (0){
     };
     
-    Octree (const Box3& theWorld) : world (theWorld), root (0) {
+    Octree (const Box3& theWorld,bool pMode) : world (theWorld),mode(pMode), root (0) {
        root = new OctreeLeafNode<Real, ItemPtr, Refine>;
     }
    
@@ -80,7 +80,7 @@ public :
     
     void Merge ()
     {
-    	root->Merge();
+    	root->Merge(mode);
     }
     
     /// Returns the number of pointers to items inserted into this octree
