@@ -12,13 +12,10 @@
 #include "slal/Point3.hpp"
 #include "slal/Vector3.hpp"
 
-
 #include "surfels/surfel.hpp"
 #include "surfels/surfels.hpp"
 
 #include "slal/Camera.hpp"
-
-
 
 class GLFrame : public QGLWidget
 {
@@ -38,6 +35,8 @@ public:
     
     RenderMode renderMode_A;
        
+    void SetThreshold(const double&);
+    
     Surfels<double> surfels;
     
     Octree<double,Surfel<double>* > octree;
@@ -61,6 +60,7 @@ private:
     void draw();
     void drawPoints();
     void model();
+    void LODSelection( OctreeNode<double,Surfel<double>* > * pNode, int& cont);
     
     template < class T>
     CGL::BoundingBox3<T> limits();
@@ -70,6 +70,8 @@ private:
     QPoint 				lastPos;
     
     CGL::Camera camera;
+    
+    double Threshold;
     
 	bool show_A;
     

@@ -66,7 +66,7 @@ public :
    
     /// destructor. 
     virtual ~Octree() {}
-
+         
     /// inserts a pointer to an object in this octree
     /// @param p pointer to object
     virtual void insert (const ItemPtr p) {

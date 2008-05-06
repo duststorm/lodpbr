@@ -15,7 +15,8 @@ MyMainWindow::MyMainWindow (QMainWindow *parent): QMainWindow(parent)
 void MyMainWindow::on_doubleSpinBoxThreshold_valueChanged(double d)
 {
 	
-	std::cout << d << std::endl;
+	glFrame->SetThreshold(d);
+	glFrame->updateGL();
 }
 
 void MyMainWindow::on_action_Model_triggered()

@@ -244,7 +244,7 @@ public:
     	}
 
     	ep = *(std::max_element(lEpMax.begin(),lEpMax.end())) - (*std::min_element(lEpMin.begin(),lEpMin.end())) ;
-    	std::cout << "OIIIIIIIIIIIII" << ep << std::endl;
+
     }
       
     

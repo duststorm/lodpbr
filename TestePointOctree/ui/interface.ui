@@ -60,7 +60,10 @@
          <double>-99.989999999999995</double>
         </property>
         <property name="singleStep" >
-         <double>0.100000000000000</double>
+         <double>0.010000000000000</double>
+        </property>
+        <property name="value" >
+         <double>0.010000000000000</double>
         </property>
        </widget>
       </item>
@@ -82,7 +85,7 @@
      <x>0</x>
      <y>0</y>
      <width>749</width>
-     <height>27</height>
+     <height>25</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuSair" >
