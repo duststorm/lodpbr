@@ -36,6 +36,7 @@ public:
     RenderMode renderMode_A;
        
     void SetThreshold(const double&);
+    void SetCameraStep(const double&);
     
     Surfels<double> surfels;
     
@@ -72,6 +73,7 @@ private:
     CGL::Camera camera;
     
     double Threshold;
+    double CameraStep;
     
 	bool show_A;
     
