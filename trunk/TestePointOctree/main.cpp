@@ -5,18 +5,127 @@
 #include <list>
 #include <algorithm>
 #include "slal/Vector3.hpp"
-
+#include <ctime> 
 
 #include "interface/myMainWindow.hpp"
+
+class ppp{
+public:
+    ppp(float w,float u)
+    {
+    	x = w;
+    	y = u;
+    };
+
+	float x;
+	float y;
+
+};
+
+class pp{
+public:
+    pp(float w,float u)
+    {
+    	mx = w;
+    	my = u;
+    };
+
+    inline const float& x() const
+    {
+  	  return ( this->mx );
+    };
+
+    inline const float& y() const
+    {
+  	  return ( this->my );
+    };
+    
+	
+	
+    inline  float operator [] ( unsigned int i)  const
+    {
+  	  if ( i > 1 )
+  	  {
+  		  std::cerr << "[ERROR] Point2 operator[]"        << std::endl
+  		  << "        Out of the Point size. " << std::endl
+  		  << "        Accepts, 0 , 1 only." << std::endl;
+  		  exit(1);
+  	  }
+
+  	  return (xy[i]);
+    };
+    
+    inline  float& operator [] ( unsigned int i)  
+
+    {
+  	  if ( i > 1 )
+  	  {
+  		  std::cerr << "[ERROR] Point2 operator[]"        << std::endl
+  		  << "        Out of the Point size. " << std::endl
+  		  << "        Accepts, 0 , 1 only." << std::endl;
+  		  exit(1);
+  	  }
+
+
+  	  return (xy[i]);
+    };
+    
+private:
+	
+	union
+	{
+		struct
+		{
+			float mx;
+			float my;
+		};
+		float xy[2];
+	};
+	         
+    
+};
+
 
 int main(int argc, char *argv[])
 {
 
+	ppp p1(1.0,1.0);
+	pp  p2(1.0,1.0);
 	CGL::Vector3<float> v(1.0,1.0,0.0);
 	CGL::Vector3<float> u(1.0,0.0,0.0);
 	
 	std::cout << std::sqrt(2)*0.5 << "  =  " << u.norm() * v.norm() << std::endl;
+			
 	
+	time_t start,end,startc,endc ;
+	time (&start);
+	unsigned long int i = 0;
+	while(i  < 2000000000)
+	{
+		p1.x = p1.x + p1.y;
+		i++;
+	}
+	time(&end);
+
+	double dif = difftime (end,start);
+
+	std::cout << dif << " maluco" <<std::endl;
+
+
+	time (&startc);
+	i = 0;
+	while(i  < 2000000000)
+	{
+		p2[0] = p2.x() + p2.y();
+		i++;
+	}
+	time(&endc);
+
+	dif = difftime (endc,startc);
+
+	std::cout << dif<< " minha" <<std::endl;
+		
+		
     QApplication app(argc, argv);
     if (!QGLFormat::hasOpenGL()) {
         cerr << "This system has no OpenGL support" << endl;
