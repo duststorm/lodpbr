@@ -16,8 +16,7 @@ INCLUDEPATH += . \
     openGLFrame/suport
 
 # Input
-HEADERS += . \
-    interface/myMainWindow.hpp \
+HEADERS += interface/myMainWindow.hpp \
     openGLFrame/GLFrame.hpp \
     openGLFrame/support/arcball.hpp \
     openGLFrame/support/atmatrix.hpp \
@@ -48,7 +47,12 @@ HEADERS += . \
     slal/Quaternion.inline.hpp \
     slal/Math.hpp \
     slal/Vector2.hpp \
-    slal/Point2.hpp
+    slal/Point2.hpp \
+    slal/Point2.inline.hpp \
+    slal/Vector3.inline.hpp \
+    slal/Vector4.inline.hpp \
+    slal/Matrix3x3.inline.hpp \
+    slal/Matrix4x4.inline.hpp
 SOURCES += main.cpp \
     interface/myMainWindow.cpp \
     openGLFrame/GLFrame.cpp \
@@ -57,7 +61,12 @@ SOURCES += main.cpp \
     slal/Camera.cpp \
     slal/Quaternion.cpp \
     slal/Trackball.cpp \
-    slal/Math.cpp
+    slal/Math.cpp \
+    slal/Vector3.cpp \
+    slal/Point2.cpp \
+    slal/Vector4.cpp \
+    slal/Matrix3x3.cpp \
+    slal/Matrix4x4.cpp
 QT += opengl
 FORMS += ui/interface.ui
 
