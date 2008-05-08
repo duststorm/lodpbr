@@ -284,12 +284,13 @@ void GLFrame::resizeGL(int width, int height)
 void GLFrame::paintGL()
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    glLoadMatrixf(~camera.ProjectionMatrix());
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
-    glTranslated(0.0,0.0,-3.0);
-    
-  
     glLoadMatrixf(~camera.ViewMatrix());
+    
     
     if ( surfels.surfels.size() != 0 )
     {

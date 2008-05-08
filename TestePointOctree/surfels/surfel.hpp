@@ -18,6 +18,7 @@
 #include "slal/Point3.hpp"
 #include "slal/Vector3.hpp"
 #include "slal/Color.hpp"
+#include "slal/Math.hpp"
 
 extern "C" 
 {
@@ -28,8 +29,6 @@ extern "C"
 	#include "ply.h"
 }
 
-
-#define PI 3.1415926535897932384626433832795
 
 /**
  * Surfel class.
@@ -267,7 +266,7 @@ template <class Real > class Surfel
 	 
 	 Real Area() const
 	 {
-		 return (  (PI * mMinorAxis.first) * (PI * mMajorAxis.first) );
+		 return (  (LAL::Math::PI * mMinorAxis.first) * (LAL::Math::PI * mMajorAxis.first) );
 	 }
 	 
 	 
@@ -338,7 +337,7 @@ template <class Real > class Surfel
 		 while (i < 360) 
 		 {
 
-			 lAlpha = ( i / 180 ) * PI;       
+			 lAlpha = ( i / 180 ) * LAL::Math::PI;       
 			 lSinAlpha =  sin( lAlpha );
 			 lCosAlpha =  cos( lAlpha );
 
