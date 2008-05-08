@@ -19,7 +19,7 @@
 *@  
 */      
 
-namespace CGL {
+namespace LAL {
 
 	template<class Real> class Matrix4x4
 	{
@@ -124,7 +124,7 @@ namespace CGL {
 
 #include "Matrix4x4.inline.hpp"
 
-}// END NAMESPACE
+}/* LAL :: NAMESPACE */
 
 #endif /*MATRIX4X4_HPP_*/
 
@@ -141,11 +141,11 @@ namespace CGL {
 //}
 
 
-//CGL::Matrix4x4<float> m2 (5.0,1.0,6.0,0.0,
+//LAL::Matrix4x4<float> m2 (5.0,1.0,6.0,0.0,
 //						   9.0,7.0,8.0,0.0,
 //						   4,5.0,6.0,0.0,
 //						   0.0,0.0,0.0,0.0);
-//CGL::Matrix4x4<float> m3;
+//LAL::Matrix4x4<float> m3;
 //
 //
 //std::cout << m3;

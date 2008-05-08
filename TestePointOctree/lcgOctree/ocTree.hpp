@@ -36,7 +36,7 @@ template <class Real, class ItemPtr, class Refine = OverflowRefine<Real,ItemPtr>
 class Octree {
 
 public:
-    typedef typename CGL::Point3<Real> 			Point3;     ///< A Point in 3D
+    typedef typename LAL::Point3<Real> 			Point3;     ///< A Point in 3D
     typedef Box_3<Real> 						Box3;       ///< Octant extent
     typedef list<ItemPtr> 						ItemPtrList;///< What is actually stored in a leaf
     typedef set<ItemPtr> 						ItemPtrSet; ///< Return type of overlap

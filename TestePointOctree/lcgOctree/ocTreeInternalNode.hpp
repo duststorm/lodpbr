@@ -25,8 +25,8 @@ class OctreeInternalNode : public OctreeNode<Real, ItemPtr, Refine> {
 
     typedef OctreeNode<Real, ItemPtr, Refine> OctreeNode;      
 
-    typedef  CGL::Point3<Real>   Point3;  ///< A Point in 3D
-    typedef  CGL::Vector3<Real>  Vector3;  ///< A Point in 3D
+    typedef  LAL::Point3<Real>   Point3;  ///< A Point in 3D
+    typedef  LAL::Vector3<Real>  Vector3;  ///< A Point in 3D
     typedef  MergeEllipses<Real> MergeEllipses; 
     
     typedef Box_3<Real> Box3; ///< Octant box type

@@ -1,5 +1,5 @@
-#ifndef	CGL_MATRIX4X4_INLINE_HPP_
-#define CGL_MATRIX4X4_INLINE_HPP_
+#ifndef	LAL_MATRIX4X4_INLINE_HPP_
+#define LAL_MATRIX4X4_INLINE_HPP_
 
 
 
@@ -75,7 +75,7 @@ Matrix4x4<Real>::Matrix4x4(const Real& a00, const Real& a01, const Real& a02, co
 };
 
 template <class Real>
-Matrix4x4<Real>::Matrix4x4(const Vector4<Real>& row1, const Vector4<Real>& row2, const Vector4<Real>& row3, const Vector4<Real>& row4  )
+Matrix4x4<Real>::Matrix4x4(const Vector4<Real>& u, const Vector4<Real>& v, const Vector4<Real>& t, const Vector4<Real>& w  )
 {
 	this->m[0][0] = u.mX; this->m[0][1] = u.mY; this->m[0][2] = u.mZ; this->m[0][3] = u.mW;
 	this->m[1][0] = v.mX; this->m[1][1] = v.mY; this->m[1][2] = v.mZ; this->m[1][3] = v.mW;
@@ -507,7 +507,7 @@ Matrix4x4<Real> Matrix4x4<Real>::MakeProjectionMatrix(const Real& fov, const Rea
 {
 
 
-	Real c 					= static_cast<Real> (1.0 / std::tan(CGL::Math::degreesToRadians(fov) * 0.5) );
+	Real c 					= static_cast<Real> (1.0 / std::tan(LAL::Math::degreesToRadians(fov) * 0.5) );
 	Real aspectRationInv 	= static_cast<Real> (1.0 / aspectRation);
 	Real fovy 				= static_cast<Real> (2.0 * std::atan(aspectRationInv / c));
 	Real xScale 			= static_cast<Real> (1.0 / tanf(0.5 * fovy));

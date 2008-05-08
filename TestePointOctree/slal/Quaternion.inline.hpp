@@ -1,6 +1,5 @@
-
-#ifndef QUATERNION_INLINE_HPP_
-#define QUATERNION_INLINE_HPP_
+#ifndef LAL_QUATERNION_INLINE_HPP_
+#define LAL_QUATERNION_INLINE_HPP_
 
 
 #include <cmath>

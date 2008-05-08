@@ -6,7 +6,7 @@
 #include "Trackball.hpp"
 
 template < class Real>
-void Trackball<Real>::mapToSphere(CGL::Vector3<Real> &v)
+void Trackball<Real>::mapToSphere(LAL::Vector3<Real> &v)
 {
 	Real len2;
 
@@ -23,8 +23,8 @@ template < class Real>
 void Trackball<Real>::Tracking(int x, int y)
 {
 
-	CGL::Quaternion<Real> q;
-	CGL::Vector3<Real> endVector(Real(x), Real(y), 0);
+	LAL::Quaternion<Real> q;
+	LAL::Vector3<Real> endVector(Real(x), Real(y), 0);
 
 	mapToSphere(endVector);
 	q.ToRotationArc(startVector, endVector);
@@ -36,13 +36,13 @@ void Trackball<Real>::Tracking(int x, int y)
 template < class Real>
 void Trackball<Real>::BeginTracking(int x, int y)
 {
-	startVector = CGL::Vector3<Real>(Real(x), Real(y), 0);
+	startVector = LAL::Vector3<Real>(Real(x), Real(y), 0);
 	startOrientation = orientation;
 	mapToSphere(startVector);
 
 }
 template < class Real>
-CGL::Matrix4x4<Real> Trackball<Real>::To4x4RotationMatrix()
+LAL::Matrix4x4<Real> Trackball<Real>::To4x4RotationMatrix()
 {
 	return orientation.To4x4Matrix();
 }

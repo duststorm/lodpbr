@@ -19,7 +19,7 @@ GLFrame::GLFrame(QWidget *parent):QGLWidget(parent)
 	renderMode_A = Points;
 	show_A 	= true;
 	
-	midlePoint = CGL::Point3<double>();
+	midlePoint = LAL::Point3<double>();
 	
 	surfels = Surfels<double>();
 	
@@ -53,7 +53,7 @@ void GLFrame::LODSelection( OctreeNode<double,Surfel<double>* > * pNode, int& co
 
 		for(std::list< Surfel<double>* >::iterator surfe = lp.begin(); surfe != lp.end(); ++surfe )
 		{
-			CGL::Point3<double> point = (*surfe)->Center();
+			LAL::Point3<double> point = (*surfe)->Center();
 			glPointSize(3.0);
 			glColor3f(1.0,0.0,0.0);
 			glVertex3f(point[0],point[1],point[2]);
@@ -67,7 +67,7 @@ void GLFrame::LODSelection( OctreeNode<double,Surfel<double>* > * pNode, int& co
 		
 		OctreeInternalNode<double,Surfel<double>* > * lInternalNode = dynamic_cast<OctreeInternalNode< double,Surfel<double>* >* >(pNode);
 			
-		CGL::Vector3<double> v (camera.Eyes());
+		LAL::Vector3<double> v (camera.Eyes());
 		   
 		//std::cout << " - " << lInternalNode->PerpendicularError(v) << " - " <<  Threshold << std::endl;
 		
@@ -75,7 +75,7 @@ void GLFrame::LODSelection( OctreeNode<double,Surfel<double>* > * pNode, int& co
 		{
 			glPointSize(3.0);
 			glColor3f(0.0,1.0,0.0);
-			CGL::Point3<double> p = lInternalNode->MeanItem()->Center();
+			LAL::Point3<double> p = lInternalNode->MeanItem()->Center();
 			glVertex3f(p[0],p[1],p[2]);
 			cont++;
 			
@@ -162,17 +162,17 @@ void GLFrame::model()
 		   while ( surfe != lp.end() )
 		   {
 
-			   CGL::Point3<double> p0 = *(*surfe) + (*oi)->eigenVector(0)*1.25;
+			   LAL::Point3<double> p0 = *(*surfe) + (*oi)->eigenVector(0)*1.25;
 			   glColor3f(1.0,0.0,0.0);
 			   glVertex3f((*(*surfe))[0],(*(*surfe))[1],(*(*surfe))[2]);
 			   glVertex3f(p0.x(),p0.y(),p0.z());
 
-			   CGL::Point3<double> p1 = (*(*surfe)) +  (*oi)->eigenVector(1)*1.25;
+			   LAL::Point3<double> p1 = (*(*surfe)) +  (*oi)->eigenVector(1)*1.25;
 			   glColor3f(0.0,1.0,0.0);
 			   glVertex3f((*(*surfe))[0],(*(*surfe))[1],(*(*surfe))[2]);
 			   glVertex3f(p1.x(),p1.y(),p1.z());
 			   
-			   CGL::Point3<double> p2 = (*(*surfe)) + (*oi)->eigenVector(2)*1.25;
+			   LAL::Point3<double> p2 = (*(*surfe)) + (*oi)->eigenVector(2)*1.25;
 			   glColor3f(0.0,0.0,1.0);
 			   glVertex3f((*(*surfe))[0],(*(*surfe))[1],(*(*surfe))[2]);
 			   glVertex3f(p2.x(),p2.y(),p2.z());
@@ -214,8 +214,8 @@ void GLFrame::drawPoints() {
 void GLFrame::calLimits()
 {
 	
-	Box_3<double> world = Box_3<double>( CGL::Point3<double>(surfels.box().xmin(),surfels.box().ymin(),surfels.box().zmin()),
-				   						 CGL::Point3<double>(surfels.box().xmax(),surfels.box().ymax(),surfels.box().zmax()));
+	Box_3<double> world = Box_3<double>( LAL::Point3<double>(surfels.box().xmin(),surfels.box().ymin(),surfels.box().zmin()),
+				   						 LAL::Point3<double>(surfels.box().xmax(),surfels.box().ymax(),surfels.box().zmax()));
 	 
 	octree = Octree<double,Surfel<double>* >(world,mode) ;
 	
@@ -236,7 +236,7 @@ void GLFrame::calLimits()
 }
 
 template <class T>
-void GLFrame::drawBox(CGL::BoundingBox3<T> BBox){
+void GLFrame::drawBox(LAL::BoundingBox3<T> BBox){
   glColor3f (1.0, 1.0, 1.0);//white
 
   glBegin(GL_LINE_LOOP);

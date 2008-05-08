@@ -1,5 +1,5 @@
-#ifndef CAMERA_HPP_
-#define CAMERA_HPP_
+#ifndef LAL_CAMERA_HPP_
+#define LAL_CAMERA_HPP_
 
 
 #include "Matrix4x4.hpp"
@@ -20,14 +20,14 @@
 *@ resolvi o reverso depois de por assim (worldAhead * mZoomRadius) - mWorldLookAt ;   
 */      
 
-namespace CGL{
+namespace LAL{
     class Camera
     {
     public:
     	
-    	typedef CGL::Matrix4x4<float> Matrix4x4;
-    	typedef CGL::Vector4<float> Vector4;
-    	typedef CGL::Vector3<float> Vector3;
+    	typedef LAL::Matrix4x4<float> Matrix4x4;
+    	typedef LAL::Vector4<float> Vector4;
+    	typedef LAL::Vector3<float> Vector3;
     	typedef Trackball<float> Trackball;
     	
         Camera()
@@ -68,7 +68,7 @@ namespace CGL{
         {
             
                 // Get the inverse of the arcball's rotation matrix
-        		CGL::Quaternion<float> cameraRotation = ~mTrackball.Orientation();
+        		LAL::Quaternion<float> cameraRotation = ~mTrackball.Orientation();
            		
         		       		
                 // Transform vectors based on camera's rotation matrix
@@ -324,6 +324,6 @@ namespace CGL{
         	Matrix4x4 mProjectionMatrix;
     };
 
-}
+}/* LAL :: NAMESPACE */
 
 #endif /*CAMERA_HPP_*/

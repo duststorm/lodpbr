@@ -1,5 +1,5 @@
-#ifndef MATRIX3X3_INLINE_HPP_
-#define MATRIX3X3_INLINE_HPP_
+#ifndef LAL_MATRIX3X3_INLINE_HPP_
+#define LAL_MATRIX3X3_INLINE_HPP_
 
 
 template <class Real>

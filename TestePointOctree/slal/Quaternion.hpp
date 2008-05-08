@@ -1,12 +1,12 @@
-#ifndef QUATERNION_HPP_
-#define QUATERNION_HPP_
+#ifndef LAL_QUATERNION_HPP_
+#define LAL_QUATERNION_HPP_
 
 #include "Vector3.hpp"
 #include "Matrix3x3.hpp"
 #include "Matrix4x4.hpp"
 #include "Math.hpp"
 
-namespace CGL{
+namespace LAL{
 
 /*!
 *@class Quaternion.
@@ -129,6 +129,6 @@ namespace CGL{
 	
 #include "Quaternion.inline.hpp"
 	
-} /* CGL :: NAMESPACE */
+} /* LAL :: NAMESPACE */
 
 #endif /*QUATERNION_HPP_*/

@@ -24,10 +24,10 @@ template <class Real>
 struct Bounding_box : public std::unary_function<Surfel<Real>, void>
 {
 	
-	CGL::BoundingBox3<Real> box;
+	LAL::BoundingBox3<Real> box;
     Bounding_box() : box(1e10,1e10,1e10,-1e10,-1e10,-1e10) {}
     void operator()(const Surfel<Real>& s) { 
-        box = box + CGL::BoundingBox3<Real>(s.position(0),s.position(1),s.position(2),
+        box = box + LAL::BoundingBox3<Real>(s.position(0),s.position(1),s.position(2),
         							   		s.position(0),s.position(1),s.position(2));
     }
 };
@@ -38,10 +38,10 @@ class Surfels
 {
 public:
 	
-	typedef CGL::Color Color;
-	typedef CGL::Point3<Real> Point3;
-	typedef CGL::Vector3<Real> Vector3;
-	typedef CGL::BoundingBox3<Real> Box3; 
+	typedef LAL::Color Color;
+	typedef LAL::Point3<Real> Point3;
+	typedef LAL::Vector3<Real> Vector3;
+	typedef LAL::BoundingBox3<Real> Box3; 
 	typedef std::vector<Surfel<Real> > surfelContainer;
 	typedef typename surfelContainer::iterator surfelIterator;
 	
@@ -56,7 +56,7 @@ public:
 	inline void compute_box () 
 	{
 		for (surfelIterator i = surfels.begin(); i != surfels.end(); ++i)
-			box_ = box_ + CGL::BoundingBox3<Real>(i->Center(0),i->Center(1),i->Center(2),
+			box_ = box_ + LAL::BoundingBox3<Real>(i->Center(0),i->Center(1),i->Center(2),
 												   i->Center(0),i->Center(1),i->Center(2)); 	
 	}
 	

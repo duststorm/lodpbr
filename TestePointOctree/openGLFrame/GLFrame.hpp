@@ -43,7 +43,7 @@ public:
     
     Octree<double,Surfel<double>* > octree;
     
-    CGL::Point3<double> midlePoint;
+    LAL::Point3<double> midlePoint;
                       
 public slots:
 	
@@ -65,13 +65,13 @@ private:
     void LODSelection( OctreeNode<double,Surfel<double>* > * pNode, int& cont);
     
     template < class T>
-    CGL::BoundingBox3<T> limits();
+    LAL::BoundingBox3<T> limits();
     template < class T>
-    void drawBox(CGL::BoundingBox3<T> BBox);
+    void drawBox(LAL::BoundingBox3<T> BBox);
   
     QPoint 				lastPos;
     
-    CGL::Camera camera;
+    LAL::Camera camera;
     
     double Threshold;
     double CameraStep;

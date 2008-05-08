@@ -1,5 +1,5 @@
-#ifndef MATH_HPP_
-#define MATH_HPP_
+#ifndef LAL_MATH_HPP_
+#define LAL_MATH_HPP_
 
 
 #include <cmath>
@@ -9,7 +9,7 @@
 //-----------------------------------------------------------------------------
 
 
-namespace CGL {
+namespace LAL {
 
 	class Math
 	{
@@ -42,5 +42,5 @@ namespace CGL {
 	};
 
 
-}/*END NAMESPACE CGL*/
+}/* LAL :: NAMESPACE */
 #endif /*MATH_HPP_*/
