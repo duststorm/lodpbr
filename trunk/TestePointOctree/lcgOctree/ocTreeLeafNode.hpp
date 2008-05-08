@@ -92,11 +92,9 @@ public:
             {
             	m += (*pi)->Center();
             }
+            
             m /= PtrList.size();
-                        
             newOctreeInternalNode->setMean(m);
-      
-           
             PtrList.clear();
             
             for (listItemPtrIterator pi = oldPtrList.begin (); pi != oldPtrList.end(); ++pi) {
@@ -213,11 +211,9 @@ public:
     	{
     		mMean = NULL;
     	}
-    	
-    	
+
     	return mMean;
     }
-    
     
     void CalularPerpendicularError (bool mode)
     {

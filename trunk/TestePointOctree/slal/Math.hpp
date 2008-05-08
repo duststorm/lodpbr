@@ -14,7 +14,7 @@ namespace LAL {
 	class Math
 	{
 	public:
-	    static const float MPI;
+	    static const float PI;
 	    static const float HALF_PI;
 	    static const float EPSILON;
 	    static const float INVSQRT2;
@@ -29,12 +29,12 @@ namespace LAL {
 	
 	    static float degreesToRadians(float degrees)
 	    {
-	        return (degrees * MPI) / 180.0f;
+	        return (degrees * PI) / 180.0f;
 	    }
 	
 	    static float radiansToDegrees(float radians)
 	    {
-	        return (radians * 180.0f) / MPI;
+	        return (radians * 180.0f) / PI;
 	        
 	    }
 		virtual ~Math();
