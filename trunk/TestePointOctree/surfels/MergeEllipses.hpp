@@ -17,11 +17,11 @@ template <class Real> class MergeEllipses
 {
 public:
 	
-	typedef CGL::Point3<Real>    				Point3; 
-	typedef CGL::Vector3<Real>   				Vector3;
-	typedef CGL::Matrix3x3<Real> 				Matrix3x3;
+	typedef LAL::Point3<Real>    				Point3; 
+	typedef LAL::Vector3<Real>   				Vector3;
+	typedef LAL::Matrix3x3<Real> 				Matrix3x3;
 	
-	typedef CGL::Point3<Real>*					PtrPoint3;
+	typedef LAL::Point3<Real>*					PtrPoint3;
 	typedef std::list<Point3>					ListPoint3;
 	typedef std::list<Point3* >       			ListPtrPoint3;
 	typedef typename ListPtrPoint3::iterator   	ListPtrPoint3Iterator;
@@ -134,7 +134,7 @@ public:
 	void NewAxis()
 	{
 
-		CGL::EigenSystem<Real> lEigen(mProjectedPoint,mNewCenter);
+		LAL::EigenSystem<Real> lEigen(mProjectedPoint,mNewCenter);
 
 		mNewMinorAxis = lEigen.MinorAxis();
 		mNewMajorAxis = lEigen.MajorAxis();

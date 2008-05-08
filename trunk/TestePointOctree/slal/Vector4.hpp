@@ -8,7 +8,7 @@
 
 #include "Vector3.hpp"
 
-namespace CGL { 
+namespace LAL { 
 
 	template <class Real>	class Vector4
 	{
@@ -17,7 +17,6 @@ namespace CGL {
 
 		union
 		{
-
 			struct
 			{
 				Real mX;
@@ -25,9 +24,7 @@ namespace CGL {
 				Real mZ;
 				Real mW;
 			};
-
 			Real xyzw[4];
-
 		};
 
 	public:
@@ -40,14 +37,14 @@ namespace CGL {
 		template < typename U >
 		Vector4 (const U* u);
 
-		Vector4 ( const Vector4<Real>& u);
+		Vector4 ( const Vector4<Real>& vector);
 		
-		Vector4 ( const Vector3<Real>& u );
+		Vector4 ( const Vector3<Real>& vector );
 		
-		Vector4 ( const Vector3<Real>& u, const Real& w);
+		Vector4 ( const Vector3<Real>& vector, const Real& w);
 		
 
-		Vector4 ( const Real& pX, const Real& pY, const Real& pZ, const Real& pW );
+		Vector4 ( const Real& x, const Real& y, const Real& z, const Real& z );
 
 		//Gets and Sets
 
@@ -78,38 +75,38 @@ namespace CGL {
 		inline const Vector4< Real >& operator/= ( const Real& factor );
 
 		template <class T>
-		friend inline Vector4<T> operator* (const Vector4<T>& u, const T& factor); 	
+		friend inline Vector4<T> operator* (const Vector4<T>& vector, const T& factor); 	
 		template <class T>
-		friend inline Vector4<T> operator* (const T& factor, const Vector4<T>& u); 
+		friend inline Vector4<T> operator* (const T& factor, const Vector4<T>& vector); 
 		template <class T>
-		friend inline Vector4<T> operator/ (const Vector4<T>& u, const T& factor); 	
+		friend inline Vector4<T> operator/ (const Vector4<T>& vector, const T& factor); 	
 		template <class T>
-		inline friend Vector4<T> operator+ (const T& factor, const Vector4<T>& u);  
+		inline friend Vector4<T> operator+ (const T& factor, const Vector4<T>& vector);  
 		template <class T>
-		inline friend Vector4<T> operator+ (const Vector4<T>& u, const T& factor);
+		inline friend Vector4<T> operator+ (const Vector4<T>& vector, const T& factor);
 		template <class T>
-		inline friend Vector4<T> operator- (const T& factor, const Vector4<T>& u);  
+		inline friend Vector4<T> operator- (const T& factor, const Vector4<T>& vector);  
 		template <class T>
-		inline friend Vector4<T> operator- (const Vector4<T>& u, const T& factor); 
+		inline friend Vector4<T> operator- (const Vector4<T>& vector, const T& factor); 
 		
 		
 		
 		// Assignment with Vector
-		inline const Vector4<Real>& operator=  ( const Vector4<Real>& u );
-		inline const Vector4<Real>& operator+= ( const Vector4<Real>& u );
-		inline const Vector4<Real>& operator-= ( const Vector4<Real>& u ); 
-		inline const Vector4<Real>& operator/= ( const Vector4<Real>& u ); 
+		inline const Vector4<Real>& operator=  ( const Vector4<Real>& vector );
+		inline const Vector4<Real>& operator+= ( const Vector4<Real>& vector );
+		inline const Vector4<Real>& operator-= ( const Vector4<Real>& vector ); 
+		inline const Vector4<Real>& operator/= ( const Vector4<Real>& vector ); 
 		
-		inline bool operator== ( const Vector4<Real>& u) const;
-		inline bool operator!= ( const Vector4<Real>& u) const;
+		inline bool operator== ( const Vector4<Real>& vector) const;
+		inline bool operator!= ( const Vector4<Real>& vector) const;
 		
-		inline Vector4<Real>  operator- ( const Vector4<Real>& u) const;
-		inline Vector4<Real>  operator+ ( const Vector4<Real>& u) const;
+		inline Vector4<Real>  operator- ( const Vector4<Real>& vector) const;
+		inline Vector4<Real>  operator+ ( const Vector4<Real>& vector) const;
 		
-		inline Real operator* ( const Vector4<Real>& u) const;
+		inline Real operator* ( const Vector4<Real>& vector) const;
 
 		template <class T>
-		friend inline std::ostream& operator<< (std::ostream & s, const Vector4<T>& u);
+		friend inline std::ostream& operator<< (std::ostream & s, const Vector4<T>& vector);
 		
 		// AUXILIAR FUNCTIONS
 		inline Real length ();
@@ -123,7 +120,7 @@ namespace CGL {
 	};
 #include "Vector4.inline.hpp"
 
-} // END NAMESPACE
+} /* LAL :: NAMESPACE */
 
 
 #endif
@@ -132,9 +129,9 @@ namespace CGL {
 
 
 //// Teste operator+ e operator- with vectors
-//CGL::Vector4<double> v1(1.0,1.0,1.0,0.0);
-//CGL::Vector4<double> v2(-1.0,-1.0,-1.0,0.0);
-//CGL::Vector4<double> v3(0.0,0.0,0.0,0.0);
+//LAL::Vector4<double> v1(1.0,1.0,1.0,0.0);
+//LAL::Vector4<double> v2(-1.0,-1.0,-1.0,0.0);
+//LAL::Vector4<double> v3(0.0,0.0,0.0,0.0);
 //
 //v3 = v1 + v2;
 //std::cout << "#v1+v2# = 0,0,0 " << v3 << std::endl;
@@ -162,8 +159,8 @@ namespace CGL {
 //
 //
 ////Teste operator* with scalar
-//v1 = CGL::Vector4<double>(1.0,1.0,1.0,0.0);
-//v3 = CGL::Vector4<double>(0.0,0.0,0.0,0.0);
+//v1 = LAL::Vector4<double>(1.0,1.0,1.0,0.0);
+//v3 = LAL::Vector4<double>(0.0,0.0,0.0,0.0);
 //
 //v3 = 3.0 * v1;
 //std::cout << "#3*v1# = 3,3,3 "<<v3 << std::endl;
@@ -180,26 +177,26 @@ namespace CGL {
 //v3 = (+v1) * v2[3];
 //std::cout << "#(+v1)*0.0# = 0,0,0" << v3 << std::endl;
 //
-//CGL::Vector4<double> v4(1.0,1.0,1.0,1.0);
-//CGL::Vector4<double> v5(-1.0,-1.0,-1.0,-1.0);
-//CGL::Vector4<double> v6(2.0,2.0,2.0,4.0);
+//LAL::Vector4<double> v4(1.0,1.0,1.0,1.0);
+//LAL::Vector4<double> v5(-1.0,-1.0,-1.0,-1.0);
+//LAL::Vector4<double> v6(2.0,2.0,2.0,4.0);
 //double r = 1.0;
 //
 //v3 += v4;
 //std::cout << "#v3+=v4# = 1,1,1 "<<v3 << std::endl;
-//v3 = CGL::Vector4<double>(0.0,0.0,0.0,0.0);
+//v3 = LAL::Vector4<double>(0.0,0.0,0.0,0.0);
 //v3 += -3.0*v4;
 //std::cout << "#v3+=-3*v4# = -3,-3,-3 "<<v3 << std::endl;
-//v3 = CGL::Vector4<double>(0.0,0.0,0.0,0.0);
+//v3 = LAL::Vector4<double>(0.0,0.0,0.0,0.0);
 //v3 += -v5+v4;
 //std::cout << "#v3+=-v5+v4# = 2,2,2 "<<v3 << std::endl;
 //
 //v3 -= v4;
 //std::cout << "#v3-=v4# = -1,-1,-1 "<<v3 << std::endl;
-//v3 = CGL::Vector4<double>(0.0,0.0,0.0,0.0);
+//v3 = LAL::Vector4<double>(0.0,0.0,0.0,0.0);
 //v3 -= -3.0*v4;
 //std::cout << "#v3-=-3*v4# = 3,3,3 "<<v3 << std::endl;
-//v3 = CGL::Vector4<double>(0.0,0.0,0.0,0.0);
+//v3 = LAL::Vector4<double>(0.0,0.0,0.0,0.0);
 //v3 -= -v5+v4;
 //std::cout << "#v3-=-v5+v4# = -2,-2,-2 "<<v3 << std::endl;
 //
@@ -210,10 +207,10 @@ namespace CGL {
 //			
 //v6 /= v4;
 //std::cout << "#v6/=v4# = 2,2,2,4 "<<v6 << std::endl;
-//v6 = CGL::Vector4<double>(2.0,2.0,2.0,4.0);
+//v6 = LAL::Vector4<double>(2.0,2.0,2.0,4.0);
 //v6 /= -3.0*v4;
 //std::cout << "#v6/=-3*v4# = -0.666,-0.666,-0.666 "<<v6 << std::endl;
-//v6 = CGL::Vector4<double>(2.0,2.0,2.0,4.0);
+//v6 = LAL::Vector4<double>(2.0,2.0,2.0,4.0);
 //v6 /= -v5+v4;
 //std::cout << "#v6/=-v5+v4# = 1,1,1,2 "<<v6 << std::endl;
 //	

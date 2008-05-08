@@ -52,7 +52,8 @@ HEADERS += interface/myMainWindow.hpp \
     slal/Vector3.inline.hpp \
     slal/Vector4.inline.hpp \
     slal/Matrix3x3.inline.hpp \
-    slal/Matrix4x4.inline.hpp
+    slal/Matrix4x4.inline.hpp \
+    slal/Point3.inline.hpp
 SOURCES += main.cpp \
     interface/myMainWindow.cpp \
     openGLFrame/GLFrame.cpp \
@@ -66,7 +67,8 @@ SOURCES += main.cpp \
     slal/Point2.cpp \
     slal/Vector4.cpp \
     slal/Matrix3x3.cpp \
-    slal/Matrix4x4.cpp
+    slal/Matrix4x4.cpp \
+    slal/Point3.cpp
 QT += opengl
 FORMS += ui/interface.ui
 

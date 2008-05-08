@@ -1,12 +1,12 @@
-#ifndef COLOR_HPP_
-#define COLOR_HPP_
+#ifndef LAL_COLOR_HPP_
+#define LAL_COLOR_HPP_
 
 #include <iostream>
 
 #include "Point3.hpp"
 #include "Vector3.hpp"
 
-namespace CGL
+namespace LAL 
 {
 
 /*!
@@ -202,6 +202,6 @@ namespace CGL
 			
 	};
 
-}/* CGL::NAMESPACE */
+}/* LAL::NAMESPACE */
 
 #endif /*COLOR_HPP_*/

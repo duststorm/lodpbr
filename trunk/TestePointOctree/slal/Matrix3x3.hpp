@@ -7,7 +7,7 @@
 #include "Point3.hpp"
 
 
-namespace CGL {
+namespace LAL {
 
 	template<class Real> class Matrix3x3
 	{
@@ -41,11 +41,9 @@ namespace CGL {
 		Real operator()  ( int i, int j )  	const;
 		Real& operator() ( int i, int j );
 		// Return Colum
-		Vector3<Real> col ( int i ) const;
-		Vector3<Real> row ( int i ) const;
+		Vector3<Real> Column ( int i ) const;
+		Vector3<Real> Row ( int i ) const;
 		
-		Real * getArray ();
-
 		inline Matrix3x3<Real>& operator= ( const Matrix3x3<Real>& A);
 		// 
 		inline Matrix3x3<Real>  operator- ( ) const;
@@ -81,7 +79,7 @@ namespace CGL {
 
 #include "Matrix3x3.inline.hpp"
 
-}// END NAMESPACE
+}/* LAL :: NAMESPACE */
 
 #endif /*MATRIX3X3_HPP_*/
 

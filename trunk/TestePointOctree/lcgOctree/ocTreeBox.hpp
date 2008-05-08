@@ -41,7 +41,7 @@ inline Real OctMIN (const Real& a, const Real& b) {
 /// @param p Second point.
 /// @return Distance between p and q.
 template <class Real>
-double distance(const CGL::Point3<Real>& q, const CGL::Point3<Real>& p)
+double distance(const LAL::Point3<Real>& q, const LAL::Point3<Real>& p)
 {
     double a, b;
     a = (p[0] - q[0]);
@@ -58,12 +58,12 @@ double distance(const CGL::Point3<Real>& q, const CGL::Point3<Real>& p)
 /// A class describing the geometry of an octant
 ///
 template <class Real>
-class Box_3 : public CGL::BoundingBox3<Real> {
+class Box_3 : public LAL::BoundingBox3<Real> {
 
 public:
 
-typedef typename CGL::Point3<Real> Point3;
-typedef typename CGL::BoundingBox3<Real> Bbox3;
+typedef typename LAL::Point3<Real> Point3;
+typedef typename LAL::BoundingBox3<Real> Bbox3;
     
 /// Constructor
 /// @param p1 first corner of box

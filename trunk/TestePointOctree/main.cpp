@@ -44,13 +44,13 @@ public:
 	
     inline  float operator [] ( unsigned int i)  const
     {
-  	  if ( i > 1 )
-  	  {
-  		  std::cerr << "[ERROR] Point2 operator[]"        << std::endl
-  		  << "        Out of the Point size. " << std::endl
-  		  << "        Accepts, 0 , 1 only." << std::endl;
-  		  exit(1);
-  	  }
+//  	  if ( i > 1 )
+//  	  {
+//  		  std::cerr << "[ERROR] Point2 operator[]"        << std::endl
+//  		  << "        Out of the Point size. " << std::endl
+//  		  << "        Accepts, 0 , 1 only." << std::endl;
+//  		  exit(1);
+//  	  }
 
   	  return (xy[i]);
     };
@@ -58,19 +58,19 @@ public:
     inline  float& operator [] ( unsigned int i)  
 
     {
-  	  if ( i > 1 )
-  	  {
-  		  std::cerr << "[ERROR] Point2 operator[]"        << std::endl
-  		  << "        Out of the Point size. " << std::endl
-  		  << "        Accepts, 0 , 1 only." << std::endl;
-  		  exit(1);
-  	  }
+//  	  if ( i > 1 )
+//  	  {
+//  		  std::cerr << "[ERROR] Point2 operator[]"        << std::endl
+//  		  << "        Out of the Point size. " << std::endl
+//  		  << "        Accepts, 0 , 1 only." << std::endl;
+//  		  exit(1);
+//  	  }
 
 
   	  return (xy[i]);
     };
     
-private:
+
 	
 	union
 	{
@@ -88,43 +88,44 @@ private:
 
 int main(int argc, char *argv[])
 {
-
-	ppp p1(1.0,1.0);
-	pp  p2(1.0,1.0);
-	CGL::Vector3<float> v(1.0,1.0,0.0);
-	CGL::Vector3<float> u(1.0,0.0,0.0);
-	
-	std::cout << std::sqrt(2)*0.5 << "  =  " << u.norm() * v.norm() << std::endl;
-			
-	
-	time_t start,end,startc,endc ;
-	time (&start);
-	unsigned long int i = 0;
-	while(i  < 2000000000)
-	{
-		p1.x = p1.x + p1.y;
-		i++;
-	}
-	time(&end);
-
-	double dif = difftime (end,start);
-
-	std::cout << dif << " maluco" <<std::endl;
-
-
-	time (&startc);
-	i = 0;
-	while(i  < 2000000000)
-	{
-		p2[0] = p2.x() + p2.y();
-		i++;
-	}
-	time(&endc);
-
-	dif = difftime (endc,startc);
-
-	std::cout << dif<< " minha" <<std::endl;
-		
+//
+//	ppp p1(1.0,1.0);
+//	pp  p2(1.0,1.0);
+//	LAL::Vector3<float> v(1.0,1.0,0.0);
+//	LAL::Vector3<float> u(1.0,0.0,0.0);
+//	
+//	std::cout << std::sqrt(2)*0.5 << "  =  " << u.norm() * v.norm() << std::endl;
+//			
+//	
+//	time_t start,end,startc,endc ;
+//	time (&start);
+//	unsigned long int i = 0;
+//	while(i  < 2000000000)
+//	{
+//		
+//		p2.my = p2.mx + p2.my;
+//		i++;
+//	}
+//	time(&end);
+//
+//	double dif = difftime (end,start);
+//
+//	std::cout << dif << " maluco" <<std::endl;
+//
+//
+//	time (&startc);
+//	i = 0;
+//	while(i  < 2000000000)
+//	{
+//		p1.y = p1.x + p1.y;
+//		i++;
+//	}
+//	time(&endc);
+//
+//	dif = difftime (endc,startc);
+//
+//	std::cout << dif<< " minha" <<std::endl;
+//		
 		
     QApplication app(argc, argv);
     if (!QGLFormat::hasOpenGL()) {
@@ -141,7 +142,7 @@ int main(int argc, char *argv[])
 
 
 
-/*CGL::Vector3<double> g(3.0,4.0,-5.0);
+/*LAL::Vector3<double> g(3.0,4.0,-5.0);
 
 	
 	
@@ -157,7 +158,7 @@ g =  A * g;
 double a = 0.0;
 double * array;
 
-g = CGL::Vector3<double>(-209.9019,1737.5126,0.0);
+g = LAL::Vector3<double>(-209.9019,1737.5126,0.0);
 
 array = C.getArray();
 	
@@ -191,23 +192,23 @@ std::cout <<  " Result "<< array[0] << " - " << array[1]<<" - "<< array[2] << st
 	
 	std::cout << C_lapack;
 	
-	std::list<CGL::Point3<double>* >  pt;
+	std::list<LAL::Point3<double>* >  pt;
 	
-	CGL::Point3<double> pm = CGL::Point3<double>( 1,-1,2 );
+	LAL::Point3<double> pm = LAL::Point3<double>( 1,-1,2 );
 	
 
-	pt.push_back( new CGL::Point3<double>(-1,-2,1) );
-	pt.push_back( new CGL::Point3<double>(1,0,2)   );
-	pt.push_back( new CGL::Point3<double>(2,-1,3)  );
-	pt.push_back( new CGL::Point3<double>(2,-1,2)  );
+	pt.push_back( new LAL::Point3<double>(-1,-2,1) );
+	pt.push_back( new LAL::Point3<double>(1,0,2)   );
+	pt.push_back( new LAL::Point3<double>(2,-1,3)  );
+	pt.push_back( new LAL::Point3<double>(2,-1,2)  );
 	
-	CGL::CubicEquation<double> resolve = CGL::CubicEquation<double>(pt,pm);
+	LAL::CubicEquation<double> resolve = LAL::CubicEquation<double>(pt,pm);
 	
-	CGL::Vector3<double> Eigenvector[3]; 
+	LAL::Vector3<double> Eigenvector[3]; 
 	
 	double Eigenvalue[3];
 	
-	CGL::Eigen<double> eigen = CGL::Eigen<double>(pt,pm);
+	LAL::Eigen<double> eigen = LAL::Eigen<double>(pt,pm);
 	
 	std::cout << "ww " << eigen.m_afEigenvalue[0] << " | "<< eigen.m_akEigenvector[0];// *  resolve.mEigenvalue[0] << std::endl;
 	std::cout << "ww " << eigen.m_afEigenvalue[1] << " | "<< eigen.m_akEigenvector[1];// *  resolve.mEigenvalue[0] << std::endl;
@@ -223,9 +224,9 @@ std::cout <<  " Result "<< array[0] << " - " << array[1]<<" - "<< array[2] << st
 		
 	std::cout << "Eita ZERO " << resolve.mEigenvector[0] * resolve.mEigenvector[1] << std::endl;
 	
-	CGL::Vector3<double> v1 (1.0,2.0,-2.0);
-	CGL::Vector3<double> v2 (3.0,0.0,1.0);
-	CGL::Vector3<double> v3 (B.col(2));
+	LAL::Vector3<double> v1 (1.0,2.0,-2.0);
+	LAL::Vector3<double> v2 (3.0,0.0,1.0);
+	LAL::Vector3<double> v3 (B.col(2));
 	
 
 	v3 = v2 ^ v1;

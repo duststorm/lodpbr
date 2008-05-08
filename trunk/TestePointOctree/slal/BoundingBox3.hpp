@@ -1,9 +1,9 @@
-#ifndef BOUNDINGBOX3_HPP_
-#define BOUNDINGBOX3_HPP_
+#ifndef LAL_BOUNDINGBOX3_HPP_
+#define LAL_BOUNDINGBOX3_HPP_
 
 #include "Point3.hpp" 
 
-namespace CGL
+namespace LAL
 {
 
 template < class Real> 
@@ -127,6 +127,6 @@ public:
 	virtual ~BoundingBox3(){};
 };
 
-}/* CGL :: NAMESPACE */
+}/* LAL :: NAMESPACE */
 
 #endif /*BOUNDINGBOX3_HPP_*/

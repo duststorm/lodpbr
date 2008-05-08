@@ -28,8 +28,8 @@ class OctreeIterator {
     typedef OctreeInternalNode<Real, ItemPtr, Refine> 	InternalNode; ///< Internal OctreeNode
     typedef Node* 										NodePtr; 	  ///< Pointer to octree node
     
-    typedef CGL::Point3<Real> 							Point3;
-    typedef CGL::Vector3<Real> 							Vector3; 
+    typedef LAL::Point3<Real> 							Point3;
+    typedef LAL::Vector3<Real> 							Vector3; 
     typedef Box_3<Real> 								Box3;          ///< Octant extent
     
     std::vector<NodePtr*> path; ///< Path from root to pointed node

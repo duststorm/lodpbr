@@ -1,5 +1,5 @@
-#ifndef POLYNOMIAL_HPP_
-#define POLYNOMIAL_HPP_
+#ifndef LAL_EIGENSYSTEM_HPP_
+#define LAL_EIGENSYSTEM_HPP_
 
 #include <cassert>
 
@@ -15,7 +15,7 @@
 #define ms_dInv3 0.333333333
 #define ms_dRoot3 1.732050808
 
-namespace CGL
+namespace LAL
 {
  // 2x3   - 4x2   - 22x + 24 = 0  3 raizes diferentes
  // 3x3   - 10x2   + 14x + 27 = 0 1 raiz real
@@ -27,9 +27,9 @@ namespace CGL
 
 	public:
 			
-		typedef CGL::Point3<Real>  		Point3; 
-		typedef CGL::Vector3<Real> 		Vector3;
-		typedef CGL::Matrix3x3<Real> 	Matrix3x3;
+		typedef LAL::Point3<Real>  		Point3; 
+		typedef LAL::Vector3<Real> 		Vector3;
+		typedef LAL::Matrix3x3<Real> 	Matrix3x3;
 
 		Real 	  mEigenvalue[3];
 		Vector3	  mEigenvector[3];			
@@ -401,9 +401,9 @@ namespace CGL
 			mEigenvalue[2] = d[2];
 
 			
-			mEigenvector[0] = mCovariance.col(0);
-			mEigenvector[1] = mCovariance.col(1);
-			mEigenvector[2] = mCovariance.col(2);
+			mEigenvector[0] = mCovariance.Column(0);
+			mEigenvector[1] = mCovariance.Column(1);
+			mEigenvector[2] = mCovariance.Column(2);
 			
 			mNormal.first  = mEigenvalue[0];
 			mNormal.second = mEigenvector[0];
@@ -465,7 +465,7 @@ namespace CGL
 
 	};	
 	
-}/* CGL :: NAMESPACE */
+}/* LAL :: NAMESPACE */
 
 #endif /*POLYNOMIAL_HPP_*/
 

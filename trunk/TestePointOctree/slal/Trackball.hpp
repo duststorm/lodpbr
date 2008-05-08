@@ -12,13 +12,13 @@ template < class Real>
 		  
 	    int width, height;
 	
-	    CGL::Quaternion<Real> orientation; 
-	    CGL::Quaternion<Real> startOrientation;
+	    LAL::Quaternion<Real> orientation; 
+	    LAL::Quaternion<Real> startOrientation;
 	    
-	    CGL::Vector3<Real> startVector;
-	    CGL::Vector3<Real> endVector;
+	    LAL::Vector3<Real> startVector;
+	    LAL::Vector3<Real> endVector;
 	    
-	    void mapToSphere(CGL::Vector3<Real> &v);
+	    void mapToSphere(LAL::Vector3<Real> &v);
 	    
 	  public:
 	    Trackball(int w,  int h):width( w ), height( h ) {}
@@ -34,8 +34,8 @@ template < class Real>
 	    void BeginTracking(int x, int y);
 	    void Reset () { orientation.Identity(); }
 	    void Tracking(int x, int y);
-	    const CGL::Quaternion<Real>& Orientation() { return orientation; }
-	    CGL::Matrix4x4<Real> To4x4RotationMatrix();
+	    const LAL::Quaternion<Real>& Orientation() { return orientation; }
+	    LAL::Matrix4x4<Real> To4x4RotationMatrix();
 	    void toOpenGL();
 	};
 

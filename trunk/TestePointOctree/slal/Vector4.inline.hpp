@@ -1,6 +1,7 @@
-#ifndef CGL_VECTOR4_INLINE_HPP_
-#define CGL_VECTOR4_INLINE_HPP_
+#ifndef LAL_VECTOR4_INLINE_HPP_
+#define LAL_VECTOR4_INLINE_HPP_
 
+//============================= LIFECYCLE ====================================
 
 template<class Real>
 Vector4<Real>::Vector4 ()
@@ -25,29 +26,29 @@ Vector4<Real>::Vector4 (const U* u)
 };
 
 template<class Real>
-Vector4<Real>::Vector4 ( const Vector4<Real>& u)
+Vector4<Real>::Vector4 ( const Vector4<Real>& vector)
 {
-	this->mX = u.mX;
-	this->mY = u.mY;
-	this->mZ = u.mZ;
-	this->mW = u.mW;
+	this->mX = vector.mX;
+	this->mY = vector.mY;
+	this->mZ = vector.mZ;
+	this->mW = vector.mW;
 };
 
 template<class Real>
-Vector4<Real>::Vector4 ( const Vector3<Real>& u, const Real& w)
+Vector4<Real>::Vector4 ( const Vector3<Real>& vector, const Real& w)
 {
-	this->mX = u.mX;
-	this->mY = u.mY;
-	this->mZ = u.mZ;
+	this->mX = vector.mX;
+	this->mY = vector.mY;
+	this->mZ = vector.mZ;
 	this->mW = w;
 };
 
 template<class Real>
-Vector4<Real>::Vector4 ( const Vector3<Real>& u)
+Vector4<Real>::Vector4 ( const Vector3<Real>& vector)
 {
-	this->mX = u.mX;
-	this->mY = u.mY;
-	this->mZ = u.mZ;
+	this->mX = vector.mX;
+	this->mY = vector.mY;
+	this->mZ = vector.mZ;
 	this->mW = static_cast< Real > (1);
 };
 
@@ -59,6 +60,8 @@ Vector4<Real>::Vector4 ( const Real& pX, const Real& pY, const Real& pZ, const R
 	this->mZ = pZ;
 	this->mW = pW;
 };
+
+//============================= ACESS ======================================
 
 //Gets and Sets
 template<class Real>
@@ -123,6 +126,8 @@ inline Real& Vector4<Real>::operator [] ( int i)
 	return (xyzw[i]);
 
 };
+
+//============================= OPERATORS ====================================
 
 // Assignment Opertators
 //With Scalar
@@ -195,80 +200,80 @@ const Vector4< Real >& Vector4<Real>::operator/= ( const Real& factor )
 
 
 template<class Real>
-inline Vector4<Real> operator* ( const Vector4<Real>& u, const Real& factor ) 	
+inline Vector4<Real> operator* ( const Vector4<Real>& vector, const Real& factor ) 	
 {
 
-	return (  Vector4<Real>( u.mX * factor,
-			u.mY * factor,
-			u.mZ * factor,
-			u.mW * factor) 
+	return (  Vector4<Real>( vector.mX * factor,
+			vector.mY * factor,
+			vector.mZ * factor,
+			vector.mW * factor) 
 	);
 
 };
 
 template<class Real>
-inline Vector4<Real> operator*	( const Real& factor, const Vector4<Real>& u ) 
+inline Vector4<Real> operator*	( const Real& factor, const Vector4<Real>& vector ) 
 {
-	return ( Vector4<Real>( u.mX * factor,
-			u.mY * factor,
-			u.mZ * factor,
-			u.mW * factor)
+	return ( Vector4<Real>( vector.mX * factor,
+			vector.mY * factor,
+			vector.mZ * factor,
+			vector.mW * factor)
 	);
 
 };
 
 template<class Real>
-inline Vector4<Real> operator/ ( const Vector4<Real>& u, const Real& factor ) 	
+inline Vector4<Real> operator/ ( const Vector4<Real>& vector, const Real& factor ) 	
 {
 
-	return (  Vector4<Real>( u.mX / factor,
-			u.mY / factor,
-			u.mZ / factor,
-			u.mW / factor) 
+	return (  Vector4<Real>( vector.mX / factor,
+			vector.mY / factor,
+			vector.mZ / factor,
+			vector.mW / factor) 
 	);
 
 };
 
 template<class Real>
-inline Vector4<Real> operator+ (const Real& factor, const Vector4<Real>& u )  
+inline Vector4<Real> operator+ (const Real& factor, const Vector4<Real>& vector )  
 {
-	return ( Vector4<Real> ( u.mX + factor,
-			u.mY + factor,
-			u.mZ + factor,
-			u.mW + factor)
+	return ( Vector4<Real> ( vector.mX + factor,
+			vector.mY + factor,
+			vector.mZ + factor,
+			vector.mW + factor)
 	);
 
 };
 
 template<class Real>
-inline Vector4<Real> operator+ (const Vector4<Real>& u, const Real& factor )  
+inline Vector4<Real> operator+ (const Vector4<Real>& vector, const Real& factor )  
 {
-	return ( Vector4<Real> ( u.mX + factor,
-			u.mY + factor,
-			u.mZ + factor,
-			u.mW + factor)
+	return ( Vector4<Real> ( vector.mX + factor,
+			vector.mY + factor,
+			vector.mZ + factor,
+			vector.mW + factor)
 	);
 
 };
 
 template<class Real>
-inline Vector4<Real> operator- (const Real& factor, const Vector4<Real>& u )  
+inline Vector4<Real> operator- (const Real& factor, const Vector4<Real>& vector )  
 {
-	return ( Vector4<Real> ( factor - u.mX ,
-			factor - u.mY,
-			factor - u.mZ,
-			factor - u.mW)
+	return ( Vector4<Real> ( factor - vector.mX ,
+			factor - vector.mY,
+			factor - vector.mZ,
+			factor - vector.mW)
 	);
 
 };
 
 template<class Real>
-inline Vector4<Real> operator- (const Vector4<Real>& u, const Real& factor )  
+inline Vector4<Real> operator- (const Vector4<Real>& vector, const Real& factor )  
 {
-	return ( Vector4<Real> ( u.mX - factor,
-			u.mY - factor,
-			u.mZ - factor,
-			u.mW - factor)
+	return ( Vector4<Real> ( vector.mX - factor,
+			vector.mY - factor,
+			vector.mZ - factor,
+			vector.mW - factor)
 	);
 
 };
@@ -276,105 +281,107 @@ inline Vector4<Real> operator- (const Vector4<Real>& u, const Real& factor )
 // With Vector
 
 template<class Real>
-inline const Vector4<Real>& Vector4<Real>::operator= ( const Vector4<Real>& u )
+inline const Vector4<Real>& Vector4<Real>::operator= ( const Vector4<Real>& vector )
 {
-	this->mX = u.mX;
-	this->mY = u.mY;
-	this->mZ = u.mZ;
-	this->mW = u.mW;
+	this->mX = vector.mX;
+	this->mY = vector.mY;
+	this->mZ = vector.mZ;
+	this->mW = vector.mW;
 
 	return ( *this );
 };
 
 template<class Real>
-const Vector4< Real >& Vector4<Real>::operator+= (  const Vector4<Real>& u ) 
+const Vector4< Real >& Vector4<Real>::operator+= (  const Vector4<Real>& vector ) 
 { 
-	this->mX += u.mX; 
-	this->mY += u.mY; 
-	this->mZ += u.mZ;
-	this->mW += u.mW;
+	this->mX += vector.mX; 
+	this->mY += vector.mY; 
+	this->mZ += vector.mZ;
+	this->mW += vector.mW;
 
 	return ( *this ); 
 }
 
 template<class Real>
-const Vector4< Real >& Vector4<Real>::operator-= (  const Vector4<Real>& u ) 
+const Vector4< Real >& Vector4<Real>::operator-= (  const Vector4<Real>& vector ) 
 { 
-	this->mX -= u.mX; 
-	this->mY -= u.mY; 
-	this->mZ -= u.mZ;
-	this->mW -= u.mW;
+	this->mX -= vector.mX; 
+	this->mY -= vector.mY; 
+	this->mZ -= vector.mZ;
+	this->mW -= vector.mW;
 
 	return ( *this ); 
 } 
 
 template<class Real>
-const Vector4< Real >& Vector4<Real>::operator/= ( const Vector4<Real>& u ) 
+const Vector4< Real >& Vector4<Real>::operator/= ( const Vector4<Real>& vector ) 
 { 
 
-	this->mX /= u.mX;
-	this->mY /= u.mY; 
-	this->mZ /= u.mZ;
-	this->mW /= u.mW;
+	this->mX /= vector.mX;
+	this->mY /= vector.mY; 
+	this->mZ /= vector.mZ;
+	this->mW /= vector.mW;
 
 	return ( *this ); 
 } 
 
 template<class Real>
-inline bool Vector4<Real>::operator== ( const Vector4<Real>& u) const
+inline bool Vector4<Real>::operator== ( const Vector4<Real>& vector) const
 {
-	return ( ( this->mX == u.mX ) and ( this->mY == u.mY ) and ( this->mZ == u.mZ ) and (this->mW == u.mW) );
+	return ( ( this->mX == vector.mX ) and ( this->mY == vector.mY ) and ( this->mZ == vector.mZ ) and (this->mW == vector.mW) );
 };	
 
 template<class Real>
-inline bool Vector4<Real>::operator!= ( const Vector4<Real>& u) const
+inline bool Vector4<Real>::operator!= ( const Vector4<Real>& vector) const
 {
-	return  !(*this == u) ;
+	return  !(*this == vector) ;
 };	
 
 template<class Real>
-inline Vector4<Real>  Vector4<Real>::operator- ( const Vector4<Real>& u) const
+inline Vector4<Real>  Vector4<Real>::operator- ( const Vector4<Real>& vector) const
 {
 
-	return ( Vector4 ( this->mX - u.mX,
-			this->mY - u.mY,
-			this->mZ - u.mZ,
-			this->mW - u.mW) 
+	return ( Vector4 ( this->mX - vector.mX,
+			this->mY - vector.mY,
+			this->mZ - vector.mZ,
+			this->mW - vector.mW) 
 	);
 };
 
 template<class Real>
-inline Vector4<Real>  Vector4<Real>::operator+ ( const Vector4<Real>& u)	const
+inline Vector4<Real>  Vector4<Real>::operator+ ( const Vector4<Real>& vector)	const
 {
 
-	return ( Vector4 ( this->mX + u.mX,
-			this->mY + u.mY,
-			this->mZ + u.mZ,
-			this->mW + u.mW)
+	return ( Vector4 ( this->mX + vector.mX,
+			this->mY + vector.mY,
+			this->mZ + vector.mZ,
+			this->mW + vector.mW)
 	);
 
 };
 
 // Dot produt
 template<class Real>
-inline Real Vector4<Real>::operator* ( const Vector4<Real>& u) const	
+inline Real Vector4<Real>::operator* ( const Vector4<Real>& vector) const	
 {
 
-	return (  (u.mX * mX ) +  ( u.mY * mY ) + ( u.mZ * mZ ) + (u.mW * mW) );
+	return (  (vector.mX * mX ) +  ( vector.mY * mY ) + ( vector.mZ * mZ ) + (vector.mW * mW) );
 
 };
 
 
 template<class Real>
-inline std::ostream& operator<< (std::ostream & s, const Vector4<Real>& u)
+inline std::ostream& operator<< (std::ostream & s, const Vector4<Real>& vector)
 {
-	s << "Vector4"<< "  x = " << u.mX 
-	<< " ,y = " << u.mY 
-	<< " ,z = " << u.mZ 
-	<< " ,w = " << u.mW << std::endl;
+	s << "Vector4" << "  x = " << vector.mX 
+				   << " ,y = " << vector.mY 
+				   << " ,z = " << vector.mZ 
+				   << " ,w = " << vector.mW << std::endl;
 
 	return s;
 };
+
+//============================= OPERATIONS ===================================
 
 // AUXILIAR FUNCTIONS
 template<class Real>
