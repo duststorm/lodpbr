@@ -73,10 +73,11 @@ void GLFrame::LODSelection( OctreeNode<double,Surfel<double>* > * pNode, int& co
 		
 		if (lInternalNode->PerpendicularError(v) < Threshold)
 		{
-			glPointSize(3.0);
+			glPointSize(1.0);
 			glColor3f(0.0,1.0,0.0);
-			LAL::Point3<double> p = lInternalNode->MeanItem()->Center();
-			glVertex3f(p[0],p[1],p[2]);
+			lInternalNode->MeanItem()->draw();
+//			LAL::Point3<double> p = lInternalNode->MeanItem()->Center();
+//			glVertex3f(p[0],p[1],p[2]);
 			cont++;
 			
 		}else
@@ -226,13 +227,14 @@ void GLFrame::calLimits()
 	    midlePoint += surf->Center();
 	    
 	}
+	
 	midlePoint /= surfels.surfels.size();  
 		
     std::cout << octree.root->itemPtrCount() <<  " AAA" << std::endl;
     
     octree.split();
     octree.Merge();
-    
+            
 }
 
 template <class T>
