@@ -87,6 +87,7 @@ class OctreeNode {
     
     virtual ItemPtrList itemList () const = 0; 
     
+    virtual int level () const = 0;
     
     virtual ItemPtr MeanItem() 	const = 0;
             

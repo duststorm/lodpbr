@@ -287,8 +287,8 @@ namespace LAL
 			for (int l = 0; l < 3; l++) {
 
 				// Find small subdiagonal element
-
-				tst1 = std::max( tst1, fabs( d[l]) + fabs(e[l] ) );
+				Real diag = fabs( d[l]) + fabs(e[l] );
+				tst1 = std::max( tst1, diag );
 				int m = l;
 				while (m < 3) 
 				{

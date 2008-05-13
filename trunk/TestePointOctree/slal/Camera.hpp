@@ -254,12 +254,12 @@ namespace LAL{
         	// multiply it by our speed factor.  
 
         	// Add the resultant vVector to our position
-        	mPosition[0] += vCross.x() * deltaUVN[0];
+        	mPosition[0] += vCross.x * deltaUVN[0];
         	//mPosition[0] += vCross.z() * deltaUVN[0];
 //        	mPosition[2] += vCross.z() * deltaUVN[0];
 
         	// Add the resultant vVector to our view
-        	mEyes[0] += vCross.x() * deltaUVN[0];
+        	mEyes[0] += vCross.x * deltaUVN[0];
   //      	mEyes[2] += vCross.z() * deltaUVN[0];
         	
         	mEyes.normalize();

@@ -38,6 +38,8 @@ namespace LAL {
 
 		Matrix4x4();
 		Matrix4x4(const Matrix4x4<Real>& A );
+		template <class T>
+		Matrix4x4(const Matrix4x4<T>& A );
 
 		Matrix4x4(const Real& a11, const Real& a12, const Real& a13, const Real& a14, 
 				  const Real& a21, const Real& a22, const Real& a23, const Real& a24,

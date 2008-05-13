@@ -153,8 +153,8 @@ public:
 		{
 			lPoint = m*(*(*it));
 
-			lFactor = ( ( ( lPoint.x() - lCenter.x() ) * (lPoint.x() - lCenter.x() ) ) / (mNewMinorAxis.first) + 
-						( ( lPoint.y() - lCenter.y() ) * (lPoint.y() - lCenter.y() ) ) / (mNewMajorAxis.first) );
+			lFactor = ( ( ( lPoint.x - lCenter.x ) * (lPoint.x - lCenter.x ) ) / (mNewMinorAxis.first) + 
+						( ( lPoint.y - lCenter.y ) * (lPoint.y - lCenter.y ) ) / (mNewMajorAxis.first) );
 
 			lFactors.push_back(lFactor);
 

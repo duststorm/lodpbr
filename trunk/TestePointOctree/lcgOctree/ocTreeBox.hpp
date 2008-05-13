@@ -154,9 +154,9 @@ bool intersect (const Box_3& box2) const {
   Point3 Bmin = box2.min();
   Point3 Bmax = box2.max(); 
       
-  return lcgOctree::OctMAX (Amin.x(), Bmin.x()) < lcgOctree::OctMIN(Amax.x(), Bmax.x()) &&
-         lcgOctree::OctMAX (Amin.y(), Bmin.y()) < lcgOctree::OctMIN(Amax.y(), Bmax.y()) &&
-         lcgOctree::OctMAX (Amin.z(), Bmin.z()) < lcgOctree::OctMIN(Amax.z(), Bmax.z());
+  return lcgOctree::OctMAX (Amin.x, Bmin.x) < lcgOctree::OctMIN(Amax.x, Bmax.x) &&
+         lcgOctree::OctMAX (Amin.y, Bmin.y) < lcgOctree::OctMIN(Amax.y, Bmax.y) &&
+         lcgOctree::OctMAX (Amin.z, Bmin.z) < lcgOctree::OctMIN(Amax.z, Bmax.z);
 }
 
 ///

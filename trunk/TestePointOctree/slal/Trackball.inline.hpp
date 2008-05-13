@@ -10,8 +10,8 @@ void Trackball<Real>::mapToSphere(LAL::Vector3<Real> &v)
 {
 	Real len2;
 
-	v[0] = (2*v.x())/Real(width-1)-1;
-	v[1] = 1-(2*v.y())/Real(height-1);
+	v[0] = (2*v.x)/Real(width-1)-1;
+	v[1] = 1-(2*v.y)/Real(height-1);
 	v[2] = 0;
 	if((len2 = v.length2())<INVSQRT2)
 		v[2] = std::sqrt(1.0f-len2); // We are on the sphere

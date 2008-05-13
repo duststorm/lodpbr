@@ -19,9 +19,9 @@ GLFrame::GLFrame(QWidget *parent):QGLWidget(parent)
 	renderMode_A = Points;
 	show_A 	= true;
 	
-	midlePoint = LAL::Point3<double>();
+	midlePoint = LAL::Point3<float>();
 	
-	surfels = Surfels<double>();
+	surfels = Surfels<float>();
 	
 	Threshold = 0.01;
 	CameraStep = 0.01;
@@ -30,12 +30,12 @@ GLFrame::GLFrame(QWidget *parent):QGLWidget(parent)
     
 }
 
-void GLFrame::SetThreshold(const double& t)
+void GLFrame::SetThreshold(const float& t)
 {
 	Threshold = t;
 }
 
-void GLFrame::SetCameraStep(const double& t)
+void GLFrame::SetCameraStep(const float& t)
 {
 	CameraStep = t;
 }
@@ -44,48 +44,80 @@ void GLFrame::SetMode(bool t)
 	mode = t;
 }
 
-void GLFrame::LODSelection( OctreeNode<double,Surfel<double>* > * pNode, int& cont)
+void GLFrame::LODSelection( OctreeNode<float,Surfel<float>* > * pNode, int& cont)
 {
 	if ( pNode->isLeaf() == true )
 	{
 
-		std::list< Surfel<double>* > lp = pNode->itemList();
+		std::list< Surfel<float>* > lp = pNode->itemList();
 
-		for(std::list< Surfel<double>* >::iterator surfe = lp.begin(); surfe != lp.end(); ++surfe )
+		
+		
+		for(std::list< Surfel<float>* >::iterator surfe = lp.begin(); surfe != lp.end(); ++surfe )
 		{
-			LAL::Point3<double> point = (*surfe)->Center();
-			glPointSize(3.0);
-			glColor3f(0.0,1.0,0.0);
-			glVertex3f(point[0],point[1],point[2]);
+			LAL::Matrix4x4<float> m(camera.ViewMatrix());
+			LAL::Vector3<float> eyeInverse =  camera.Eyes();
+			LAL::Vector3<float> p ((*surfe)->Center().x,(*surfe)->Center().y,(*surfe)->Center().z);
+			LAL::Vector3<float> dir = p - eyeInverse;
+			
+			dir.normalize();
+			
+			float cosNDir = (dir*(*surfe)->Normal());
 
-			cont++;
+			if ( cosNDir > 0.0)
+			{
+				LAL::Point3<float> point = (*surfe)->Center();
+				glPointSize(3.0);
+				glColor3f(0.0,1.0,0.0);
+				glVertex3f(point[0],point[1],point[2]);
+				cont++;
+			}
+			
 		}	
 
 		
 	}else
 	{
 		
-		OctreeInternalNode<double,Surfel<double>* > * lInternalNode = dynamic_cast<OctreeInternalNode< double,Surfel<double>* >* >(pNode);
+		OctreeInternalNode<float,Surfel<float>* > * lInternalNode = dynamic_cast<OctreeInternalNode< float,Surfel<float>* >* >(pNode);
 			
-		LAL::Vector3<double> v (camera.Eyes());
-		   
-		//std::cout << " - " << lInternalNode->PerpendicularError(v) << " - " <<  Threshold << std::endl;
+		LAL::Vector3<float> v (camera.Eyes());
 		
-		if (lInternalNode->PerpendicularError(v) < Threshold)
-		{
-			glPointSize(1.0);
-			glColor3f(1.0,0.0,0.0);
-			lInternalNode->MeanItem()->draw();
-//			LAL::Point3<double> p = lInternalNode->MeanItem()->Center();
-//			glVertex3f(p[0],p[1],p[2]);
-			cont++;
-			
-		}else
+		if (lInternalNode->level()  < 0 )
 		{
 			for(int i = 0; i < 8; ++i)
-				LODSelection(lInternalNode->son[i],cont);
-		}
+				LODSelection(lInternalNode->son[i],cont);	
+		}// Se level for menor que dois
+		else
+		{
+			LAL::Matrix4x4<float> m(camera.ViewMatrix());
+			LAL::Vector3<float> eyeInverse = camera.Eyes();
+			
+			
+			LAL::Vector3<float> p (lInternalNode->MeanItem()->Center().x,lInternalNode->MeanItem()->Center().y,lInternalNode->MeanItem()->Center().z);
+			LAL::Vector3<float> dir =  p - eyeInverse ;
+			dir.normalize();
+			
+			float cosNDir = (dir*lInternalNode->MeanItem()->Normal());
+			
+			if ( cosNDir > 0.0)
+			{
+				if (lInternalNode->PerpendicularError(v) < Threshold)
+				{
+					glPointSize(1.0);
+					glColor3f(1.0,0.0,0.0);
+					lInternalNode->MeanItem()->draw();
+					//			LAL::Point3<float> p = lInternalNode->MeanItem()->Center();
+					//			glVertex3f(p[0],p[1],p[2]);
+					cont++;
 
+				}else
+				{
+					for(int i = 0; i < 8; ++i)
+						LODSelection(lInternalNode->son[i],cont);
+				}
+			}
+		}// Se level for maior que dois
 			   
 	}
 }
@@ -171,15 +203,15 @@ void GLFrame::drawPoints() {
 void GLFrame::calLimits()
 {
 	
-	Box_3<double> world = Box_3<double>( LAL::Point3<double>(surfels.box().xmin(),surfels.box().ymin(),surfels.box().zmin()),
-				   						 LAL::Point3<double>(surfels.box().xmax(),surfels.box().ymax(),surfels.box().zmax()));
+	Box_3<float> world = Box_3<float>( LAL::Point3<float>(surfels.box().xmin(),surfels.box().ymin(),surfels.box().zmin()),
+				   						 LAL::Point3<float>(surfels.box().xmax(),surfels.box().ymax(),surfels.box().zmax()));
 	 
-	octree = Octree<double,Surfel<double>* >(world,mode) ;
+	octree = Octree<float,Surfel<float>* >(world,mode) ;
 	
-	for (std::vector<Surfel<double> >::iterator surf =  surfels.surfels.begin();surf != surfels.surfels.end(); ++ surf ) 
+	for (std::vector<Surfel<float> >::iterator surf =  surfels.surfels.begin();surf != surfels.surfels.end(); ++ surf ) 
 	{
 		
-		octree.insert (new Surfel<double>(*surf));
+		octree.insert (new Surfel<float>(*surf));
 	    midlePoint += surf->Center();
 	    
 	}
