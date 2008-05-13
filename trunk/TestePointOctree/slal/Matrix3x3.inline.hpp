@@ -21,17 +21,17 @@ Matrix3x3<Real>::Matrix3x3(Real a11, Real a12, Real a13,Real a21, Real a22, Real
 template <class Real>
 Matrix3x3<Real>::Matrix3x3(const Vector3<Real>& row1, const Vector3<Real>& row2, const Vector3<Real>& row3 )
 {
-	this->a[0][0] = row1.mX; this->a[0][1] = row1.mY; this->a[0][2] = row1.mZ; 
-	this->a[1][0] = row2.mX; this->a[1][1] = row2.mY; this->a[1][2] = row2.mZ;
-	this->a[2][0] = row3.mX; this->a[2][1] = row3.mY; this->a[2][2] = row3.mZ;
+	this->a[0][0] = row1.x; this->a[0][1] = row1.y; this->a[0][2] = row1.z; 
+	this->a[1][0] = row2.x; this->a[1][1] = row2.y; this->a[1][2] = row2.z;
+	this->a[2][0] = row3.x; this->a[2][1] = row3.y; this->a[2][2] = row3.z;
 };
 
 template <class Real>
 Matrix3x3<Real>::Matrix3x3(const Point3<Real>& row1, const Point3<Real>& row2, const Point3<Real>& row3 )
 {
-	this->a[0][0] = row1.mX; this->a[0][1] = row1.mY; this->a[0][2] = row1.mZ; 
-	this->a[1][0] = row2.mX; this->a[1][1] = row2.mY; this->a[1][2] = row2.mZ;
-	this->a[2][0] = row3.mX; this->a[2][1] = row3.mY; this->a[2][2] = row3.mZ;
+	this->a[0][0] = row1.x; this->a[0][1] = row1.y; this->a[0][2] = row1.z; 
+	this->a[1][0] = row2.x; this->a[1][1] = row2.y; this->a[1][2] = row2.z;
+	this->a[2][0] = row3.x; this->a[2][1] = row3.y; this->a[2][2] = row3.z;
 };
 
 // transpose
@@ -252,11 +252,11 @@ inline Matrix3x3<Real> operator* ( const Matrix3x3<Real>& A, const Matrix3x3<Rea
 template <class Real>
 inline Vector3<Real> operator* ( const Matrix3x3<Real>& A, const Vector3<Real>& u)
 {
-	return ( Vector3<Real>( A.a[0][0] * u.mX + A.a[0][1] * u.mY + A.a[0][2] * u.mZ,
+	return ( Vector3<Real>( A.a[0][0] * u.x + A.a[0][1] * u.y + A.a[0][2] * u.z,
 
-			A.a[1][0] * u.mX + A.a[1][1] * u.mY + A.a[1][2] * u.mZ,
+			A.a[1][0] * u.x + A.a[1][1] * u.y + A.a[1][2] * u.z,
 
-			A.a[2][0] * u.mX + A.a[2][1] * u.mY + A.a[2][2] * u.mZ )
+			A.a[2][0] * u.x + A.a[2][1] * u.y + A.a[2][2] * u.z )
 
 	); 
 
@@ -265,11 +265,11 @@ inline Vector3<Real> operator* ( const Matrix3x3<Real>& A, const Vector3<Real>& 
 template <class Real>
 inline Point3<Real> operator* ( const Matrix3x3<Real>& A, const Point3<Real>& p)
 {
-	return ( Point3<Real>( A.a[0][0] * p.mX + A.a[0][1] * p.mY + A.a[0][2] * p.mZ,
+	return ( Point3<Real>( A.a[0][0] * p.x + A.a[0][1] * p.y + A.a[0][2] * p.z,
 
-			A.a[1][0] * p.mX + A.a[1][1] * p.mY + A.a[1][2] * p.mZ,
+			A.a[1][0] * p.x + A.a[1][1] * p.y + A.a[1][2] * p.z,
 
-			A.a[2][0] * p.mX + A.a[2][1] * p.mY + A.a[2][2] * p.mZ )
+			A.a[2][0] * p.x + A.a[2][1] * p.y + A.a[2][2] * p.z )
 
 	); 
 

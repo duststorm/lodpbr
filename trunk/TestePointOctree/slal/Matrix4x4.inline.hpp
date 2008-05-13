@@ -50,9 +50,9 @@ Matrix4x4<Real>::Matrix4x4(const Vector3<Real>& eyes, const Vector3<Real>& posit
 	Vector3<Real> xaxis = (up ^ zaxis).norm();
 	Vector3<Real> yaxis =  zaxis ^ xaxis;
 
-	this->m[0][0] = xaxis.mX; this->m[0][1] = xaxis.mY; this->m[0][2] = xaxis.mZ; this->m[0][3] = -(xaxis * eyes);
-	this->m[1][0] = yaxis.mX; this->m[1][1] = yaxis.mY; this->m[1][2] = yaxis.mZ; this->m[1][3] = -(yaxis * eyes);
-	this->m[2][0] = zaxis.mX; this->m[2][1] = zaxis.mY; this->m[2][2] = zaxis.mZ; this->m[2][3] = -(zaxis * eyes);
+	this->m[0][0] = xaxis.x; this->m[0][1] = xaxis.y; this->m[0][2] = xaxis.z; this->m[0][3] = -(xaxis * eyes);
+	this->m[1][0] = yaxis.x; this->m[1][1] = yaxis.y; this->m[1][2] = yaxis.z; this->m[1][3] = -(yaxis * eyes);
+	this->m[2][0] = zaxis.x; this->m[2][1] = zaxis.y; this->m[2][2] = zaxis.z; this->m[2][3] = -(zaxis * eyes);
 
 	this->m[3][0] = static_cast< Real > ( 0 );    
 	this->m[3][1] = static_cast< Real > ( 0 );    
@@ -77,18 +77,18 @@ Matrix4x4<Real>::Matrix4x4(const Real& a00, const Real& a01, const Real& a02, co
 template <class Real>
 Matrix4x4<Real>::Matrix4x4(const Vector4<Real>& u, const Vector4<Real>& v, const Vector4<Real>& t, const Vector4<Real>& w  )
 {
-	this->m[0][0] = u.mX; this->m[0][1] = u.mY; this->m[0][2] = u.mZ; this->m[0][3] = u.mW;
-	this->m[1][0] = v.mX; this->m[1][1] = v.mY; this->m[1][2] = v.mZ; this->m[1][3] = v.mW;
-	this->m[2][0] = t.mX; this->m[2][1] = t.mY; this->m[2][2] = t.mZ; this->m[2][3] = t.mW;
-	this->m[3][0] = w.mX; this->m[3][1] = w.mY; this->m[3][2] = w.mZ; this->m[3][3] = w.mW;
+	this->m[0][0] = u.x; this->m[0][1] = u.y; this->m[0][2] = u.z; this->m[0][3] = u.w;
+	this->m[1][0] = v.x; this->m[1][1] = v.y; this->m[1][2] = v.z; this->m[1][3] = v.w;
+	this->m[2][0] = t.x; this->m[2][1] = t.y; this->m[2][2] = t.z; this->m[2][3] = t.w;
+	this->m[3][0] = w.x; this->m[3][1] = w.y; this->m[3][2] = w.z; this->m[3][3] = w.w;
 };
 
 //	template <class Real>
 //	Matrix4x4<Real>::Matrix4x4(const Vector3<Real>& u, const Vector3<Real>& v, const Vector3<Real>& t)
 //	{
-//		this->m[0][0] = u.mX; this->m[0][1] = u.mY; this->m[0][2] = u.mZ; this->m[0][3] = static_cast< Real > ( 0 );
-//		this->m[1][0] = v.mX; this->m[1][1] = v.mY; this->m[1][2] = v.mZ; this->m[1][3] = static_cast< Real > ( 0 );
-//		this->m[2][0] = t.mX; this->m[2][1] = t.mY; this->m[2][2] = t.mZ; this->m[2][3] = static_cast< Real > ( 0 ) ;
+//		this->m[0][0] = u.x; this->m[0][1] = u.y; this->m[0][2] = u.z; this->m[0][3] = static_cast< Real > ( 0 );
+//		this->m[1][0] = v.x; this->m[1][1] = v.y; this->m[1][2] = v.z; this->m[1][3] = static_cast< Real > ( 0 );
+//		this->m[2][0] = t.x; this->m[2][1] = t.y; this->m[2][2] = t.z; this->m[2][3] = static_cast< Real > ( 0 ) ;
 //		this->m[3][0] = static_cast< Real > ( 0 ); this->m[3][1] = static_cast< Real > ( 0 ); this->m[3][2] =	static_cast< Real > ( 0 ) ; this->m[3][3] = static_cast< Real > ( 1 );
 //	};
 
@@ -350,13 +350,13 @@ inline Matrix4x4<Real> operator* ( const Matrix4x4<Real>& A, const Matrix4x4<Rea
 template <class Real>
 inline Vector3<Real> operator* ( const Matrix4x4<Real>& A, const Vector4<Real>& u)
 {
-	return ( Vector4<Real>( A.m[0][0] * u.mX + A.m[0][1] * u.mY + A.m[0][2] * u.mZ + A.m[0][3] * u.mW,
+	return ( Vector4<Real>( A.m[0][0] * u.x + A.m[0][1] * u.y + A.m[0][2] * u.z + A.m[0][3] * u.w,
 
-			A.m[1][0] * u.mX + A.m[1][1] * u.mY + A.m[1][2] * u.mZ + A.m[1][3] * u.mW,
+			A.m[1][0] * u.x + A.m[1][1] * u.y + A.m[1][2] * u.z + A.m[1][3] * u.w,
 
-			A.m[2][0] * u.mX + A.m[2][1] * u.mY + A.m[2][2] * u.mZ + A.m[2][3] * u.mW,
+			A.m[2][0] * u.x + A.m[2][1] * u.y + A.m[2][2] * u.z + A.m[2][3] * u.w,
 
-			A.m[3][0] * u.mX + A.m[3][1] * u.mY + A.m[3][2] * u.mZ + A.m[3][3] * u.mW)
+			A.m[3][0] * u.x + A.m[3][1] * u.y + A.m[3][2] * u.z + A.m[3][3] * u.w)
 
 	); 
 
@@ -365,11 +365,11 @@ inline Vector3<Real> operator* ( const Matrix4x4<Real>& A, const Vector4<Real>& 
 template <class Real>
 inline Vector3<Real> operator* ( const Matrix4x4<Real>& A, const Vector3<Real>& u)
 {
-	return ( Vector3<Real>( A.m[0][0] * u.mX + A.m[0][1] * u.mY + A.m[0][2] * u.mZ, 
+	return ( Vector3<Real>( A.m[0][0] * u.x + A.m[0][1] * u.y + A.m[0][2] * u.z, 
 
-			A.m[1][0] * u.mX + A.m[1][1] * u.mY + A.m[1][2] * u.mZ, 
+			A.m[1][0] * u.x + A.m[1][1] * u.y + A.m[1][2] * u.z, 
 
-			A.m[2][0] * u.mX + A.m[2][1] * u.mY + A.m[2][2] * u.mZ) );
+			A.m[2][0] * u.x + A.m[2][1] * u.y + A.m[2][2] * u.z) );
 
 
 
@@ -463,7 +463,7 @@ Matrix4x4<Real> Matrix4x4<Real>::MakeTranslate (const Vector3<Real>& v) const
 	return ( Matrix4x4<Real>( 0.0 ,0.0, 0.0, 0.0,
 			0.0, 0.0, 0.0, 0.0,
 			0.0, 0.0, 0.0, 0.0,
-			v.mX , v.mY , v.mZ ,1.0) );
+			v.x , v.y , v.z ,1.0) );
 }
 
 template <class Real>
@@ -472,7 +472,7 @@ Matrix4x4<Real> Matrix4x4<Real>::MakeTranslate (const Vector4<Real>& v) const
 	return ( Matrix4x4<Real>( 0.0 ,0.0, 0.0, 0.0,
 			0.0, 0.0, 0.0, 0.0,
 			0.0, 0.0, 0.0, 0.0,
-			v.mX , v.mY , v.mZ ,1.0) );
+			v.x , v.y , v.z ,1.0) );
 }
 
 template <class Real>
@@ -487,18 +487,18 @@ Matrix4x4<Real> Matrix4x4<Real>::MakeTranslate (const Real& v0,const Real& v1,co
 template <class Real>
 Matrix4x4<Real> Matrix4x4<Real>::MakeScalar (const Vector3<Real>& v) const
 {
-	return ( Matrix4x4<Real>( v.mX ,0.0, 0.0, 0.0,
-			0.0, v.mY, 0.0, 0.0,
-			0.0, 0.0, v.mY, 0.0,
+	return ( Matrix4x4<Real>( v.x ,0.0, 0.0, 0.0,
+			0.0, v.y, 0.0, 0.0,
+			0.0, 0.0, v.y, 0.0,
 			0.0, 0.0, 0.0 , 0.0, 1.0) );
 }
 
 template <class Real>
 Matrix4x4<Real> Matrix4x4<Real>::MakeScalar (const Vector4<Real>& v) const
 {
-	return ( Matrix4x4<Real>( v.mX ,0.0, 0.0, 0.0,
-			0.0, v.mY, 0.0, 0.0,
-			0.0, 0.0, v.mY, 0.0,
+	return ( Matrix4x4<Real>( v.x ,0.0, 0.0, 0.0,
+			0.0, v.y, 0.0, 0.0,
+			0.0, 0.0, v.y, 0.0,
 			0.0, 0.0, 0.0 , 0.0, 1.0) );
 }
 
@@ -550,9 +550,9 @@ Matrix4x4<Real> Matrix4x4<Real>::MakeViewMatrix(const Vector3<Real>& eyes, const
 	Vector3<Real> xaxis = (up ^ zaxis).norm();
 	Vector3<Real> yaxis =  zaxis ^ xaxis;
 
-	return Matrix4x4<Real>( xaxis.mX	   , xaxis.my		, xaxis.mz, -(xaxis * eyes), 
-			yaxis.mZ	   , yaxis.mY		, yaxis.mz, -(yaxis * eyes), 
-			zaxis.mZ	   , zaxis.mY		, zaxis.mZ, -(zaxis * eyes), 
+	return Matrix4x4<Real>( xaxis.x	   , xaxis.my		, xaxis.mz, -(xaxis * eyes), 
+			yaxis.z	   , yaxis.y		, yaxis.mz, -(yaxis * eyes), 
+			zaxis.z	   , zaxis.y		, zaxis.z, -(zaxis * eyes), 
 			0, 0 , 0, 1 );
 
 

@@ -27,23 +27,23 @@ namespace LAL
       template <class Real>   class Point3
       {
 
-      private:
+      public:
           /*! An union. */
           /*!
            * Share memory with abscissas atributes and the XYZ Array.
            * The Struct has the same size of the A.
            */
-          union
-          {
-        	  struct
-        	  {
-        		  Real mX; /*!< X abscissa of space. */  
-        		  Real mY; /*!< Y abscissa of space. */
-        		  Real mZ; /*!< Z abscissa of space. */
-        	  };
+    	  union
+    	  {
+    		  struct
+    		  {
+    			  Real x; /*!< X abscissa of space. */  
+    			  Real y; /*!< Y abscissa of space. */
+    			  Real z; /*!< Z abscissa of space. */
+    		  };
 
-        	  Real xyz[3];/*!< Array of abscissas for fast operator return @see operator[].*/
-          };
+    		  Real xyz[3];/*!< Array of abscissas for fast operator return @see operator[].*/
+    	  };
 
       public:
 
@@ -56,10 +56,6 @@ namespace LAL
     	  Point3 ( const Vector3<Real>& u);
     	  template < typename P >
     	  Point3 (const P* point);
-
-    	  inline const Real& x() const;
-    	  inline const Real& y() const;
-    	  inline const Real& z() const;
 
     	  inline void Set(const Real& x, const Real& y, const Real& z);
     	  //Operator
