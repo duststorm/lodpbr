@@ -70,8 +70,9 @@ public:
     /// @param fatherPtr reference to the pointer inside the father which points to this node
     virtual void insert (const Box3& world, int level, const ItemPtr p, OctreeNode*& fatherPtr) {
 
+    	mlevel = level;
         PtrList.push_back(p);
-
+     
     }
 
     virtual void split (const Box3& world, int level, OctreeNode*& fatherPtr) 
@@ -159,6 +160,11 @@ public:
         return distance (world, best, p, c);
     }
     
+    virtual int level () const
+    {
+    	return mlevel;
+    }
+     
     
     /// Returns true or false depending on whether this is leaf node or not
     virtual bool isLeaf () const { return true; }
@@ -248,6 +254,7 @@ private:
 	
 	ItemPtr mMean;
 	Real ep;
+	int mlevel;
 };
 
 

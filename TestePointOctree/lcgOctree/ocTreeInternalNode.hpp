@@ -96,6 +96,8 @@ public:
     /// @param fatherPtr reference to the pointer inside the father which points to this node
     virtual void insert (const Box3& world, int level, const ItemPtr p, OctreeNode*& fatherPtr) {
 
+    	mlevel = level;
+    	
         for (int index = 0; index < 8; ++index) {
             Box3 suboctant = world.coords(index,mean_);
             
@@ -223,6 +225,11 @@ public:
     	return leafList;
     }
     
+    virtual int level () const
+    {
+    	return mlevel;
+    }
+     
     virtual ItemPtr MeanItem() const
     {
     	return mMean;
@@ -346,6 +353,8 @@ private:
 	
 	  Point3 	mean_;
 	  ItemPtr 	mMean;
+	  
+	  int 		mlevel;
 	  
 	  Real ep;
 };

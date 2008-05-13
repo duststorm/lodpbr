@@ -256,10 +256,10 @@ template <class Real > class Surfel
 	 /// I/O operator - output
 	 inline friend std::ostream& operator << (std::ostream& out, const Surfel &s) 
 	 {
-	    out << s.perpendicularError() << " " << s.Center.x() << " " 
-	    	<< s.Center.y() 	<< " " << s.Center.z() << " " 
-	       	<< s.radius() 		<< " " << s.Normal.x() << " " 
-	       	<< s.Normal.y() 	<< " " << s.Normal.z();
+	    out << s.perpendicularError() << " " << s.Center.x << " " 
+	    	<< s.Center.y 	<< " " << s.Center.z << " " 
+	       	<< s.radius() 		<< " " << s.Normal.x << " " 
+	       	<< s.Normal.y 	<< " " << s.Normal.z;
 	    
 	    return out;
 	 };
@@ -276,14 +276,14 @@ template <class Real > class Surfel
 		 //select the shortest of projections of axes on v
 		 //(the closest to perpendicular to v),
 		 //and project it to the plane defined by v
-		 if ( fabs( pVector.x()) < fabs( pVector.y()) ) // x < y 
+		 if ( fabs( pVector.x) < fabs( pVector.y) ) // x < y 
 		 {
 
-			 if ( fabs( pVector.x()) < fabs( pVector.z()) )
+			 if ( fabs( pVector.x) < fabs( pVector.z) )
 			 {  // x < y && x < z
-				 Vector3 lPerpendicularX (1.0 - (pVector.x() * pVector.x()),
-						 				  -pVector.x() * pVector.y(),
-						 				  -pVector.x() * pVector.z() );
+				 Vector3 lPerpendicularX (1.0 - (pVector.x * pVector.x),
+						 				  -pVector.x * pVector.y,
+						 				  -pVector.x * pVector.z );
 				 
 				 return lPerpendicularX.norm();
 			 }
@@ -291,20 +291,20 @@ template <class Real > class Surfel
 		 else
 		 { //y <= x
 
-			 if (fabs(pVector.y()) < fabs(pVector.z()) )
+			 if (fabs(pVector.y) < fabs(pVector.z) )
 			 {  // y <= x && y < z
-				 Vector3 lPerpendicularY( -pVector.y() * pVector.x(), 
-						 				  1.0 - (pVector.y() * pVector.y()), 
-						 				  -pVector.y() * pVector.z() );
+				 Vector3 lPerpendicularY( -pVector.y * pVector.x, 
+						 				  1.0 - (pVector.y * pVector.y), 
+						 				  -pVector.y * pVector.z );
 				 
 				 return lPerpendicularY.norm();
 
 			 }
 		 }
 		 // z <= x && z <= y
-		 Vector3 lPerpendicularZ(-pVector.z() * pVector.x(), 
-				 				 -pVector.z() * pVector.y(), 
-				 				 1.0 - (pVector.z() * pVector.z()));
+		 Vector3 lPerpendicularZ(-pVector.z * pVector.x, 
+				 				 -pVector.z * pVector.y, 
+				 				 1.0 - (pVector.z * pVector.z));
 		 
 		 return lPerpendicularZ.norm();
 

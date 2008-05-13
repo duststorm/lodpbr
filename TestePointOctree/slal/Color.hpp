@@ -6,7 +6,7 @@
 #include "Point3.hpp"
 #include "Vector3.hpp"
 
-namespace 
+namespace LAL
 {
 
 /*!
@@ -41,11 +41,11 @@ namespace
 				
 			template < typename C >				
 			Color (const Point3<C>& pPoint )
-				: mRed(pPoint.x()), mGreen(pPoint.y()), mBlue(pPoint.z()), mAlfa(0) {};
+				: mRed(pPoint.x), mGreen(pPoint.y), mBlue(pPoint.z), mAlfa(0) {};
 				
 			template < typename C >				
 			Color (const Vector3<C>& pVector )
-				: mRed(pVector.x()), mGreen(pVector.y()), mBlue(pVector.z()), mAlfa(0) {};
+				: mRed(pVector.x), mGreen(pVector.y), mBlue(pVector.z), mAlfa(0) {};
 			
 			template < typename C >
 			inline void setRGB ( const C* pC)

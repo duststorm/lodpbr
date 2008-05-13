@@ -1,3 +1,4 @@
+
 #ifndef	LAL_MATRIX4X4_INLINE_HPP_
 #define LAL_MATRIX4X4_INLINE_HPP_
 
@@ -34,6 +35,16 @@ Matrix4x4<Real>::Matrix4x4(const Matrix4x4<Real>& A)
 	this->m[1][0] = A.m[1][0]; this->m[1][1] = A.m[1][1]; this->m[1][2] = A.m[1][2]; this->m[1][3] = A.m[1][3];
 	this->m[2][0] = A.m[2][0]; this->m[2][1] = A.m[2][1]; this->m[2][2] = A.m[2][2]; this->m[2][3] = A.m[2][3];
 	this->m[3][0] = A.m[3][0]; this->m[3][1] = A.m[3][1]; this->m[3][2] = A.m[3][2]; this->m[3][3] = A.m[3][3];
+}
+
+template <class Real>
+template <class T>
+Matrix4x4<Real>::Matrix4x4(const Matrix4x4<T>& A)
+{
+	this->m[0][0] = A[0][0]; this->m[0][1] = A[0][1]; this->m[0][2] = A[0][2]; this->m[0][3] = A[0][3]; 
+	this->m[1][0] = A[1][0]; this->m[1][1] = A[1][1]; this->m[1][2] = A[1][2]; this->m[1][3] = A[1][3];
+	this->m[2][0] = A[2][0]; this->m[2][1] = A[2][1]; this->m[2][2] = A[2][2]; this->m[2][3] = A[2][3];
+	this->m[3][0] = A[3][0]; this->m[3][1] = A[3][1]; this->m[3][2] = A[3][2]; this->m[3][3] = A[3][3];
 }
 
 template <class Real>

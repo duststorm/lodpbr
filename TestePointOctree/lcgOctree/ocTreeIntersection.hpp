@@ -13,9 +13,9 @@ namespace lcgOctree {
 ///
 template <class Real>
 bool checkIntersection (const LAL::BoundingBox3<Real>& box, LAL::Point3<Real>* p) {
-	return p->x() >= box.xmin() && p->x() < box.xmax() &&
-	p->y() >= box.ymin() && p->y() < box.ymax() &&
-	p->z() >= box.zmin() && p->z() < box.zmax();
+	return p->x >= box.xmin() && p->x < box.xmax &&
+	p->y >= box.ymin() && p->y < box.ymax &&
+	p->z >= box.zmin() && p->z < box.zmax;
 }
 
 /// Returns the euclidean distance between a point and a point in 3D space
@@ -43,9 +43,9 @@ Real distance2Item (const LAL::Point3<Real>* pt, const LAL::Point3<Real>& p, LAL
 ///
 template <class Real>
 bool checkIntersection (const LAL::BoundingBox3<Real>& box, Surfel<Real>* s) {
-	return s->Center().x() >= box.xmin() && s->Center().x() < box.xmax() &&
-	s->Center().y() >= box.ymin() && s->Center().y() < box.ymax() &&
-	s->Center().z() >= box.zmin() && s->Center().z() < box.zmax();
+	return s->Center().x >= box.xmin() && s->Center().x < box.xmax() &&
+	s->Center().y >= box.ymin() && s->Center().y < box.ymax() &&
+	s->Center().z >= box.zmin() && s->Center().z < box.zmax();
 }
 
 /// Returns the euclidean distance between a point and a point in 3D space

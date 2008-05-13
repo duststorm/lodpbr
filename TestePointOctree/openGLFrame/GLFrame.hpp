@@ -35,15 +35,15 @@ public:
     
     RenderMode renderMode_A;
        
-    void SetThreshold(const double&);
-    void SetCameraStep(const double&);
+    void SetThreshold(const float&);
+    void SetCameraStep(const float&);
     void SetMode(bool);
     
-    Surfels<double> surfels;
+    Surfels<float> surfels;
     
-    Octree<double,Surfel<double>* > octree;
+    Octree<float,Surfel<float>* > octree;
     
-    LAL::Point3<double> midlePoint;
+    LAL::Point3<float> midlePoint;
                       
 public slots:
 	
@@ -62,7 +62,7 @@ private:
     void draw();
     void drawPoints();
     void model();
-    void LODSelection( OctreeNode<double,Surfel<double>* > * pNode, int& cont);
+    void LODSelection( OctreeNode<float,Surfel<float>* > * pNode, int& cont);
     
     template < class T>
     LAL::BoundingBox3<T> limits();
@@ -73,8 +73,8 @@ private:
     
     LAL::Camera camera;
     
-    double Threshold;
-    double CameraStep;
+    float Threshold;
+    float CameraStep;
     bool mode;
     
 	bool show_A;

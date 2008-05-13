@@ -60,7 +60,7 @@ void MyMainWindow::open(QString filename,bool who) {
     	  	
     	  glFrame->surfels.surfels.clear();
     	      	     	     	  	
-    	  Surfels<double>::loadPly(text,glFrame->surfels);
+    	  Surfels<float>::loadPly(text,glFrame->surfels);
     	  glFrame->calLimits();
 
       }
