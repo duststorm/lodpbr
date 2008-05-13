@@ -97,25 +97,6 @@ void MyMainWindow::on_action_Quit_MainWin_triggered()
 
 void MyMainWindow::on_push_Button_Vertex_Around_clicked()
 {
-#if 0
-	int i = 0;
-	std::vector<Surfel<double> >::iterator it = glFrame->surfels.surfels.begin(); 
-	
-	while ( (i < 11) and ( it != glFrame->surfels.surfels.end() ) )
-	{
-		
-		CGL::Point3<double> *p = new CGL::Point3<double>(it->Center(0),it->Center(1),it->Center(2));
-		glFrame->octree.insert (p);
-		glFrame->surfels.temp.push_back( Surfel<double> (*p) );
-		it++;
-		i++;
-				
-	} 
-	glFrame->octree.split();
-	std::cout << i << " ==OPA== " << glFrame->surfels.temp.size() << " OctreeSize =" << glFrame->octree.root->itemPtrCount() << std::endl;
-	
-	if ( i != 0 )
-	glFrame->surfels.surfels.erase (glFrame->surfels.surfels.begin(),glFrame->surfels.surfels.begin()+i);
-#endif
+
 }	
 	

@@ -55,7 +55,7 @@ void GLFrame::LODSelection( OctreeNode<double,Surfel<double>* > * pNode, int& co
 		{
 			LAL::Point3<double> point = (*surfe)->Center();
 			glPointSize(3.0);
-			glColor3f(1.0,0.0,0.0);
+			glColor3f(0.0,1.0,0.0);
 			glVertex3f(point[0],point[1],point[2]);
 
 			cont++;
@@ -74,7 +74,7 @@ void GLFrame::LODSelection( OctreeNode<double,Surfel<double>* > * pNode, int& co
 		if (lInternalNode->PerpendicularError(v) < Threshold)
 		{
 			glPointSize(1.0);
-			glColor3f(0.0,1.0,0.0);
+			glColor3f(1.0,0.0,0.0);
 			lInternalNode->MeanItem()->draw();
 //			LAL::Point3<double> p = lInternalNode->MeanItem()->Center();
 //			glVertex3f(p[0],p[1],p[2]);
@@ -147,51 +147,7 @@ void GLFrame::initializeGL()
 
 }
 
-void GLFrame::model()
-{
-	
-	for (OctreeIterator<double, Surfel<double>* > oi = octree.begin();oi != octree.end();++oi )
-	{
-		if ( (*oi)->isLeaf())
-		{
-	   	   glDisable(GL_LIGHTING);		
-		   glColor3f(0.0,0.0,1.0);
-		   glBegin(GL_LINES);
 
-		   	   
-#if 0		   
-		   while ( surfe != lp.end() )
-		   {
-
-			   LAL::Point3<double> p0 = *(*surfe) + (*oi)->eigenVector(0)*1.25;
-			   glColor3f(1.0,0.0,0.0);
-			   glVertex3f((*(*surfe))[0],(*(*surfe))[1],(*(*surfe))[2]);
-			   glVertex3f(p0.x(),p0.y(),p0.z());
-
-			   LAL::Point3<double> p1 = (*(*surfe)) +  (*oi)->eigenVector(1)*1.25;
-			   glColor3f(0.0,1.0,0.0);
-			   glVertex3f((*(*surfe))[0],(*(*surfe))[1],(*(*surfe))[2]);
-			   glVertex3f(p1.x(),p1.y(),p1.z());
-			   
-			   LAL::Point3<double> p2 = (*(*surfe)) + (*oi)->eigenVector(2)*1.25;
-			   glColor3f(0.0,0.0,1.0);
-			   glVertex3f((*(*surfe))[0],(*(*surfe))[1],(*(*surfe))[2]);
-			   glVertex3f(p2.x(),p2.y(),p2.z());
-
-	
-
-			   ++surfe;
-		   }
-#endif		   
-		   glEnd();
-		   glEnable(GL_LIGHTING);
-		   glPointSize(1.0);
-		   break;
-		}  
-					
-	}
-	
-}
 
 
 void GLFrame::drawPoints() {
@@ -297,33 +253,10 @@ void GLFrame::paintGL()
     if ( surfels.surfels.size() != 0 )
     {
     	if (renderMode_A == Points)
-    		drawPoints();
-    	
-    	/*if (renderMode_A == Model)
     	{
-    	   model();
-    	   drawPoints();
-    	}*/
-    	
+    		drawPoints();
+    	}
     	DrawGroud();
-    	
-		for (OctreeIterator<double, Surfel<double>* > oi = octree.begin();oi != octree.end();++oi )
-		{
-		   			  
-	      // drawBox(octree.box(oi));
-		   glDisable(GL_LIGHTING);		
-		   glPointSize(5.0);
-		   glColor3f(0.0,0.0,1.0);
-		   glBegin(GL_POINTS);
-		   			   		   		        
-		   //glVertex3f(oi.mean()[0],oi.mean()[1],oi.mean()[2]);
-		   		   
-		   glEnd();
-		   glEnable(GL_LIGHTING);
-		   glPointSize(1.0);
-						
-		}
-		
     }
 
 
