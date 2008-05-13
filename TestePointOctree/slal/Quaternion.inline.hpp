@@ -206,7 +206,7 @@ inline Quaternion<Real> operator* (const Quaternion<Real>& a, const Quaternion<R
 template <class Real>
 inline Vector3<Real> Quaternion<Real>::Rotate(const Vector3<Real>& v) const
 {
-    Quaternion<Real> lQuaternio(1.0,v.x(), v.y(), v.z());
+    Quaternion<Real> lQuaternio(1.0,v.x, v.y, v.z);
     
     lQuaternio = *this*lQuaternio*(~(*this));
     
@@ -443,9 +443,9 @@ inline void  Quaternion<Real>::ToRotationArc(Vector3<Real> &u, Vector3<Real> &v)
 	Real s = std::sqrt((1+d)*2);
 
 	mW = s * static_cast<Real> (0.5);  
-	mX = w.x() / s;
-	mY = w.y() / s;
-	mZ = w.z() / s; 
+	mX = w.x / s;
+	mY = w.y / s;
+	mZ = w.z / s; 
 
 }
 

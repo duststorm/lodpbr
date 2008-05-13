@@ -12,15 +12,15 @@ namespace LAL {
 	template <class Real>	class Vector3
 	{
 
-	private:
+	public:
 
 		union
 		{
 			struct
 			{
-				Real mX;
-				Real mY;
-				Real mZ;
+				Real x;
+				Real y;
+				Real z;
 			};
 			Real xyz[3];
 		};
@@ -40,14 +40,6 @@ namespace LAL {
 		Vector3 ( const Vector3<U>& vector);
 
 		Vector3 ( const Real& pX, const Real& pY, const Real& pZ );
-
-		//Gets and Sets
-	
-		inline Real x() const;
-
-		inline Real y() const;
-
-		inline Real z() const;
 
 		inline void Set(const Real& x, const Real& y, const Real& z);
 		//Operator

@@ -6,7 +6,7 @@
 #include "Point3.hpp"
 #include "Vector3.hpp"
 
-namespace LAL 
+namespace 
 {
 
 /*!

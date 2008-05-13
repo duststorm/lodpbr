@@ -44,32 +44,32 @@ public:
 	
 	inline const Real& xmin() const
 	{
-		return ( this->min_.x() );
+		return ( this->min_.x );
 	};
 	
 	inline const Real& ymin() const
 	{
-		return ( this->min_.y() );
+		return ( this->min_.y );
 	};
 	
 	inline const Real& zmin() const
 	{
-		return ( this->min_.z() );
+		return ( this->min_.z );
 	};
 	
 	inline const Real& xmax() const
 	{
-		return ( this->max_.x() );
+		return ( this->max_.x );
 	};
 	
 	inline const Real& ymax() const
 	{
-		return ( this->max_.y() );
+		return ( this->max_.y );
 	};
 	
 	inline const Real& zmax() const
 	{
-		return ( this->max_.z() );
+		return ( this->max_.z );
 	};
 	
 	inline const Point3<Real>& min() const

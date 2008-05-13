@@ -88,13 +88,13 @@ namespace LAL
 
 			for (ListIterator it = pPoint3List.begin(); it != pPoint3List.end() ; ++it)
 			{
-				correlationXX += ( ((*it)->x() - pMean.x()) * ((*it)->x() - pMean.x()) ); 
-				correlationYY += ( ((*it)->y() - pMean.y()) * ((*it)->y() - pMean.y()) );
-				correlationZZ += ( ((*it)->z() - pMean.z()) * ((*it)->z() - pMean.z()) );
+				correlationXX += ( ((*it)->x - pMean.x) * ((*it)->x - pMean.x) ); 
+				correlationYY += ( ((*it)->y - pMean.y) * ((*it)->y - pMean.y) );
+				correlationZZ += ( ((*it)->z - pMean.z) * ((*it)->z - pMean.z) );
 
-				correlationXY += ( ((*it)->x() - pMean.x()) * ((*it)->y() - pMean.y()) );
-				correlationXZ += ( ((*it)->x() - pMean.x()) * ((*it)->z() - pMean.z()) );
-				correlationYZ += ( ((*it)->y() - pMean.y()) * ((*it)->z() - pMean.z()) );
+				correlationXY += ( ((*it)->x - pMean.x) * ((*it)->y - pMean.y) );
+				correlationXZ += ( ((*it)->x - pMean.x) * ((*it)->z - pMean.z) );
+				correlationYZ += ( ((*it)->y - pMean.y) * ((*it)->z - pMean.z) );
 
 			}
 

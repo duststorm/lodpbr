@@ -8,8 +8,8 @@
 template<class Real>
 Point2<Real>::Point2()
 {
-	this->mX 		= static_cast< Real > (0);
-	this->mY 		= static_cast< Real > (0);
+	this->x 		= static_cast< Real > (0);
+	this->y 		= static_cast< Real > (0);
 };
 
 /*!@brief Constructor with X, Y and Z initialization.
@@ -20,7 +20,7 @@ Point2<Real>::Point2()
  */
 template<class Real>
 Point2<Real>::Point2 ( const Real& x, const Real& y )
-: mX(x), mY(y) {};
+: x(x), y(y) {};
 
 /*!@brief Constructor with X, Y and Z initialization with vector paramenter.
  * @param[in] u Vector of Real.
@@ -28,14 +28,14 @@ Point2<Real>::Point2 ( const Real& x, const Real& y )
 
 template<class Real>
 Point2<Real>::Point2 ( const Vector2<Real>& vector)
-: mX(vector.mX), mY(vector.mY) {};
+: x(vector.x), y(vector.y) {};
 
 /*!@brief Copy Constructor.
  *  @param[in] p Point Real.
  */
 template<class Real>
 Point2<Real>::Point2 ( const Point2<Real>& point)
-: mX(point.mX), mY(point.mY) {};
+: x(point.x), y(point.y) {};
 
 /*!@brief Constructor with X, Y and Z initialization of any type.
  *  @details Initialize all abscissas of any. Try cast to the Real type of the class
@@ -47,29 +47,13 @@ Point2<Real>::Point2 (const P* point)
 {
 	assert(point);
 
-	this->mX = static_cast< Real > ( point[0] );
-	this->mY = static_cast< Real > ( point[1] );
+	this->x = static_cast< Real > ( point[0] );
+	this->y = static_cast< Real > ( point[1] );
 
 };
 
 //============================= ACESS ======================================
 
-/*!@brief Get X abscissa.
- *  @return Real.
- */              
-template<class Real>
-inline const Real& Point2<Real>::x() const
-{
-	return ( this->mX );
-};
-/*!@brief Get Y abscissa.
- *  @return Real.
- */
-template<class Real>
-inline const Real& Point2<Real>::y() const
-{
-	return ( this->mY );
-};
 
 template<class Real>
 inline Point2<Real>::operator Real * ()
@@ -133,7 +117,7 @@ inline  Real& Point2<Real>::operator [] ( unsigned int i)
 template<class Real>
 inline Point2<Real> Point2<Real>::operator+ ( )  const  
 {
-	return ( Point2<Real> (this->mX, this->mY)  );
+	return ( Point2<Real> (this->x, this->y)  );
 };
 
 /*!@brief operator-
@@ -145,7 +129,7 @@ template<class Real>
 inline Point2<Real>  Point2<Real>::operator- ( ) const
 {
 
-	return ( Point2<Real> (-this->mX, -this->mY) );
+	return ( Point2<Real> (-this->x, -this->y) );
 
 };
 
@@ -157,8 +141,8 @@ inline Point2<Real>  Point2<Real>::operator- ( ) const
 template<class Real>
 const Point2< Real >& Point2<Real>::operator+= ( const Real&  factor )
 {
-	this->mX += factor;
-	this->mY += factor;
+	this->x += factor;
+	this->y += factor;
 
 	return ( *this );
 }
@@ -170,8 +154,8 @@ const Point2< Real >& Point2<Real>::operator+= ( const Real&  factor )
 template<class Real>
 const Point2< Real >& Point2<Real>::operator-= ( const Real&  factor )
 {
-	this->mX -= factor;
-	this->mY -= factor;
+	this->x -= factor;
+	this->y -= factor;
 
 	return ( *this );
 }
@@ -184,8 +168,8 @@ template<class Real>
 const Point2< Real >& Point2<Real>::operator*= ( const Real& factor )
 {
 
-	this->mX  *= factor;
-	this->mY  *= factor;
+	this->x  *= factor;
+	this->y  *= factor;
 
 	return ( *this );
 }
@@ -199,8 +183,8 @@ const Point2< Real >& Point2<Real>::operator/= ( const Real& factor )
 {
 	Real lFactor = (Real)1 / factor;
 
-	this->mX *= lFactor;
-	this->mY *= lFactor;
+	this->x *= lFactor;
+	this->y *= lFactor;
 
 	return ( *this );
 }
@@ -212,7 +196,7 @@ const Point2< Real >& Point2<Real>::operator/= ( const Real& factor )
 template<class Real>
 inline Point2<Real> operator+ (const Real& factor,const Point2<Real>& point )   
 {
-	return ( Point2<Real> ( point.mX + factor, point.mY + factor ) );
+	return ( Point2<Real> ( point.x + factor, point.y + factor ) );
 
 };
 /*!@brief operator+
@@ -222,7 +206,7 @@ inline Point2<Real> operator+ (const Real& factor,const Point2<Real>& point )
 template<class Real>
 inline Point2<Real> operator+ (const Point2<Real>& point, const Real& factor )   
 {
-	return ( Point2<Real> ( point.mX + factor, point.mY + factor ) );
+	return ( Point2<Real> ( point.x + factor, point.y + factor ) );
 
 };
 
@@ -233,7 +217,7 @@ inline Point2<Real> operator+ (const Point2<Real>& point, const Real& factor )
 template<class Real>
 inline  Point2<Real> operator- (const Real& factor,const Point2<Real>& point )  
 {
-	return ( Point2<Real> ( factor - point.mX , factor - point.mY )
+	return ( Point2<Real> ( factor - point.x , factor - point.y )
 	);
 
 };
@@ -245,7 +229,7 @@ inline  Point2<Real> operator- (const Real& factor,const Point2<Real>& point )
 template<class Real>
 inline Point2<Real> operator- (const Point2<Real>& point, const Real& factor )  
 {
-	return ( Point2<Real> ( point.mX - factor, point.mY - factor ) );
+	return ( Point2<Real> ( point.x - factor, point.y - factor ) );
 
 };
 
@@ -257,14 +241,14 @@ inline Point2<Real> operator- (const Point2<Real>& point, const Real& factor )
 template<class Real>
 inline Point2<Real> operator* (const Real& factor,const Point2<Real>& point )   
 {
-	return ( Point2<Real> ( point.mX * factor, point.mY * factor ) );
+	return ( Point2<Real> ( point.x * factor, point.y * factor ) );
 
 };
 
 template<class Real>
 inline Point2<Real> operator* (const Point2<Real>& point, const Real& factor )   
 {
-	return ( Point2<Real> ( point.mX * factor, point.mY * factor ) );
+	return ( Point2<Real> ( point.x * factor, point.y * factor ) );
 
 };
 
@@ -276,7 +260,7 @@ inline Point2<Real> operator* (const Point2<Real>& point, const Real& factor )
 template<class Real>
 inline Point2<Real> Point2<Real>::operator/ ( const Real& factor )  const  
 {
-	return ( Point2<Real> ( mX / factor, mY/ factor ) );
+	return ( Point2<Real> ( x / factor, y/ factor ) );
 
 };
 
@@ -287,8 +271,8 @@ inline Point2<Real> Point2<Real>::operator/ ( const Real& factor )  const
 template<class Real>
 inline const Point2<Real>& Point2<Real>::operator= ( const Point2<Real>& point)
 {
-	this->mX = point.mX;
-	this->mY = point.mY;
+	this->x = point.x;
+	this->y = point.y;
 
 	return ( *this );
 };
@@ -302,8 +286,8 @@ inline const Point2<Real>& Point2<Real>::operator= ( const Point2<Real>& point)
 template<class Real>
 const Point2< Real >& Point2<Real>::operator+= (  const Point2<Real>& point )
 {
-	this->mX += point.mX;
-	this->mY += point.mY;
+	this->x += point.x;
+	this->y += point.y;
 
 	return ( *this );
 }
@@ -315,8 +299,8 @@ const Point2< Real >& Point2<Real>::operator+= (  const Point2<Real>& point )
 template<class Real>
 const Point2<Real>& Point2<Real>::operator-= (  const Point2<Real>& point )
 {
-	this->mX -= point.mX;
-	this->mY -= point.mY;
+	this->x -= point.x;
+	this->y -= point.y;
 
 	return ( *this );
 }
@@ -330,8 +314,8 @@ template<class Real>
 const Point2<Real>& Point2<Real>::operator/= ( const Point2<Real>& point )
 {
 
-	this->mX /= point.mX;
-	this->mY /= point.mY;
+	this->x /= point.x;
+	this->y /= point.y;
 
 	return ( *this );
 }
@@ -343,7 +327,7 @@ const Point2<Real>& Point2<Real>::operator/= ( const Point2<Real>& point )
 template<class Real>
 inline bool Point2<Real>::operator== ( const Point2<Real>& p) const
 {
-	return ( ( this->mX == p.mX ) and ( this->mY == p.mY ) );
+	return ( ( this->x == p.x ) and ( this->y == p.y ) );
 };      
 /*!@brief operator!=
  * @details Opposite to the operator==
@@ -365,7 +349,7 @@ inline bool Point2<Real>::operator!= ( const Point2<Real>& point) const
 template<class Real>
 inline Vector2<Real> operator- (const Point2<Real>& source, const Point2<Real>& target)   
 {
-	return ( Vector2<Real>( 	source.mX - target.mX,  source.mY - target.mY ) );
+	return ( Vector2<Real>( 	source.x - target.x,  source.y - target.y ) );
 
 };
 
@@ -376,7 +360,7 @@ inline Vector2<Real> operator- (const Point2<Real>& source, const Point2<Real>& 
 template<class Real>
 inline Point2<Real> operator- (const Point2<Real>& point, const Vector2<Real>& vector)   
 {
-	return ( Point2<Real>( point.mX - vector.mX, point.mY - vector.mY)  );
+	return ( Point2<Real>( point.x - vector.x, point.y - vector.y)  );
 };
 
 
@@ -388,7 +372,7 @@ template<class Real>
 inline Point2<Real> operator- (const Vector2<Real>& vector,const Point2<Real>& point )   
 {
 
-	return ( Point2<Real>( vector.mX - point.mX, vector.mY - point.mY ) );
+	return ( Point2<Real>( vector.x - point.x, vector.y - point.y ) );
 
 };
 
@@ -401,7 +385,7 @@ inline Point2<Real> operator- (const Vector2<Real>& vector,const Point2<Real>& p
 template<class Real>
 inline Point2<Real> Point2<Real>::operator+ (const Point2<Real>& point)  const 
 {
-	return ( Point2<Real>( mX + point.mX, mY + point.mY ) );
+	return ( Point2<Real>( x + point.x, y + point.y ) );
 
 };
 
@@ -413,7 +397,7 @@ inline Point2<Real> Point2<Real>::operator+ (const Point2<Real>& point)  const
 template<class Real>
 inline Point2<Real> operator+ (const Point2<Real>& point, const Vector2<Real>& vector)   
 {
-	return ( Point2<Real> ( point.mX + vector.mX, point.mY + vector.mY, point.mZ + vector.mZ ) );
+	return ( Point2<Real> ( point.x + vector.x, point.y + vector.y ) );
 
 };
 /*!@brief operator+
@@ -423,7 +407,7 @@ inline Point2<Real> operator+ (const Point2<Real>& point, const Vector2<Real>& v
 template<class Real>
 inline Point2<Real> operator+ (const Vector2<Real>& vector,const Point2<Real>& point )   
 {
-	return ( Point2<Real> ( point.mX + vector.mX, point.mY + vector.mY ) );
+	return ( Point2<Real> ( point.x + vector.x, point.y + vector.y ) );
 
 };
 
@@ -435,7 +419,7 @@ inline Point2<Real> operator+ (const Vector2<Real>& vector,const Point2<Real>& p
 template<class Real>
 inline std::ostream& operator<< (std::ostream & s, const Point2<Real>& point)
 {
-	s << "Point2" << " x = " << point.mX << " ,y = " << std::endl;
+	s << "Point2" << " x = " << point.x << " ,y = " << std::endl;
 
 
 	return ( s );
@@ -446,7 +430,7 @@ inline std::ostream& operator<< (std::ostream & s, const Point2<Real>& point)
 template<class Real>
 Real Point2<Real>::SquaredDistance ( const Point2<Real>& point ) 
 {
-	return (  (point.mX - this->mX ) * ( point.mX - this->mX ) +  ( point.mY - this->mY) * ( point.mY - this->mY) );
+	return (  (point.x - this->x ) * ( point.x - this->x ) +  ( point.y - this->y) * ( point.y - this->y) );
 }
 
 #endif /*POINT2__INLINE_HPP_*/

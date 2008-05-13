@@ -35,10 +35,6 @@ namespace LAL
 
     	  //@}
 
-    	  /*!@name Accessing the value */ 
-    	  inline const Real& x() const;
-    	  inline const Real& y() const;
-
     	  /*! Conversion operator returning the memory address of the Point.
 
     	  Useful to pass as a parameter to OpenGL functions:
@@ -149,7 +145,7 @@ namespace LAL
 
     	  virtual ~Point2(){};
 
-      private:
+      public:
     	  /*! @name Members  */
     	  //@{
     	  /*! An union. */
@@ -161,8 +157,8 @@ namespace LAL
     	  {
     		  struct
     		  {
-    			  Real mX; /*!< X abscissa of space. */  
-    			  Real mY; /*!< Y abscissa of space. */
+    			  Real x; /*!< X abscissa of space. */  
+    			  Real y; /*!< Y abscissa of space. */
     		  };
     		  Real xy[2];/*!< Array of abscissas for fast operator return @see operator[].*/
     	  };
