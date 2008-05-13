@@ -372,7 +372,7 @@ template <class Real > class Surfel
 			{		
 				Point3 point = (*(*it));
 				glPointSize(1.5);
-				glColor3f(0.0,1.0,0.25);
+				glColor3f(0.75,0.25,1.0);
 				
 			 	glVertex3f(point[0],point[1],point[2]);
 			}
