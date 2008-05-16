@@ -211,7 +211,7 @@ public:
     	{
     		MergeEllipses lMerge = MergeEllipses(PtrList);
     		mMean = lMerge.NewPtrSurfel();
-    		//CalularPerpendicularError (mode);
+    		ComputePerpendicularError (mode);
     	}
     	else
     	{
@@ -221,11 +221,30 @@ public:
     	return mMean;
     }
     
-    void CalularPerpendicularError (bool mode)
+    Real NormalCone() const
+    {
+    	if (mMean != NULL) 
+    	{
+    		return mNormalCone;
+    	}
+    	
+    	return HUGE_VAL; 	
+    }
+    
+    void ComputeNormalCone()
+    {
+    	
+    }
+    
+    
+    // tentar achar em um loop so o produto scalar minimo @see Artigo de Normal Cone
+    void ComputePerpendicularError (bool mode)
     {
     	std::list<Real> lEpMin;
     	std::list<Real> lEpMax;
-
+    	
+    	std::list<Real> lNormaCone;
+    	
     	Real epMax = static_cast<Real>(0);
     	Real epMin = static_cast<Real>(0);
     	
@@ -235,8 +254,9 @@ public:
     	{
     		
     			di = mMean->MajorAxis().first * (std::sqrt(1.0 - (mMean->Normal() * (*it)->Normal())  ) );
-   		
-
+    			
+    			lNormaCone.push_back(mMean->Normal() * (*it)->Normal());
+   			
     			epMax = ( ( mMean->Center() - (*it)->Center() ) * mMean->Normal() + di );
     			epMin =	( ( mMean->Center() - (*it)->Center() ) * mMean->Normal() - di );
 
@@ -245,8 +265,17 @@ public:
     		
     	}
 
+//    	Vector3 C = lBox3.Center();
+//    	
+//    	for (const_listItemPtrIterator it = PtrList.begin (); it != PtrList.end(); ++it)
+//    	{
+//    		lNormaCone.push_back( (C * (*it)->Normal()) );
+//    	}
+    	
     	ep = *(std::max_element(lEpMax.begin(),lEpMax.end())) - (*std::min_element(lEpMin.begin(),lEpMin.end())) ;
-
+    	
+    	mNormalCone = *(std::min_element(lNormaCone.begin(),lNormaCone.end()) );
+    	mNormalCone = std::sqrt(1 - (mNormalCone*mNormalCone)); 
     }
       
     
@@ -255,6 +284,8 @@ private:
 	ItemPtr mMean;
 	Real ep;
 	int mlevel;
+	Real mNormalCone;
+	
 };
 
 

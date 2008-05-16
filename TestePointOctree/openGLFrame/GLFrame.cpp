@@ -49,75 +49,88 @@ void GLFrame::LODSelection( OctreeNode<float,Surfel<float>* > * pNode, int& cont
 	if ( pNode->isLeaf() == true )
 	{
 
-		std::list< Surfel<float>* > lp = pNode->itemList();
-
-		
-		
-		for(std::list< Surfel<float>* >::iterator surfe = lp.begin(); surfe != lp.end(); ++surfe )
+		if (pNode->MeanItem() != NULL)
 		{
-			LAL::Matrix4x4<float> m(camera.ViewMatrix());
-			LAL::Vector3<float> eyeInverse =  camera.Eyes();
-			LAL::Vector3<float> p ((*surfe)->Center().x,(*surfe)->Center().y,(*surfe)->Center().z);
-			LAL::Vector3<float> dir = p - eyeInverse;
-			
+			LAL::Vector3<float> eyeInverse = camera.Eyes();
+			LAL::Vector3<float> p (pNode->MeanItem()->Center().x,pNode->MeanItem()->Center().y,pNode->MeanItem()->Center().z);
+			LAL::Vector3<float> dir =  p - eyeInverse ;
 			dir.normalize();
+			float cosNDir = (dir*pNode->MeanItem()->Normal());
 			
-			float cosNDir = (dir*(*surfe)->Normal());
-
-			if ( cosNDir > 0.0)
+			if (cosNDir < pNode->NormalCone() )
 			{
-				LAL::Point3<float> point = (*surfe)->Center();
-				glPointSize(3.0);
-				glColor3f(0.0,1.0,0.0);
-				glVertex3f(point[0],point[1],point[2]);
-				cont++;
-			}
-			
-		}	
 
-		
+				std::list< Surfel<float>* > lp = pNode->itemList();
+
+
+
+				for(std::list< Surfel<float>* >::iterator surfe = lp.begin(); surfe != lp.end(); ++surfe )
+				{
+					LAL::Vector3<float> eyeInverse =  camera.Eyes();
+					LAL::Vector3<float> p ((*surfe)->Center().x,(*surfe)->Center().y,(*surfe)->Center().z);
+					LAL::Vector3<float> dir = p - eyeInverse;
+
+					dir.normalize();
+
+					float cosNDir = (dir*(*surfe)->Normal());
+
+					if ( cosNDir < 0.0)
+					{
+						LAL::Point3<float> point = (*surfe)->Center();
+						glPointSize(1.0);
+						glColor3f(0.0,1.0,0.0);
+						glVertex3f(point[0],point[1],point[2]);
+						cont++;
+					}
+
+				}	
+			}
+		}
 	}else
 	{
 		
 		OctreeInternalNode<float,Surfel<float>* > * lInternalNode = dynamic_cast<OctreeInternalNode< float,Surfel<float>* >* >(pNode);
-			
-		LAL::Vector3<float> v (camera.Eyes());
+//			
+		for(int i = 0; i < 8; ++i)
+			LODSelection(lInternalNode->son[i],cont);
 		
-		if (lInternalNode->level()  < 0 )
-		{
-			for(int i = 0; i < 8; ++i)
-				LODSelection(lInternalNode->son[i],cont);	
-		}// Se level for menor que dois
-		else
-		{
-			LAL::Matrix4x4<float> m(camera.ViewMatrix());
-			LAL::Vector3<float> eyeInverse = camera.Eyes();
-			
-			
-			LAL::Vector3<float> p (lInternalNode->MeanItem()->Center().x,lInternalNode->MeanItem()->Center().y,lInternalNode->MeanItem()->Center().z);
-			LAL::Vector3<float> dir =  p - eyeInverse ;
-			dir.normalize();
-			
-			float cosNDir = (dir*lInternalNode->MeanItem()->Normal());
-			
-			if ( cosNDir > 0.0)
-			{
-				if (lInternalNode->PerpendicularError(v) < Threshold)
-				{
-					glPointSize(1.0);
-					glColor3f(1.0,0.0,0.0);
-					lInternalNode->MeanItem()->draw();
-					//			LAL::Point3<float> p = lInternalNode->MeanItem()->Center();
-					//			glVertex3f(p[0],p[1],p[2]);
-					cont++;
-
-				}else
-				{
-					for(int i = 0; i < 8; ++i)
-						LODSelection(lInternalNode->son[i],cont);
-				}
-			}
-		}// Se level for maior que dois
+//		LAL::Vector3<float> v (camera.Eyes());
+//		
+//		if (lInternalNode->level()  < 0 )
+//		{
+//			for(int i = 0; i < 8; ++i)
+//				LODSelection(lInternalNode->son[i],cont);	
+//		}// Se level for menor que dois
+//		else
+//		{
+//			LAL::Matrix4x4<float> m(camera.ViewMatrix());
+//			LAL::Vector3<float> eyeInverse = camera.Eyes();
+//			
+//			
+//			LAL::Vector3<float> p (lInternalNode->MeanItem()->Center().x,lInternalNode->MeanItem()->Center().y,lInternalNode->MeanItem()->Center().z);
+//			LAL::Vector3<float> dir =  p - eyeInverse ;
+//			dir.normalize();
+//			
+//			float cosNDir = (dir*lInternalNode->MeanItem()->Normal());
+//			
+//			if ( cosNDir > lInternalNode)
+//			{
+//				if (lInternalNode->PerpendicularError(v) < Threshold)
+//				{
+//					glPointSize(1.0);
+//					glColor3f(1.0,0.0,0.0);
+//					lInternalNode->MeanItem()->draw();
+//					//			LAL::Point3<float> p = lInternalNode->MeanItem()->Center();
+//					//			glVertex3f(p[0],p[1],p[2]);
+//					cont++;
+//
+//				}else
+//				{
+//					for(int i = 0; i < 8; ++i)
+//						LODSelection(lInternalNode->son[i],cont);
+//				}
+//			}
+//		}// Se level for maior que dois
 			   
 	}
 }

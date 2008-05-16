@@ -33,7 +33,7 @@ namespace LAL {
 
 		template < typename U >
 		Vector3 (const U* u);
-
+		//Copy constructor			
 		Vector3 ( const Vector3<Real>& vector);
 		
 		template < typename U >

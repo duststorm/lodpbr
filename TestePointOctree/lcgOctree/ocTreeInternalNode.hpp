@@ -229,87 +229,18 @@ public:
     {
     	return mlevel;
     }
+    
+    virtual Real NormalCone() const
+    {
+    	return mNormalCone;	
+    }
+    
      
     virtual ItemPtr MeanItem() const
     {
     	return mMean;
     }
-    
-    void CalularPerpendicularError (bool mode)
-    {
-    	std::list<Real> lEpMin;
-    	std::list<Real> lEpMax;
-
-    	Real epMax = static_cast<Real>(0);
-    	Real epMin = static_cast<Real>(0);
-    	
-    	Real di	   = static_cast<Real>(0);
-
-    	if (mode  == true)
-    	{
-    	
-    		for (int index = 0; index < 8; ++index) 
-    		{
-
-    			if (son[index]->MeanItem() != NULL)
-    			{
-    				di = mMean->MajorAxis().first * (std::sqrt(1.0 - (mMean->Normal()*son[index]->MeanItem()->Normal())  ) );
-
-
-    				epMax = ( ( mMean->Center() - son[index]->MeanItem()->Center() ) * mMean->Normal() + di );
-    				epMin =	( ( mMean->Center() - son[index]->MeanItem()->Center() ) * mMean->Normal() - di );
-
-    				lEpMin.push_back(epMin);
-    				lEpMax.push_back(epMax);
-
-    			}
-
-    		}
-    		
-    	}else
-    	{
-
-    		ItemPtrList lp = this->itemList();
-
-    		
-    		for (listItemPtrIterator it = lp.begin (); it != lp.end(); ++it)
-    		{
-    			
-    				di = (*it)->Radius() * (std::sqrt(1.0 - (mMean->Normal()*(*it)->Normal() )  ) );
-
-
-    				epMax = ( ( mMean->Center() - (*it)->Center() ) * mMean->Normal() + di );
-    				epMin =	( ( mMean->Center() - (*it)->Center() ) * mMean->Normal() - di );
-
-    				lEpMin.push_back(epMin);
-    				lEpMax.push_back(epMax);
-
-    		}
-
-    	}
-    		
-
-    	ep = *(std::max_element(lEpMax.begin(),lEpMax.end())) - (*std::min_element(lEpMin.begin(),lEpMin.end())) ;
-    	
-    }
-      
-        
-    // Por que passando como const VEctor3& eye , da error de disqualified  ....
-    
-    virtual Real PerpendicularError (Vector3 eye) const
-    {
-    	
-    	if (mMean != NULL) 
-    	{
-    		Real cos = mMean->Normal().norm() * eye.norm();
-    	
-    		Real ImageError = (ep*(1- cos*cos))/eye.length();
-    	
-    		return ImageError;
-    	}
-    	
-    	return HUGE_VAL;
-    }
+       
     
     virtual Real TangencialError (const Vector3& eye) const
     {
@@ -337,7 +268,7 @@ public:
         	MergeEllipses lMerge = MergeEllipses(lLeafSurfel);
     		mMean = lMerge.NewPtrSurfel();
     		
-    		CalularPerpendicularError(mode);
+    		ComputePerpendicularError(mode);
     		
         }else
         {
@@ -349,6 +280,82 @@ public:
     	return mMean;
     }
     
+    void ComputePerpendicularError (bool mode)
+        {
+        	std::list<Real> lEpMin;
+        	std::list<Real> lEpMax;
+
+        	Real epMax = static_cast<Real>(0);
+        	Real epMin = static_cast<Real>(0);
+        	
+        	Real di	   = static_cast<Real>(0);
+
+        	if (mode  == true)
+        	{
+        	
+        		for (int index = 0; index < 8; ++index) 
+        		{
+
+        			if (son[index]->MeanItem() != NULL)
+        			{
+        				di = mMean->MajorAxis().first * (std::sqrt(1.0 - (mMean->Normal()*son[index]->MeanItem()->Normal())  ) );
+
+
+        				epMax = ( ( mMean->Center() - son[index]->MeanItem()->Center() ) * mMean->Normal() + di );
+        				epMin =	( ( mMean->Center() - son[index]->MeanItem()->Center() ) * mMean->Normal() - di );
+
+        				lEpMin.push_back(epMin);
+        				lEpMax.push_back(epMax);
+
+        			}
+
+        		}
+        		
+        	}else
+        	{
+
+        		ItemPtrList lp = this->itemList();
+
+        		
+        		for (listItemPtrIterator it = lp.begin (); it != lp.end(); ++it)
+        		{
+        			
+        				di = (*it)->Radius() * (std::sqrt(1.0 - (mMean->Normal()*(*it)->Normal() )  ) );
+
+
+        				epMax = ( ( mMean->Center() - (*it)->Center() ) * mMean->Normal() + di );
+        				epMin =	( ( mMean->Center() - (*it)->Center() ) * mMean->Normal() - di );
+
+        				lEpMin.push_back(epMin);
+        				lEpMax.push_back(epMax);
+
+        		}
+
+        	}
+        		
+
+        	ep = *(std::max_element(lEpMax.begin(),lEpMax.end())) - (*std::min_element(lEpMin.begin(),lEpMin.end())) ;
+        	
+        }
+          
+            
+        // Por que passando como const VEctor3& eye , da error de disqualified  ....
+        
+        virtual Real PerpendicularError (Vector3 eye) const
+        {
+        	
+        	if (mMean != NULL) 
+        	{
+        		Real cos = mMean->Normal().norm() * eye.norm();
+        	
+        		Real ImageError = (ep*(1- cos*cos))/eye.length();
+        	
+        		return ImageError;
+        	}
+        	
+        	return HUGE_VAL;
+        }
+    
 private:
 	
 	  Point3 	mean_;
@@ -357,6 +364,7 @@ private:
 	  int 		mlevel;
 	  
 	  Real ep;
+	  Real mNormalCone;
 };
 
 
