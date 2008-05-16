@@ -41,6 +41,10 @@ public:
 		this->max_ = Point3<Real> ( xMax,yMax,zMax );
 	};
 	
+	Real Center() const
+	{
+		Vector3<Real>( 0.5*(max_.x - min_.x) , 0.5*(max_.y - min_.y), 0.5*(max_.z - min_.z)  );
+	}
 	
 	inline const Real& xmin() const
 	{

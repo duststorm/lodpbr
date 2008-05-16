@@ -99,6 +99,8 @@ class OctreeNode {
     
     virtual Real GeometricError  	(const Vector3& eye) const = 0;
     
+    virtual Real NormalCone() const = 0;
+    
     // Virtual destructor 
     virtual ~OctreeNode(){};
     
