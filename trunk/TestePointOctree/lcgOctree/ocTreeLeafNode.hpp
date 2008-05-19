@@ -275,7 +275,10 @@ public:
     	ep = *(std::max_element(lEpMax.begin(),lEpMax.end())) - (*std::min_element(lEpMin.begin(),lEpMin.end())) ;
     	
     	mNormalCone = *(std::min_element(lNormaCone.begin(),lNormaCone.end()) );
-    	mNormalCone = std::sqrt(1 - (mNormalCone*mNormalCone)); 
+    	mNormalCone = std::sqrt(1.0 - (mNormalCone*mNormalCone)); 
+    	
+    	if ( mNormalCone < static_cast<Real>(0) )
+    		mNormalCone = static_cast<Real>(1);
     }
       
     
