@@ -289,7 +289,11 @@ public:
         	Real epMin = static_cast<Real>(0);
         	
         	Real di	   = static_cast<Real>(0);
-
+        	        	        	
+        	Real lNormalConeCos = static_cast<Real>(1);
+        	Real lNormalConeSin = static_cast<Real>(1);
+        	Real lTempCos		= static_cast<Real>(1);
+        	
         	if (mode  == true)
         	{
         	
@@ -303,7 +307,16 @@ public:
 
         				epMax = ( ( mMean->Center() - son[index]->MeanItem()->Center() ) * mMean->Normal() + di );
         				epMin =	( ( mMean->Center() - son[index]->MeanItem()->Center() ) * mMean->Normal() - di );
-
+        				
+        				lTempCos = son[index]->MeanItem()->Normal() * mMean->Normal();
+        				
+        				if (lTempCos < lNormalConeCos )
+        				{
+        					lNormalConeCos = lTempCos;
+        					lNormalConeSin = son[index]->NormalCone();
+        				}
+        					
+        				
         				lEpMin.push_back(epMin);
         				lEpMax.push_back(epMax);
 
@@ -335,6 +348,14 @@ public:
         		
 
         	ep = *(std::max_element(lEpMax.begin(),lEpMax.end())) - (*std::min_element(lEpMin.begin(),lEpMin.end())) ;
+        	
+        	       	       	       	
+        	mNormalCone =  std::sqrt(1.0 - (lNormalConeCos*lNormalConeCos)) * lNormalConeSin
+        										+
+        				   std::sqrt(1.0 - (lNormalConeSin*lNormalConeSin)) * lNormalConeCos;
+        	
+        	if ( mNormalCone < static_cast<Real>(0) )
+        		mNormalCone = static_cast<Real>(1);
         	
         }
           

@@ -90,48 +90,44 @@ void GLFrame::LODSelection( OctreeNode<float,Surfel<float>* > * pNode, int& cont
 	{
 		
 		OctreeInternalNode<float,Surfel<float>* > * lInternalNode = dynamic_cast<OctreeInternalNode< float,Surfel<float>* >* >(pNode);
-//			
-		for(int i = 0; i < 8; ++i)
-			LODSelection(lInternalNode->son[i],cont);
-		
-//		LAL::Vector3<float> v (camera.Eyes());
-//		
-//		if (lInternalNode->level()  < 0 )
-//		{
-//			for(int i = 0; i < 8; ++i)
-//				LODSelection(lInternalNode->son[i],cont);	
-//		}// Se level for menor que dois
-//		else
-//		{
-//			LAL::Matrix4x4<float> m(camera.ViewMatrix());
-//			LAL::Vector3<float> eyeInverse = camera.Eyes();
-//			
-//			
-//			LAL::Vector3<float> p (lInternalNode->MeanItem()->Center().x,lInternalNode->MeanItem()->Center().y,lInternalNode->MeanItem()->Center().z);
-//			LAL::Vector3<float> dir =  p - eyeInverse ;
-//			dir.normalize();
-//			
-//			float cosNDir = (dir*lInternalNode->MeanItem()->Normal());
-//			
-//			if ( cosNDir > lInternalNode)
-//			{
-//				if (lInternalNode->PerpendicularError(v) < Threshold)
-//				{
-//					glPointSize(1.0);
-//					glColor3f(1.0,0.0,0.0);
-//					lInternalNode->MeanItem()->draw();
-//					//			LAL::Point3<float> p = lInternalNode->MeanItem()->Center();
-//					//			glVertex3f(p[0],p[1],p[2]);
-//					cont++;
-//
-//				}else
-//				{
-//					for(int i = 0; i < 8; ++i)
-//						LODSelection(lInternalNode->son[i],cont);
-//				}
-//			}
-//		}// Se level for maior que dois
-			   
+			
+//		for(int i = 0; i < 8; ++i)
+//			LODSelection(lInternalNode->son[i],cont);
+		if ( lInternalNode->level() < 3)
+		{
+			for(int i = 0; i < 8; ++i)
+				LODSelection(lInternalNode->son[i],cont);
+		}
+		else
+		{
+			LAL::Vector3<float> v (camera.Eyes());
+			LAL::Vector3<float> eyeInverse = camera.Eyes();
+
+			LAL::Vector3<float> p (lInternalNode->MeanItem()->Center().x,lInternalNode->MeanItem()->Center().y,lInternalNode->MeanItem()->Center().z);
+			LAL::Vector3<float> dir =  p - eyeInverse ;
+
+			dir.normalize();
+
+			float cosNDir = (dir * lInternalNode->MeanItem()->Normal());
+
+			if ( cosNDir < lInternalNode->NormalCone())
+			{
+				if (lInternalNode->PerpendicularError(v) < Threshold)
+				{
+					glPointSize(1.0);
+					glColor3f(1.0,0.0,0.0);
+					lInternalNode->MeanItem()->draw();
+//					LAL::Point3<float> p = lInternalNode->MeanItem()->Center();
+//					glVertex3f(p[0],p[1],p[2]);
+					cont++;
+
+				}else
+				{
+					for(int i = 0; i < 8; ++i)
+						LODSelection(lInternalNode->son[i],cont);
+				}
+			}
+		}		   
 	}
 }
 
