@@ -66,44 +66,44 @@ void GLFrame::LODSelection( OctreeNode<float,Surfel<float>* > * pNode, int& cont
 	if ( pNode->isLeaf() == true )
 	{
 
-		if (pNode->MeanItem() != NULL)
-		{
-			LAL::Vector3<float> eyeInverse = camera.Eyes();
-			LAL::Vector3<float> p (pNode->MeanItem()->Center().x,pNode->MeanItem()->Center().y,pNode->MeanItem()->Center().z);
-			LAL::Vector3<float> dir =  p - eyeInverse ;
-			dir.normalize();
-			float cosNDir = (dir*pNode->MeanItem()->Normal());
-			
-			if (cosNDir < pNode->NormalCone() )
-			{
-
-				std::list< Surfel<float>* > lp = pNode->itemList();
-
-
-
-				for(std::list< Surfel<float>* >::iterator surfe = lp.begin(); surfe != lp.end(); ++surfe )
-				{
-					LAL::Vector3<float> eyeInverse =  camera.Eyes();
-					LAL::Vector3<float> p ((*surfe)->Center().x,(*surfe)->Center().y,(*surfe)->Center().z);
-					LAL::Vector3<float> dir = p - eyeInverse;
-
-					dir.normalize();
-
-					float cosNDir = (dir*(*surfe)->Normal());
-
-					if ( cosNDir < 0.0)
-					{
-						LAL::Point3<float> point = (*surfe)->Center();
-						glPointSize(1.0);
-						//(*surfe)->draw();
-						glColor3f(0.0,1.0,0.0);
-						glVertex3f(point[0],point[1],point[2]);
-						cont++;
-					}
-
-				}	
-			}
-		}
+//		if (pNode->MeanItem() != NULL)
+//		{
+//			LAL::Vector3<float> eyeInverse = camera.Eyes();
+//			LAL::Vector3<float> p (pNode->MeanItem()->Center().x,pNode->MeanItem()->Center().y,pNode->MeanItem()->Center().z);
+//			LAL::Vector3<float> dir =  p - eyeInverse ;
+//			dir.normalize();
+//			float cosNDir = (dir*pNode->MeanItem()->Normal());
+//			
+//			if (cosNDir < pNode->NormalCone() )
+//			{
+//
+//				std::list< Surfel<float>* > lp = pNode->itemList();
+//
+//
+//
+//				for(std::list< Surfel<float>* >::iterator surfe = lp.begin(); surfe != lp.end(); ++surfe )
+//				{
+//					LAL::Vector3<float> eyeInverse =  camera.Eyes();
+//					LAL::Vector3<float> p ((*surfe)->Center().x,(*surfe)->Center().y,(*surfe)->Center().z);
+//					LAL::Vector3<float> dir = p - eyeInverse;
+//
+//					dir.normalize();
+//
+//					float cosNDir = (dir*(*surfe)->Normal());
+//
+//					if ( cosNDir < 0.0)
+//					{
+//						LAL::Point3<float> point = (*surfe)->Center();
+//						glPointSize(1.0);
+//						//(*surfe)->draw();
+//						glColor3f(0.0,1.0,0.0);
+//						glVertex3f(point[0],point[1],point[2]);
+//						cont++;
+//					}
+//
+//				}	
+//			}
+//		}
 	}else
 	{
 		
@@ -134,9 +134,9 @@ void GLFrame::LODSelection( OctreeNode<float,Surfel<float>* > * pNode, int& cont
 				{
 					glPointSize(1.0);
 					glColor3f(1.0,0.0,0.0);
-					//lInternalNode->MeanItem()->draw();
-					LAL::Point3<float> p = lInternalNode->MeanItem()->Center();
-					glVertex3f(p[0],p[1],p[2]);
+					lInternalNode->MeanItem()->draw();
+					//LAL::Point3<float> p = lInternalNode->MeanItem()->Center();
+					//glVertex3f(p[0],p[1],p[2]);
 					cont++;
 
 				}else
@@ -317,6 +317,10 @@ void GLFrame::paintGL()
     	if (renderMode_A == Points)
     	{
     		drawPoints();
+    		for (OctreeIterator<float, Surfel<float>* > oi = octree.begin();oi != octree.end();++oi )
+    			drawBox(octree.box(oi));
+
+
     	}
     	DrawGroud();
     }
@@ -367,7 +371,7 @@ void GLFrame::mousePressEvent(QMouseEvent *event)
     	    	
     }
     
-
+    
     lastPos = event->pos();
 }
 
@@ -391,6 +395,15 @@ void GLFrame::mouseMoveEvent(QMouseEvent *event)
  	
     	camera.OnRotationMove(event->x(), event->y());
     }
+    
+    /*!
+     *  event->pos() retorna coordenadas x e y relativa a widget que recebeu o evento.  
+     *  mapToGlobla mapei as coordenadas da widget para coordenada global da tela.
+     *  QCurso::setPos() posiciona o mouse em coordenada global.
+     *  tudo o que eu queria para implementar a First Person Camera !  
+    */
+    
+    QCursor::setPos(mapToGlobal(QPoint(static_cast<int>(width()*0.5),static_cast<int>(height()*0.5))));
  	updateGL();
     lastPos = event->pos();
 }
