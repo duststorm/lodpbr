@@ -101,14 +101,14 @@ public:
     	 
     	 assert (ison >= 0 && ison < 8);
     	 
-    	 if (ison & 1) minx = fatherNode->mean().x();
-    	 else maxx = fatherNode->mean().x();
+    	 if (ison & 1) minx = fatherNode->mean().x;
+    	 else maxx = fatherNode->mean().x;
 	  
-    	 if (ison & 2) miny = fatherNode->mean().y();
-    	 else maxy = fatherNode->mean().y();
+    	 if (ison & 2) miny = fatherNode->mean().y;
+    	 else maxy = fatherNode->mean().y;
 
-    	 if (ison & 4) minz = fatherNode->mean().z();
-    	 else maxz = fatherNode->mean().z();
+    	 if (ison & 4) minz = fatherNode->mean().z;
+    	 else maxz = fatherNode->mean().z;
 
     	 fatherNode = (InternalNode*) (*path [i]);
          }

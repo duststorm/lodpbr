@@ -359,9 +359,8 @@ public:
         	if ( mNormalCone < static_cast<Real>(0) )
         		mNormalCone = static_cast<Real>(1);
         	else 
-        	{
-            	mNormalCone = std::sqrt(1.0 - (mNormalCone*mNormalCone));
-        	}
+        	   	mNormalCone = std::sqrt(1.0 - (mNormalCone*mNormalCone));
+        	
         	
         }
           
