@@ -49,7 +49,6 @@ public:
 
     /// constructor
     OctreeLeafNode () {
-
     }
 
     /// destructor
@@ -264,13 +263,6 @@ public:
     			lEpMax.push_back(epMax);
     		
     	}
-
-//    	Vector3 C = lBox3.Center();
-//    	
-//    	for (const_listItemPtrIterator it = PtrList.begin (); it != PtrList.end(); ++it)
-//    	{
-//    		lNormaCone.push_back( (C * (*it)->Normal()) );
-//    	}
     	
     	ep = *(std::max_element(lEpMax.begin(),lEpMax.end())) - (*std::min_element(lEpMin.begin(),lEpMin.end())) ;
     	

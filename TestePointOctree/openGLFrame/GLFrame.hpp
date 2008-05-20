@@ -63,6 +63,7 @@ private:
     void drawPoints();
     void model();
     void LODSelection( OctreeNode<float,Surfel<float>* > * pNode, int& cont);
+    void SIZE( OctreeNode<float,Surfel<float>* > * pNode, long int& cont);
     
     template < class T>
     LAL::BoundingBox3<T> limits();

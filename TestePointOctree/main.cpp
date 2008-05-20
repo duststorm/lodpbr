@@ -1,14 +1,12 @@
 #include <QApplication>
 
 #include <iostream>
-#include <cmath>
 #include <list>
 #include <algorithm>
 #include "slal/Vector3.hpp"
 #include <ctime> 
-
 #include "interface/myMainWindow.hpp"
-
+#include "slal/Math.hpp"
 class ppp{
 public:
     ppp(float w,float u)
@@ -126,7 +124,8 @@ int main(int argc, char *argv[])
 //
 //	std::cout << dif<< " minha" <<std::endl;
 //		
-		
+
+	
     QApplication app(argc, argv);
     if (!QGLFormat::hasOpenGL()) {
         cerr << "This system has no OpenGL support" << endl;

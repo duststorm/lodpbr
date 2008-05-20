@@ -80,7 +80,7 @@ public:
             Real middle = mean_[d];
             if ((p[d]) > middle) {
                 index += mult;
-                min[d] = middle; max[d] = (p2[2]);
+                min[d] = middle; max[d] = (p2[d]);
             } else {
                 max[d] = middle; min[d] = (p1[d]);
             }

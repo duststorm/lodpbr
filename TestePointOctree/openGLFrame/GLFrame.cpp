@@ -44,6 +44,23 @@ void GLFrame::SetMode(bool t)
 	mode = t;
 }
 
+void GLFrame::SIZE(OctreeNode<float,Surfel<float>* > * pNode, long int& cont)
+{
+	if ( pNode->isLeaf() == true )
+	{
+		cont += sizeof(*pNode); 
+	}
+	else
+	{
+		OctreeInternalNode<float,Surfel<float>* > * lInternalNode = dynamic_cast<OctreeInternalNode< float,Surfel<float>* >* >(pNode);
+
+		for(int i = 0; i < 8; ++i)
+			SIZE(lInternalNode->son[i],cont);
+		cont += sizeof(*lInternalNode);
+	}
+
+}
+
 void GLFrame::LODSelection( OctreeNode<float,Surfel<float>* > * pNode, int& cont)
 {
 	if ( pNode->isLeaf() == true )
@@ -78,6 +95,7 @@ void GLFrame::LODSelection( OctreeNode<float,Surfel<float>* > * pNode, int& cont
 					{
 						LAL::Point3<float> point = (*surfe)->Center();
 						glPointSize(1.0);
+						//(*surfe)->draw();
 						glColor3f(0.0,1.0,0.0);
 						glVertex3f(point[0],point[1],point[2]);
 						cont++;
@@ -116,9 +134,9 @@ void GLFrame::LODSelection( OctreeNode<float,Surfel<float>* > * pNode, int& cont
 				{
 					glPointSize(1.0);
 					glColor3f(1.0,0.0,0.0);
-					lInternalNode->MeanItem()->draw();
-//					LAL::Point3<float> p = lInternalNode->MeanItem()->Center();
-//					glVertex3f(p[0],p[1],p[2]);
+					//lInternalNode->MeanItem()->draw();
+					LAL::Point3<float> p = lInternalNode->MeanItem()->Center();
+					glVertex3f(p[0],p[1],p[2]);
 					cont++;
 
 				}else
@@ -231,7 +249,10 @@ void GLFrame::calLimits()
     
     octree.split();
     octree.Merge();
-            
+    
+    long int cont = 0;
+    
+                   
 }
 
 template <class T>
