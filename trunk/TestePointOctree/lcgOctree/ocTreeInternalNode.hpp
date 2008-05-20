@@ -15,6 +15,7 @@
 #include "ocTreeLeafNode.hpp"
 
 #include "surfels/MergeEllipses.hpp"
+#include "slal/Math.hpp"
 
 ///
 /// This represents an internal Octree Node. These point to eight 
@@ -321,6 +322,7 @@ public:
         				lEpMax.push_back(epMax);
 
         			}
+        			
 
         		}
         		
@@ -350,12 +352,16 @@ public:
         	ep = *(std::max_element(lEpMax.begin(),lEpMax.end())) - (*std::min_element(lEpMin.begin(),lEpMin.end())) ;
         	
         	       	       	       	
-        	mNormalCone =  std::sqrt(1.0 - (lNormalConeCos*lNormalConeCos)) * lNormalConeSin
-        										+
-        				   std::sqrt(1.0 - (lNormalConeSin*lNormalConeSin)) * lNormalConeCos;
+        	mNormalCone =  std::sqrt(1.0 - (lNormalConeSin*lNormalConeSin)) * lNormalConeCos 
+        										-
+        				lNormalConeSin * std::sqrt(1.0 - (lNormalConeCos*lNormalConeCos));
         	
         	if ( mNormalCone < static_cast<Real>(0) )
         		mNormalCone = static_cast<Real>(1);
+        	else 
+        	{
+            	mNormalCone = std::sqrt(1.0 - (mNormalCone*mNormalCone));
+        	}
         	
         }
           
