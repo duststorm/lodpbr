@@ -12,7 +12,7 @@ template < class Real>
 		  
 	    int width, height;
 	
-	    LAL::Quaternion<Real> orientation; 
+	    LAL::Quaternion<Real> mOrientation; 
 	    LAL::Quaternion<Real> startOrientation;
 	    
 	    LAL::Vector3<Real> startVector;
@@ -25,17 +25,17 @@ template < class Real>
 	
 	    Trackball() {}
 	    
-	    void SetBounds (int pw, int ph)
+	    void setBounds (int pw, int ph)
 	    {
 	    	width = pw;
 	    	height = ph;
 	    }
 
-	    void BeginTracking(int x, int y);
-	    void Reset () { orientation.Identity(); }
-	    void Tracking(int x, int y);
-	    const LAL::Quaternion<Real>& Orientation() { return orientation; }
-	    LAL::Matrix4x4<Real> To4x4RotationMatrix();
+	    void beginTracking(int x, int y);
+	    void reset () { mOrientation.identity(); }
+	    void tracking(int x, int y);
+	    const LAL::Quaternion<Real>& orientation() { return mOrientation; }
+	    LAL::Matrix4x4<Real> to4x4RotationMatrix();
 	    void toOpenGL();
 	};
 

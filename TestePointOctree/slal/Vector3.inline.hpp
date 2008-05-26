@@ -53,7 +53,7 @@ Vector3<Real>::Vector3 ( const Real& pX, const Real& pY, const Real& pZ )
 
 
 template<class Real>
-inline void Vector3<Real>::Set(const Real& x, const Real& y, const Real& z) 
+inline void Vector3<Real>::setValues(const Real& x, const Real& y, const Real& z) 
 {
 	this->x = x;
 	this->y = y;
@@ -116,11 +116,7 @@ inline Vector3<Real> Vector3<Real>::operator+ ( )  const
 	return ( Vector3<Real> (this->x, this->y, this->z)  );
 };
 
-/*!@brief operator-
- * @details Unary operator tha return the negative of the point.
- * @note To be clearer the arithmetic operations.
- * @return Point3.
- */
+
 template<class Real>
 inline Vector3<Real>  Vector3<Real>::operator- ( ) const
 {

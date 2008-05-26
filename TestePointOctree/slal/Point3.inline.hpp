@@ -58,7 +58,7 @@ Point3<Real>::Point3 (const P* p)
 
 
 template<class Real>
-inline void Point3<Real>::Set(const Real& x, const Real& y, const Real& z) 
+inline void Point3<Real>::setValues(const Real& x, const Real& y, const Real& z) 
 {
 	this->x = x;
 	this->y = y;
@@ -446,7 +446,7 @@ inline std::ostream& operator<< (std::ostream & s, const Point3<Real>& point)
  * @details return the distance of two points
  */            
 template<class Real>
-Real Point3<Real>::SquaredDistance ( const Point3<Real>& point ) 
+Real Point3<Real>::squaredDistance ( const Point3<Real>& point ) 
 {
 	return (  (point.x - this->x) * (point.x - this->x)	+  
 			  (point.y - this->y) * (point.y - this->y) +   

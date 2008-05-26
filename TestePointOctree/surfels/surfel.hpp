@@ -168,7 +168,7 @@ template <class Real > class Surfel
 	   
 	 ~Surfel() {};
 	
-	 const Point3 Center () const 
+	 Point3 Center () const 
 	 { 
 		 return  ( this->mCenter ) ; 
 	 };

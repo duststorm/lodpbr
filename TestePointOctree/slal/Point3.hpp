@@ -28,28 +28,32 @@ namespace LAL
       {
 
       public:
-          /*! An union. */
-          /*!
-           * Share memory with abscissas atributes and the XYZ Array.
-           * The Struct has the same size of the A.
-           */
-    	  union
-    	  {
-    		  struct
-    		  {
-    			  Real x; /*!< X abscissa of space. */  
-    			  Real y; /*!< Y abscissa of space. */
-    			  Real z; /*!< Z abscissa of space. */
-    		  };
-
-    		  Real xyz[3];/*!< Array of abscissas for fast operator return @see operator[].*/
-    	  };
+     	  /*! @name Members  */
+     	  //@{
+     	  /*! An union. */
+     	  /*!
+     	   * Shareed memory with abscissas atributes and the XYZ Array.
+     	   * The Struct has the same size of the \code xyz[] \endcode.
+     	   */
+     	  union
+     	  {
+     		  struct
+     		  {
+     			  Real x; /*!< X abscissa of space. */  
+     			  Real y; /*!< Y abscissa of space. */
+     			  Real z; /*!< Y abscissa of space. */
+     		  };
+     		  Real xyz[3];/*!< Array of abscissas for fast operator return @see operator[].*/
+     	  };
+     	  //@}
 
       public:
 
     	  friend class Vector3<Real>;
 
-    	  //constructor
+    	  /*! @name  Defining a Point3 */
+    	  //@{
+    	  /*! Default constructor. Value is set to (0,0,0). */
     	  Point3();
     	  Point3 ( const Real& x, const Real& y, const Real& z );
     	  Point3 ( const Point3<Real>& point);
@@ -57,16 +61,33 @@ namespace LAL
     	  template < typename P >
     	  Point3 (const P* point);
 
-    	  inline void Set(const Real& x, const Real& y, const Real& z);
+    	  inline void setValues(const Real& x, const Real& y, const Real& z);
+    	  virtual ~Point3(){};
     	  //Operator
+    	  //@}
+    	  
+  		  /*! @name Accessing the value */
+  		  //@{
+  			
+    	  /*! Conversion operator returning the memory address of the Point.
 
+    	  Useful to pass as a parameter to OpenGL functions:
+    	  \code
+    	  LAL:Point3<float> pos, normal;
+    	  glNormal3fv(normal);
+    	  glVertex3fv(pos);
+    	  \endcode */
+    	  
     	  inline operator Real * ();
     	  inline operator const Real * ();
     	  
     	  inline  Real operator [] ( int i)  const;
 
     	  Real& operator [] ( int i);  
-
+    	  //@}
+    	  
+    	  /*! @name Algebraic computations */
+    	  // @{
     	  // Point/Scalar operations
     	  inline Point3<Real>  	  operator+ ( ) const;
     	  inline Point3<Real>  	  operator- ( ) const;
@@ -114,14 +135,23 @@ namespace LAL
     	  inline friend Point3<T> operator- (const Point3<T>& point, const Vector3<T>& vector ) ;  
     	  template <class T>
     	  inline friend Point3<T> operator- (const Vector3<T>& vector, const Point3<T>& point ) ;  
-
+      	  /*! @name Output stream */
+      	  //@{
+      	  /*! Output stream operator. Enables debugging code like:
+      	  \code
+      	  LAL::Point3<> p(...);
+      	  std::cout << "Point3" << " x = " << p.x << " ,y = " << p.y << " ,z = " << p.z << std::endl;
+      	  \endcode */
     	  template <class T>
     	  inline friend std::ostream& operator<< (std::ostream & s, const Point3<T>& point);
-    
-    	  // Functions
-    	  Real SquaredDistance ( const Point3<Real>& point ) ;
-
-    	  virtual ~Point3(){};
+    	  
+    	  //@}
+    	  /*!@name Functions */
+    	  //@{
+    	  /*!  */
+    	  Real squaredDistance ( const Point3<Real>& p ) ;
+		  //@}
+    	  
 
       };
 

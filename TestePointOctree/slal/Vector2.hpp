@@ -10,28 +10,44 @@
 
 namespace LAL { 
 
+/*!
+*@class Vector2.
+*@brief Class that represent a Vector in 2D.
+*@details coming soon , but ... coming soon  ... wait ¬¬.
+*@author Felipe Moura.
+*@version 1.0.
+*@date 25-Feb-2008.
+*@todo OpenGL interface and a C style array.
+*/  
+
 	template <class Real>	class Vector2
 	{
 
-	public:
-
-		union
-		{
-
-			struct
-			{
-				Real x;
-				Real y;
-			};
-
-			Real xy[3];
-
-		};
-
+    public:
+  	  /*! @name Members  */
+  	  //@{
+  	  /*! An union. */
+  	  /*!
+  	   * Shareed memory with abscissas atributes and the XY Array.
+  	   * The Struct has the same size of the \code xy[] \endcode.
+  	   */
+  	  union
+  	  {
+  		  struct
+  		  {
+  			  Real x; /*!< X abscissa of space. */  
+  			  Real y; /*!< Y abscissa of space. */
+  		  };
+  		  Real xy[2];/*!< Array of abscissas for fast operator return @see operator[].*/
+  	  };
+  	  //@}
+    
 	public:
 
 		// VETOR COLUNA OU VETOR LINHA ??
-
+  	  /*! @name  Defining a Point2 */
+  	  //@{
+  	  /*! Default constructor. Value is set to (0,0,0). */
 		Vector2 ();
 
 		template < typename U >
@@ -40,18 +56,34 @@ namespace LAL {
 		Vector2 ( const Vector2<Real>& u);
 
 		Vector2 ( const Real& pX, const Real& pY );
-
+		virtual ~Vector2 ();
+		//@}
 		//Operator
 
+		/*! @name Accessing the value */
+		//@{
+
+		/*! Conversion operator returning the memory address of the Point.
+
+  	  	Useful to pass as a parameter to OpenGL functions:	
+  	  	\code
+  	  	LAL:Point2<float> pos, normal;
+  	  	glNormal2fv(normal);
+  	  	glVertex2fv(pos);
+  	  	\endcode */
+		
 		inline operator Real * ();
 		inline operator const Real * ();
 
 		inline Real operator [] ( unsigned int i) const;
 
 		inline Real& operator [] ( unsigned int i);
-
+		//@}
+		
 		// Assignment Opertators
 		//With Scalar
+  	  	/*! @name Algebraic computations */
+  	  	// @{
   	  	inline Vector2<Real>   		  operator+ ( ) const;
   	  	inline Vector2<Real>   		  operator- ( ) const;
   	  	
@@ -90,17 +122,29 @@ namespace LAL {
 		inline Vector2<Real>  operator+ ( const Vector2<Real>& u) const;
 		
 		inline Real operator* ( const Vector2<Real>& u) const;
+		//@}
 		
-		template <class T>
-		friend inline std::ostream& operator<< (std::ostream & s, const Vector2<T>& u);
+  	  //@}
+  	  /*! @name Output stream */
+  	  //@{
+  	  /*! Output stream operator. Enables debugging code like:
+  	  \code
+  	  LAL::Vector2<> p(...);
+  	  std::cout << "Vector2" << " x = " << v.x << " ,y = " << v.y << std::endl;
+  	  \endcode */
+  	  template <class T>
+  	  inline friend std::ostream& operator<< (std::ostream & s, const Vector2<T>& p);
+  	  //@}
 		
-		// AUXILIAR FUNCTIONS
+  	  	/*! @name Functions */
+  	  	//@{
+  	   	/*!  */
 		inline Real length ();
 		inline void normalize ();
 		inline Vector2<Real> norm ();
 	
-
-		~Vector2 ();
+		//@}
+	
 
 
 	};

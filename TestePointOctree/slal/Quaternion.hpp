@@ -31,20 +31,26 @@ namespace LAL{
 		friend class Matrix3x3<Real>;
 		friend class Matrix4x4<Real>;
 		
+	   	 /*! @name  Defining a Quaternion */
+	    //@{
+		/*! Default constructor. Value is set to (1,0,0,0). */
 		Quaternion();
 		Quaternion(const Quaternion<Real>& pQuaternion);
 		Quaternion(const Real& pW, const Real& pX, const Real& pY, const Real& pZ);
 		Quaternion(const Real& pAngle, const Vector3<Real>& pAxis );
+		inline Quaternion<Real>& operator=  (const Quaternion<Real>& pQuaternion);
+  	  	inline void setAngle (const Real& pAngle); 
+  	  	inline void setAxis  (const Vector3<Real>& pAxis);
+  	  	inline void setAxis  (const Real& pX, const Real& pY, const Real& pZ);
 		
+		/*! @name Accessing the value */
+		//@{
+		  			
   	  	inline Real x() const;
   	  	inline Real y() const;
   	  	inline Real z() const;
   	  	inline Real w() const; 
-  	  	
-  	  	inline void SetAngle (const Real& pAngle); 
-  	  	inline void SetAxis  (const Vector3<Real>& pAxis);
-  	  	inline void SetAxis  (const Real& pX, const Real& pY, const Real& pZ);
-  	  	
+ 	  	
   	  	inline Vector3<Real> 	axis () const;
   	  	inline Real 			angle() const; 
 
@@ -55,11 +61,13 @@ namespace LAL{
 		inline operator const Real* () const;
 		
 		inline operator Real* ();
-
+		
+		//@}
 		
 	    // arithmetic updates
-		inline Quaternion<Real>&			operator=  (const Quaternion<Real>& pQuaternion);
-
+		
+  	  	/*! @name Algebraic computations */
+  	  	// @{
 		inline Quaternion<Real>& 			operator*= (const Quaternion<Real>& pQuaternion);
 	    inline Quaternion<Real>& 			operator*= (const Real& pFactor);
 	    inline Quaternion<Real>& 			operator/= (const Real& pFactor);
@@ -81,33 +89,45 @@ namespace LAL{
 	    // functions of a quaternion
 	    //Inverses the Quaternion (same rotation angle(), but negated axis()).
 	    inline Quaternion<Real> 	operator~  ( ) const;
-	    inline Real 			    Length() const;  
-	    inline Quaternion<Real> 	Inverse () const;
-	    inline void 				Invert  ();
-	    inline Real					Norm() const;
-	    inline void	 				Normalize   ();
-	    inline Quaternion<Real>		Normalized  ();
-	    inline Vector3<Real>        Rotate   ( const Vector3<Real>& v) const;
-		inline Real				    Dot      ( const Quaternion<Real>& pQuaternion) const;
+	    //@}
+	    
+	   	/*!@name Functions */
+	    //@{
+	    inline Real 			    length() const;  
+	    inline Quaternion<Real> 	inverse () const;
+	    inline void 				invert  ();
+	    inline Real					norm() const;
+	    inline void	 				normalize   ();
+	    inline Quaternion<Real>		normalized  ();
+	    inline Vector3<Real>        rotate   ( const Vector3<Real>& v) const;
+		inline Real				    dot      ( const Quaternion<Real>& pQuaternion) const;
 	
-		inline void Identity ();
-		inline void To3x3Matrix (Matrix3x3<Real>& pRotMatrix) const;
-		inline void To4x4Matrix (Matrix4x4<Real>& pRotMatrix) const;
-		inline void To4x4Matrix( Real * pRotMatrix) const;
-		inline Matrix4x4<Real>  To4x4Matrix() const; 
+		inline void identity ();
+		inline void to3x3Matrix (Matrix3x3<Real>& pRotMatrix) const;
+		inline void to4x4Matrix (Matrix4x4<Real>& pRotMatrix) const;
+		inline void to4x4Matrix( Real * pRotMatrix) const;
+		inline Matrix4x4<Real>  to4x4Matrix() const; 
 		
-		inline void FromRotationMatrix 	(const Matrix4x4<Real>& pRotMatrix );
-		inline void FromAxisAngle		(const Vector3<Real>& axis, const Real& degrees);
-		inline void FromHeadPitchRoll	( Real headDegrees, Real pitchDegrees, Real rollDegrees);
-		inline void FromMatrix			(const Matrix4x4<Real>& m);
+		inline void fromRotationMatrix 	(const Matrix4x4<Real>& pRotMatrix );
+		inline void fromAxisAngle		(const Vector3<Real>& axis, const Real& degrees);
+		inline void fromHeadPitchRoll	( Real headDegrees, Real pitchDegrees, Real rollDegrees);
+		inline void fromMatrix			(const Matrix4x4<Real>& m);
 		
-		inline void ToAxisAngle			(Vector3<Real>& axis, Real& degrees) const;
-		inline void ToHeadPitchRoll		(const Real& headDegrees, const Real& pitchDegrees, const Real& rollDegrees) const;
-		inline void ToRotationArc		(Vector3<Real> &u, Vector3<Real> &v);
-		
+		inline void toAxisAngle			(Vector3<Real>& axis, Real& degrees) const;
+		inline void toHeadPitchRoll		(const Real& headDegrees, const Real& pitchDegrees, const Real& rollDegrees) const;
+		inline void toRotationArc		(Vector3<Real> &u, Vector3<Real> &v);
+		//@}
+
+		/*! @name Output stream */
+		//@{
+		/*! Output stream operator. Enables debugging code like:
+    	  \code
+
+    	  std::cout << " Quaternion " << " w = " << q.w() << " x = " << q.x() << " ,y = " << q.y() << " ,z = " << z() << std::endl;
+    	  \endcode */
 		template <class T>
 		friend inline std::ostream& operator<< (std::ostream & s, const Quaternion<Real>& pQuaternion);
-		
+		//@}
 		virtual ~Quaternion();
 		
 	private:
