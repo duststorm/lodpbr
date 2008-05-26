@@ -88,11 +88,6 @@ inline Vector2<Real> Vector2<Real>::operator+ ( )  const
 	return ( Vector2<Real> (this->x, this->y)  );
 };
 
-/*!@brief operator-
- * @details Unary operator tha return the negative of the point.
- * @note To be clearer the arithmetic operations.
- * @return Point3.
- */
 template<class Real>
 inline Vector2<Real>  Vector2<Real>::operator- ( ) const
 {

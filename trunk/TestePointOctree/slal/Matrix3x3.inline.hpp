@@ -105,7 +105,7 @@ Real& Matrix3x3<Real>::operator() ( int i, int j )
 
 // Return Colum
 template <class Real>
-Vector3<Real> Matrix3x3<Real>::Column ( int i )  const
+Vector3<Real> Matrix3x3<Real>::column ( int i )  const
 {
 
 	if( i<0 || i>=3 ){
@@ -120,7 +120,7 @@ Vector3<Real> Matrix3x3<Real>::Column ( int i )  const
 }
 
 template <class Real>
-Vector3<Real> Matrix3x3<Real>::Row ( int i ) const  
+Vector3<Real> Matrix3x3<Real>::row ( int i ) const  
 {
 
 	if( i<0 || i>=3 ){

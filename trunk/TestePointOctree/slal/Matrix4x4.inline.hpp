@@ -1,8 +1,5 @@
-
 #ifndef	LAL_MATRIX4X4_INLINE_HPP_
 #define LAL_MATRIX4X4_INLINE_HPP_
-
-
 
 template <class Real>
 Matrix4x4<Real>::Matrix4x4()
@@ -47,37 +44,12 @@ Matrix4x4<Real>::Matrix4x4(const Matrix4x4<T>& A)
 	this->m[3][0] = A[3][0]; this->m[3][1] = A[3][1]; this->m[3][2] = A[3][2]; this->m[3][3] = A[3][3];
 }
 
-template <class Real>
-Matrix4x4<Real>::Matrix4x4(const Real& fov, const Real aspectRation, const Real& near, const Real& far)
-{
-	this = this->MakeProjectionMatrix(fov,aspectRation,near,far);
-};
 
 template <class Real>
-Matrix4x4<Real>::Matrix4x4(const Vector3<Real>& eyes, const Vector3<Real>& position, const Vector3<Real>& up)
-{
-
-	Vector3<Real> zaxis = (eyes - position).norm();
-	Vector3<Real> xaxis = (up ^ zaxis).norm();
-	Vector3<Real> yaxis =  zaxis ^ xaxis;
-
-	this->m[0][0] = xaxis.x; this->m[0][1] = xaxis.y; this->m[0][2] = xaxis.z; this->m[0][3] = -(xaxis * eyes);
-	this->m[1][0] = yaxis.x; this->m[1][1] = yaxis.y; this->m[1][2] = yaxis.z; this->m[1][3] = -(yaxis * eyes);
-	this->m[2][0] = zaxis.x; this->m[2][1] = zaxis.y; this->m[2][2] = zaxis.z; this->m[2][3] = -(zaxis * eyes);
-
-	this->m[3][0] = static_cast< Real > ( 0 );    
-	this->m[3][1] = static_cast< Real > ( 0 );    
-	this->m[3][2] = static_cast< Real > ( 0 );
-	this->m[3][3] = static_cast< Real > ( 1 );
-
-}
-
-
-template <class Real>
-Matrix4x4<Real>::Matrix4x4(const Real& a00, const Real& a01, const Real& a02, const Real& a03,
-		const Real& a10, const Real& a11, const Real& a12, const Real& a13, 
-		const Real& a20, const Real& a21, const Real& a22, const Real& a23,
-		const Real& a30, const Real& a31, const Real& a32, const Real& a33)
+Matrix4x4<Real>::Matrix4x4( Real a00, Real a01,Real  a02,Real  a03,
+		Real a10,Real  a11,Real  a12,Real  a13, 
+		Real a20,Real  a21,Real  a22,Real  a23,
+		Real a30,Real  a31,Real  a32,Real  a33)
 {
 	this->m[0][0] = a00; this->m[0][1] = a01; this->m[0][2] = a02; this->m[0][3] = a03; 
 	this->m[1][0] = a10; this->m[1][1] = a11; this->m[1][2] = a12; this->m[1][3] = a13;
@@ -86,22 +58,22 @@ Matrix4x4<Real>::Matrix4x4(const Real& a00, const Real& a01, const Real& a02, co
 };
 
 template <class Real>
-Matrix4x4<Real>::Matrix4x4(const Vector4<Real>& u, const Vector4<Real>& v, const Vector4<Real>& t, const Vector4<Real>& w  )
+Matrix4x4<Real>::Matrix4x4(const Vector4<Real>& row1, const Vector4<Real>& row2, const Vector4<Real>& row3, const Vector4<Real>& row4  )
 {
-	this->m[0][0] = u.x; this->m[0][1] = u.y; this->m[0][2] = u.z; this->m[0][3] = u.w;
-	this->m[1][0] = v.x; this->m[1][1] = v.y; this->m[1][2] = v.z; this->m[1][3] = v.w;
-	this->m[2][0] = t.x; this->m[2][1] = t.y; this->m[2][2] = t.z; this->m[2][3] = t.w;
-	this->m[3][0] = w.x; this->m[3][1] = w.y; this->m[3][2] = w.z; this->m[3][3] = w.w;
+	this->m[0][0] = row1.x; this->m[0][1] = row1.y; this->m[0][2] = row1.z; this->m[0][3] = row1.w;
+	this->m[1][0] = row2.x; this->m[1][1] = row2.y; this->m[1][2] = row2.z; this->m[1][3] = row2.w;
+	this->m[2][0] = row3.x; this->m[2][1] = row3.y; this->m[2][2] = row3.z; this->m[2][3] = row3.w;
+	this->m[3][0] = row4.x; this->m[3][1] = row4.y; this->m[3][2] = row4.z; this->m[3][3] = row4.w;
 };
 
-//	template <class Real>
-//	Matrix4x4<Real>::Matrix4x4(const Vector3<Real>& u, const Vector3<Real>& v, const Vector3<Real>& t)
-//	{
-//		this->m[0][0] = u.x; this->m[0][1] = u.y; this->m[0][2] = u.z; this->m[0][3] = static_cast< Real > ( 0 );
-//		this->m[1][0] = v.x; this->m[1][1] = v.y; this->m[1][2] = v.z; this->m[1][3] = static_cast< Real > ( 0 );
-//		this->m[2][0] = t.x; this->m[2][1] = t.y; this->m[2][2] = t.z; this->m[2][3] = static_cast< Real > ( 0 ) ;
-//		this->m[3][0] = static_cast< Real > ( 0 ); this->m[3][1] = static_cast< Real > ( 0 ); this->m[3][2] =	static_cast< Real > ( 0 ) ; this->m[3][3] = static_cast< Real > ( 1 );
-//	};
+template <class Real>
+Matrix4x4<Real>::Matrix4x4(const Vector3<Real>& row1, const Vector3<Real>& row2, const Vector3<Real>& row3)
+{
+	this->m[0][0] = row1.x; this->m[0][1] = row1.y; this->m[0][2] = row1.z; this->m[0][3] = static_cast< Real > ( 0 );
+	this->m[1][0] = row2.x; this->m[1][1] = row2.y; this->m[1][2] = row2.z; this->m[1][3] = static_cast< Real > ( 0 );
+	this->m[2][0] = row3.x; this->m[2][1] = row3.y; this->m[2][2] = row3.z; this->m[2][3] = static_cast< Real > ( 0 ) ;
+	this->m[3][0] = static_cast< Real > ( 0 ); this->m[3][1] = static_cast< Real > ( 0 ); this->m[3][2] =	static_cast< Real > ( 0 ) ; this->m[3][3] = static_cast< Real > ( 1 );
+};
 
 
 
@@ -289,6 +261,31 @@ inline Matrix4x4<Real> operator* ( const Matrix4x4<Real>& A, const Real& factor)
 };
 
 template <class Real>
+inline Matrix4x4<Real>& Matrix4x4<Real>::operator+= ( const Real& factor)
+{
+
+	m[0][0] += factor; m[0][1] += factor; m[0][2] += factor; m[0][3] += factor;
+	m[1][0] += factor; m[1][1] += factor; m[1][2] += factor; m[1][3] += factor;
+	m[2][0] += factor; m[2][1] += factor; m[2][2] += factor; m[2][3] += factor; 
+	m[3][0] += factor; m[3][1] += factor; m[3][2] += factor; m[3][3] += factor;
+
+	return (*this);
+};
+
+template <class Real>
+inline Matrix4x4<Real>& Matrix4x4<Real>::operator-= ( const Real& factor)
+{
+
+	m[0][0] -= factor; m[0][1] -= factor; m[0][2] -= factor; m[0][3] -= factor;
+	m[1][0] -= factor; m[1][1] -= factor; m[1][2] -= factor; m[1][3] -= factor;
+	m[2][0] -= factor; m[2][1] -= factor; m[2][2] -= factor; m[2][3] -= factor; 
+	m[3][0] -= factor; m[3][1] -= factor; m[3][2] -= factor; m[3][3] -= factor;
+
+	return (*this);
+};
+
+
+template <class Real>
 inline Matrix4x4<Real>& Matrix4x4<Real>::operator/= ( const Real& factor)
 {
 
@@ -305,6 +302,18 @@ inline Matrix4x4<Real>& Matrix4x4<Real>::operator/= ( const Real& factor)
 	m[1][0] *= lFactor; m[1][1] *= lFactor; m[1][2] *= lFactor; m[1][3] *= lFactor;
 	m[2][0] *= lFactor; m[2][1] *= lFactor; m[2][2] *= lFactor; m[2][3] *= lFactor; 
 	m[3][0] *= lFactor; m[3][1] *= lFactor; m[3][2] *= lFactor; m[3][3] *= lFactor;
+
+	return (*this);
+};
+
+template <class Real>
+inline Matrix4x4<Real>& Matrix4x4<Real>::operator*= ( const Real& factor)
+{
+
+	m[0][0] *= factor; m[0][1] *= factor; m[0][2] *= factor; m[0][3] *= factor;
+	m[1][0] *= factor; m[1][1] *= factor; m[1][2] *= factor; m[1][3] *= factor;
+	m[2][0] *= factor; m[2][1] *= factor; m[2][2] *= factor; m[2][3] *= factor; 
+	m[3][0] *= factor; m[3][1] *= factor; m[3][2] *= factor; m[3][3] *= factor;
 
 	return (*this);
 };
@@ -424,7 +433,7 @@ bool Matrix4x4<Real>::isSymetric ()
 }
 
 template <class Real>
-Matrix4x4<Real>	Matrix4x4<Real>::Inverse() const
+Matrix4x4<Real>	Matrix4x4<Real>::inverse() const
 {
 	Real A00 = m[1][2]*m[2][3]*m[3][1] - m[1][3]*m[2][2]*m[3][1] + m[1][3]*m[2][1]*m[3][2] - m[1][1]*m[2][3]*m[3][2] - m[1][2]*m[2][1]*m[3][3] + m[1][1]*m[2][2]*m[3][3];
 	Real A01 = m[0][3]*m[2][2]*m[3][1] - m[0][2]*m[2][3]*m[3][1] - m[0][3]*m[2][1]*m[3][2] + m[0][1]*m[2][3]*m[3][2] + m[0][2]*m[2][1]*m[3][3] - m[0][1]*m[2][2]*m[3][3];
@@ -455,7 +464,7 @@ Matrix4x4<Real>	Matrix4x4<Real>::Inverse() const
 
 
 template <class Real>
-Real	Matrix4x4<Real>::Determinant() const
+Real	Matrix4x4<Real>::determinant() const
 {
 	Real	 value;
 	value =
@@ -469,7 +478,7 @@ Real	Matrix4x4<Real>::Determinant() const
 }
 
 template <class Real>
-Matrix4x4<Real> Matrix4x4<Real>::MakeTranslate (const Vector3<Real>& v) const
+Matrix4x4<Real> Matrix4x4<Real>::makeTranslate (const Vector3<Real>& v) const
 {
 	return ( Matrix4x4<Real>( 0.0 ,0.0, 0.0, 0.0,
 			0.0, 0.0, 0.0, 0.0,
@@ -478,7 +487,7 @@ Matrix4x4<Real> Matrix4x4<Real>::MakeTranslate (const Vector3<Real>& v) const
 }
 
 template <class Real>
-Matrix4x4<Real> Matrix4x4<Real>::MakeTranslate (const Vector4<Real>& v) const
+Matrix4x4<Real> Matrix4x4<Real>::makeTranslate (const Vector4<Real>& v) const
 {
 	return ( Matrix4x4<Real>( 0.0 ,0.0, 0.0, 0.0,
 			0.0, 0.0, 0.0, 0.0,
@@ -487,7 +496,7 @@ Matrix4x4<Real> Matrix4x4<Real>::MakeTranslate (const Vector4<Real>& v) const
 }
 
 template <class Real>
-Matrix4x4<Real> Matrix4x4<Real>::MakeTranslate (const Real& v0,const Real& v1,const Real& v2) const
+Matrix4x4<Real> Matrix4x4<Real>::makeTranslate (const Real& v0,const Real& v1,const Real& v2) const
 {
 	return ( Matrix4x4<Real>( 0.0 ,0.0, 0.0, 0.0,
 			0.0, 0.0, 0.0, 0.0,
@@ -496,7 +505,7 @@ Matrix4x4<Real> Matrix4x4<Real>::MakeTranslate (const Real& v0,const Real& v1,co
 
 }
 template <class Real>
-Matrix4x4<Real> Matrix4x4<Real>::MakeScalar (const Vector3<Real>& v) const
+Matrix4x4<Real> Matrix4x4<Real>::makeScalar (const Vector3<Real>& v) const
 {
 	return ( Matrix4x4<Real>( v.x ,0.0, 0.0, 0.0,
 			0.0, v.y, 0.0, 0.0,
@@ -505,7 +514,7 @@ Matrix4x4<Real> Matrix4x4<Real>::MakeScalar (const Vector3<Real>& v) const
 }
 
 template <class Real>
-Matrix4x4<Real> Matrix4x4<Real>::MakeScalar (const Vector4<Real>& v) const
+Matrix4x4<Real> Matrix4x4<Real>::makeScalar (const Vector4<Real>& v) const
 {
 	return ( Matrix4x4<Real>( v.x ,0.0, 0.0, 0.0,
 			0.0, v.y, 0.0, 0.0,
@@ -514,7 +523,7 @@ Matrix4x4<Real> Matrix4x4<Real>::MakeScalar (const Vector4<Real>& v) const
 }
 
 template <class Real>
-Matrix4x4<Real> Matrix4x4<Real>::MakeProjectionMatrix(const Real& fov, const Real aspectRation, const Real& near, const Real& far) const
+Matrix4x4<Real> Matrix4x4<Real>::makeProjectionMatrix(const Real& fov, const Real aspectRation, const Real& near, const Real& far) 
 {
 
 
@@ -554,23 +563,26 @@ Matrix4x4<Real> Matrix4x4<Real>::MakeProjectionMatrix(const Real& fov, const Rea
 };
 
 template <class Real>
-Matrix4x4<Real> Matrix4x4<Real>::MakeViewMatrix(const Vector3<Real>& eyes, const Vector3<Real>& position, const Vector3<Real>& up) const
+Matrix4x4<Real> Matrix4x4<Real>::makeViewMatrix(const Vector3<Real>& eyes, const Vector3<Real>& position, const Vector3<Real>& up) 
 {
 
-	Vector3<Real> zaxis = (eyes - position ).norm();
+	Vector3<Real> zaxis = (eyes - position).norm();
 	Vector3<Real> xaxis = (up ^ zaxis).norm();
 	Vector3<Real> yaxis =  zaxis ^ xaxis;
 
-	return Matrix4x4<Real>( xaxis.x	   , xaxis.my		, xaxis.mz, -(xaxis * eyes), 
-			yaxis.z	   , yaxis.y		, yaxis.mz, -(yaxis * eyes), 
-			zaxis.z	   , zaxis.y		, zaxis.z, -(zaxis * eyes), 
-			0, 0 , 0, 1 );
+	return Matrix4x4<Real>( xaxis.x	   , xaxis.y		, xaxis.z, -(xaxis * eyes), 
+							yaxis.x	   , yaxis.y		, yaxis.z, -(yaxis * eyes), 
+							zaxis.x	   , zaxis.y		, zaxis.z, -(zaxis * eyes), 
+							static_cast< Real > ( 0 ),
+							static_cast< Real > ( 0 ),
+							static_cast< Real > ( 0 ), 
+							static_cast< Real > ( 1 ) );
 
 
 };
 
 template <class Real>
-void Matrix4x4<Real>::FromHeadPitchRoll(Real headDegrees, Real pitchDegrees, Real rollDegrees)
+void Matrix4x4<Real>::fromHeadPitchRoll(Real headDegrees, Real pitchDegrees, Real rollDegrees)
 {
 	// Constructs a rotation matrix based on a Euler Transform.
 	// I use the popular NASA standard airplane convention of 
@@ -609,7 +621,7 @@ void Matrix4x4<Real>::FromHeadPitchRoll(Real headDegrees, Real pitchDegrees, Rea
 }
 
 template <class Real>
-void Matrix4x4<Real>::Rotate(const Vector3<Real>& axis, Real& degrees)
+void Matrix4x4<Real>::rotate(const Vector3<Real>& axis, Real& degrees)
 {
 
 
@@ -643,7 +655,7 @@ void Matrix4x4<Real>::Rotate(const Vector3<Real>& axis, Real& degrees)
 }
 
 template <class Real>
-void Matrix4x4<Real>::ToHeadPitchRoll(Real &headDegrees, Real &pitchDegrees, Real &rollDegrees) const
+void Matrix4x4<Real>::toHeadPitchRoll(Real &headDegrees, Real &pitchDegrees, Real &rollDegrees) const
 {
 
 

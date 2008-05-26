@@ -25,10 +25,12 @@ namespace LAL{
     {
     public:
     	
+#ifndef DOXYGEN
     	typedef LAL::Matrix4x4<float> Matrix4x4;
     	typedef LAL::Vector4<float> Vector4;
     	typedef LAL::Vector3<float> Vector3;
     	typedef Trackball<float> Trackball;
+#endif
     	
         Camera()
         {
@@ -48,39 +50,39 @@ namespace LAL{
         	mZFarPlane   = 1000.0f;
         };
         
-        void MoveForward( float Distance )
+        void moveForward( float Distance )
         {
         	mPosition +=  ( (mPosition - (mEyes )) * Distance);
         }
 
-        void StrafeRight ( float Distance )
+        void strafeRight ( float Distance )
         {
                     
         	mPosition +=  ( ((mPosition - (mEyes ))^mUp) *Distance);
         }
 
-        void MoveUpward( float Distance )
+        void moveUpward( float Distance )
         {
         	mPosition = mPosition + (Vector3(0.0,1.0,0.0)*Distance);
         }
 
-        Matrix4x4 ViewMatrix()
+        Matrix4x4 viewMatrix()
         {
             
                 // Get the inverse of the arcball's rotation matrix
-        		LAL::Quaternion<float> cameraRotation = ~mTrackball.Orientation();
+        		LAL::Quaternion<float> cameraRotation = ~mTrackball.orientation();
            		
         		       		
                 // Transform vectors based on camera's rotation matrix
                // mUp   = cameraRotation.Rotate(Vector3(0,1,0));
-                mEyes = cameraRotation.Rotate(Vector3(0,0,1)); 
+                mEyes = cameraRotation.rotate(Vector3(0,0,1)); 
                                
                 mEyes =    mPosition - (mEyes * mZoomRadius);
          
                 // Update the eye point based on a radius away from the lookAt position
                // mEyes = cameraRotation.Rotate(mEyes);
 
-                return Matrix4x4 (mEyes, mPosition, mUp);
+                return Matrix4x4::makeViewMatrix(mEyes, mPosition, mUp);
             
         }
         
@@ -122,7 +124,7 @@ namespace LAL{
 //            }
 //        }
 
-        Matrix4x4 ProjectionMatrix()
+        Matrix4x4 projectionMatrix()
         {
           
           
@@ -130,93 +132,93 @@ namespace LAL{
             
         }
 
-        Vector3 Position()
+        Vector3 position()
         {
                         
                 return mPosition;
             
         }
-        Vector3 Eyes()
+        Vector3 eyes()
         {
                         
                 return mEyes;
             
         }
 
-        float FieldOfView()
+        float fieldOfView()
         {
    
                 return mFieldOfView;
                 
         }
         
-        void SetFieldOfView( const float& pFieldOfView)
+        void setFieldOfView( const float& pFieldOfView)
         {
-            SetProjectionMatrix(pFieldOfView, mAspectRatio, mZNearPlane, mZFarPlane);
+            setProjectionMatrix(pFieldOfView, mAspectRatio, mZNearPlane, mZFarPlane);
         }
 
-        float AspectRatio()
+        float aspectRatio()
         {
             
         	return mAspectRatio;
         
         }
 
-        void SetAspectRatio( const float& pAspectRatio)
+        void setAspectRatio( const float& pAspectRatio)
         {
-            SetProjectionMatrix( mFieldOfView, pAspectRatio, mZNearPlane, mZFarPlane);
+            setProjectionMatrix( mFieldOfView, pAspectRatio, mZNearPlane, mZFarPlane);
         }
         
-        float ZNearPlane()
+        float zNearPlane()
         {
             
                 return mZNearPlane;
                        
         }
         
-        void SetZNearPlane(const float& pZNearPlane)
+        void setZNearPlane(const float& pZNearPlane)
         {
-        	SetProjectionMatrix(mFieldOfView, mAspectRatio, pZNearPlane, mZFarPlane);
+        	setProjectionMatrix(mFieldOfView, mAspectRatio, pZNearPlane, mZFarPlane);
         }
 
-        float ZFarPlane()
+        float zFarPlane()
         {
             
                 return mZFarPlane;
                        
         }
         
-        void SetZFarPlane(const float& pZFarPlane)
+        void setZFarPlane(const float& pZFarPlane)
         {
-        	SetProjectionMatrix(mFieldOfView, mAspectRatio, mZNearPlane, pZFarPlane);
+        	setProjectionMatrix(mFieldOfView, mAspectRatio, mZNearPlane, pZFarPlane);
         }
 
-        void SetProjectionMatrix(float pFieldOfView, float pAspectRatio, float pZNearPlane, float pZFarPlane)
+        void setProjectionMatrix(float pFieldOfView, float pAspectRatio, float pZNearPlane, float pZFarPlane)
         {
             mFieldOfView = pFieldOfView;
             mAspectRatio = pAspectRatio;
             mZNearPlane  = pZNearPlane;
             mZFarPlane   = pZFarPlane;
-            mProjectionMatrix = mProjectionMatrix.MakeProjectionMatrix(mFieldOfView, mAspectRatio, mZNearPlane, mZFarPlane);
+            mProjectionMatrix = Matrix4x4::makeProjectionMatrix(mFieldOfView, mAspectRatio, mZNearPlane, mZFarPlane);
         }
 
 
-        void TranslateU(float delta)
+        void translateU(float delta)
         {
-            Translate(delta, 0.0f, 0.0f);
+            translate(delta, 0.0f, 0.0f);
         }
 
-        void TranslateV(float delta)
+        void translateV(float delta)
         {
-            Translate(0.0f, delta, 0.0f);
+            translate(0.0f, delta, 0.0f);
         }
 
-        void TranslateN(float delta)
+        void translateN(float delta)
         {
-            Translate(0.0f, 0.0f, delta);
+            translate(0.0f, 0.0f, delta);
         }
 
-        void Translate(Vector3 deltaUVN)
+        void translate(Vector3 deltaUVN)
         {
 //            Matrix4x4 mat = mTranslationMatrix.MakeTranslate(deltaUVN);
 //            mTranslationMatrix = mTranslationMatrix * mat;
@@ -266,22 +268,22 @@ namespace LAL{
         	
         }
 
-        void Translate(float deltaU, float deltaV, float deltaN)
+        void translate(float deltaU, float deltaV, float deltaN)
         {
-            Translate(Vector3(deltaU, deltaV, deltaN));
+            translate(Vector3(deltaU, deltaV, deltaN));
         }
 
-        void OnRotationBegin( int x, int y)
+        void onRotationBegin( int x, int y)
         {
-            mTrackball.BeginTracking(x,y);
+            mTrackball.beginTracking(x,y);
         }
-        void OnRotationMove(int x, int y)
+        void onRotationMove(int x, int y)
         {
-            mTrackball.Tracking(x,y);
+            mTrackball.tracking(x,y);
         }
 
 
-        void Zoom(float mouseWheelDelta)
+        void zoom(float mouseWheelDelta)
         {
             // Change the radius from the camera to the model based on wheel scrolling
             mZoomRadius -= mouseWheelDelta * mZoomRadius * 0.1f;
@@ -289,15 +291,15 @@ namespace LAL{
             mZoomRadius  = std::max ( mMinRadius, mZoomRadius );
         }
 
-        void SetWindowSize(int width, int height)
+        void setWindowSize(int width, int height)
         {   
-            mTrackball.SetBounds(width, height);	        
+            mTrackball.setBounds(width, height);	        
         }
 
-         void Reset()
+         void reset()
         {
             mPosition = mInitalPosition;
-            mTrackball.Reset();
+            mTrackball.reset();
         }
         
         private:

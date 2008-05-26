@@ -401,9 +401,9 @@ namespace LAL
 			mEigenvalue[2] = d[2];
 
 			
-			mEigenvector[0] = mCovariance.Column(0);
-			mEigenvector[1] = mCovariance.Column(1);
-			mEigenvector[2] = mCovariance.Column(2);
+			mEigenvector[0] = mCovariance.column(0);
+			mEigenvector[1] = mCovariance.column(1);
+			mEigenvector[2] = mCovariance.column(2);
 			
 			mNormal.first  = mEigenvalue[0];
 			mNormal.second = mEigenvector[0];

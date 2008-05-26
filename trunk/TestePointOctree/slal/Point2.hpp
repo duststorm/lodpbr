@@ -11,6 +11,16 @@
 
 namespace LAL
 {
+
+/*!
+*@class Point2.
+*@brief Class that represent a Point in 2D.
+*@details coming soon , but ... coming soon  ... wait ¬¬.
+*@author Felipe Moura.
+*@version 1.0.
+*@date 25-Feb-2008.
+*@todo OpenGL interface and a C style array.
+*/      
       template <class Real> class Point2
       {
 
@@ -18,7 +28,7 @@ namespace LAL
 
     	  friend class Vector2<Real>;
 
-    	  /*! @name Setting the value */
+    	  /*! @name  Defining a Point2 */
     	  //@{
     	  /*! Default constructor. Value is set to (0,0,0). */
     	  Point2();
@@ -32,9 +42,12 @@ namespace LAL
     	  /*!@warning If the type is not a number, the construtor will store trash.*/
     	  template < typename P >
     	  Point2 (const P* p);
-
+    	  virtual ~Point2(){};
     	  //@}
 
+  		  /*! @name Accessing the value */
+  		  //@{
+  			
     	  /*! Conversion operator returning the memory address of the Point.
 
     	  Useful to pass as a parameter to OpenGL functions:
@@ -44,6 +57,7 @@ namespace LAL
     	  glVertex2fv(pos);
     	  \endcode */
 
+    	  
     	  inline operator Real * ();
     	  inline operator const Real * ();
 
@@ -52,7 +66,7 @@ namespace LAL
     	  Real& operator [] ( unsigned int i);  
     	  //@}
 
-    	  /*! @name Point - Scalar operations */
+    	  /*! @name Algebraic computations */
     	  // @{
     	  /*! Unary plus operator. */
     	  inline Point2<Real>  	  operator+ ( ) const;
@@ -68,7 +82,7 @@ namespace LAL
 
     	  /*! Divides the vector by a scalar \p k.
 
-    	   @waning A test is performed to avoide division by zero. */
+    	   @wanning A test is performed to avoide division by zero. */
 
     	  inline const Point2<Real>& operator/= ( const Real& factor );
     	  /*!@see operator+ */
@@ -91,11 +105,7 @@ namespace LAL
     	  inline friend Point2<T> operator* (const Point2<T>& p, const T& factor ) ;  
     	  /*!@see operator/ */
     	  inline Point2<Real> operator/ ( const Real& factor ) const;
-    	  //@}
-
-
-    	  /*! @name Point - Point computations */
-    	  // @{
+    	  
     	  /*! Assigment operator. */
     	  inline const Point2<Real>& operator=  ( const Point2<Real>& p);
     	  /*! Adds \p a to the point. */
@@ -116,10 +126,7 @@ namespace LAL
 
     	  inline bool operator== ( const Point2<Real>& p) const;
     	  inline bool operator!= ( const Point2<Real>& p) const;
-    	  //@}
-
-    	  /*! @name Point - Vector operations */
-    	  // @{
+    	  
     	  template <class T>
     	  inline friend Point2<T> operator+ (const Point2<T>& p, const Vector2<T>& u) ;  
     	  template <class T>
@@ -140,11 +147,13 @@ namespace LAL
     	  template <class T>
     	  inline friend std::ostream& operator<< (std::ostream & s, const Point2<T>& p);
     	  //@}
-    	  // Functions
-    	  Real SquaredDistance ( const Point2<Real>& p ) ;
-
-    	  virtual ~Point2(){};
-
+    	  
+    	  /*! @name Functions */
+    	  //@{
+    	  /*!  */
+    	  Real squaredDistance ( const Point2<Real>& p ) ;
+		  //@}
+    	  
       public:
     	  /*! @name Members  */
     	  //@{

@@ -9,26 +9,47 @@
 
 namespace LAL { 
 
+/*!
+*@class Vector3.
+*@brief Class that represent a Vector in 3D.
+*@details coming soon , but ... coming soon  ... wait ¬¬.
+*@author Felipe Moura.
+*@version 1.0.
+*@date 25-Feb-2008.
+*@todo OpenGL interface and a C style array.
+*/     
+
 	template <class Real>	class Vector3
 	{
 
-	public:
-
-		union
-		{
-			struct
-			{
-				Real x;
-				Real y;
-				Real z;
-			};
-			Real xyz[3];
-		};
+    public:
+  	  /*! @name Members  */
+  	  //@{
+  	  /*! An union. */
+  	  /*!
+  	   * Shareed memory with abscissas atributes and the XYZ Array.
+  	   * The Struct has the same size of the \code xyz[] \endcode.
+  	   */
+  	  union
+  	  {
+  		  struct
+  		  {
+  			  Real x; /*!< X abscissa of space. */  
+  			  Real y; /*!< Y abscissa of space. */
+  			  Real z; /*!< Y abscissa of space. */
+  		  };
+  		  Real xyz[3];/*!< Array of abscissas for fast operator return @see operator[].*/
+  	  };
+  	  //@}
+    
 
 	public:
 
 		// VETOR COLUNA OU VETOR LINHA ??
-
+		
+  	  	/*! @name  Defining a Vector3 */
+  	  	//@{
+  	  	/*! Default constructor. Value is set to (0,0,0). */
 		Vector3 ();
 
 		template < typename U >
@@ -40,19 +61,37 @@ namespace LAL {
 		Vector3 ( const Vector3<U>& vector);
 
 		Vector3 ( const Real& pX, const Real& pY, const Real& pZ );
-
-		inline void Set(const Real& x, const Real& y, const Real& z);
+		
+		inline const Vector3<Real>& operator=  ( const Vector3<Real>& vector );
+		
+		inline void setValues(const Real& x, const Real& y, const Real& z);
+		//@}
 		//Operator
 
+		/*! @name Accessing the value */
+		//@{
+
+		/*! Conversion operator returning the memory address of the Point.
+
+  	  	Useful to pass as a parameter to OpenGL functions:
+  	  	\code
+  	  	LAL:Vector3<float> pos, normal;
+  	  	glNormal3fv(normal);
+  	  	glVertex3fv(pos);
+  	  	\endcode */
+  	  
 		inline operator Real * ();
 		inline operator const Real * ();
 
 		inline Real operator [] ( int i) const;
 
 		inline Real& operator [] ( int i);
-
+		//@}
+		
 		// Assignment Opertators
 		//With Scalar
+ 	  	/*! @name Algebraic computations */
+  	  	// @{
   	  	inline Vector3<Real>   		  operator+ ( ) const;
   	  	inline Vector3<Real>   		  operator- ( ) const;
   	  	
@@ -79,7 +118,7 @@ namespace LAL {
 		
 		
 		// With Vector
-		inline const Vector3<Real>& operator=  ( const Vector3<Real>& vector );
+		
 		inline const Vector3<Real>& operator+= ( const Vector3<Real>& vector );
 		inline const Vector3<Real>& operator-= ( const Vector3<Real>& vector ); 
 		inline const Vector3<Real>& operator/= ( const Vector3<Real>& vector ); 
@@ -94,16 +133,24 @@ namespace LAL {
 
 		// Cross Product	
 		inline Vector3<Real>  operator^ (const Vector3<Real>& vector) const;
-		
+		//@}
+		//@{
+		/*! Output stream operator. Enables debugging code like:
+    	  \code
+    	  LAL::Vector3<> v(...);
+    	  std::cout << "Vector3" << " x = " << v.x << " ,y = " << v.y << " ,z = " << v.z << std::endl;
+    	  \endcode */
 		template <class T>
 		friend inline std::ostream& operator<< (std::ostream & s, const Vector3<T>& vector);
-		
+  	  	/*!@name Functions */
+  	  	//@{
+  	  	/*!  */
 		// AUXILIAR FUNCTIONS
 		inline Real length ();
 		inline Real length2();
 		inline void normalize ();
 		inline Vector3<Real> norm ();
-	
+		//@}
 
 		~Vector3 ();
 
