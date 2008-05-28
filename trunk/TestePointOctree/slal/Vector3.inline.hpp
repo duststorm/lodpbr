@@ -49,8 +49,15 @@ Vector3<Real>::Vector3 ( const Real& pX, const Real& pY, const Real& pZ )
 	this->z = pZ;
 };
 
-//============================= ACESS ======================================
+template<class Real>
+inline Vector3<Real>& Vector3<Real>::operator= ( const Vector3<Real>& vector )
+{
+	this->x = vector.x;
+	this->y = vector.y;
+	this->z = vector.z;
 
+	return ( *this );
+};
 
 template<class Real>
 inline void Vector3<Real>::setValues(const Real& x, const Real& y, const Real& z) 
@@ -59,6 +66,8 @@ inline void Vector3<Real>::setValues(const Real& x, const Real& y, const Real& z
 	this->y = y;
 	this->z = z;
 };
+
+//============================= ACESS ======================================
 
 //Operator
 
@@ -243,15 +252,6 @@ inline Vector3<Real> operator- (const Vector3<Real>& vector, const Real& factor 
 
 // With Vector
 
-template<class Real>
-inline const Vector3<Real>& Vector3<Real>::operator= ( const Vector3<Real>& vector )
-{
-	this->x = vector.x;
-	this->y = vector.y;
-	this->z = vector.z;
-
-	return ( *this );
-};
 
 template<class Real>
 const Vector3< Real >& Vector3<Real>::operator+= (  const Vector3<Real>& vector ) 
