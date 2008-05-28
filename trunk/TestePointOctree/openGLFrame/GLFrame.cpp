@@ -96,7 +96,20 @@ void GLFrame::LODSelection( OctreeNode<float,Surfel<float>* > * pNode, int& cont
 //						LAL::Point3<float> point = (*surfe)->Center();
 						glPointSize(1.0);
 						//(*surfe)->draw();
-						glColor3f(0.0,1.0,0.0);
+						 if ( pNode->level() == 2 )
+							 glColor3f(1.0,0.0,0.0);
+						 else if ( pNode->level() == 3 )
+							 glColor3f(1.0,0.0,1.0);
+						else if ( pNode->level() == 4 )
+							glColor3f(1.0,1.0,0.0);
+						else if ( pNode->level() == 5 )
+							glColor3f(0.0,1.0,0.0);
+						else if ( pNode->level() == 6 )
+							glColor3f(0.0,1.0,1.0);
+						else if ( pNode->level() == 7 )
+							glColor3f(0.0,0.0,1.0);
+						else 
+							glColor3f(1.0,1.0,1.0);
 						glVertex3fv((*surfe)->Center());
 						cont++;
 					}
@@ -111,7 +124,7 @@ void GLFrame::LODSelection( OctreeNode<float,Surfel<float>* > * pNode, int& cont
 //			
 //		for(int i = 0; i < 8; ++i)
 //			LODSelection(lInternalNode->son[i],cont);
-		if ( lInternalNode->level() < 3)
+		if ( lInternalNode->level() < 1)
 		{
 			for(int i = 0; i < 8; ++i)
 				LODSelection(lInternalNode->son[i],cont);
@@ -133,10 +146,25 @@ void GLFrame::LODSelection( OctreeNode<float,Surfel<float>* > * pNode, int& cont
 				if (lInternalNode->PerpendicularError(v) < Threshold)
 				{
 					glPointSize(1.0);
-					glColor3f(1.0,0.0,0.0);
-					//lInternalNode->MeanItem()->draw();
+					
+					 if ( lInternalNode->level() == 2 )
+						 glColor3f(1.0,0.0,0.0);
+					 else if ( lInternalNode->level() == 3 )
+						 glColor3f(1.0,0.0,1.0);
+					else if ( lInternalNode->level() == 4 )
+						glColor3f(1.0,1.0,0.0);
+					else if ( lInternalNode->level() == 5 )
+						glColor3f(0.0,1.0,0.0);
+					else if ( lInternalNode->level() == 6 )
+						glColor3f(0.0,1.0,1.0);
+					else if ( lInternalNode->level() == 7 )
+						glColor3f(0.0,0.0,1.0);
+					else 
+						glColor3f(1.0,1.0,1.0);
+					
+					lInternalNode->MeanItem()->draw();
 //					LAL::Point3<float> p = lInternalNode->MeanItem()->Center();
-					glVertex3fv( lInternalNode->MeanItem()->Center());
+					//glVertex3fv( lInternalNode->MeanItem()->Center());
 					cont++;
 
 				}else
@@ -213,7 +241,6 @@ void GLFrame::drawPoints() {
    
    glDisable(GL_LIGHTING);		
    glPointSize(3.0);
-   glColor3f(1.0,0.0,0.0);
    glBegin(GL_POINTS);
    
    int cont = 0;
@@ -293,7 +320,7 @@ void GLFrame::resizeGL(int width, int height)
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
     GLfloat x = GLfloat(width) / height;
-    camera.setProjectionMatrix(90.0,x,0.1,1000);
+    camera.setProjectionMatrix(45.0,x,0.1,1000);
     glLoadMatrixf(~camera.projectionMatrix());
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
@@ -304,9 +331,6 @@ void GLFrame::resizeGL(int width, int height)
 void GLFrame::paintGL()
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-    glLoadMatrixf(~camera.projectionMatrix());
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
     glLoadMatrixf(~camera.viewMatrix());
