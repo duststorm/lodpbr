@@ -257,13 +257,28 @@ public:
     {
     	ItemPtrList lLeafSurfel;
     	
-        for (int index = 0; index < 8; ++index) 
-        {
-        	if (son[index]->Merge(mode) != NULL)
-        		lLeafSurfel.push_back( son[index]->MeanItem() );
-        	
-        }
-        
+    	
+    	if ( mode == true)
+    	{
+
+    		for (int index = 0; index < 8; ++index) 
+    		{
+    			if (son[index]->Merge(mode) != NULL)
+    				lLeafSurfel.push_back( son[index]->MeanItem() );
+
+    		}
+
+    	}else
+    	{
+    		for (int index = 0; index < 8; ++index) 
+    		{
+    			son[index]->Merge(mode); 
+
+    		}
+
+    		lLeafSurfel = this->itemList();
+     	}
+            	   	
         if (lLeafSurfel.size() > 0)
         {
         	MergeEllipses lMerge = MergeEllipses(lLeafSurfel);
@@ -340,9 +355,12 @@ public:
 
         				epMax = ( ( mMean->Center() - (*it)->Center() ) * mMean->Normal() + di );
         				epMin =	( ( mMean->Center() - (*it)->Center() ) * mMean->Normal() - di );
-
+        				
         				lEpMin.push_back(epMin);
         				lEpMax.push_back(epMax);
+        				
+
+
 
         		}
 
@@ -374,7 +392,7 @@ public:
         	{
         		Real cos = mMean->Normal().norm() * eye.norm();
         	
-        		Real ImageError = (ep*(1- cos*cos))/eye.length();
+        		Real ImageError = (ep*std::sqrt(1- cos*cos))/eye.length();
         	
         		return ImageError;
         	}

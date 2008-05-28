@@ -176,8 +176,8 @@ public:
     	{
     		Real cos = mMean->Normal().norm() * eye.norm();
     	
-    		Real ImageError = (ep*(1- cos*cos))/eye.length();
-    	
+    		Real ImageError = (ep*std::sqrt(1- cos*cos))/eye.length();
+    		        	   	
     		return ImageError;
     	}
     	
