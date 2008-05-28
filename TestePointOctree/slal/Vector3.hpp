@@ -42,6 +42,11 @@ namespace LAL {
   	  };
   	  //@}
     
+  	  static const Vector3 ZERO;
+  	  static const Vector3 UNIT_X;
+  	  static const Vector3 UNIT_Y;
+  	  static const Vector3 UNIT_Z;
+  	  static const Vector3 UNIT;
 
 	public:
 
@@ -62,7 +67,7 @@ namespace LAL {
 
 		Vector3 ( const Real& pX, const Real& pY, const Real& pZ );
 		
-		inline const Vector3<Real>& operator=  ( const Vector3<Real>& vector );
+		inline Vector3<Real>& operator=  ( const Vector3<Real>& vector );
 		
 		inline void setValues(const Real& x, const Real& y, const Real& z);
 		//@}

@@ -21,17 +21,17 @@
 */      
 
 namespace LAL{
+
     class Camera
     {
     public:
-    	
-#ifndef DOXYGEN
+	
+    	typedef LAL::Quaternion<float> Quaternion;
     	typedef LAL::Matrix4x4<float> Matrix4x4;
     	typedef LAL::Vector4<float> Vector4;
     	typedef LAL::Vector3<float> Vector3;
     	typedef Trackball<float> Trackball;
-#endif
-    	
+   	
         Camera()
         {
         	mZoomRadius =  5.0f;
@@ -39,6 +39,9 @@ namespace LAL{
         	mMaxRadius  = 10.0f;
         	
         	mInitalPosition = Vector3(0.0,0.0,0.0);
+        	
+        	mOrientation = Quaternion(1.0,0.0,0.0,0.0);
+       	
         	mPosition = Vector3(0.0,0.0,0.0);
         	mEyes = Vector3(0.0,0.0,1.0);
         	mUp = Vector3(0.0,1.0,0.0);
@@ -48,11 +51,17 @@ namespace LAL{
         	mAspectRatio = 1.0f;
         	mZNearPlane  = 0.001f;
         	mZFarPlane   = 1000.0f;
+        	
         };
         
         void moveForward( float Distance )
         {
         	mPosition +=  ( (mPosition - (mEyes )) * Distance);
+        }
+        
+        void moveUpward( float Distance )
+        {
+        	mPosition = mPosition + (Vector3::UNIT_Y*Distance);
         }
 
         void strafeRight ( float Distance )
@@ -61,22 +70,16 @@ namespace LAL{
         	mPosition +=  ( ((mPosition - (mEyes ))^mUp) *Distance);
         }
 
-        void moveUpward( float Distance )
-        {
-        	mPosition = mPosition + (Vector3(0.0,1.0,0.0)*Distance);
-        }
-
         Matrix4x4 viewMatrix()
         {
             
                 // Get the inverse of the arcball's rotation matrix
-        		LAL::Quaternion<float> cameraRotation = ~mTrackball.orientation();
-           		
-        		       		
+        		//LAL::Quaternion<float> cameraRotation = ~mTrackball.orientation();
+            	       		       		
                 // Transform vectors based on camera's rotation matrix
                // mUp   = cameraRotation.Rotate(Vector3(0,1,0));
-                mEyes = cameraRotation.rotate(Vector3(0,0,1)); 
-                               
+                mEyes = mOrientation.rotate(Vector3::UNIT_Z);
+                
                 mEyes =    mPosition - (mEyes * mZoomRadius);
          
                 // Update the eye point based on a radius away from the lookAt position
@@ -86,70 +89,24 @@ namespace LAL{
             
         }
         
-//        void Camera::rotateFirstPerson(float headingDegrees, float pitchDegrees)
-//        {
-//            // Implements the rotation logic for the first person style and
-//            // spectator style camera behaviors. Roll is ignored.
-//
-//            m_accumPitchDegrees += pitchDegrees;
-//
-//            if (m_accumPitchDegrees > 90.0f)
-//            {
-//                pitchDegrees = 90.0f - (m_accumPitchDegrees - pitchDegrees);
-//                m_accumPitchDegrees = 90.0f;
-//            }
-//
-//            if (m_accumPitchDegrees < -90.0f)
-//            {
-//                pitchDegrees = -90.0f - (m_accumPitchDegrees - pitchDegrees);
-//                m_accumPitchDegrees = -90.0f;
-//            }
-//
-//            Quaternion rot;
-//
-//            // Rotate camera about the world y axis.
-//            // Note the order the quaternions are multiplied. That is important!
-//            if (headingDegrees != 0.0f)
-//            {
-//                rot.fromAxisAngle(WORLD_YAXIS, headingDegrees);
-//                m_orientation = rot * m_orientation;
-//            }
-//
-//            // Rotate camera about its local x axis.
-//            // Note the order the quaternions are multiplied. That is important!
-//            if (pitchDegrees != 0.0f)
-//            {
-//                rot.fromAxisAngle(WORLD_XAXIS, pitchDegrees);
-//                m_orientation = m_orientation * rot;
-//            }
-//        }
 
         Matrix4x4 projectionMatrix()
         {
-          
-          
                 return mProjectionMatrix;
-            
         }
 
         Vector3 position()
         {
-                        
-                return mPosition;
-            
+        	return mPosition;
         }
         Vector3 eyes()
         {
-                        
-                return mEyes;
-            
+        	return mEyes;
         }
 
         float fieldOfView()
         {
-   
-                return mFieldOfView;
-                
+        	return mFieldOfView;
         }
         
         void setFieldOfView( const float& pFieldOfView)
@@ -159,9 +116,7 @@ namespace LAL{
 
         float aspectRatio()
         {
-            
         	return mAspectRatio;
-        
         }
 
         void setAspectRatio( const float& pAspectRatio)
@@ -171,9 +126,7 @@ namespace LAL{
         
         float zNearPlane()
         {
-            
-                return mZNearPlane;
-                       
+        	return mZNearPlane;
         }
         
         void setZNearPlane(const float& pZNearPlane)
@@ -183,9 +136,7 @@ namespace LAL{
 
         float zFarPlane()
         {
-            
-                return mZFarPlane;
-                       
+        	return mZFarPlane;
         }
         
         void setZFarPlane(const float& pZFarPlane)
@@ -196,9 +147,11 @@ namespace LAL{
         void setProjectionMatrix(float pFieldOfView, float pAspectRatio, float pZNearPlane, float pZFarPlane)
         {
             mFieldOfView = pFieldOfView;
+            
             mAspectRatio = pAspectRatio;
             mZNearPlane  = pZNearPlane;
             mZFarPlane   = pZFarPlane;
+            
             mProjectionMatrix = Matrix4x4::makeProjectionMatrix(mFieldOfView, mAspectRatio, mZNearPlane, mZFarPlane);
         }
 
@@ -276,10 +229,12 @@ namespace LAL{
         void onRotationBegin( int x, int y)
         {
             mTrackball.beginTracking(x,y);
+
         }
         void onRotationMove(int x, int y)
         {
             mTrackball.tracking(x,y);
+            mOrientation = ~mTrackball.orientation();
         }
 
 
@@ -305,6 +260,8 @@ namespace LAL{
         private:
         	
         	Vector3 mInitalPosition;
+        	
+        	Quaternion mOrientation;
         	
         	Vector3 mPosition;
         	Vector3 mEyes;
