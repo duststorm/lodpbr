@@ -80,7 +80,7 @@ public :
     
     void Merge ()
     {
-    	root->Merge(mode);
+    	root->merge(mode);
     }
     
     /// Returns the number of pointers to items inserted into this octree

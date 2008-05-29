@@ -89,17 +89,17 @@ class OctreeNode {
     
     virtual int level () const = 0;
     
-    virtual ItemPtr MeanItem() 	const = 0;
+    virtual ItemPtr surfel () 	const = 0;
             
-    virtual ItemPtr Merge(bool mode = true) = 0;
+    virtual ItemPtr merge (bool mode = true) = 0;
     
-    virtual Real PerpendicularError ( Vector3 eye) const = 0;
+    virtual Real perpendicularError ( Vector3 eye) const = 0;
     
-    virtual Real TangencialError 	(const Vector3& eye) const = 0;
+    virtual Real tangencialError (const Vector3& eye) const = 0;
     
-    virtual Real GeometricError  	(const Vector3& eye) const = 0;
+    virtual Real geometricError	(const Vector3& eye) const = 0;
     
-    virtual Real NormalCone() const = 0;
+    virtual Real normalCone () const = 0;
     
     // Virtual destructor 
     virtual ~OctreeNode(){};

@@ -58,6 +58,7 @@ public:
     OctreeInternalNode () {
        son [0] = son [1] = son [2] = son [3] =
        son [4] = son [5] = son [6] = son [7] = 0;
+       mSurfel = NULL;
     }
 
     /// destructor
@@ -231,29 +232,29 @@ public:
     	return mlevel;
     }
     
-    virtual Real NormalCone() const
+    virtual Real normalCone() const
     {
     	return mNormalCone;	
     }
     
      
-    virtual ItemPtr MeanItem() const
+    virtual ItemPtr surfel() const
     {
-    	return mMean;
+    	return mSurfel;
     }
        
     
-    virtual Real TangencialError (const Vector3& eye) const
+    virtual Real tangencialError (const Vector3& eye) const
     {
     	return 1.0;
     }
     
-    virtual Real GeometricError (const Vector3& eye) const
+    virtual Real geometricError (const Vector3& eye) const
     {
     	return 1.0;
     }
     
-    virtual ItemPtr Merge(bool mode) 
+    virtual ItemPtr merge(bool mode) 
     {
     	ItemPtrList lLeafSurfel;
     	
@@ -263,37 +264,48 @@ public:
 
     		for (int index = 0; index < 8; ++index) 
     		{
-    			if (son[index]->Merge(mode) != NULL)
-    				lLeafSurfel.push_back( son[index]->MeanItem() );
-
+    			if (son[index]->merge(mode) != NULL)
+    			{
+    				lLeafSurfel.push_back( son[index]->surfel() );
+    			}
+    			else
+    			{
+    		   		ItemPtrList  temp_Leaf = son[index]->itemList();
+    		    		
+    		    		if (!temp_Leaf.empty()){
+    		    			for (ItemPtrListIterator pi = temp_Leaf.begin (); pi != temp_Leaf.end(); ++pi){
+    		    				lLeafSurfel.push_back(*pi);
+    		    			}
+    		    		}  
+    			}
+    				
     		}
 
     	}else
     	{
     		for (int index = 0; index < 8; ++index) 
     		{
-    			son[index]->Merge(mode); 
+    			son[index]->merge(mode); 
 
     		}
-
-    		lLeafSurfel = this->itemList();
+    		
+	   		lLeafSurfel = this->itemList();
      	}
             	   	
         if (lLeafSurfel.size() > 0)
         {
         	MergeEllipses lMerge = MergeEllipses(lLeafSurfel);
-    		mMean = lMerge.NewPtrSurfel();
+    		mSurfel = lMerge.NewPtrSurfel();
     		
     		ComputePerpendicularError(mode);
     		
         }else
         {
-        	mMean = NULL;
+        	mSurfel = NULL;
         }
-        
-        
+               
         	
-    	return mMean;
+    	return mSurfel;
     }
     
     void ComputePerpendicularError (bool mode)
@@ -310,26 +322,31 @@ public:
         	Real lNormalConeSin = static_cast<Real>(1);
         	Real lTempCos		= static_cast<Real>(1);
         	
+        	Vector3 n  = mSurfel->Normal();
+        	
         	if (mode  == true)
         	{
         	
         		for (int index = 0; index < 8; ++index) 
         		{
 
-        			if (son[index]->MeanItem() != NULL)
+        			if (son[index]->surfel() != NULL)
         			{
-        				di = mMean->MajorAxis().first * (std::sqrt(1.0 - (mMean->Normal()*son[index]->MeanItem()->Normal())*(mMean->Normal()*son[index]->MeanItem()->Normal())  ) );
-
-
-        				epMax = ( ( mMean->Center() - son[index]->MeanItem()->Center() ) * mMean->Normal() + di );
-        				epMin =	( ( mMean->Center() - son[index]->MeanItem()->Center() ) * mMean->Normal() - di );
         				
-        				lTempCos = son[index]->MeanItem()->Normal() * mMean->Normal();
+        				Vector3 ni = son[index]->surfel()->Normal();
+        				
+        				di = mSurfel->MajorAxis().first * ( std::sqrt(1.0 - (n*ni) * (n*ni)  ) );
+
+
+        				epMax = ( ( mSurfel->Center() - son[index]->surfel()->Center() ) * n + di );
+        				epMin =	( ( mSurfel->Center() - son[index]->surfel()->Center() ) * n - di );
+        				
+        				lTempCos = ni * n;
         				
         				if (lTempCos < lNormalConeCos )
         				{
         					lNormalConeCos = lTempCos;
-        					lNormalConeSin = son[index]->NormalCone();
+        					lNormalConeSin = son[index]->normalCone();
         				}
         					
         				
@@ -350,16 +367,13 @@ public:
         		for (listItemPtrIterator it = lp.begin (); it != lp.end(); ++it)
         		{
         			
-        				di = (*it)->Radius() * (std::sqrt(1.0 - (mMean->Normal()*(*it)->Normal() )*(mMean->Normal()*(*it)->Normal() )  ) );
+        				di = (*it)->MajorAxis().first * (std::sqrt(1.0 - (n*(*it)->Normal() ) * (n*(*it)->Normal() )  ) );
 
-
-        				epMax = ( ( mMean->Center() - (*it)->Center() ) * mMean->Normal() + di );
-        				epMin =	( ( mMean->Center() - (*it)->Center() ) * mMean->Normal() - di );
+        				epMax = ( ( mSurfel->Center() - (*it)->Center() ) * n + di );
+        				epMin =	( ( mSurfel->Center() - (*it)->Center() ) * n - di );
         				
         				lEpMin.push_back(epMin);
         				lEpMax.push_back(epMax);
-        				
-
 
 
         		}
@@ -385,12 +399,12 @@ public:
             
         // Por que passando como const VEctor3& eye , da error de disqualified  ....
         
-        virtual Real PerpendicularError (Vector3 eye) const
+        virtual Real perpendicularError (Vector3 eye) const
         {
         	
-        	if (mMean != NULL) 
+        	if (mSurfel != NULL) 
         	{
-        		Real cos = mMean->Normal().norm() * eye.norm();
+        		Real cos = mSurfel->Normal().norm() * eye.norm();
         	
         		Real ImageError = (ep*std::sqrt(1- cos*cos))/eye.length();
         	
@@ -403,7 +417,7 @@ public:
 private:
 	
 	  Point3 	mean_;
-	  ItemPtr 	mMean;
+	  ItemPtr 	mSurfel;
 	  
 	  int 		mlevel;
 	  

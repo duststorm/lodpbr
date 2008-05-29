@@ -370,10 +370,9 @@ template <class Real > class Surfel
  		 	
 			for(ListPtrPoint3Iterator it = lBoundaries.begin();it != lBoundaries.end();++it)
 			{		
-				Point3 point = (*(*it));
 				glPointSize(1.5);
 							
-			 	glVertex3f(point[0],point[1],point[2]);
+			 	glVertex3fv(*(*it));
 			}
 			
 

@@ -49,6 +49,7 @@ public:
 
     /// constructor
     OctreeLeafNode () {
+    	mSurfel = NULL;
     }
 
     /// destructor
@@ -170,26 +171,17 @@ public:
     
     /// FUNCOES CRIADAS POR MIN
     
-    virtual Real PerpendicularError (Vector3 eye) const
+    virtual Real perpendicularError (Vector3 eye) const
     {
-    	if (mMean != NULL) 
-    	{
-    		Real cos = mMean->Normal().norm() * eye.norm();
-    	
-    		Real ImageError = (ep*std::sqrt(1- cos*cos))/eye.length();
-    		        	   	
-    		return ImageError;
-    	}
-    	
     	return HUGE_VAL;
     }
     
-    virtual Real TangencialError (const Vector3& eye) const
+    virtual Real tangencialError (const Vector3& eye) const
     {
     	return 1.0;
     }
     
-    virtual Real GeometricError (const Vector3& eye) const
+    virtual Real geometricError (const Vector3& eye) const
     {
     	return 1.0;
     }
@@ -199,87 +191,57 @@ public:
     	return PtrList;
     }
     
-    virtual ItemPtr MeanItem() const
+    virtual ItemPtr surfel() const
     {
-    	return mMean;
+    	return NULL;
     }
     
-    virtual ItemPtr Merge(bool mode) 
+    virtual ItemPtr merge(bool mode) 
     {
     	if (PtrList.size() > 0)
     	{
     		MergeEllipses lMerge = MergeEllipses(PtrList);
-    		mMean = lMerge.NewPtrSurfel();
-    		ComputePerpendicularError (mode);
-    	}
-    	else
-    	{
-    		mMean = NULL;
+    		mSurfel = lMerge.NewPtrSurfel();
+    		computeNormalCone();
     	}
 
-    	return mMean;
+    	return NULL;
     }
     
-    Real NormalCone() const
+    Real normalCone() const
     {
-    	if (mMean != NULL) 
+    	if (PtrList.size() > 0) 
     	{
     		return mNormalCone;
     	}
     	
-    	return HUGE_VAL; 	
+    	return static_cast<Real> (1.0); 	
     }
     
-    void ComputeNormalCone()
+    void computeNormalCone()
     {
-    	
-    }
-    
-    
-    // tentar achar em um loop so o produto scalar minimo @see Artigo de Normal Cone
-    void ComputePerpendicularError (bool mode)
-    {
-    	std::list<Real> lEpMin;
-    	std::list<Real> lEpMax;
     	
     	std::list<Real> lNormaCone;
-    	
-    	Real epMax = static_cast<Real>(0);
-    	Real epMin = static_cast<Real>(0);
-    	
-    	Real di	   = static_cast<Real>(0);
 
     	for (const_listItemPtrIterator it = PtrList.begin (); it != PtrList.end(); ++it)
     	{
-    		
-    			di = mMean->MajorAxis().first * (std::sqrt(1.0 - ( mMean->Normal() * (*it)->Normal() ) * ( mMean->Normal() * (*it)->Normal() )  ) );
-    			
-    			lNormaCone.push_back(mMean->Normal() * (*it)->Normal());
-   			
-    			epMax = ( ( mMean->Center() - (*it)->Center() ) * mMean->Normal() + di );
-    			epMin =	( ( mMean->Center() - (*it)->Center() ) * mMean->Normal() - di );
-
-    			lEpMin.push_back(epMin);
-    			lEpMax.push_back(epMax);
-    		
+    		lNormaCone.push_back(mSurfel->Normal() * (*it)->Normal());
     	}
-    	
-    	ep = *(std::max_element(lEpMax.begin(),lEpMax.end())) - (*std::min_element(lEpMin.begin(),lEpMin.end())) ;
-    	
+
     	mNormalCone = *(std::min_element(lNormaCone.begin(),lNormaCone.end()) );
     	if ( mNormalCone < static_cast<Real>(0) )
     		mNormalCone = static_cast<Real>(1);
     	else
     		mNormalCone = std::sqrt(1.0 - (mNormalCone*mNormalCone)); 
-    	
+        	
 
     }
-      
+    
+    
     
 private:
 	
-	ItemPtr mMean;
-	Real ep;
+	ItemPtr mSurfel;
 	int mlevel;
 	Real mNormalCone;
 	

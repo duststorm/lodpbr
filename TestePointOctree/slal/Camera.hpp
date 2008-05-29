@@ -85,7 +85,7 @@ namespace LAL{
         		//LAL::Quaternion<float> cameraRotation = ~mTrackball.orientation();
             	       		       		
                 // Transform vectors based on camera's rotation matrix
-               // mUp   = mOrientation.rotate(Vector3::UNIT_Y);
+                //mUp   = mOrientation.rotate(Vector3::UNIT_Y);
                 mEyes = mOrientation.rotate(Vector3::UNIT_Z);
                 
                 mEyes =    mPosition - (mEyes * mZoomRadius);
