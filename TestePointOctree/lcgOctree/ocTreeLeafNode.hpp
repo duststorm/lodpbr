@@ -252,7 +252,7 @@ public:
     	for (const_listItemPtrIterator it = PtrList.begin (); it != PtrList.end(); ++it)
     	{
     		
-    			di = mMean->MajorAxis().first * (std::sqrt(1.0 - (mMean->Normal() * (*it)->Normal())  ) );
+    			di = mMean->MajorAxis().first * (std::sqrt(1.0 - ( mMean->Normal() * (*it)->Normal() ) * ( mMean->Normal() * (*it)->Normal() )  ) );
     			
     			lNormaCone.push_back(mMean->Normal() * (*it)->Normal());
    			

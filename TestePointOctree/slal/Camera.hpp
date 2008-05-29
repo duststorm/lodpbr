@@ -32,6 +32,12 @@ namespace LAL{
     	typedef LAL::Vector3<float> Vector3;
     	typedef Trackball<float> Trackball;
    	
+    	enum CameraBehavior
+    	{
+    		FIRST_PERSON,
+    		FLIGHT
+    	};
+    	
         Camera()
         {
         	mZoomRadius =  5.0f;
@@ -41,6 +47,8 @@ namespace LAL{
         	mInitalPosition = Vector3(0.0,0.0,0.0);
         	
         	mOrientation = Quaternion(1.0,0.0,0.0,0.0);
+        	mAccumPitchDegrees = 0.0f;
+        	mBehavior = FIRST_PERSON;
        	
         	mPosition = Vector3(0.0,0.0,0.0);
         	mEyes = Vector3(0.0,0.0,1.0);
@@ -77,7 +85,7 @@ namespace LAL{
         		//LAL::Quaternion<float> cameraRotation = ~mTrackball.orientation();
             	       		       		
                 // Transform vectors based on camera's rotation matrix
-                mUp   = mOrientation.rotate(Vector3::UNIT_Y);
+               // mUp   = mOrientation.rotate(Vector3::UNIT_Y);
                 mEyes = mOrientation.rotate(Vector3::UNIT_Z);
                 
                 mEyes =    mPosition - (mEyes * mZoomRadius);
@@ -156,76 +164,6 @@ namespace LAL{
         }
 
 
-        void translateU(float delta)
-        {
-            translate(delta, 0.0f, 0.0f);
-        }
-
-        void translateV(float delta)
-        {
-            translate(0.0f, delta, 0.0f);
-        }
-
-        void translateN(float delta)
-        {
-            translate(0.0f, 0.0f, delta);
-        }
-
-        void translate(Vector3 deltaUVN)
-        {
-//            Matrix4x4 mat = mTranslationMatrix.MakeTranslate(deltaUVN);
-//            mTranslationMatrix = mTranslationMatrix * mat;
-//
-//            float amount = deltaUVN.length();
-//
-//            deltaUVN.normalize();
-//
-////            Matrix4x4 invCameraRot = mTrackball.To4x4RotationMatrix().Inverse();
-////            deltaUVN = invCameraRot * deltaUVN;
-//
-//            mPosition += deltaUVN * amount;
-        	
-        	// Strafing is quite simple if you understand what the cross product is.
-        	// Unlike the dot product, which yields a scalar and is commutative, the vector cross product yields a
-            // 3D vector and is not commutative.For example,assume we have two vectors
-        	// 
-        	//[x1 ,y1, z1] * [x2 , y2 , z2] = [y1z2-z1y2 , z1x2-x1z2 , x1y2-y1x2]
-        	//[ 2 , 7 , 3] * [ 1 , 4  , 3] =  [(7)(3)-(3)(4),(3)(1)-(2)(3),(2)(1)-(7)(1)]=[9 ,-3 ,-5]
-        	// When dot product and cross product are used together, the cross product takes precedence: a·b×c = a·(b×c)
-            
-        	// Initialize a variable for the cross product result
-        	Vector3 vCross;
-
-        	// Get the view vVector of our camera and store it in a local variable
-        	Vector3 View_Vector = mEyes - mPosition;
-
-        	// Here we calculate the cross product of our up vVector and view vVector
-
-        	// The X value for the vVector is:  (V1.y * V2.z) - (V1.z * V2.y)
-        	
-        	vCross = mUp ^ View_Vector;
-        	
-        	// Now we want to just add this new vVector to our position and view, as well as
-        	// multiply it by our speed factor.  
-
-        	// Add the resultant vVector to our position
-        	mPosition[0] += vCross.x * deltaUVN[0];
-        	//mPosition[0] += vCross.z() * deltaUVN[0];
-//        	mPosition[2] += vCross.z() * deltaUVN[0];
-
-        	// Add the resultant vVector to our view
-        	mEyes[0] += vCross.x * deltaUVN[0];
-  //      	mEyes[2] += vCross.z() * deltaUVN[0];
-        	
-        	mEyes.normalize();
-        	
-        }
-
-        void translate(float deltaU, float deltaV, float deltaN)
-        {
-            translate(Vector3(deltaU, deltaV, deltaN));
-        }
-
         void onRotationBegin( int x, int y)
         {
             mTrackball.beginTracking(x,y);
@@ -237,7 +175,95 @@ namespace LAL{
             mOrientation = ~mTrackball.orientation();
         }
 
+        void rotate(float headingDegrees, float pitchDegrees, float rollDegrees)
+        {
+            // Rotates the camera based on its current behavior.
+            // Note that not all behaviors support rolling.
 
+            pitchDegrees = -pitchDegrees;
+            headingDegrees = -headingDegrees;
+            rollDegrees = -rollDegrees;
+
+            switch (mBehavior)
+            {
+            case FIRST_PERSON:
+                rotateFirstPerson(headingDegrees, pitchDegrees);
+                break;
+
+            case FLIGHT:
+                rotateFlight(headingDegrees, pitchDegrees, rollDegrees);
+                break;
+            }
+
+
+        }
+
+        void rotateFlight(float headingDegrees, float pitchDegrees, float rollDegrees)
+        {
+            // Implements the rotation logic for the flight style camera behavior.
+
+            Quaternion rot;
+
+            rot.fromHeadPitchRoll(headingDegrees, pitchDegrees, rollDegrees);
+            mOrientation *= rot;
+        }
+
+        void rotateFirstPerson(float headingDegrees, float pitchDegrees)
+        {
+            // Implements the rotation logic for the first person style and
+            // spectator style camera behaviors. Roll is ignored.
+
+            mAccumPitchDegrees += pitchDegrees;
+
+            if (mAccumPitchDegrees > 90.0f)
+            {
+                pitchDegrees = 90.0f - (mAccumPitchDegrees - pitchDegrees);
+                mAccumPitchDegrees = 90.0f;
+            }
+
+            if (mAccumPitchDegrees < -90.0f)
+            {
+                pitchDegrees = -90.0f - (mAccumPitchDegrees - pitchDegrees);
+                mAccumPitchDegrees = -90.0f;
+            }
+
+            Quaternion rot;
+
+            // Rotate camera about the world y axis.
+            // Note the order the quaternions are multiplied. That is important!
+            if (headingDegrees != 0.0f)
+            {
+                rot.fromAxisAngle(Vector3::UNIT_Y, headingDegrees);
+                mOrientation = rot * mOrientation;
+            }
+
+            // Rotate camera about its local x axis.
+            // Note the order the quaternions are multiplied. That is important!
+            if (pitchDegrees != 0.0f)
+            {
+                rot.fromAxisAngle(Vector3::UNIT_X, pitchDegrees);
+                mOrientation = mOrientation * rot;
+            }
+        }
+
+        void setBehavior(CameraBehavior newBehavior)
+        {
+            if (mBehavior == FLIGHT and newBehavior == FIRST_PERSON)
+            {
+                // Moving from flight-simulator mode to first-person.
+                // Need to ignore camera roll, but retain existing pitch and heading.
+
+//                lookAt(m_eye, m_eye + m_zAxis.inverse(), WORLD_YAXIS);
+            }
+
+            mBehavior = newBehavior;
+        }
+        
+        inline CameraBehavior getBehavior() const
+        { 
+        	return mBehavior; 
+        }
+        
         void zoom(float mouseWheelDelta)
         {
             // Change the radius from the camera to the model based on wheel scrolling
@@ -256,31 +282,34 @@ namespace LAL{
             mPosition = mInitalPosition;
             mTrackball.reset();
         }
-        
-        private:
-        	
-        	Vector3 mInitalPosition;
-        	
-        	Quaternion mOrientation;
-        	
-        	Vector3 mPosition;
-        	Vector3 mEyes;
-        	Vector3 mUp;
 
-        	float mZoomRadius;
-        	float mMinRadius;
-        	float mMaxRadius;
+       
+    private:
 
-        	Trackball mTrackball;
+    	Vector3 mInitalPosition;
 
-        	Matrix4x4 mTranslationMatrix;
+    	Quaternion mOrientation;
+    	float mAccumPitchDegrees;
+    	CameraBehavior mBehavior;
 
-        	float mFieldOfView ;
-        	float mAspectRatio ;
-        	float mZNearPlane  ;
-        	float mZFarPlane   ;
+    	Vector3 mPosition;
+    	Vector3 mEyes;
+    	Vector3 mUp;
 
-        	Matrix4x4 mProjectionMatrix;
+    	float mZoomRadius;
+    	float mMinRadius;
+    	float mMaxRadius;
+
+    	Trackball mTrackball;
+
+    	Matrix4x4 mTranslationMatrix;
+
+    	float mFieldOfView ;
+    	float mAspectRatio ;
+    	float mZNearPlane  ;
+    	float mZFarPlane   ;
+
+    	Matrix4x4 mProjectionMatrix;
     };
 
 }/* LAL :: NAMESPACE */
