@@ -72,6 +72,9 @@ private:
   
     QPoint 				lastPos;
     
+    float mCenterX;
+    float mCenterY;
+    
     LAL::Camera camera;
     
     float Threshold;

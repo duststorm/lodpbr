@@ -318,7 +318,7 @@ public:
 
         			if (son[index]->MeanItem() != NULL)
         			{
-        				di = mMean->MajorAxis().first * (std::sqrt(1.0 - (mMean->Normal()*son[index]->MeanItem()->Normal())  ) );
+        				di = mMean->MajorAxis().first * (std::sqrt(1.0 - (mMean->Normal()*son[index]->MeanItem()->Normal())*(mMean->Normal()*son[index]->MeanItem()->Normal())  ) );
 
 
         				epMax = ( ( mMean->Center() - son[index]->MeanItem()->Center() ) * mMean->Normal() + di );
@@ -350,7 +350,7 @@ public:
         		for (listItemPtrIterator it = lp.begin (); it != lp.end(); ++it)
         		{
         			
-        				di = (*it)->Radius() * (std::sqrt(1.0 - (mMean->Normal()*(*it)->Normal() )  ) );
+        				di = (*it)->Radius() * (std::sqrt(1.0 - (mMean->Normal()*(*it)->Normal() )*(mMean->Normal()*(*it)->Normal() )  ) );
 
 
         				epMax = ( ( mMean->Center() - (*it)->Center() ) * mMean->Normal() + di );

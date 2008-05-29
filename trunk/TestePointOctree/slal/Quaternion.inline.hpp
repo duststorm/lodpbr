@@ -381,7 +381,7 @@ inline void  Quaternion<Real>::fromRotationMatrix ( const Matrix4x4<Real>& pRotM
 		  }
 	    }
 	  
- this->Normalize();
+ this->normalize();
 
 }
 
@@ -393,16 +393,16 @@ inline void  Quaternion<Real>::fromAxisAngle(const Vector3<Real> &axis, const Re
     Real s = std::sin(halfTheta);
     
     mW = std::cos(halfTheta);
-    mX = axis.x() * s;
-    mY = axis.y() * s;
-    mZ = axis.z() * s;
+    mX = axis.x * s;
+    mY = axis.y * s;
+    mZ = axis.z * s;
 }
 template <class Real>
 inline void  Quaternion<Real>::fromHeadPitchRoll(Real headDegrees, Real pitchDegrees, Real rollDegrees)
 {
     Matrix4x4<Real> m;
-    m.FromHeadPitchRoll(headDegrees, pitchDegrees, rollDegrees);
-    FromRotationMatrix(m);
+    m.fromHeadPitchRoll(headDegrees, pitchDegrees, rollDegrees);
+    fromRotationMatrix(m);
 }
 
 template <class Real>
