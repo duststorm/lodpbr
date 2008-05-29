@@ -45,8 +45,11 @@ void GLFrame::SetMode(bool t)
 	mode = t;
 }
 
-void GLFrame::SIZE(OctreeNode<float,Surfel<float>* > * pNode, long int& cont)
+void GLFrame::SIZE(OctreeNode<float,Surfel<float>* > * pNode, long int& cont,std::map < int , std::vector<float> >& oi)
 {
+	
+	
+ 	
 	if ( pNode->isLeaf() == true )
 	{
 		cont += sizeof(*pNode); 
@@ -56,73 +59,64 @@ void GLFrame::SIZE(OctreeNode<float,Surfel<float>* > * pNode, long int& cont)
 		OctreeInternalNode<float,Surfel<float>* > * lInternalNode = dynamic_cast<OctreeInternalNode< float,Surfel<float>* >* >(pNode);
 
 		for(int i = 0; i < 8; ++i)
-			SIZE(lInternalNode->son[i],cont);
+			SIZE(lInternalNode->son[i],cont,oi);
+				
+		oi[lInternalNode->level()].push_back(lInternalNode->perpendicularError(camera.eyes()));  
+				
 		cont += sizeof(*lInternalNode);
 	}
 
+	
 }
 
 void GLFrame::LODSelection( OctreeNode<float,Surfel<float>* > * pNode, int& cont)
 {
+	
 	if ( pNode->isLeaf() == true )
 	{
 
-		if (pNode->MeanItem() != NULL)
+		std::list< Surfel<float>* > lp = pNode->itemList();
+
+		for(std::list< Surfel<float>* >::iterator surfe = lp.begin(); surfe != lp.end(); ++surfe )
 		{
-			LAL::Vector3<float> eyeInverse = camera.eyes();
-			LAL::Vector3<float> p (pNode->MeanItem()->Center().x,pNode->MeanItem()->Center().y,pNode->MeanItem()->Center().z);
-			LAL::Vector3<float> dir =  p - eyeInverse ;
+			LAL::Vector3<float> eyeInverse =  camera.eyes();
+			LAL::Vector3<float> p ((*surfe)->Center().x,(*surfe)->Center().y,(*surfe)->Center().z);
+			LAL::Vector3<float> dir = p - eyeInverse;
+
 			dir.normalize();
-			float cosNDir = (dir*pNode->MeanItem()->Normal());
-			
-			if (cosNDir < pNode->NormalCone() )
+
+			float cosNDir = (dir*(*surfe)->Normal());
+
+			if ( cosNDir < 0.0)
 			{
-
-				std::list< Surfel<float>* > lp = pNode->itemList();
-
-
-
-				for(std::list< Surfel<float>* >::iterator surfe = lp.begin(); surfe != lp.end(); ++surfe )
-				{
-					LAL::Vector3<float> eyeInverse =  camera.eyes();
-					LAL::Vector3<float> p ((*surfe)->Center().x,(*surfe)->Center().y,(*surfe)->Center().z);
-					LAL::Vector3<float> dir = p - eyeInverse;
-
-					dir.normalize();
-
-					float cosNDir = (dir*(*surfe)->Normal());
-
-					if ( cosNDir < 0.0)
-					{
-//						LAL::Point3<float> point = (*surfe)->Center();
-						glPointSize(1.0);
-						//(*surfe)->draw();
-						 if ( pNode->level() == 2 )
-							 glColor3f(1.0,0.0,0.0);
-						 else if ( pNode->level() == 3 )
-							 glColor3f(1.0,0.0,1.0);
-						else if ( pNode->level() == 4 )
-							glColor3f(1.0,1.0,0.0);
-						else if ( pNode->level() == 5 )
-							glColor3f(0.0,1.0,0.0);
-						else if ( pNode->level() == 6 )
-							glColor3f(0.0,1.0,1.0);
-						else if ( pNode->level() == 7 )
-							glColor3f(0.0,0.0,1.0);
-						else 
-							glColor3f(1.0,1.0,1.0);
-						glVertex3fv((*surfe)->Center());
-						cont++;
-					}
-
-				}	
+				//						LAL::Point3<float> point = (*surfe)->Center();
+				glPointSize(1.0);
+				//(*surfe)->draw();
+				if ( pNode->level() == 2 )
+					glColor3f(1.0,0.0,0.0);
+				else if ( pNode->level() == 3 )
+					glColor3f(1.0,0.0,1.0);
+				else if ( pNode->level() == 4 )
+					glColor3f(1.0,1.0,0.0);
+				else if ( pNode->level() == 5 )
+					glColor3f(0.0,1.0,0.0);
+				else if ( pNode->level() == 6 )
+					glColor3f(0.0,1.0,1.0);
+				else if ( pNode->level() == 7 )
+					glColor3f(0.0,0.0,1.0);
+				else 
+					glColor3f(1.0,1.0,1.0);
+				glVertex3fv((*surfe)->Center());
+				cont++;
 			}
-		}
+
+		}	
+		
 	}else
 	{
 		
 		OctreeInternalNode<float,Surfel<float>* > * lInternalNode = dynamic_cast<OctreeInternalNode< float,Surfel<float>* >* >(pNode);
-//			
+			
 //		for(int i = 0; i < 8; ++i)
 //			LODSelection(lInternalNode->son[i],cont);
 		if ( lInternalNode->level() < 1)
@@ -135,44 +129,52 @@ void GLFrame::LODSelection( OctreeNode<float,Surfel<float>* > * pNode, int& cont
 			LAL::Vector3<float> v (camera.eyes());
 			LAL::Vector3<float> eyeInverse = camera.eyes();
 
-			LAL::Vector3<float> p (lInternalNode->MeanItem()->Center().x,lInternalNode->MeanItem()->Center().y,lInternalNode->MeanItem()->Center().z);
+			LAL::Vector3<float> p (lInternalNode->surfel()->Center().x,lInternalNode->surfel()->Center().y,lInternalNode->surfel()->Center().z);
 			LAL::Vector3<float> dir =  p - eyeInverse ;
 
 			dir.normalize();
+			
+			float cosNDir = (dir * lInternalNode->surfel()->Normal());
 
-			float cosNDir = (dir * lInternalNode->MeanItem()->Normal());
-
-			if ( cosNDir < lInternalNode->NormalCone())
+			if ( cosNDir < lInternalNode->normalCone())
 			{
-				if (lInternalNode->PerpendicularError(v) < Threshold)
-				{
-					glPointSize(1.0);
 					
-					 if ( lInternalNode->level() == 2 )
-						 glColor3f(1.0,0.0,0.0);
-					 else if ( lInternalNode->level() == 3 )
-						 glColor3f(1.0,0.0,1.0);
-					else if ( lInternalNode->level() == 4 )
-						glColor3f(1.0,1.0,0.0);
-					else if ( lInternalNode->level() == 5 )
-						glColor3f(0.0,1.0,0.0);
-					else if ( lInternalNode->level() == 6 )
-						glColor3f(0.0,1.0,1.0);
-					else if ( lInternalNode->level() == 7 )
-						glColor3f(0.0,0.0,1.0);
-					else 
-						glColor3f(1.0,1.0,1.0);
-					
-					lInternalNode->MeanItem()->draw();
-//					LAL::Point3<float> p = lInternalNode->MeanItem()->Center();
-					//glVertex3fv( lInternalNode->MeanItem()->Center());
-					cont++;
+				if ( (lInternalNode->perpendicularError(v) >= 0) && (lInternalNode->perpendicularError(v) < Threshold))
+					{
+						glPointSize(1.0);
 
-				}else
+						if ( lInternalNode->level() == 2 )
+							glColor3f(1.0,0.0,0.0);
+						else if ( lInternalNode->level() == 3 )
+							glColor3f(1.0,0.0,1.0);
+						else if ( lInternalNode->level() == 4 )
+							glColor3f(1.0,1.0,0.0);
+						else if ( lInternalNode->level() == 5 )
+							glColor3f(0.0,1.0,0.0);
+						else if ( lInternalNode->level() == 6 )
+							glColor3f(0.0,1.0,1.0);
+						else if ( lInternalNode->level() == 7 )
+							glColor3f(0.0,0.0,1.0);
+						else 
+							glColor3f(1.0,1.0,1.0);
+
+						lInternalNode->surfel()->draw();
+						//										LAL::Point3<float> p = lInternalNode->surfel()->Center();
+						//					glVertex3fv( lInternalNode->surfel()->Center());
+						cont++;
+
+					}
+				
+				else
 				{
 					for(int i = 0; i < 8; ++i)
 						LODSelection(lInternalNode->son[i],cont);
 				}
+				
+			}else
+			{
+				for(int i = 0; i < 8; ++i)
+					LODSelection(lInternalNode->son[i],cont);
 			}
 		}		   
 	}
@@ -278,9 +280,21 @@ void GLFrame::calLimits()
     octree.split();
     octree.Merge();
     
+    
+    
+    
     long int cont = 0;
     
-                   
+    std::map < int , std::vector<float> > oi;
+    
+    SIZE(octree.root,cont,oi);
+        
+	for(std::map<int , std::vector<float> >::iterator it = oi.begin(); it != oi.end(); ++it)
+	{
+    	std::cout << "level min " << it->first << ":>" << *(std::min_element(it->second.begin(),it->second.end()) ) << std::endl;
+    	std::cout << "level max " << it->first << ":>" << *(std::max_element(it->second.begin(),it->second.end()) ) << std::endl;
+    	std::cout << "----" << std::endl;
+	}
 }
 
 template <class T>
@@ -338,8 +352,7 @@ void GLFrame::paintGL()
     glLoadIdentity();
     glLoadMatrixf(~camera.viewMatrix());
     
-    std::cout << ~camera.viewMatrix(); 
-    
+       
     if ( surfels.surfels.size() != 0 )
     {
     	if (renderMode_A == Points)
@@ -391,7 +404,7 @@ void GLFrame::mousePressEvent(QMouseEvent *event)
 	 
     if (event->button() == Qt::MidButton) 
     {
-//    	camera.onRotationBegin(event->x(),event->y());
+    	camera.onRotationBegin(event->x(),event->y());
     	updateGL(); 
     }
     else if (event->button() == Qt::RightButton) 
@@ -420,7 +433,7 @@ void GLFrame::mouseMoveEvent(QMouseEvent *event)
       
     }else if (event->buttons() & Qt::MidButton)  {
  	
-//    	camera.onRotationMove(event->x(), event->y());
+    	camera.onRotationMove(event->x(), event->y());
     }
     
     /*!
@@ -430,17 +443,17 @@ void GLFrame::mouseMoveEvent(QMouseEvent *event)
      *  tudo o que eu queria para implementar a First Person Camera !  
     */
     
-    float heading = 0.0f;
-    float pitch = 0.0f;
-    float roll = 0.0f;
-
-    pitch = (static_cast<float>(event->x()) - mCenterX) * 0.2;
-    heading = -(static_cast<float>(event->y()) - mCenterY) * 0.2;
-
-    camera.rotate(heading, pitch, 0.0f);
-
-    //mouse.moveToWindowCenter();
-    QCursor::setPos(mapToGlobal(QPoint(static_cast<int>(width()*0.5),static_cast<int>(height()*0.5))));
+//    float heading = 0.0f;
+//    float pitch = 0.0f;
+//    float roll = 0.0f;
+//
+//    pitch = (static_cast<float>(event->x()) - mCenterX) * 0.2;
+//    heading = -(static_cast<float>(event->y()) - mCenterY) * 0.2;
+//
+//    camera.rotate(heading, pitch, 0.0f);
+//
+//    //mouse.moveToWindowCenter();
+//    QCursor::setPos(mapToGlobal(QPoint(static_cast<int>(width()*0.5),static_cast<int>(height()*0.5))));
  	updateGL();
     lastPos = event->pos();
 }
