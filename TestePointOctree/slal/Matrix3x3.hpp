@@ -23,11 +23,8 @@ namespace LAL {
 	template<class Real> class Matrix3x3
 	{
 	private:
-		union
-		{
-			Real a[3][3];
-			Real mA[9];
-		};
+		
+		Vector3<Real> m[ 3 ];		
 
 	public:
 
@@ -48,18 +45,16 @@ namespace LAL {
 		/*! @name Accessing the value */
 		//@{
 			
-		inline operator const Real* () const;
+	
+		inline const Vector3<Real>& operator[] (int rowIndex) const;
 		
-		inline operator Real* ();
+		inline Vector3<Real>& operator[] (int rowIndex);
 		
-		inline const Real* operator[] (int rowIndex) const;
-		
-		inline Real* operator[] (int rowIndex);
 		Real operator()  ( int i, int j )  	const;
 		Real& operator() ( int i, int j );
 		// Return Colum
-		Vector3<Real> column ( int i ) const;
-		Vector3<Real> row ( int i ) const;
+		Vector3<Real> Column ( int i ) const;
+		Vector3<Real> Row ( int i ) const;
 		//@}	
 		// 
 		/*! @name Algebraic computations */
@@ -92,9 +87,13 @@ namespace LAL {
 		/*! @name Matrix Function  */
 		//@{ 
 		friend  inline std::ostream& operator<< (std::ostream & s, const Matrix3x3<T>& A);
+		
+//		const Real* ToRealtPtr( void ) const ;
+		
+		Real* ToRealPtr( void );
 	
-		bool isSymetric ();
-		Matrix3x3<Real> identity ();
+		bool IsSymetric ();
+		Matrix3x3<Real> Identity ();
 		
 		//@}
 

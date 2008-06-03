@@ -98,7 +98,7 @@ public:
 		{
 			mNewCenter = lSomaCenterAreas / lSomaAreas;
 			mNewNormal = lSomaNormalAreas / lSomaAreas;
-			mNewNormal.normalize();
+			mNewNormal.Normalize();
 		}
 	};
 
@@ -139,8 +139,8 @@ public:
 		mNewMinorAxis = lEigen.MinorAxis();
 		mNewMajorAxis = lEigen.MajorAxis();
 
-		mNewMinorAxis.second.normalize();
-		mNewMajorAxis.second.normalize();
+		mNewMinorAxis.second.Normalize();
+		mNewMajorAxis.second.Normalize();
 
 		Matrix3x3 m = Matrix3x3 (mNewMinorAxis.second,mNewMajorAxis.second,mNewNormal);
 		std::list<Real> lFactors;

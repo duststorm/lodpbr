@@ -86,14 +86,14 @@ namespace LAL{
             	       		       		
                 // Transform vectors based on camera's rotation matrix
                 //mUp   = mOrientation.rotate(Vector3::UNIT_Y);
-                mEyes = mOrientation.rotate(Vector3::UNIT_Z);
+                mEyes = mOrientation.Rotate(Vector3::UNIT_Z);
                 
                 mEyes =    mPosition - (mEyes * mZoomRadius);
          
                 // Update the eye point based on a radius away from the lookAt position
                // mEyes = cameraRotation.Rotate(mEyes);
 
-                return Matrix4x4::makeViewMatrix(mEyes, mPosition, mUp);
+                return Matrix4x4::MakeViewMatrix(mEyes, mPosition, mUp);
             
         }
         
@@ -160,7 +160,7 @@ namespace LAL{
             mZNearPlane  = pZNearPlane;
             mZFarPlane   = pZFarPlane;
             
-            mProjectionMatrix = Matrix4x4::makeProjectionMatrix(mFieldOfView, mAspectRatio, mZNearPlane, mZFarPlane);
+            mProjectionMatrix = Matrix4x4::MakeProjectionMatrix(mFieldOfView, mAspectRatio, mZNearPlane, mZFarPlane);
         }
 
 
@@ -204,7 +204,7 @@ namespace LAL{
 
             Quaternion rot;
 
-            rot.fromHeadPitchRoll(headingDegrees, pitchDegrees, rollDegrees);
+            rot.FromHeadPitchRoll(headingDegrees, pitchDegrees, rollDegrees);
             mOrientation *= rot;
         }
 
@@ -233,7 +233,7 @@ namespace LAL{
             // Note the order the quaternions are multiplied. That is important!
             if (headingDegrees != 0.0f)
             {
-                rot.fromAxisAngle(Vector3::UNIT_Y, headingDegrees);
+                rot.FromAxisAngle(Vector3::UNIT_Y, headingDegrees);
                 mOrientation = rot * mOrientation;
             }
 
@@ -241,7 +241,7 @@ namespace LAL{
             // Note the order the quaternions are multiplied. That is important!
             if (pitchDegrees != 0.0f)
             {
-                rot.fromAxisAngle(Vector3::UNIT_X, pitchDegrees);
+                rot.FromAxisAngle(Vector3::UNIT_X, pitchDegrees);
                 mOrientation = mOrientation * rot;
             }
         }

@@ -120,10 +120,10 @@ template <class Real > class Surfel
 			 						
 			 						
 		  {
-		 	mNormal.normalize();
+		 	mNormal.Normalize();
 		 	Vector3 lV = Perpendicular(mNormal);
 		 	Vector3 lU = mNormal ^ lV;
-		 	lU.normalize();
+		 	lU.Normalize();
 		 	mMinorAxis = std::make_pair(mSplatRadius,lV);
 		 	mMajorAxis = std::make_pair(mSplatRadius,lU);
 		 	//std::cout << " Value " << mMajorAxis.first << " Vector " << mMajorAxis.second << std::endl; 
@@ -285,7 +285,7 @@ template <class Real > class Surfel
 						 				  -pVector.x * pVector.y,
 						 				  -pVector.x * pVector.z );
 				 
-				 return lPerpendicularX.norm();
+				 return lPerpendicularX.Norm();
 			 }
 		 }  
 		 else
@@ -297,7 +297,7 @@ template <class Real > class Surfel
 						 				  1.0 - (pVector.y * pVector.y), 
 						 				  -pVector.y * pVector.z );
 				 
-				 return lPerpendicularY.norm();
+				 return lPerpendicularY.Norm();
 
 			 }
 		 }
@@ -306,7 +306,7 @@ template <class Real > class Surfel
 				 				 -pVector.z * pVector.y, 
 				 				 1.0 - (pVector.z * pVector.z));
 		 
-		 return lPerpendicularZ.norm();
+		 return lPerpendicularZ.Norm();
 
 	 }	   
 	   	 

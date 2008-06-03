@@ -60,17 +60,15 @@ namespace LAL {
 		/*! @name Accessing the value */
 		//@{
 		
-		inline operator const Real* () const;
-		inline operator Real* ();
 		
-		inline const Real* operator[] (int rowIndex) const;
-		inline Real* operator[] (int rowIndex);
+		inline const Vector4<Real>& operator[] (int rowIndex) const;
+		inline Vector4<Real>& operator[] (int rowIndex);
 		
 		Real  operator()  ( int i, int j )  	const;
 		Real& operator() ( int i, int j );
 		// Return Colum
-		Vector4<Real> col ( int i ) const;
-		Vector4<Real> row ( int i ) const;
+		Vector4<Real> Column ( int i ) const;
+		Vector4<Real> Row ( int i ) const;
 
 		
 		//@}
@@ -110,35 +108,39 @@ namespace LAL {
 		
 		/*! @name Translate and Scalar */
 		//@{
-		Matrix4x4<Real> makeTranslate (const Vector3<Real>& v) const;
-		Matrix4x4<Real> makeTranslate (const Vector4<Real>& v) const;
-		Matrix4x4<Real> makeTranslate (const Real& v0,const Real& v1,const Real& v2) const;
+		Matrix4x4<Real> MakeTranslate (const Vector3<Real>& v) const;
+		Matrix4x4<Real> MakeTranslate (const Vector4<Real>& v) const;
+		Matrix4x4<Real> MakeTranslate (const Real& v0,const Real& v1,const Real& v2) const;
 		
-		Matrix4x4<Real> makeScalar (const Vector3<Real>& v) const;
-		Matrix4x4<Real> makeScalar (const Vector4<Real>& v) const;
+		Matrix4x4<Real> MakeScalar (const Vector3<Real>& v) const;
+
 		//@}
 		
 		/*! @name Projection */
-		static Matrix4x4<Real> makeProjectionMatrix (const Real& fovy, const Real aspectRation, const Real& near, const Real& far) ;
-		static Matrix4x4<Real> makeViewMatrix       (const Vector3<Real>& eyes, const Vector3<Real>& position, const Vector3<Real>& up) ;
+		static Matrix4x4<Real> MakeProjectionMatrix (const Real& fovy, const Real aspectRation, const Real& near, const Real& far) ;
+		static Matrix4x4<Real> MakeViewMatrix       (const Vector3<Real>& eyes, const Vector3<Real>& position, const Vector3<Real>& up) ;
 		//@}
 		/*! @name Rotation  */
 		//@{ 
-		void fromHeadPitchRoll(Real headDegrees, Real pitchDegrees, Real rollDegrees);
-		void rotate(const Vector3<Real>& axis, Real& degrees);
-		void toHeadPitchRoll(Real &headDegrees, Real &pitchDegrees, Real &rollDegrees) const;
+		void FromHeadPitchRoll(Real headDegrees, Real pitchDegrees, Real rollDegrees);
+		void Rotate(const Vector3<Real>& axis, Real& degrees);
+		void ToHeadPitchRoll(Real &headDegrees, Real &pitchDegrees, Real &rollDegrees) const;
 		//@}
 		
 		/*! @name Matrix Function  */
 		//@{ 
 				
-		Matrix4x4<Real> identity ();
+		Matrix4x4<Real> Identity ();
 		
-		Real determinant () const;
+		Real Determinant () const;
 		
-		Matrix4x4<Real> inverse () const;
+		Matrix4x4<Real> Inverse () const;
 		//Inquiry
-		bool isSymetric ();
+		bool IsSymetric ();
+		
+//		const Real* ToRealPtr( void ) const 
+		
+		Real* ToRealPtr( void );
 		
 		template <class T>
 		friend  inline std::ostream& operator<< (std::ostream & s, const Matrix4x4<T>& A);
@@ -146,12 +148,8 @@ namespace LAL {
 		
 	private:
 		
-		union
-		{
-			Real m[4][4];
-			Real mA[16];
-		};
-
+	Vector4<Real> m[4];
+	
 	};
 
 #include "Matrix4x4.inline.hpp"
