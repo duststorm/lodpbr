@@ -93,29 +93,29 @@ namespace LAL{
 	    
 	   	/*!@name Functions */
 	    //@{
-	    inline Real 			    length() const;  
-	    inline Quaternion<Real> 	inverse () const;
-	    inline void 				invert  ();
-	    inline Real					norm() const;
-	    inline void	 				normalize   ();
-	    inline Quaternion<Real>		normalized  ();
-	    inline Vector3<Real>        rotate   ( const Vector3<Real>& v) const;
-		inline Real				    dot      ( const Quaternion<Real>& pQuaternion) const;
+	    inline Real 			    Length() const;  
+	    inline Quaternion<Real> 	Inverse () const;
+	    inline void 				Invert  ();
+	    inline Real					Norm() const;
+	    inline void	 				Normalize   ();
+	    inline Quaternion<Real>		Normalized  ();
+	    inline Vector3<Real>        Rotate   ( const Vector3<Real>& v) const;
+		inline Real				    Dot      ( const Quaternion<Real>& pQuaternion) const;
 	
-		inline void identity ();
-		inline void to3x3Matrix (Matrix3x3<Real>& pRotMatrix) const;
-		inline void to4x4Matrix (Matrix4x4<Real>& pRotMatrix) const;
-		inline void to4x4Matrix( Real * pRotMatrix) const;
-		inline Matrix4x4<Real>  to4x4Matrix() const; 
+		inline void Identity ();
+		inline void To3x3Matrix (Matrix3x3<Real>& pRotMatrix) const;
+		inline void To4x4Matrix (Matrix4x4<Real>& pRotMatrix) const;
+		inline void To4x4Matrix( Real * pRotMatrix) const;
+		inline Matrix4x4<Real>  To4x4Matrix() const; 
 		
-		inline void fromRotationMatrix 	(const Matrix4x4<Real>& pRotMatrix );
-		inline void fromAxisAngle		(const Vector3<Real>& axis, const Real& degrees);
-		inline void fromHeadPitchRoll	( Real headDegrees, Real pitchDegrees, Real rollDegrees);
-		inline void fromMatrix			(const Matrix4x4<Real>& m);
+		inline void FromRotationMatrix 	(const Matrix4x4<Real>& pRotMatrix );
+		inline void FromAxisAngle		(const Vector3<Real>& axis, const Real& degrees);
+		inline void FromHeadPitchRoll	( Real headDegrees, Real pitchDegrees, Real rollDegrees);
+		inline void FromMatrix			(const Matrix4x4<Real>& m);
 		
-		inline void toAxisAngle			(Vector3<Real>& axis, Real& degrees) const;
-		inline void toHeadPitchRoll		(const Real& headDegrees, const Real& pitchDegrees, const Real& rollDegrees) const;
-		inline void toRotationArc		(Vector3<Real> &u, Vector3<Real> &v);
+		inline void ToAxisAngle			(Vector3<Real>& axis, Real& degrees) const;
+		inline void ToHeadPitchRoll		(const Real& headDegrees, const Real& pitchDegrees, const Real& rollDegrees) const;
+		inline void ToRotationArc		(Vector3<Real> &u, Vector3<Real> &v);
 		//@}
 
 		/*! @name Output stream */

@@ -13,7 +13,7 @@ void Trackball<Real>::mapToSphere(LAL::Vector3<Real> &v)
 	v[0] = (2*v.x)/Real(width-1)-1;
 	v[1] = 1-(2*v.y)/Real(height-1);
 	v[2] = 0;
-	if((len2 = v.length2())<INVSQRT2)
+	if((len2 = v.LengthSqr())<INVSQRT2)
 		v[2] = std::sqrt(1.0f-len2); // We are on the sphere
 	else
 		v[2] = 1.0f/(2*std::sqrt(len2)); // On the hyperbole
@@ -27,10 +27,10 @@ void Trackball<Real>::tracking(int x, int y)
 	LAL::Vector3<Real> endVector(Real(x), Real(y), 0);
 
 	mapToSphere(endVector);
-	q.toRotationArc(startVector, endVector);
+	q.ToRotationArc(startVector, endVector);
 	mOrientation = q * startOrientation;
 		
-	mOrientation.normalize();
+	mOrientation.Normalize();
 }
 
 template < class Real>

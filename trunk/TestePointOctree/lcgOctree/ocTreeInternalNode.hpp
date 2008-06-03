@@ -404,9 +404,9 @@ public:
         	
         	if (mSurfel != NULL) 
         	{
-        		Real cos = mSurfel->Normal().norm() * eye.norm();
+        		Real cos = mSurfel->Normal().Norm() * eye.Norm();
         	
-        		Real ImageError = (ep*std::sqrt(1- cos*cos))/eye.length();
+        		Real ImageError = (ep*std::sqrt(1- cos*cos))/eye.Length();
         	
         		return ImageError;
         	}

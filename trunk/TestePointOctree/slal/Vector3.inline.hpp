@@ -25,42 +25,42 @@ Vector3<Real>::Vector3 (const U* u)
 
 template<class Real>
 template < typename U >
-Vector3<Real>::Vector3 ( const Vector3<U>& vector)
+Vector3<Real>::Vector3 ( const Vector3<U>& v)
 {
-	this->x = static_cast< Real > (vector.x);
-	this->y = static_cast< Real > (vector.y);
-	this->z = static_cast< Real > (vector.z);
+	this->x = static_cast< Real > (v.x);
+	this->y = static_cast< Real > (v.y);
+	this->z = static_cast< Real > (v.z);
 };
 
 
 template<class Real>
-Vector3<Real>::Vector3 ( const Vector3<Real>& vector)
+Vector3<Real>::Vector3 ( const Vector3<Real>& v)
 {
-	this->x = vector.x;
-	this->y = vector.y;
-	this->z = vector.z;
+	this->x = v.x;
+	this->y = v.y;
+	this->z = v.z;
 };
 
 template<class Real>
-Vector3<Real>::Vector3 ( const Real& pX, const Real& pY, const Real& pZ )
+Vector3<Real>::Vector3 ( const Real& x, const Real& y, const Real& z )
 {
-	this->x = pX;
-	this->y = pY;
-	this->z = pZ;
+	this->x = x;
+	this->y = y;
+	this->z = z;
 };
 
 template<class Real>
-inline Vector3<Real>& Vector3<Real>::operator= ( const Vector3<Real>& vector )
+inline Vector3<Real>& Vector3<Real>::operator= ( const Vector3<Real>& v )
 {
-	this->x = vector.x;
-	this->y = vector.y;
-	this->z = vector.z;
+	this->x = v.x;
+	this->y = v.y;
+	this->z = v.z;
 
 	return ( *this );
 };
 
 template<class Real>
-inline void Vector3<Real>::setValues(const Real& x, const Real& y, const Real& z) 
+inline void Vector3<Real>::Set(const Real& x, const Real& y, const Real& z) 
 {
 	this->x = x;
 	this->y = y;
@@ -72,21 +72,9 @@ inline void Vector3<Real>::setValues(const Real& x, const Real& y, const Real& z
 //Operator
 
 template<class Real>
-inline Vector3<Real>::operator Real * ()
+inline Real Vector3<Real>::operator [] ( int index ) const
 {
-	return xyz;
-}
-
-template<class Real>
-inline Vector3<Real>::operator const Real * ()
-{
-	return xyz;
-}
-
-template<class Real>
-inline Real Vector3<Real>::operator [] ( int i) const
-{
-	if ( i > 2)
+	if ( index > 2)
 	{
 		std::cerr << "[ERROR] Vector3 operator[]"        << std::endl
 		<< "        Out of the vector size. " << std::endl
@@ -94,14 +82,14 @@ inline Real Vector3<Real>::operator [] ( int i) const
 		exit(1);
 	}
 
-	return (xyz[i]);
+	return ( ( &x )[ index ] );
 
 };
 
 template<class Real>
-inline Real& Vector3<Real>::operator [] ( int i) 
+inline Real& Vector3<Real>::operator [] ( int index) 
 {
-	if ( i > 2)
+	if ( index > 2)
 	{
 		std::cerr << "[ERROR] Vector3 operator[]"        << std::endl
 		<< "        Out of the vector size. " << std::endl
@@ -110,7 +98,7 @@ inline Real& Vector3<Real>::operator [] ( int i)
 	}
 
 
-	return (xyz[i]);
+	return ( ( &x )[ index ] );
 
 };
 
@@ -179,74 +167,53 @@ const Vector3< Real >& Vector3<Real>::operator/= ( const Real& factor )
 
 
 template<class Real>
-inline Vector3<Real> operator* ( const Vector3<Real>& vector, const Real& factor ) 	
+inline Vector3<Real> operator* ( const Vector3<Real>& v, const Real& factor ) 	
 {
 
-	return (  Vector3<Real>( vector.x * factor,
-			vector.y * factor,
-			vector.z * factor ) 
-	);
+	return (  Vector3<Real>( v.x * factor, v.y * factor, v.z * factor )	);
 
 };
 
 template<class Real>
-inline Vector3<Real> operator*	( const Real& factor, const Vector3<Real>& vector ) 
+inline Vector3<Real> operator*	( const Real& factor, const Vector3<Real>& v ) 
 {
-	return ( Vector3<Real>( vector.x * factor,
-			vector.y * factor,
-			vector.z * factor )
-	);
+	return ( Vector3<Real>( v.x * factor, v.y * factor, v.z * factor ) );
 
 };
 
 template<class Real>
-inline Vector3<Real> operator/ ( const Vector3<Real>& vector, const Real& factor ) 	
+inline Vector3<Real> operator/ ( const Vector3<Real>& v, const Real& factor ) 	
 {
 
-	return (  Vector3<Real>( vector.x / factor,
-			vector.y / factor,
-			vector.z / factor ) 
-	);
+	return (  Vector3<Real>( v.x / factor, 	v.y / factor, v.z / factor ) );
 
 };
 
 template<class Real>
-inline Vector3<Real> operator+ (const Real& factor, const Vector3<Real>& vector )  
+inline Vector3<Real> operator+ (const Real& factor, const Vector3<Real>& v )  
 {
-	return ( Vector3<Real> ( vector.x + factor,
-			vector.y + factor,
-			vector.z + factor )
-	);
+	return ( Vector3<Real> ( v.x + factor, v.y + factor, v.z + factor ) );
 
 };
 
 template<class Real>
-inline Vector3<Real> operator+ (const Vector3<Real>& vector, const Real& factor )  
+inline Vector3<Real> operator+ (const Vector3<Real>& v, const Real& factor )  
 {
-	return ( Vector3<Real> ( vector.x + factor,
-			vector.y + factor,
-			vector.z + factor )
-	);
+	return ( Vector3<Real> ( v.x + factor, v.y + factor, v.z + factor ) );
 
 };
 
 template<class Real>
-inline Vector3<Real> operator- (const Real& factor, const Vector3<Real>& vector )  
+inline Vector3<Real> operator- (const Real& factor, const Vector3<Real>& v )  
 {
-	return ( Vector3<Real> ( factor - vector.x ,
-			factor - vector.y ,
-			factor - vector.z  )
-	);
+	return ( Vector3<Real> ( factor - v.x , factor - v.y , factor - v.z  ) );
 
 };
 
 template<class Real>
-inline Vector3<Real> operator- (const Vector3<Real>& vector, const Real& factor )  
+inline Vector3<Real> operator- (const Vector3<Real>& v, const Real& factor )  
 {
-	return ( Vector3<Real> ( vector.x - factor,
-			vector.y - factor,
-			vector.z - factor )
-	);
+	return ( Vector3<Real> ( v.x - factor, 	v.y - factor, v.z - factor ) );
 
 };
 
@@ -254,117 +221,108 @@ inline Vector3<Real> operator- (const Vector3<Real>& vector, const Real& factor 
 
 
 template<class Real>
-const Vector3< Real >& Vector3<Real>::operator+= (  const Vector3<Real>& vector ) 
+const Vector3< Real >& Vector3<Real>::operator+= (  const Vector3<Real>& v ) 
 { 
-	this->x += vector.x; 
-	this->y += vector.y; 
-	this->z += vector.z;
+	this->x += v.x; 
+	this->y += v.y; 
+	this->z += v.z;
 
 	return ( *this ); 
 }
 
 template<class Real>
-const Vector3< Real >& Vector3<Real>::operator-= (  const Vector3<Real>& vector ) 
+const Vector3< Real >& Vector3<Real>::operator-= (  const Vector3<Real>& v ) 
 { 
-	this->x -= vector.x; 
-	this->y -= vector.y; 
-	this->z -= vector.z;
+	this->x -= v.x; 
+	this->y -= v.y; 
+	this->z -= v.z;
 
 	return ( *this ); 
 } 
 
 template<class Real>
-const Vector3< Real >& Vector3<Real>::operator/= ( const Vector3<Real>& vector ) 
+const Vector3< Real >& Vector3<Real>::operator/= ( const Vector3<Real>& v ) 
 { 
 
-	this->x /= vector.x;
-	this->y /= vector.y; 
-	this->z /= vector.z;
+	this->x /= v.x;
+	this->y /= v.y; 
+	this->z /= v.z;
 
 	return ( *this ); 
 } 
 
 template<class Real>
-inline bool Vector3<Real>::operator== ( const Vector3<Real>& vector) const
+inline bool Vector3<Real>::operator== ( const Vector3<Real>& v) const
 {
-	return ( ( this->x == vector.x ) and ( this->y == vector.y ) and ( this->z == vector.z ) );
+	return ( ( this->x == v.x ) and ( this->y == v.y ) and ( this->z == v.z ) );
 };	
 
 template<class Real>
-inline bool Vector3<Real>::operator!= ( const Vector3<Real>& vector) const
+inline bool Vector3<Real>::operator!= ( const Vector3<Real>& v) const
 {
-	return  !(*this == vector) ;
+	return  !(*this == v) ;
 };	
 
 template<class Real>
-inline Vector3<Real>  Vector3<Real>::operator- ( const Vector3<Real>& vector) const
+inline Vector3<Real>  Vector3<Real>::operator- ( const Vector3<Real>& v) const
 {
 
-	return ( Vector3 ( this->x - vector.x,
-			this->y - vector.y,
-			this->z - vector.z) 
-	);
+	return ( Vector3 ( this->x - v.x, this->y - v.y, this->z - v.z) );
 };
 
 template<class Real>
-inline Vector3<Real>  Vector3<Real>::operator+ ( const Vector3<Real>& vector)	const
+inline Vector3<Real>  Vector3<Real>::operator+ ( const Vector3<Real>& v)	const
 {
 
-	return ( Vector3 ( this->x + vector.x,
-			this->y + vector.y,
-			this->z + vector.z)
-	);
+	return ( Vector3 ( this->x + v.x, this->y + v.y, this->z + v.z) );
 
 };
 
 template<class Real>
-inline Real Vector3<Real>::operator* ( const Vector3<Real>& vector) const	
+inline Real Vector3<Real>::operator* ( const Vector3<Real>& v) const	
 {
 
-	return (  (vector.x * x ) +  ( vector.y * y ) + ( vector.z * z )  );
+	return (  (v.x * x ) +  ( v.y * y ) + ( v.z * z )  );
 
 };
 
 // Cross Product
 template<class Real>
-inline Vector3<Real>  Vector3<Real>::operator^ (const Vector3<Real>& vector) const
+inline Vector3<Real>  Vector3<Real>::operator^ (const Vector3<Real>& v) const
 {
-	return ( Vector3<Real> ( 	y*vector.z - z*vector.y,
-			z*vector.x - x*vector.z,
-			x*vector.y - y*vector.x)
-	);
+	return ( Vector3<Real> ( 	y*v.z - z*v.y, 	z*v.x - x*v.z, 	x*v.y - y*v.x) );
 
 };
 
 //============================= OPERATIONS ===================================
 
 template<class Real>
-inline std::ostream& operator<< (std::ostream & s, const Vector3<Real>& vector)
+inline std::ostream& operator<< (std::ostream & s, const Vector3<Real>& v)
 {
-	s << "Vector3"<< " x = " << vector.x << " ,y = " << vector.y << " ,z = " << vector.z << std::endl;
+	s << "Vector3"<< " x = " << v.x << " ,y = " << v.y << " ,z = " << v.z << std::endl;
 
 	return s;
 };
 
 // AUXILIAR FUNCTIONS
 template<class Real>
-inline Real Vector3<Real>::length ()
+inline Real Vector3<Real>::Length ()
 {
 	return sqrt( (this->x * this->x) + (this->y * this->y) + (this->z * this->z) );
 };
 
 // AUXILIAR FUNCTIONS
 template<class Real>
-inline Real Vector3<Real>::length2 ()
+inline Real Vector3<Real>::LengthSqr ()
 {
 	return ( (this->x * this->x) + (this->y * this->y) + (this->z * this->z) );
 };
 
 
 template<class Real>
-inline void Vector3<Real>::normalize ()
+inline void Vector3<Real>::Normalize ()
 {
-	Real factor = sqrt( (x * x) + (y * y) + (z * z) );
+	Real factor = std::sqrt( (x * x) + (y * y) + (z * z) );
 
 	if (factor <= static_cast<Real>(0))
 	{
@@ -383,7 +341,7 @@ inline void Vector3<Real>::normalize ()
 };
 
 template<class Real>
-inline Vector3<Real> Vector3<Real>::norm ()
+inline Vector3<Real> Vector3<Real>::Norm ()
 {
 	Real factor = sqrt( (x * x) + (y * y) + (z * z) );
 
@@ -396,6 +354,19 @@ inline Vector3<Real> Vector3<Real>::norm ()
 	return ( Vector3<Real> (x * d, y * d, z * d) );
 
 };
+
+template<class Real>
+const Real* Vector3<Real>::ToRealPtr( void ) const 
+{
+	return &x;
+}
+
+template<class Real>
+Real* Vector3<Real>::ToRealPtr( void )
+{
+	return &x;
+}
+
 template <class Real>
 Vector3<Real>::~Vector3 (){};
 

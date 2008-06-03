@@ -204,7 +204,7 @@ inline Quaternion<Real> operator* (const Quaternion<Real>& a, const Quaternion<R
 }
 
 template <class Real>
-inline Vector3<Real> Quaternion<Real>::rotate(const Vector3<Real>& v) const
+inline Vector3<Real> Quaternion<Real>::Rotate(const Vector3<Real>& v) const
 {
     Quaternion<Real> lQuaternio(1.0,v.x, v.y, v.z);
     
@@ -215,7 +215,7 @@ inline Vector3<Real> Quaternion<Real>::rotate(const Vector3<Real>& v) const
 
 
 template <class Real>
-inline void Quaternion<Real>::to3x3Matrix (Matrix3x3<Real>& pRotMatrix) const
+inline void Quaternion<Real>::To3x3Matrix (Matrix3x3<Real>& pRotMatrix) const
 {
     Real x  = static_cast<Real> (2.0)*mX;
     Real y  = static_cast<Real> (2.0)*mY;
@@ -242,7 +242,7 @@ inline void Quaternion<Real>::to3x3Matrix (Matrix3x3<Real>& pRotMatrix) const
 }
 
 template <class Real>
-inline void Quaternion<Real>::to4x4Matrix(Matrix4x4<Real> &pRotMatrix) const 
+inline void Quaternion<Real>::To4x4Matrix(Matrix4x4<Real> &pRotMatrix) const 
 {
     Real x  = static_cast<Real> (2.0)*mX;
     Real y  = static_cast<Real> (2.0)*mY;
@@ -271,7 +271,7 @@ inline void Quaternion<Real>::to4x4Matrix(Matrix4x4<Real> &pRotMatrix) const
   }
 
 template <class Real>
-inline Matrix4x4<Real> Quaternion<Real>::to4x4Matrix() const 
+inline Matrix4x4<Real> Quaternion<Real>::To4x4Matrix() const 
 {
 	
 	Matrix4x4<Real> pRotMatrix;
@@ -305,7 +305,7 @@ inline Matrix4x4<Real> Quaternion<Real>::to4x4Matrix() const
   }
 
 template <class Real>
-inline void Quaternion<Real>::to4x4Matrix( Real * pRotMatrix) const {
+inline void Quaternion<Real>::To4x4Matrix( Real * pRotMatrix) const {
 	
     Real x  = static_cast<Real> (2.0)*mX;
     Real y  = static_cast<Real> (2.0)*mY;
@@ -338,7 +338,7 @@ inline void Quaternion<Real>::to4x4Matrix( Real * pRotMatrix) const {
 
 //----------------------------------------------------------------------------
 template <class Real>
-inline void  Quaternion<Real>::fromRotationMatrix ( const Matrix4x4<Real>& pRotMatrix )
+inline void  Quaternion<Real>::FromRotationMatrix ( const Matrix4x4<Real>& pRotMatrix )
 {
 	  const Real onePlusTrace = static_cast<Real> (1.0)  + pRotMatrix[0][0] + pRotMatrix[1][1] + pRotMatrix[2][2];
 
@@ -381,12 +381,12 @@ inline void  Quaternion<Real>::fromRotationMatrix ( const Matrix4x4<Real>& pRotM
 		  }
 	    }
 	  
- this->normalize();
+ this->Normalize();
 
 }
 
 template <class Real>
-inline void  Quaternion<Real>::fromAxisAngle(const Vector3<Real> &axis, const Real& degrees)
+inline void  Quaternion<Real>::FromAxisAngle(const Vector3<Real> &axis, const Real& degrees)
 {
     Real halfTheta = static_cast<Real> (Math::degreesToRadians(degrees) * 0.5f);
     
@@ -398,15 +398,15 @@ inline void  Quaternion<Real>::fromAxisAngle(const Vector3<Real> &axis, const Re
     mZ = axis.z * s;
 }
 template <class Real>
-inline void  Quaternion<Real>::fromHeadPitchRoll(Real headDegrees, Real pitchDegrees, Real rollDegrees)
+inline void  Quaternion<Real>::FromHeadPitchRoll(Real headDegrees, Real pitchDegrees, Real rollDegrees)
 {
     Matrix4x4<Real> m;
-    m.fromHeadPitchRoll(headDegrees, pitchDegrees, rollDegrees);
-    fromRotationMatrix(m);
+    m.FromHeadPitchRoll(headDegrees, pitchDegrees, rollDegrees);
+    FromRotationMatrix(m);
 }
 
 template <class Real>
-inline void  Quaternion<Real>::toAxisAngle( Vector3<Real>& axis, Real& degrees ) const
+inline void  Quaternion<Real>::ToAxisAngle( Vector3<Real>& axis, Real& degrees ) const
 {
     // Converts this quaternion to an axis and an angle.
 
@@ -432,11 +432,11 @@ inline void  Quaternion<Real>::toAxisAngle( Vector3<Real>& axis, Real& degrees )
 
 // Reference: Stan Melax, Game Programming Gems
 template <class Real>
-inline void  Quaternion<Real>::toRotationArc(Vector3<Real> &u, Vector3<Real> &v) 
+inline void  Quaternion<Real>::ToRotationArc(Vector3<Real> &u, Vector3<Real> &v) 
 {
 
-	u.normalize();
-	v.normalize();
+	u.Normalize();
+	v.Normalize();
 	Vector3<Real> w = u ^ v;
 
 	Real d = u*v;
@@ -494,20 +494,20 @@ inline Quaternion<Real> Quaternion<Real>::operator~ () const
 }
 
 template <class Real>
-inline Real Quaternion<Real>::length () const
+inline Real Quaternion<Real>::Length () const
 {
     return std::sqrt(  mX*mX +  mY*mY +  mZ*mZ + mW*mW );
 }
 
 template <class Real>
-inline Real Quaternion<Real>::norm () const
+inline Real Quaternion<Real>::Norm () const
 {
     return   ( mX*mX + mY*mY +  mZ*mZ + mW*mW ) ;
 }
 
 
 template <class Real>
-inline void Quaternion<Real>::normalize ()
+inline void Quaternion<Real>::Normalize ()
 {
     Real lLength = sqrt(  mX*mX +  mY*mY +  mZ*mZ + mW*mW );
 
@@ -531,7 +531,7 @@ inline void Quaternion<Real>::normalize ()
 }
 
 template <class Real>
-inline void Quaternion<Real>::identity ()
+inline void Quaternion<Real>::Identity ()
 {
 	this->mW = static_cast<Real> (1);
 	this->mX = static_cast<Real> (0);
@@ -542,7 +542,7 @@ inline void Quaternion<Real>::identity ()
 
 
 template <class Real>
-inline Quaternion<Real> Quaternion<Real>::normalized ()
+inline Quaternion<Real> Quaternion<Real>::Normalized ()
 {
     Real lLength = sqrt(  mX*mX +  mY*mY +  mZ*mZ + mW*mW );
 
@@ -563,7 +563,7 @@ inline Quaternion<Real> Quaternion<Real>::normalized ()
 
 
 template <class Real>
-inline Quaternion<Real> Quaternion<Real>::inverse () const
+inline Quaternion<Real> Quaternion<Real>::Inverse () const
 {
 	Real lNorm =   mX*mX +  mY*mY +  mZ*mZ + mW*mW ;
 	
@@ -581,7 +581,7 @@ inline Quaternion<Real> Quaternion<Real>::inverse () const
 }
 
 template <class Real>
-inline void  Quaternion<Real>::invert () 
+inline void  Quaternion<Real>::Invert () 
 {
 	Real lNorm =   mX*mX +  mY*mY +  mZ*mZ + mW*mW ;
 	
@@ -606,7 +606,7 @@ inline void  Quaternion<Real>::invert ()
 }
 
 template <class Real>
-inline Real Quaternion<Real>::dot (const Quaternion<Real>& pQuaternion) const
+inline Real Quaternion<Real>::Dot (const Quaternion<Real>& pQuaternion) const
 {
     Real lScalar = static_cast<Real> (0.0);
         

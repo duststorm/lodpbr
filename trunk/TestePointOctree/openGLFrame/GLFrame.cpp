@@ -83,7 +83,7 @@ void GLFrame::LODSelection( OctreeNode<float,Surfel<float>* > * pNode, int& cont
 			LAL::Vector3<float> p ((*surfe)->Center().x,(*surfe)->Center().y,(*surfe)->Center().z);
 			LAL::Vector3<float> dir = p - eyeInverse;
 
-			dir.normalize();
+			dir.Normalize();
 
 			float cosNDir = (dir*(*surfe)->Normal());
 
@@ -132,7 +132,7 @@ void GLFrame::LODSelection( OctreeNode<float,Surfel<float>* > * pNode, int& cont
 			LAL::Vector3<float> p (lInternalNode->surfel()->Center().x,lInternalNode->surfel()->Center().y,lInternalNode->surfel()->Center().z);
 			LAL::Vector3<float> dir =  p - eyeInverse ;
 
-			dir.normalize();
+			dir.Normalize();
 			
 			float cosNDir = (dir * lInternalNode->surfel()->Normal());
 
@@ -336,7 +336,7 @@ void GLFrame::resizeGL(int width, int height)
     glLoadIdentity();
     GLfloat x = GLfloat(width) / height;
     camera.setProjectionMatrix(45.0,x,0.1,1000);
-    glLoadMatrixf(~camera.projectionMatrix());
+    glLoadMatrixf((~camera.projectionMatrix()).ToRealPtr());
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
     mCenterX =  static_cast<float> (width*0.5);
@@ -350,7 +350,7 @@ void GLFrame::paintGL()
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
-    glLoadMatrixf(~camera.viewMatrix());
+    glLoadMatrixf((~camera.viewMatrix()).ToRealPtr());
     
        
     if ( surfels.surfels.size() != 0 )

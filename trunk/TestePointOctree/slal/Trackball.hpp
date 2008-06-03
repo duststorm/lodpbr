@@ -32,7 +32,7 @@ template < class Real>
 	    }
 
 	    void beginTracking(int x, int y);
-	    void reset () { mOrientation.identity(); }
+	    void reset () { mOrientation.Identity(); }
 	    void tracking(int x, int y);
 	    const LAL::Quaternion<Real>& orientation() { return mOrientation; }
 	    LAL::Matrix4x4<Real> to4x4RotationMatrix();
