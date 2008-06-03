@@ -25,9 +25,9 @@ namespace LAL {
     public:
     	/*! @name Members  */
     	//@{
-    	Real x; /*!< X abscissa of space. */  
-    	Real y; /*!< Y abscissa of space. */
-    	Real z; /*!< Y abscissa of space. */
+    	Real x; /*!< x abscissa of space. */  
+    	Real y; /*!< y abscissa of space. */
+    	Real z; /*!< z abscissa of space. */
     	//@}
 
     	static const Vector3 ZERO;
@@ -45,22 +45,20 @@ namespace LAL {
   	  	/*! Default constructor. Value is set to (0,0,0). */
 		Vector3 ();
 
-		template < typename U >
-		Vector3 (const U* u);
+		template < class T >
+		Vector3 (const T* v);
 		//Copy constructor			
 		Vector3 ( const Vector3<Real>& v);
 		
-		template < typename U >
-		Vector3 ( const Vector3<U>& v);
+		template < typename T >
+		Vector3 ( const Vector3<T>& v);
 
 		Vector3 ( const Real& x, const Real& y, const Real& z );
 		
-		inline Vector3<Real>& operator=  ( const Vector3<Real>& v );
+		Vector3<Real>& 			operator=( const Vector3<Real>& v );
 		
-		inline void Set(const Real& x, const Real& y, const Real& z);
+		void 					Set( const Real& x, const Real& y, const Real& z );
 		//@}
-		//Operator
-
 		/*! @name Accessing the value */
 		//@{
 
@@ -72,58 +70,54 @@ namespace LAL {
   	  	glNormal3fv(normal);
   	  	glVertex3fv(pos);
   	  	\endcode */
-  	  
-
-		inline Real operator [] ( int index) const;
-
-		inline Real& operator [] ( int index);
+		
+ 		Real 					operator[]( int index) const;
+		Real& 					operator[]( int index);
 		//@}
 		
 		// Assignment Opertators
 		//With Scalar
  	  	/*! @name Algebraic computations */
   	  	// @{
-  	  	inline Vector3<Real>   		  operator+ ( ) const;
-  	  	inline Vector3<Real>   		  operator- ( ) const;
+  	  	Vector3<Real>   		operator+() const;
+  	  	Vector3<Real>   		operator-() const;
   	  	
-		inline const Vector3< Real >& operator+= ( const Real& factor );
-		inline const Vector3< Real >& operator-= ( const Real& factor ); 
-		inline const Vector3< Real >& operator*= ( const Real& factor ); 
-		inline const Vector3< Real >& operator/= ( const Real& factor );
+		Vector3< Real >& 		operator+=( const Real& factor );
+		Vector3< Real >& 		operator-=( const Real& factor ); 
+		Vector3< Real >& 		operator*=( const Real& factor ); 
+		Vector3< Real >& 		operator/=( const Real& factor );
 
 		template <class T>
-		friend inline Vector3<T> operator* (const Vector3<T>& v, const T& factor); 	
+		friend Vector3<T> 		operator*( const Vector3<T>& v, const T& factor ); 	
 		template <class T>
-		friend inline Vector3<T> operator* (const T& factor, const Vector3<T>& v); 
+		friend Vector3<T> 		operator*( const T& factor, const Vector3<T>& v ); 
 		template <class T>
-		friend inline Vector3<T> operator/ (const Vector3<T>& v, const T& factor); 	
+		friend Vector3<T> 		operator/( const Vector3<T>& v, const T& factor ); 	
 		template <class T>
-		inline friend Vector3<T> operator+ (const T& factor, const Vector3<T>& v);  
+		friend Vector3<T> 		operator+( const T& factor, const Vector3<T>& v );  
 		template <class T>
-		inline friend Vector3<T> operator+ (const Vector3<T>& v, const T& factor);
+		friend Vector3<T> 		operator+( const Vector3<T>& v, const T& factor );
 		template <class T>
-		inline friend Vector3<T> operator- (const T& factor, const Vector3<T>& v);  
+		friend Vector3<T> 		operator-( const T& factor, const Vector3<T>& v );  
 		template <class T>
-		inline friend Vector3<T> operator- (const Vector3<T>& v, const T& factor); 
-		
-		
-		
+		friend Vector3<T> 		operator-( const Vector3<T>& v, const T& factor ); 
+			
 		// With Vector
 		
-		inline const Vector3<Real>& operator+= ( const Vector3<Real>& v );
-		inline const Vector3<Real>& operator-= ( const Vector3<Real>& v ); 
-		inline const Vector3<Real>& operator/= ( const Vector3<Real>& v ); 
+		bool 					operator==( const Vector3<Real>& v ) const;
+		bool 					operator!=( const Vector3<Real>& v ) const;
 		
-		inline bool operator== ( const Vector3<Real>& v) const;
-		inline bool operator!= ( const Vector3<Real>& v) const;
+		Vector3<Real>& 			operator+=( const Vector3<Real>& v );
+		Vector3<Real>& 			operator-=( const Vector3<Real>& v ); 
+		Vector3<Real>& 			operator/=( const Vector3<Real>& v ); 
+	
+		Vector3<Real>  			operator-( const Vector3<Real>& v ) const;
+		Vector3<Real>  			operator+( const Vector3<Real>& v ) const;
 		
-		inline Vector3<Real>  operator- ( const Vector3<Real>& v) const;
-		inline Vector3<Real>  operator+ ( const Vector3<Real>& v) const;
-		
-		inline Real operator* ( const Vector3<Real>& v) const;
+		Real 					operator*( const Vector3<Real>& v ) const;
 
 		// Cross Product	
-		inline Vector3<Real>  operator^ (const Vector3<Real>& v) const;
+		inline Vector3<Real>  	operator^( const Vector3<Real>& v ) const;
 		//@}
 		//@{
 		/*! Output stream operator. Enables debugging code like:
@@ -132,18 +126,18 @@ namespace LAL {
     	  std::cout << "Vector3" << " x = " << v.x << " ,y = " << v.y << " ,z = " << v.z << std::endl;
     	  \endcode */
 		template <class T>
-		friend inline std::ostream& operator<< (std::ostream & s, const Vector3<T>& v);
+		friend std::ostream& 	operator<< ( std::ostream & s, const Vector3<T>& v);
   	  	/*!@name Functions */
   	  	//@{
   	  	/*!  */
 		// AUXILIAR FUNCTIONS
-		inline Real Length ();
-		inline Real LengthSqr();
-		inline void Normalize ();
-		inline Vector3<Real> Norm ();
+		Real 					Length( void );
+		Real 					LengthSqr( void );
+		void 					Normalize( void );
+		Vector3<Real> 			Norm( void );
 		
-		const Real* ToRealPtr( void ) const ;
-		Real* ToRealPtr( void ) ;
+		const Real* 			ToRealPtr( void ) const;
+		Real* 					ToRealPtr( void );
 		//@}
 
 		~Vector3 ();

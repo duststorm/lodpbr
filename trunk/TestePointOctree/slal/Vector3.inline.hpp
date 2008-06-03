@@ -3,29 +3,31 @@
 
 //============================= LIFECYCLE ====================================
 
+
+
 template<class Real>
-Vector3<Real>::Vector3 ()
+Vector3<Real>::Vector3()
 {
 	this->x = static_cast< Real > ( 0 );
 	this->y = static_cast< Real > ( 0 );
 	this->z = static_cast< Real > ( 0 );
 };
 
-template<class Real>
-template < typename U >
-Vector3<Real>::Vector3 (const U* u)
+template< class Real>
+template< class T >
+Vector3<Real>::Vector3( const T* v )
 {
-	assert(u);
+	assert(v);
 
-	this->x = static_cast< Real > ( u[0] );
-	this->y = static_cast< Real > ( u[1] );
-	this->z = static_cast< Real > ( u[2] );
+	this->x = static_cast< Real > ( v[0] );
+	this->y = static_cast< Real > ( v[1] );
+	this->z = static_cast< Real > ( v[2] );
 
 };
 
-template<class Real>
-template < typename U >
-Vector3<Real>::Vector3 ( const Vector3<U>& v)
+template< class Real>
+template< class T >
+Vector3<Real>::Vector3( const Vector3<T>& v )
 {
 	this->x = static_cast< Real > (v.x);
 	this->y = static_cast< Real > (v.y);
@@ -34,7 +36,7 @@ Vector3<Real>::Vector3 ( const Vector3<U>& v)
 
 
 template<class Real>
-Vector3<Real>::Vector3 ( const Vector3<Real>& v)
+Vector3<Real>::Vector3( const Vector3<Real>& v )
 {
 	this->x = v.x;
 	this->y = v.y;
@@ -42,7 +44,7 @@ Vector3<Real>::Vector3 ( const Vector3<Real>& v)
 };
 
 template<class Real>
-Vector3<Real>::Vector3 ( const Real& x, const Real& y, const Real& z )
+Vector3<Real>::Vector3( const Real& x, const Real& y, const Real& z )
 {
 	this->x = x;
 	this->y = y;
@@ -50,7 +52,7 @@ Vector3<Real>::Vector3 ( const Real& x, const Real& y, const Real& z )
 };
 
 template<class Real>
-inline Vector3<Real>& Vector3<Real>::operator= ( const Vector3<Real>& v )
+inline Vector3<Real>& Vector3<Real>::operator=( const Vector3<Real>& v )
 {
 	this->x = v.x;
 	this->y = v.y;
@@ -60,7 +62,7 @@ inline Vector3<Real>& Vector3<Real>::operator= ( const Vector3<Real>& v )
 };
 
 template<class Real>
-inline void Vector3<Real>::Set(const Real& x, const Real& y, const Real& z) 
+inline void Vector3<Real>::Set( const Real& x, const Real& y, const Real& z ) 
 {
 	this->x = x;
 	this->y = y;
@@ -72,7 +74,7 @@ inline void Vector3<Real>::Set(const Real& x, const Real& y, const Real& z)
 //Operator
 
 template<class Real>
-inline Real Vector3<Real>::operator [] ( int index ) const
+inline Real Vector3<Real>::operator[]( int index ) const
 {
 	if ( index > 2)
 	{
@@ -87,7 +89,7 @@ inline Real Vector3<Real>::operator [] ( int index ) const
 };
 
 template<class Real>
-inline Real& Vector3<Real>::operator [] ( int index) 
+inline Real& Vector3<Real>::operator[]( int index ) 
 {
 	if ( index > 2)
 	{
@@ -108,14 +110,14 @@ inline Real& Vector3<Real>::operator [] ( int index)
 //With Scalar
 
 template<class Real>
-inline Vector3<Real> Vector3<Real>::operator+ ( )  const  
+inline Vector3<Real> Vector3<Real>::operator+()  const  
 {
 	return ( Vector3<Real> (this->x, this->y, this->z)  );
 };
 
 
 template<class Real>
-inline Vector3<Real>  Vector3<Real>::operator- ( ) const
+inline Vector3<Real>  Vector3<Real>::operator-() const
 {
 
 	return ( Vector3<Real> (-this->x, -this->y, -this->z) );
@@ -123,7 +125,7 @@ inline Vector3<Real>  Vector3<Real>::operator- ( ) const
 };
 
 template<class Real>
-const Vector3< Real >& Vector3<Real>::operator+= ( const Real&  factor ) 
+Vector3< Real >& Vector3<Real>::operator+=( const Real&  factor ) 
 { 
 	this->x += factor; 
 	this->y += factor; 
@@ -133,7 +135,7 @@ const Vector3< Real >& Vector3<Real>::operator+= ( const Real&  factor )
 } 
 
 template<class Real>
-const Vector3< Real >& Vector3<Real>::operator-= ( const Real&  factor ) 
+Vector3< Real >& Vector3<Real>::operator-=( const Real&  factor ) 
 { 
 	this->x -= factor; 
 	this->y -= factor; 
@@ -143,7 +145,7 @@ const Vector3< Real >& Vector3<Real>::operator-= ( const Real&  factor )
 } 
 
 template<class Real>
-const Vector3< Real >& Vector3<Real>::operator*= ( const Real& factor ) 
+Vector3< Real >& Vector3<Real>::operator*=( const Real& factor ) 
 { 
 
 	this->x  *= factor;
@@ -154,7 +156,7 @@ const Vector3< Real >& Vector3<Real>::operator*= ( const Real& factor )
 }
 
 template<class Real>
-const Vector3< Real >& Vector3<Real>::operator/= ( const Real& factor ) 
+Vector3< Real >& Vector3<Real>::operator/=( const Real& factor ) 
 { 
 	Real lFactor = (Real)1 / factor;
 
@@ -167,7 +169,7 @@ const Vector3< Real >& Vector3<Real>::operator/= ( const Real& factor )
 
 
 template<class Real>
-inline Vector3<Real> operator* ( const Vector3<Real>& v, const Real& factor ) 	
+inline Vector3<Real> operator*( const Vector3<Real>& v, const Real& factor ) 	
 {
 
 	return (  Vector3<Real>( v.x * factor, v.y * factor, v.z * factor )	);
@@ -175,14 +177,14 @@ inline Vector3<Real> operator* ( const Vector3<Real>& v, const Real& factor )
 };
 
 template<class Real>
-inline Vector3<Real> operator*	( const Real& factor, const Vector3<Real>& v ) 
+inline Vector3<Real> operator*( const Real& factor, const Vector3<Real>& v ) 
 {
 	return ( Vector3<Real>( v.x * factor, v.y * factor, v.z * factor ) );
 
 };
 
 template<class Real>
-inline Vector3<Real> operator/ ( const Vector3<Real>& v, const Real& factor ) 	
+inline Vector3<Real> operator/( const Vector3<Real>& v, const Real& factor ) 	
 {
 
 	return (  Vector3<Real>( v.x / factor, 	v.y / factor, v.z / factor ) );
@@ -190,28 +192,28 @@ inline Vector3<Real> operator/ ( const Vector3<Real>& v, const Real& factor )
 };
 
 template<class Real>
-inline Vector3<Real> operator+ (const Real& factor, const Vector3<Real>& v )  
+inline Vector3<Real> operator+( const Real& factor, const Vector3<Real>& v )  
 {
 	return ( Vector3<Real> ( v.x + factor, v.y + factor, v.z + factor ) );
 
 };
 
 template<class Real>
-inline Vector3<Real> operator+ (const Vector3<Real>& v, const Real& factor )  
+inline Vector3<Real> operator+( const Vector3<Real>& v, const Real& factor )  
 {
 	return ( Vector3<Real> ( v.x + factor, v.y + factor, v.z + factor ) );
 
 };
 
 template<class Real>
-inline Vector3<Real> operator- (const Real& factor, const Vector3<Real>& v )  
+inline Vector3<Real> operator-( const Real& factor, const Vector3<Real>& v )  
 {
 	return ( Vector3<Real> ( factor - v.x , factor - v.y , factor - v.z  ) );
 
 };
 
 template<class Real>
-inline Vector3<Real> operator- (const Vector3<Real>& v, const Real& factor )  
+inline Vector3<Real> operator-( const Vector3<Real>& v, const Real& factor )  
 {
 	return ( Vector3<Real> ( v.x - factor, 	v.y - factor, v.z - factor ) );
 
@@ -221,7 +223,7 @@ inline Vector3<Real> operator- (const Vector3<Real>& v, const Real& factor )
 
 
 template<class Real>
-const Vector3< Real >& Vector3<Real>::operator+= (  const Vector3<Real>& v ) 
+Vector3< Real >& Vector3<Real>::operator+=(  const Vector3<Real>& v ) 
 { 
 	this->x += v.x; 
 	this->y += v.y; 
@@ -231,7 +233,7 @@ const Vector3< Real >& Vector3<Real>::operator+= (  const Vector3<Real>& v )
 }
 
 template<class Real>
-const Vector3< Real >& Vector3<Real>::operator-= (  const Vector3<Real>& v ) 
+Vector3< Real >& Vector3<Real>::operator-=( const Vector3<Real>& v ) 
 { 
 	this->x -= v.x; 
 	this->y -= v.y; 
@@ -241,7 +243,7 @@ const Vector3< Real >& Vector3<Real>::operator-= (  const Vector3<Real>& v )
 } 
 
 template<class Real>
-const Vector3< Real >& Vector3<Real>::operator/= ( const Vector3<Real>& v ) 
+Vector3< Real >& Vector3<Real>::operator/=( const Vector3<Real>& v ) 
 { 
 
 	this->x /= v.x;
@@ -252,26 +254,26 @@ const Vector3< Real >& Vector3<Real>::operator/= ( const Vector3<Real>& v )
 } 
 
 template<class Real>
-inline bool Vector3<Real>::operator== ( const Vector3<Real>& v) const
+inline bool Vector3<Real>::operator==( const Vector3<Real>& v ) const
 {
 	return ( ( this->x == v.x ) and ( this->y == v.y ) and ( this->z == v.z ) );
 };	
 
 template<class Real>
-inline bool Vector3<Real>::operator!= ( const Vector3<Real>& v) const
+inline bool Vector3<Real>::operator!=( const Vector3<Real>& v) const
 {
 	return  !(*this == v) ;
 };	
 
 template<class Real>
-inline Vector3<Real>  Vector3<Real>::operator- ( const Vector3<Real>& v) const
+inline Vector3<Real>  Vector3<Real>::operator-( const Vector3<Real>& v ) const
 {
 
 	return ( Vector3 ( this->x - v.x, this->y - v.y, this->z - v.z) );
 };
 
 template<class Real>
-inline Vector3<Real>  Vector3<Real>::operator+ ( const Vector3<Real>& v)	const
+inline Vector3<Real>  Vector3<Real>::operator+( const Vector3<Real>& v )	const
 {
 
 	return ( Vector3 ( this->x + v.x, this->y + v.y, this->z + v.z) );
@@ -279,7 +281,7 @@ inline Vector3<Real>  Vector3<Real>::operator+ ( const Vector3<Real>& v)	const
 };
 
 template<class Real>
-inline Real Vector3<Real>::operator* ( const Vector3<Real>& v) const	
+inline Real Vector3<Real>::operator*( const Vector3<Real>& v ) const	
 {
 
 	return (  (v.x * x ) +  ( v.y * y ) + ( v.z * z )  );
@@ -288,16 +290,16 @@ inline Real Vector3<Real>::operator* ( const Vector3<Real>& v) const
 
 // Cross Product
 template<class Real>
-inline Vector3<Real>  Vector3<Real>::operator^ (const Vector3<Real>& v) const
+inline Vector3<Real>  Vector3<Real>::operator^( const Vector3<Real>& v ) const
 {
-	return ( Vector3<Real> ( 	y*v.z - z*v.y, 	z*v.x - x*v.z, 	x*v.y - y*v.x) );
+	return ( Vector3<Real> ( y*v.z - z*v.y, 	z*v.x - x*v.z, 	x*v.y - y*v.x ) );
 
 };
 
 //============================= OPERATIONS ===================================
 
 template<class Real>
-inline std::ostream& operator<< (std::ostream & s, const Vector3<Real>& v)
+inline std::ostream& operator<<( std::ostream & s, const Vector3<Real>& v )
 {
 	s << "Vector3"<< " x = " << v.x << " ,y = " << v.y << " ,z = " << v.z << std::endl;
 
@@ -306,21 +308,21 @@ inline std::ostream& operator<< (std::ostream & s, const Vector3<Real>& v)
 
 // AUXILIAR FUNCTIONS
 template<class Real>
-inline Real Vector3<Real>::Length ()
+inline Real Vector3<Real>::Length()
 {
 	return sqrt( (this->x * this->x) + (this->y * this->y) + (this->z * this->z) );
 };
 
 // AUXILIAR FUNCTIONS
 template<class Real>
-inline Real Vector3<Real>::LengthSqr ()
+inline Real Vector3<Real>::LengthSqr()
 {
 	return ( (this->x * this->x) + (this->y * this->y) + (this->z * this->z) );
 };
 
 
 template<class Real>
-inline void Vector3<Real>::Normalize ()
+inline void Vector3<Real>::Normalize()
 {
 	Real factor = std::sqrt( (x * x) + (y * y) + (z * z) );
 

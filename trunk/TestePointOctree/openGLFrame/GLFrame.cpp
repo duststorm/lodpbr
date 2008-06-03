@@ -106,7 +106,7 @@ void GLFrame::LODSelection( OctreeNode<float,Surfel<float>* > * pNode, int& cont
 					glColor3f(0.0,0.0,1.0);
 				else 
 					glColor3f(1.0,1.0,1.0);
-				glVertex3fv((*surfe)->Center());
+				glVertex3fv((*surfe)->Center().ToRealPtr());
 				cont++;
 			}
 
