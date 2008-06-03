@@ -26,79 +26,73 @@ namespace LAL {
 		friend class Vector3<Real>;
 		// VETOR  LINHA 
 
-		Vector4 ();
-
-		template < typename U >
-		Vector4 (const U* u);
-
-		Vector4 ( const Vector4<Real>& vector);
-		
-		Vector4 ( const Vector3<Real>& vector );
-		
-		Vector4 ( const Vector3<Real>& vector, const Real& w);
-		
-
-		Vector4 ( const Real& x, const Real& y, const Real& z, const Real& z );
+		Vector4();
+		template < class T >
+		Vector4 (const T* v);
+		Vector4( const Vector4<Real>& vector);
+		Vector4( const Vector3<Real>& vector );
+		Vector4( const Vector3<Real>& vector, const Real& w);
+		Vector4( const Real& x, const Real& y, const Real& z, const Real& w );
 
 
 		//Operator
 
-		inline Real  operator [] ( int index ) const;
+		Real  operator[]( int index ) const;
 
-		inline Real& operator [] ( int index );
+		Real& operator[]( int index );
 
 		// Assignment Opertators with Scalar
 		
-  	  	inline Vector4<Real>   		  operator+ ( ) const;
-  	  	inline Vector4<Real>   		  operator- ( ) const;
+  	  	Vector4<Real>   		  operator+ ( ) const;
+  	  	Vector4<Real>   		  operator- ( ) const;
   	  	
-		inline const Vector4< Real >& operator+= ( const Real& factor );
-		inline const Vector4< Real >& operator-= ( const Real& factor ); 
-		inline const Vector4< Real >& operator*= ( const Real& factor ); 
-		inline const Vector4< Real >& operator/= ( const Real& factor );
+	    Vector4< Real >& operator+=( const Real& factor );
+		Vector4< Real >& operator-=( const Real& factor ); 
+		Vector4< Real >& operator*=( const Real& factor ); 
+		Vector4< Real >& operator/=( const Real& factor );
 
 		template <class T>
-		friend inline Vector4<T> operator* (const Vector4<T>& v, const T& factor); 	
+		friend Vector4<T> operator*( const Vector4<T>& v, const T& factor ); 	
 		template <class T>
-		friend inline Vector4<T> operator* (const T& factor, const Vector4<T>& v); 
+		friend Vector4<T> operator*( const T& factor, const Vector4<T>& v ); 
 		template <class T>
-		friend inline Vector4<T> operator/ (const Vector4<T>& v, const T& factor); 	
+		friend Vector4<T> operator/( const Vector4<T>& v, const T& factor ); 	
 		template <class T>
-		inline friend Vector4<T> operator+ (const T& factor, const Vector4<T>& v);  
+		friend Vector4<T> operator+( const T& factor, const Vector4<T>& v );  
 		template <class T>
-		inline friend Vector4<T> operator+ (const Vector4<T>& v, const T& factor);
+		friend Vector4<T> operator+( const Vector4<T>& v, const T& factor );
 		template <class T>
-		inline friend Vector4<T> operator- (const T& factor, const Vector4<T>& v);  
+		friend Vector4<T> operator-( const T& factor, const Vector4<T>& v );  
 		template <class T>
-		inline friend Vector4<T> operator- (const Vector4<T>& v, const T& factor); 
+		friend Vector4<T> operator-( const Vector4<T>& v, const T& factor ); 
 		
 		
 		
 		// Assignment with Vector
-		inline const Vector4<Real>& operator=  ( const Vector4<Real>& v );
-		inline const Vector4<Real>& operator+= ( const Vector4<Real>& v );
-		inline const Vector4<Real>& operator-= ( const Vector4<Real>& v ); 
-		inline const Vector4<Real>& operator/= ( const Vector4<Real>& v ); 
+		Vector4<Real>& operator= ( const Vector4<Real>& v );
+		Vector4<Real>& operator+=( const Vector4<Real>& v );
+		Vector4<Real>& operator-=( const Vector4<Real>& v ); 
+		Vector4<Real>& operator/=( const Vector4<Real>& v ); 
 		
-		inline bool operator== ( const Vector4<Real>& v) const;
-		inline bool operator!= ( const Vector4<Real>& v) const;
+		bool operator==( const Vector4<Real>& v) const;
+		bool operator!=( const Vector4<Real>& v) const;
 		
-		inline Vector4<Real>  operator- ( const Vector4<Real>& v) const;
-		inline Vector4<Real>  operator+ ( const Vector4<Real>& v) const;
+		Vector4<Real>  			operator-( const Vector4<Real>& v) const;
+		Vector4<Real>  			operator+( const Vector4<Real>& v) const;
 		
-		inline Real operator* ( const Vector4<Real>& v) const;
+		Real 					operator*( const Vector4<Real>& v) const;
 
 		template <class T>
-		friend inline std::ostream& operator<< (std::ostream & s, const Vector4<T>& v);
+		friend std::ostream& 	operator<<(std::ostream & s, const Vector4<T>& v);
 		
 		// AUXILIAR FUNCTIONS
-		inline Real Length ();
-		inline Real LengthSqr ();
-		inline void Normalize ();
-		inline Vector4<Real> Norm ();
+		Real 					Length( void );
+		Real					LengthSqr( void );
+		void 					Normalize( void );
+		Vector4<Real> 			Norm( void );
 		
-		const Real* ToRealPtr( void ) const ;
-		Real* ToRealPtr( void ) ;
+		const Real* 			ToRealPtr( void ) const ;
+		Real*	 				ToRealPtr( void ) ;
 
 		~Vector4 ();
 

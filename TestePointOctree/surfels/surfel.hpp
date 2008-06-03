@@ -372,7 +372,7 @@ template <class Real > class Surfel
 			{		
 				glPointSize(1.5);
 							
-			 	glVertex3fv(*(*it));
+			 	glVertex3fv((*it)->ToRealPtr());
 			}
 			
 

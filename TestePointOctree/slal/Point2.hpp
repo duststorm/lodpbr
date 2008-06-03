@@ -37,12 +37,14 @@ namespace LAL
     	  /*! Copy constructor. */
     	  Point2 ( const Point2<Real>& p);
     	  /*! Constructor by Vector 2. */
-    	  Point2 ( const Vector2<Real>& u);
+    	  Point2 ( const Vector2<Real>& v);
     	  /*! Constructor by a array of any type. */
     	  /*!@warning If the type is not a number, the construtor will store trash.*/
-    	  template < typename P >
-    	  Point2 (const P* p);
+    	  template < class T >
+    	  Point2 (const T* p);
     	  virtual ~Point2(){};
+    	  
+    	  void 					Set( const Real& x, const Real& y );
     	  //@}
 
   		  /*! @name Accessing the value */
@@ -57,85 +59,82 @@ namespace LAL
     	  glVertex2fv(pos);
     	  \endcode */
 
-    	  
-    	  inline operator Real * ();
-    	  inline operator const Real * ();
 
-    	  inline  Real operator [] ( unsigned int i)  const;
+    	  Real 					operator[]( unsigned int i)  const;
 
-    	  Real& operator [] ( unsigned int i);  
+    	  Real& 				operator[]( unsigned int i);  
     	  //@}
 
     	  /*! @name Algebraic computations */
     	  // @{
     	  /*! Unary plus operator. */
-    	  inline Point2<Real>  	  operator+ ( ) const;
+    	  Point2<Real>  	  	operator+() const;
     	  /*! Unary minus operator. */
-    	  inline Point2<Real>  	  operator- ( ) const;
+    	  Point2<Real>  	  	operator-() const;
 
     	  /*! Adds the point by a scalar \p factor. */
-    	  inline const Point2<Real>& operator+= ( const Real& factor );
+    	  Point2<Real>& 		operator+=( const Real& factor );
     	  /*! Subtracts the point by a scalar \p factor. */
-    	  inline const Point2<Real>& operator-= ( const Real& factor );
+    	  Point2<Real>& 		operator-=( const Real& factor );
     	  /*! Multiply the vector by a scalar \p k. */
-    	  inline const Point2<Real>& operator*= ( const Real& factor );
+    	  Point2<Real>& 		operator*=( const Real& factor );
 
     	  /*! Divides the vector by a scalar \p k.
 
     	   @wanning A test is performed to avoide division by zero. */
 
-    	  inline const Point2<Real>& operator/= ( const Real& factor );
+    	  Point2<Real>& 		operator/=( const Real& factor );
     	  /*!@see operator+ */
     	  template <class T>
-    	  inline friend Point2<T> operator+ (const T& factor,const Point2<T>& p  ) ;
+    	  friend Point2<T> 		operator+( const T& factor,const Point2<T>& p  ) ;
     	  /*!@see operator+ */
     	  template <class T>
-    	  inline friend Point2<T> operator+ (const Point2<T>& p, const T& factor ) ;
+    	  friend Point2<T> 		operator+( const Point2<T>& p, const T& factor ) ;
     	  /*!@see operator- */
     	  template <class T>
-    	  inline friend Point2<T> operator- (const T& factor, const Point2<T>& p ) ;
+    	  friend Point2<T> 		operator-( const T& factor, const Point2<T>& p ) ;
     	  /*!@see operator- */
     	  template <class T>
-    	  inline friend Point2<T> operator- (const Point2<T>& p, const T& factor ) ;  
+    	  friend Point2<T>		operator-( const Point2<T>& p, const T& factor ) ;  
     	  /*!@see operator* */
     	  template <class T>
-    	  inline friend Point2<T> operator* (const T& factor, const Point2<T>& p ) ;
+    	  friend Point2<T> 		operator*( const T& factor, const Point2<T>& p ) ;
     	  /*!@see operator* */
     	  template <class T>
-    	  inline friend Point2<T> operator* (const Point2<T>& p, const T& factor ) ;  
+    	  friend Point2<T> 		operator*( const Point2<T>& p, const T& factor ) ;  
     	  /*!@see operator/ */
-    	  inline Point2<Real> operator/ ( const Real& factor ) const;
+    	  Point2<Real> 			operator/( const Real& factor ) const;
     	  
     	  /*! Assigment operator. */
-    	  inline const Point2<Real>& operator=  ( const Point2<Real>& p);
+    	  Point2<Real>& 		operator= ( const Point2<Real>& p );
     	  /*! Adds \p a to the point. */
-    	  inline const Point2<Real>& operator+= ( const Point2<Real>& u );
+    	  Point2<Real>& 		operator+=( const Point2<Real>& p );
     	  /*! Subtract \p a to the vector. */
-    	  inline const Point2<Real>& operator-= ( const Point2<Real>& u );
+    	  Point2<Real>& 		operator-=( const Point2<Real>& p );
     	  /*! Divide \p a to the point by atribute to atribute. */
     	  /*\code
         	  p1.x() / p2.x();
         	  p1.x() / p2.y();
         	  \endcode */
-    	  inline const Point2<Real>& operator/= ( const Point2<Real>& u );
+    	  const Point2<Real>& 	operator/= ( const Point2<Real>& p );
     	  /*!@see operator+= */
-    	  inline Point2<Real> operator+ (const Point2<Real>& p) const;
+    	  Point2<Real> 			operator+ (const Point2<Real>& p ) const;
     	  /*! This operation return a vector that has direction ...*/
     	  template <class T>
-    	  friend inline Vector2<T>  operator- (const Point2<T>& p,const Point2<T>& q ) ;
+    	  friend Vector2<T>  	operator- (const Point2<T>& p,const Point2<T>& q ) ;
 
-    	  inline bool operator== ( const Point2<Real>& p) const;
-    	  inline bool operator!= ( const Point2<Real>& p) const;
+    	  bool 					operator== ( const Point2<Real>& p) const;
+    	  bool 					operator!= ( const Point2<Real>& p) const;
     	  
     	  template <class T>
-    	  inline friend Point2<T> operator+ (const Point2<T>& p, const Vector2<T>& u) ;  
+    	  friend Point2<T> 		operator+ (const Point2<T>& p, const Vector2<T>& v) ;  
     	  template <class T>
-    	  inline friend Point2<T> operator+ (const Vector2<T>& u, const Point2<T>& p ) ;
+    	  friend Point2<T> 		operator+ (const Vector2<T>& v, const Point2<T>& p ) ;
 
     	  template <class T>
-    	  inline friend Point2<T> operator- (const Point2<T>& p, const Vector2<T>& u ) ;  
+    	  friend Point2<T> 		operator-( const Point2<T>& p, const Vector2<T>& v ) ;  
     	  template <class T>
-    	  inline friend Point2<T> operator- (const Vector2<T>& u, const Point2<T>& p ) ;  
+    	  friend Point2<T> 		operator-( const Vector2<T>& v, const Point2<T>& p ) ;  
     	  //@}
     	  /*! @name Output stream */
     	  //@{
@@ -145,13 +144,15 @@ namespace LAL
     	  std::cout << "Point2" << " x = " << p.x() << " ,y = " << p.y() << std::endl;
     	  \endcode */
     	  template <class T>
-    	  inline friend std::ostream& operator<< (std::ostream & s, const Point2<T>& p);
+    	  friend std::ostream& 	operator<< (std::ostream & s, const Point2<T>& p);
     	  //@}
     	  
     	  /*! @name Functions */
     	  //@{
     	  /*!  */
-    	  Real squaredDistance ( const Point2<Real>& p ) ;
+    	  Real 							SquaredDistance( const Point2<Real>& p ) ;
+  		  const Real* 					ToRealPtr( void ) const;
+  		  Real* 						ToRealPtr( void );
 		  //@}
     	  
       public:
@@ -162,15 +163,9 @@ namespace LAL
     	   * Shareed memory with abscissas atributes and the XY Array.
     	   * The Struct has the same size of the \code xy[] \endcode.
     	   */
-    	  union
-    	  {
-    		  struct
-    		  {
-    			  Real x; /*!< X abscissa of space. */  
-    			  Real y; /*!< Y abscissa of space. */
-    		  };
-    		  Real xy[2];/*!< Array of abscissas for fast operator return @see operator[].*/
-    	  };
+    	  Real x; /*!< X abscissa of space. */  
+    	  Real y; /*!< Y abscissa of space. */
+    	
     	  //@}
       };
       

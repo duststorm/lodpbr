@@ -11,8 +11,6 @@
 
 namespace LAL
 {
-
-
 /*!
 *@class Point3.
 *@brief Class that represent a Point in 3D.
@@ -22,7 +20,6 @@ namespace LAL
 *@date 25-Feb-2008.
 *@todo OpenGL interface and a C style array.
 */      
-
 
       template <class Real>   class Point3
       {
@@ -35,16 +32,10 @@ namespace LAL
      	   * Shareed memory with abscissas atributes and the XYZ Array.
      	   * The Struct has the same size of the \code xyz[] \endcode.
      	   */
-     	  union
-     	  {
-     		  struct
-     		  {
-     			  Real x; /*!< X abscissa of space. */  
-     			  Real y; /*!< Y abscissa of space. */
-     			  Real z; /*!< Y abscissa of space. */
-     		  };
-     		  Real xyz[3];/*!< Array of abscissas for fast operator return @see operator[].*/
-     	  };
+    	  Real x; /*!< X abscissa of space. */  
+    	  Real y; /*!< Y abscissa of space. */
+    	  Real z; /*!< Y abscissa of space. */
+
      	  //@}
 
       public:
@@ -55,14 +46,14 @@ namespace LAL
     	  //@{
     	  /*! Default constructor. Value is set to (0,0,0). */
     	  Point3();
-    	  Point3 ( const Real& x, const Real& y, const Real& z );
-    	  Point3 ( const Point3<Real>& point);
-    	  Point3 ( const Vector3<Real>& u);
-    	  template < typename P >
-    	  Point3 (const P* point);
-
-    	  inline void setValues(const Real& x, const Real& y, const Real& z);
+    	  Point3( const Real& x, const Real& y, const Real& z );
+    	  Point3( const Point3<Real>& point );
+    	  Point3( const Vector3<Real>& v );
+    	  template < class T >
+    	  Point3( const T* point );
     	  virtual ~Point3(){};
+    	  
+    	  void 					Set( const Real& x, const Real& y, const Real& z );
     	  //Operator
     	  //@}
     	  
@@ -78,63 +69,59 @@ namespace LAL
     	  glVertex3fv(pos);
     	  \endcode */
     	  
-    	  inline operator Real * ();
-    	  inline operator const Real * ();
-    	  
-    	  inline  Real operator [] ( int i)  const;
-
-    	  Real& operator [] ( int i);  
+    	  Real 					operator[]( int i ) const;
+    	  Real& 				operator[]( int i );  
     	  //@}
     	  
     	  /*! @name Algebraic computations */
     	  // @{
     	  // Point/Scalar operations
-    	  inline Point3<Real>  	  operator+ ( ) const;
-    	  inline Point3<Real>  	  operator- ( ) const;
+    	  Point3<Real>  	  	operator+() const;
+    	  Point3<Real>  	  	operator-() const;
 
-    	  inline const Point3<Real>& operator+= ( const Real& factor );
-    	  inline const Point3<Real>& operator-= ( const Real& factor );
-    	  inline const Point3<Real>& operator*= ( const Real& factor );
-    	  inline const Point3<Real>& operator/= ( const Real& factor );
+    	  Point3<Real>& 		operator+=( const Real& factor );
+    	  Point3<Real>& 		operator-=( const Real& factor );
+    	  Point3<Real>& 		operator*=( const Real& factor );
+    	  Point3<Real>& 		operator/=( const Real& factor );
     	  template <class T>
-    	  inline friend Point3<T> operator+ (const T& factor,const Point3<T>& point  ) ;
+    	  friend Point3<T> 		operator+( const T& factor,const Point3<T>& p  ) ;
     	  template <class T>
-    	  inline friend Point3<T> operator+ (const Point3<T>& point, const T& factor ) ;
+    	  friend Point3<T> 		operator+( const Point3<T>& p, const T& factor ) ;
     	  template <class T>
-    	  inline friend Point3<T> operator- (const T& factor, const Point3<T>& point ) ;  
+    	  friend Point3<T> 		operator-( const T& factor, const Point3<T>& p ) ;  
     	  template <class T>
-    	  inline friend Point3<T> operator- (const Point3<T>& point, const T& factor ) ;  
+    	  friend Point3<T> 		operator-( const Point3<T>& p, const T& factor ) ;  
 
     	  template <class T>
-    	  inline friend Point3<T> operator* (const T& factor, const Point3<T>& point ) ;  
+    	  friend Point3<T> 		operator*( const T& factor, const Point3<T>& p ) ;  
     	  template <class T>
-    	  inline friend Point3<T> operator* (const Point3<T>& point, const T& factor ) ;  
+    	  friend Point3<T> 		operator*( const Point3<T>& p, const T& factor ) ;  
 
-    	  inline Point3<Real> operator/ ( const Real& factor ) const;
+    	   Point3<Real> 		operator/( const Real& factor ) const;
 
     	  // Point/Point operations
-    	  inline const Point3<Real>& operator=  ( const Point3<Real>& point);
-    	  inline const Point3<Real>& operator+= ( const Point3<Real>& point );
-    	  inline const Point3<Real>& operator-= ( const Point3<Real>& point );
-    	  inline const Point3<Real>& operator/= ( const Point3<Real>& point );
+    	  Point3<Real>& 		operator= ( const Point3<Real>& p );
+    	  Point3<Real>& 		operator+=( const Point3<Real>& p );
+    	  Point3<Real>& 		operator-=( const Point3<Real>& p );
+    	  Point3<Real>& 		operator/=( const Point3<Real>& p );
 
-    	  inline Point3<Real> operator+ (const Point3<Real>& point) const;
+    	  Point3<Real> 			operator+( const Point3<Real>& p ) const;
     	  template <class T>
-    	  friend inline Vector3<T>  operator- (const Point3<T>& source,const Point3<T>& target ) ;
+    	  friend  Vector3<T>  	operator-( const Point3<T>& source,const Point3<T>& target ) ;
 
-    	  inline bool operator== ( const Point3<Real>& point) const;
-    	  inline bool operator!= ( const Point3<Real>& point) const;
+    	  bool 					operator==( const Point3<Real>& p ) const;
+    	  bool 					operator!=( const Point3<Real>& p ) const;
 
     	  // Point/Vector
     	  template <class T>
-    	  inline friend Point3<T> operator+ (const Point3<T>& point, const Vector3<T>& vector) ;  
+    	  friend Point3<T> 		operator+( const Point3<T>& p, const Vector3<T>& v ) ;  
     	  template <class T>
-    	  inline friend Point3<T> operator+ (const Vector3<T>& vector, const Point3<T>& point ) ;
+    	  friend Point3<T> 		operator+( const Vector3<T>& v, const Point3<T>& p ) ;
 
     	  template <class T>
-    	  inline friend Point3<T> operator- (const Point3<T>& point, const Vector3<T>& vector ) ;  
+    	  friend Point3<T> 		operator-( const Point3<T>& p, const Vector3<T>& v ) ;  
     	  template <class T>
-    	  inline friend Point3<T> operator- (const Vector3<T>& vector, const Point3<T>& point ) ;  
+    	  friend Point3<T> 		operator-( const Vector3<T>& v, const Point3<T>& p ) ;  
       	  /*! @name Output stream */
       	  //@{
       	  /*! Output stream operator. Enables debugging code like:
@@ -143,13 +130,15 @@ namespace LAL
       	  std::cout << "Point3" << " x = " << p.x << " ,y = " << p.y << " ,z = " << p.z << std::endl;
       	  \endcode */
     	  template <class T>
-    	  inline friend std::ostream& operator<< (std::ostream & s, const Point3<T>& point);
+    	  friend std::ostream& 	operator<< (std::ostream & s, const Point3<T>& p);
     	  
     	  //@}
     	  /*!@name Functions */
     	  //@{
     	  /*!  */
-    	  Real squaredDistance ( const Point3<Real>& p ) ;
+    	  Real 					SquaredDistance ( const Point3<Real>& p ) ;
+  		  const Real* 			ToRealPtr( void ) const;
+  		  Real* 				ToRealPtr( void );
 		  //@}
     	  
 
