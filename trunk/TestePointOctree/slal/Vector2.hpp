@@ -31,15 +31,10 @@ namespace LAL {
   	   * Shareed memory with abscissas atributes and the XY Array.
   	   * The Struct has the same size of the \code xy[] \endcode.
   	   */
-  	  union
-  	  {
-  		  struct
-  		  {
-  			  Real x; /*!< X abscissa of space. */  
-  			  Real y; /*!< Y abscissa of space. */
-  		  };
-  		  Real xy[2];/*!< Array of abscissas for fast operator return @see operator[].*/
-  	  };
+
+    	Real x; /*!< X abscissa of space. */  
+    	Real y; /*!< Y abscissa of space. */
+
   	  //@}
     
 	public:
@@ -50,12 +45,12 @@ namespace LAL {
   	  /*! Default constructor. Value is set to (0,0,0). */
 		Vector2 ();
 
-		template < typename U >
-		Vector2 (const U* u);
+		template < class T >
+		Vector2 (const T* v);
 
-		Vector2 ( const Vector2<Real>& u);
+		Vector2 ( const Vector2<Real>& v);
 
-		Vector2 ( const Real& pX, const Real& pY );
+		Vector2 ( const Real& x, const Real& y );
 		virtual ~Vector2 ();
 		//@}
 		//Operator
@@ -72,56 +67,52 @@ namespace LAL {
   	  	glVertex2fv(pos);
   	  	\endcode */
 		
-		inline operator Real * ();
-		inline operator const Real * ();
-
-		inline Real operator [] ( unsigned int i) const;
-
-		inline Real& operator [] ( unsigned int i);
+		Real 				operator[]( unsigned int index) const;
+		Real& 				operator[]( unsigned int index);
 		//@}
 		
 		// Assignment Opertators
 		//With Scalar
   	  	/*! @name Algebraic computations */
   	  	// @{
-  	  	inline Vector2<Real>   		  operator+ ( ) const;
-  	  	inline Vector2<Real>   		  operator- ( ) const;
+  	  	Vector2<Real>   	operator+() const;
+  	  	Vector2<Real>   	operator-() const;
   	  	
-		inline const Vector2< Real >& operator+= ( const Real&  factor );
-		inline const Vector2< Real >& operator-= ( const Real&  factor ); 
-		inline const Vector2< Real >& operator*= ( const Real& factor ); 
-		inline const Vector2< Real >& operator/= ( const Real& factor );
+		Vector2< Real >& 	operator+=( const Real& factor );
+		Vector2< Real >& 	operator-=( const Real& factor ); 
+		Vector2< Real >& 	operator*=( const Real& factor ); 
+		Vector2< Real >& 	operator/=( const Real& factor );
 
 		template <class T>
-		friend inline Vector2<T> operator* (const Vector2<T>& u, const T& factor); 	
+		friend Vector2<T>	operator*( const Vector2<T>& v, const T& factor ); 	
 		template <class T>
-		friend inline Vector2<T> operator* (const T& factor, const Vector2<T>& u); 
+		friend Vector2<T>	operator*( const T& factor, const Vector2<T>& v ); 
 		template <class T>
-		friend inline Vector2<T> operator/ (const Vector2<T>& u, const T& factor); 	
+		friend Vector2<T> 	operator/( const Vector2<T>& v, const T& factor ); 	
 		template <class T>
-		inline friend Vector2<T> operator+ (const T& factor, const Vector2<T>& u);  
+		friend Vector2<T> 	operator+( const T& factor, const Vector2<T>& v );  
 		template <class T>
-		inline friend Vector2<T> operator+ (const Vector2<T>& u, const T& factor);
+		friend Vector2<T> 	operator+( const Vector2<T>& v, const T& factor );
 		template <class T>
-		inline friend Vector2<T> operator- (const T& factor, const Vector2<T>& u);  
+		friend Vector2<T> 	operator-( const T& factor, const Vector2<T>& v );  
 		template <class T>
-		inline friend Vector2<T> operator- (const Vector2<T>& u, const T& factor); 
+		friend Vector2<T> 	operator-( const Vector2<T>& v, const T& factor ); 
 		
 		
 		
 		// With Vector
-		inline const Vector2<Real>& operator=  ( const Vector2<Real>& u );
-		inline const Vector2<Real>& operator+= ( const Vector2<Real>& u );
-		inline const Vector2<Real>& operator-= ( const Vector2<Real>& u ); 
-		inline const Vector2<Real>& operator/= ( const Vector2<Real>& u ); 
+		Vector2<Real>& 		operator= ( const Vector2<Real>& v );
+		Vector2<Real>&		operator+=( const Vector2<Real>& v );
+		Vector2<Real>&		operator-=( const Vector2<Real>& v ); 
+		Vector2<Real>&		operator/=( const Vector2<Real>& v ); 
 		
-		inline bool operator== ( const Vector2<Real>& u) const;
-		inline bool operator!= ( const Vector2<Real>& u) const;
+		bool 				operator==( const Vector2<Real>& v) const;
+		bool 				operator!=( const Vector2<Real>& v) const;
 		
-		inline Vector2<Real>  operator- ( const Vector2<Real>& u) const;
-		inline Vector2<Real>  operator+ ( const Vector2<Real>& u) const;
+		Vector2<Real>  		operator-( const Vector2<Real>& v) const;
+		Vector2<Real>  		operator+( const Vector2<Real>& v) const;
 		
-		inline Real operator* ( const Vector2<Real>& u) const;
+		Real 				operator*( const Vector2<Real>& v ) const;
 		//@}
 		
   	  //@}
@@ -133,16 +124,18 @@ namespace LAL {
   	  std::cout << "Vector2" << " x = " << v.x << " ,y = " << v.y << std::endl;
   	  \endcode */
   	  template <class T>
-  	  inline friend std::ostream& operator<< (std::ostream & s, const Vector2<T>& p);
+  	  friend std::ostream& 	operator<<( std::ostream & s, const Vector2<T>& v );
   	  //@}
 		
   	  	/*! @name Functions */
   	  	//@{
   	   	/*!  */
-		inline Real length ();
-		inline void normalize ();
-		inline Vector2<Real> norm ();
-	
+		Real 				Length( void );
+		void 				Normalize( void );
+		Vector2<Real> 		Morm( void );
+		const Real* 		ToRealPtr( void ) const;
+		Real* 				ToRealPtr( void );
+		
 		//@}
 	
 
@@ -211,7 +204,7 @@ v1[1] = v1*(-v2)
 
 /*
  * solucão para não ter warnning no retorno de uma referencia
-inline Vector2<T>&  operator- ( const Vector2<T>& u) const
+Vector2<T>&  operator- ( const Vector2<T>& u) const
 {
 	Vector2<T> w;
 	 	

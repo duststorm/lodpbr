@@ -37,45 +37,45 @@ namespace LAL {
 
 		//Operator
 
-		Real  operator[]( int index ) const;
+		Real  					operator[]( int index ) const;
 
-		Real& operator[]( int index );
+		Real& 					operator[]( int index );
 
 		// Assignment Opertators with Scalar
 		
-  	  	Vector4<Real>   		  operator+ ( ) const;
-  	  	Vector4<Real>   		  operator- ( ) const;
+  	  	Vector4<Real>   		operator+ ( ) const;
+  	  	Vector4<Real>   		operator- ( ) const;
   	  	
-	    Vector4< Real >& operator+=( const Real& factor );
-		Vector4< Real >& operator-=( const Real& factor ); 
-		Vector4< Real >& operator*=( const Real& factor ); 
-		Vector4< Real >& operator/=( const Real& factor );
+	    Vector4< Real >& 		operator+=( const Real& factor );
+		Vector4< Real >& 		operator-=( const Real& factor ); 
+		Vector4< Real >& 		operator*=( const Real& factor ); 
+		Vector4< Real >& 		operator/=( const Real& factor );
 
 		template <class T>
-		friend Vector4<T> operator*( const Vector4<T>& v, const T& factor ); 	
+		friend Vector4<T> 		operator*( const Vector4<T>& v, const T& factor ); 	
 		template <class T>
-		friend Vector4<T> operator*( const T& factor, const Vector4<T>& v ); 
+		friend Vector4<T> 		operator*( const T& factor, const Vector4<T>& v ); 
 		template <class T>
-		friend Vector4<T> operator/( const Vector4<T>& v, const T& factor ); 	
+		friend Vector4<T> 		operator/( const Vector4<T>& v, const T& factor ); 	
 		template <class T>
-		friend Vector4<T> operator+( const T& factor, const Vector4<T>& v );  
+		friend Vector4<T> 		operator+( const T& factor, const Vector4<T>& v );  
 		template <class T>
-		friend Vector4<T> operator+( const Vector4<T>& v, const T& factor );
+		friend Vector4<T> 		operator+( const Vector4<T>& v, const T& factor );
 		template <class T>
-		friend Vector4<T> operator-( const T& factor, const Vector4<T>& v );  
+		friend Vector4<T> 		operator-( const T& factor, const Vector4<T>& v );  
 		template <class T>
-		friend Vector4<T> operator-( const Vector4<T>& v, const T& factor ); 
+		friend Vector4<T> 		operator-( const Vector4<T>& v, const T& factor ); 
 		
 		
 		
 		// Assignment with Vector
-		Vector4<Real>& operator= ( const Vector4<Real>& v );
-		Vector4<Real>& operator+=( const Vector4<Real>& v );
-		Vector4<Real>& operator-=( const Vector4<Real>& v ); 
-		Vector4<Real>& operator/=( const Vector4<Real>& v ); 
+		Vector4<Real>& 			operator= ( const Vector4<Real>& v );
+		Vector4<Real>& 			operator+=( const Vector4<Real>& v );
+		Vector4<Real>& 			operator-=( const Vector4<Real>& v ); 
+		Vector4<Real>& 			operator/=( const Vector4<Real>& v ); 
 		
-		bool operator==( const Vector4<Real>& v) const;
-		bool operator!=( const Vector4<Real>& v) const;
+		bool 					operator==( const Vector4<Real>& v) const;
+		bool 					operator!=( const Vector4<Real>& v) const;
 		
 		Vector4<Real>  			operator-( const Vector4<Real>& v) const;
 		Vector4<Real>  			operator+( const Vector4<Real>& v) const;

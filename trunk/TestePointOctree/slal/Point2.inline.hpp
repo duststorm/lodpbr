@@ -8,8 +8,8 @@
 template<class Real>
 Point2<Real>::Point2()
 {
-	this->x 		= static_cast< Real > (0);
-	this->y 		= static_cast< Real > (0);
+	this->x = static_cast< Real > (0);
+	this->y = static_cast< Real > (0);
 };
 
 
@@ -39,7 +39,7 @@ Point2<Real>::Point2 (const T* point)
 };
 
 template<class Real>
-inline void Point3<Real>::Set( const Real& x, const Real& y ) 
+inline void Point2<Real>::Set( const Real& x, const Real& y ) 
 {
 	this->x = x;
 	this->y = y;
@@ -52,13 +52,7 @@ inline void Point3<Real>::Set( const Real& x, const Real& y )
 template<class Real>
 inline  Real Point2<Real>::operator[]( unsigned int index )  const
 {
-	if ( index > 1 )
-	{
-		std::cerr << "[ERROR] Point2 operator[]"        << std::endl
-		<< "        Out of the Point size. " << std::endl
-		<< "        Accepts, 0 , 1 only." << std::endl;
-		exit(1);
-	}
+	assert( ( index >= 0 ) && ( index < 2 ) );
 
 	return ( ( &x )[ index ] );
 };
@@ -67,15 +61,8 @@ template<class Real>
 inline  Real& Point2<Real>::operator[]( unsigned int index )  
 
 {
-	if ( index > 1 )
-	{
-		std::cerr << "[ERROR] Point2 operator[]"        << std::endl
-		<< "        Out of the Point size. " << std::endl
-		<< "        Accepts, 0 , 1 only." << std::endl;
-		exit(1);
-	}
-
-
+	assert( ( index >= 0 ) && ( index < 2 ) );
+	
 	return ( ( &x )[ index ] );
 };
 
@@ -129,10 +116,10 @@ inline Point2< Real >& Point2<Real>::operator*=( const Real& factor )
 template<class Real>
 inline Point2< Real >& Point2<Real>::operator/=( const Real& factor )
 {
-	Real lFactor = (Real)1 / factor;
+	Real f = (Real)1 / factor;
 
-	this->x *= lFactor;
-	this->y *= lFactor;
+	this->x *= f;
+	this->y *= f;
 
 	return ( *this );
 }

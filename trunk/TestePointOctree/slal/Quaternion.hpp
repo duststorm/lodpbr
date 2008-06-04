@@ -35,32 +35,24 @@ namespace LAL{
 	    //@{
 		/*! Default constructor. Value is set to (1,0,0,0). */
 		Quaternion();
-		Quaternion(const Quaternion<Real>& pQuaternion);
-		Quaternion(const Real& pW, const Real& pX, const Real& pY, const Real& pZ);
-		Quaternion(const Real& pAngle, const Vector3<Real>& pAxis );
-		inline Quaternion<Real>& operator=  (const Quaternion<Real>& pQuaternion);
-  	  	inline void setAngle (const Real& pAngle); 
-  	  	inline void setAxis  (const Vector3<Real>& pAxis);
-  	  	inline void setAxis  (const Real& pX, const Real& pY, const Real& pZ);
+		Quaternion( const Quaternion<Real>& quat );
+		Quaternion( const Real& w, const Real& x, const Real& y, const Real& z );
+		Quaternion( const Real& pAngle, const Vector3<Real>& pAxis );
+		
+		Quaternion<Real>& 		operator=(const Quaternion<Real>& quat );
+  	  	void 					SetAngle( const Real& angle ); 
+  	  	void 					SetAxis( const Vector3<Real>& axis );
+  	  	void 					SetAxis( const Real& x, const Real& y, const Real& z );
 		
 		/*! @name Accessing the value */
 		//@{
-		  			
-  	  	inline Real x() const;
-  	  	inline Real y() const;
-  	  	inline Real z() const;
-  	  	inline Real w() const; 
+ 
  	  	
-  	  	inline Vector3<Real> 	axis () const;
-  	  	inline Real 			angle() const; 
+  	  	Vector3<Real> 			Axis () const;
+  	  	Real 					Angle() const; 
 
-		inline Real  operator [] ( int i) const;
-
-		inline Real& operator [] ( int i);
-		
-		inline operator const Real* () const;
-		
-		inline operator Real* ();
+		Real  					operator[]( int index ) const;
+		Real& 					operator[]( int index );
 		
 		//@}
 		
@@ -68,54 +60,54 @@ namespace LAL{
 		
   	  	/*! @name Algebraic computations */
   	  	// @{
-		inline Quaternion<Real>& 			operator*= (const Quaternion<Real>& pQuaternion);
-	    inline Quaternion<Real>& 			operator*= (const Real& pFactor);
-	    inline Quaternion<Real>& 			operator/= (const Real& pFactor);
+		Quaternion<Real>& 		operator*=( const Quaternion<Real>& quat );
+	    Quaternion<Real>& 		operator*=( const Real& factor );
+	    Quaternion<Real>& 		operator/=( const Real& factor );
 	    
 		
 	    // arithmetic operations
 		template < class T>
-	    inline friend Quaternion<T> operator*  (const Quaternion<T>& a, const Quaternion<T>& b ) ;
+	    friend Quaternion<T> 	operator*( const Quaternion<T>& a, const Quaternion<T>& b ) ;
 		
 		template < class T>
-	    inline friend Vector3<T>    operator*  (const Quaternion<T>& pQuaternion, const Vector3<T>& pVector ) ;
+	    friend Vector3<T>    	operator*( const Quaternion<T>& quat, const Vector3<T>& vector ) ;
 		
-	    inline Quaternion<Real> operator* (const Real& pFactor) const;
-	    inline Quaternion<Real> operator/ (const Real& pFactor) const;
+	    Quaternion<Real> 		operator*( const Real& factor) const;
+	    Quaternion<Real> 		operator/( const Real& factor) const;
 		
 		//Negates all the coefficients of the Quaternion.
-		inline Quaternion<Real> 	operator-  () const;
+		Quaternion<Real> 		operator-() const;
  	    
 	    // functions of a quaternion
 	    //Inverses the Quaternion (same rotation angle(), but negated axis()).
-	    inline Quaternion<Real> 	operator~  ( ) const;
+	    Quaternion<Real> 		operator~( ) const;
 	    //@}
 	    
 	   	/*!@name Functions */
 	    //@{
-	    inline Real 			    Length() const;  
-	    inline Quaternion<Real> 	Inverse () const;
-	    inline void 				Invert  ();
-	    inline Real					Norm() const;
-	    inline void	 				Normalize   ();
-	    inline Quaternion<Real>		Normalized  ();
-	    inline Vector3<Real>        Rotate   ( const Vector3<Real>& v) const;
-		inline Real				    Dot      ( const Quaternion<Real>& pQuaternion) const;
+	    Real 			    	Length( void ) const;  
+	    Quaternion<Real> 		Inverse( void ) const;
+	    void 					Invert( void );
+	    Real					Norm( void ) const;
+	    void	 				Normalize( void );
+	    Quaternion<Real>		Normalized( void );
+	    Vector3<Real>        	Rotate( const Vector3<Real>& v ) const;
+		Real				    Dot( const Quaternion<Real>& quat ) const;
 	
-		inline void Identity ();
-		inline void To3x3Matrix (Matrix3x3<Real>& pRotMatrix) const;
-		inline void To4x4Matrix (Matrix4x4<Real>& pRotMatrix) const;
-		inline void To4x4Matrix( Real * pRotMatrix) const;
-		inline Matrix4x4<Real>  To4x4Matrix() const; 
+		void 					Identity();
+		void 					To3x3Matrix( Matrix3x3<Real>& rotationMatrix ) const;
+		void 					To4x4Matrix( Matrix4x4<Real>& rotationMatrix ) const;
+		void 					To4x4Matrix( Real * rotMatrix) const;
+		Matrix4x4<Real>  		To4x4Matrix() const; 
 		
-		inline void FromRotationMatrix 	(const Matrix4x4<Real>& pRotMatrix );
-		inline void FromAxisAngle		(const Vector3<Real>& axis, const Real& degrees);
-		inline void FromHeadPitchRoll	( Real headDegrees, Real pitchDegrees, Real rollDegrees);
-		inline void FromMatrix			(const Matrix4x4<Real>& m);
+		void 					FromRotationMatrix( const Matrix4x4<Real>& rotationMatrix );
+		void 					FromAxisAngle( const Vector3<Real>& axis, const Real& degrees );
+		void 					FromHeadPitchRoll( const Real& headDegrees, const Real& pitchDegrees, const Real& rollDegrees);
+		void 					FromMatrix( const Matrix4x4<Real>& m );
 		
-		inline void ToAxisAngle			(Vector3<Real>& axis, Real& degrees) const;
-		inline void ToHeadPitchRoll		(const Real& headDegrees, const Real& pitchDegrees, const Real& rollDegrees) const;
-		inline void ToRotationArc		(Vector3<Real> &u, Vector3<Real> &v);
+		void 					ToAxisAngle( Vector3<Real>& axis, Real& degrees ) const;
+		void 					ToHeadPitchRoll( const Real& headDegrees, const Real& pitchDegrees, const Real& rollDegrees ) const;
+		void 					ToRotationArc( Vector3<Real> &u, Vector3<Real> &v );
 		//@}
 
 		/*! @name Output stream */
@@ -126,24 +118,16 @@ namespace LAL{
     	  std::cout << " Quaternion " << " w = " << q.w() << " x = " << q.x() << " ,y = " << q.y() << " ,z = " << z() << std::endl;
     	  \endcode */
 		template <class T>
-		friend inline std::ostream& operator<< (std::ostream & s, const Quaternion<Real>& pQuaternion);
+		friend std::ostream& 	operator<< ( std::ostream & s, const Quaternion<Real>& quat );
 		//@}
 		virtual ~Quaternion();
 		
-	private:
+	public:
 		
-		union
-		{
-			struct
-			{
-				Real mW;
-				Real mX;
-				Real mY;
-				Real mZ;
-			};
-
-			Real wxyz[4];
-		};
+		Real w;
+		Real x;
+		Real y;
+		Real z;
 		
 	};
 	
