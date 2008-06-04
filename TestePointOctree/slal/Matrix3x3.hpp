@@ -33,67 +33,63 @@ namespace LAL {
 		/*! @name Defining a Matrix4x4 */
 		//@{
 		Matrix3x3();
-		Matrix3x3(Real a11, Real a12, Real a13,Real a21, Real a22, Real a23,Real a31, Real a32, Real a33);
-		Matrix3x3(const Vector3<Real>& row1, const Vector3<Real>& row2, const Vector3<Real>& row3 );
-		Matrix3x3(const Point3<Real>& row1, const Point3<Real>& row2, const Point3<Real>& row3 );
-		inline Matrix3x3<Real>& operator= ( const Matrix3x3<Real>& A);
+		Matrix3x3( Real a11, Real a12, Real a13,Real a21, Real a22, Real a23,Real a31, Real a32, Real a33 );
+		Matrix3x3( const Vector3<Real>& row1, const Vector3<Real>& row2, const Vector3<Real>& row3 );
+		Matrix3x3( const Point3<Real>& row1, const Point3<Real>& row2, const Point3<Real>& row3 );
 		virtual ~Matrix3x3();
+		Matrix3x3<Real>& 		operator=( const Matrix3x3<Real>& A);
 		//@}
 		// transpose
-		inline Matrix3x3<Real> operator~ () const;
-		
+		Matrix3x3<Real> 		operator~() const;
 		/*! @name Accessing the value */
 		//@{
-			
-	
-		inline const Vector3<Real>& operator[] (int rowIndex) const;
+		const Vector3<Real>& 	operator[]( int rowIndex ) const;
+		Vector3<Real>& 			operator[]( int rowIndex );
 		
-		inline Vector3<Real>& operator[] (int rowIndex);
-		
-		Real operator()  ( int i, int j )  	const;
-		Real& operator() ( int i, int j );
+		Real 					operator()( int i, int j )  	const;
+		Real& 					operator()( int i, int j );
 		// Return Colum
-		Vector3<Real> Column ( int i ) const;
-		Vector3<Real> Row ( int i ) const;
+		Vector3<Real> 			Column( int index ) const;
+		Vector3<Real> 			Row( int index ) const;
 		//@}	
 		// 
 		/*! @name Algebraic computations */
 		//@{
-		inline Matrix3x3<Real>  operator- ( ) const;
-		inline Matrix3x3<Real>  operator+ ( ) const;
+		Matrix3x3<Real>  		operator-() const;
+		Matrix3x3<Real>  		operator+() const;
 
 		template <class T>
-		friend inline Matrix3x3<T> operator* ( const T& factor, const Matrix3x3<T>& A);
+		friend Matrix3x3<T> 	operator*( const T& factor, const Matrix3x3<T>& a );
 		template <class T>
-		friend inline Matrix3x3<T> operator* ( const Matrix3x3<T>& A, const T& factor);
+		friend Matrix3x3<T> 	operator*( const Matrix3x3<T>& a, const T& factor );
 		template <class T>
-		friend inline Matrix3x3<T> operator/ ( const Matrix3x3<T>& A, const T& factor);
+		friend Matrix3x3<T> 	operator/( const Matrix3x3<T>& a, const T& factor );
 
 		template <class T>
-		friend inline Matrix3x3<T> operator+ (const Matrix3x3<T>& A, const Matrix3x3<T>& B);
+		friend Matrix3x3<T> 	operator+( const Matrix3x3<T>& a, const Matrix3x3<T>& b );
 		template <class T>
-		friend inline Matrix3x3<T> operator- (const Matrix3x3<T>& A, const Matrix3x3<T>& B);
+		friend Matrix3x3<T> 	operator-( const Matrix3x3<T>& a, const Matrix3x3<T>& b );
 		template <class T>
-		friend inline Matrix3x3<T> operator* (const Matrix3x3<T>& A, const Matrix3x3<T>& B);
+		friend Matrix3x3<T> 	operator*( const Matrix3x3<T>& a, const Matrix3x3<T>& b );
 		
 		template <class T>
-		friend inline Vector3<T> operator* ( const Matrix3x3<T>& A, const Vector3<T>& u);
+		friend Vector3<T> 		operator*( const Matrix3x3<T>& a, const Vector3<T>& v );
 		template <class T>
-		friend inline Point3<T>  operator* ( const Matrix3x3<T>& A, const Point3<T>& p );
-		template <class T>
+		friend Point3<T>  		operator*( const Matrix3x3<T>& a, const Point3<T>& p );
 		//@}
 	
 		
 		/*! @name Matrix Function  */
-		//@{ 
-		friend  inline std::ostream& operator<< (std::ostream & s, const Matrix3x3<T>& A);
+		//@{
+		template <class T>
+		friend  std::ostream& 	operator<< ( std::ostream & s, const Matrix3x3<T>& a );
 		
-//		const Real* ToRealtPtr( void ) const ;
+		const Real* 			ToRealPtr( void ) const ;
 		
-		Real* ToRealPtr( void );
+		Real* 					ToRealPtr( void );
 	
-		bool IsSymetric ();
-		Matrix3x3<Real> Identity ();
+		bool 					IsSymetric();
+		Matrix3x3<Real> 		Identity();
 		
 		//@}
 
