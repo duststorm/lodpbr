@@ -36,114 +36,102 @@ namespace LAL {
 		/*! Default constructor. All value is set to 0. */
 		Matrix4x4();
 		 /*! Copy constructor. */ 
-		Matrix4x4(const Matrix4x4<Real>& A );
-		inline Matrix4x4<Real>& operator= ( const Matrix4x4<Real>& A);
+		Matrix4x4( const Matrix4x4<Real>& a );
+		inline Matrix4x4<Real>& operator=( const Matrix4x4<Real>& a);
 		
 		/*! Copy constructor for a Matrix with another type */
 		template <class T>
-		Matrix4x4(const Matrix4x4<T>& A );
+		Matrix4x4( const Matrix4x4<T>& a );
 
 		/*! Constructor. Four Vector4 representing the rows*/
-		Matrix4x4(const Vector4<Real>& row1, const Vector4<Real>& row2, const Vector4<Real>& row3, const Vector4<Real>& row4 );
+		Matrix4x4( const Vector4<Real>& row1, const Vector4<Real>& row2, const Vector4<Real>& row3, const Vector4<Real>& row4 );
 		/*! Constructor. Three Vector3 representing the three  first rows*/
-		Matrix4x4(const Vector3<Real>& row1, const Vector3<Real>& row1, const Vector3<Real>& row3);
+		Matrix4x4( const Vector3<Real>& row1, const Vector3<Real>& row1, const Vector3<Real>& row3);
 		
 		 /*! Constructor. Taking 16 arguments. */
-		Matrix4x4(Real a11, Real a12, Real a13, Real a14, 
-				  Real a21, Real a22, Real a23, Real a24,
-				  Real a31, Real a32, Real a31, Real a34, 
-				  Real a41, Real a42, Real a43, Real a44 );
+		Matrix4x4( Real a11, Real a12, Real a13, Real a14, 
+				   Real a21, Real a22, Real a23, Real a24,
+				   Real a31, Real a32, Real a31, Real a34, 
+				   Real a41, Real a42, Real a43, Real a44 );
+		
 		virtual ~Matrix4x4();
 		
 		//@}
-		
 		/*! @name Accessing the value */
 		//@{
+				
+		const Vector4<Real>& 	operator[]( int rowIndex ) const;
+		Vector4<Real>& 			operator[]( int rowIndex );
 		
-		
-		inline const Vector4<Real>& operator[] (int rowIndex) const;
-		inline Vector4<Real>& operator[] (int rowIndex);
-		
-		Real  operator()  ( int i, int j )  	const;
-		Real& operator() ( int i, int j );
+		Real  					operator()( int i, int j ) const;
+		Real& 					operator()( int i, int j );
 		// Return Colum
-		Vector4<Real> Column ( int i ) const;
-		Vector4<Real> Row ( int i ) const;
+		Vector4<Real> 			Column ( int index ) const;
+		Vector4<Real> 			Row ( int index ) const;
 
 		
 		//@}
 		
 		/*! @name Algebraic computations */
 		//@{
-		inline Matrix4x4<Real> operator~ () const;
-		inline Matrix4x4<Real>  operator- ( ) const;
-		inline Matrix4x4<Real>  operator+ ( ) const;
-		template <class T>
-		friend inline Matrix4x4<T> operator* ( const T& factor, const Matrix4x4<T>& A);
-		template <class T>
-		friend inline Matrix4x4<T> operator* ( const Matrix4x4<T>& A, const T& factor);
-		template <class T>
-		friend inline Matrix4x4<T> operator/ ( const Matrix4x4<T>& A, const T& factor);
+		Matrix4x4<Real> 		operator~() const;
+		Matrix4x4<Real>  		operator-() const;
+		Matrix4x4<Real>  		operator+() const;
 		
-		inline Matrix4x4<Real>& operator/=( const Real& factor);
-		inline Matrix4x4<Real>& operator*=( const Real& factor);
-		inline Matrix4x4<Real>& operator+=( const Real& factor);
-		inline Matrix4x4<Real>& operator-=( const Real& factor);
+		template <class T>
+		friend Matrix4x4<T> 	operator*( const T& factor, const Matrix4x4<T>& a );
+		template <class T>
+		friend Matrix4x4<T> 	operator*( const Matrix4x4<T>& a, const T& factor );
+		template <class T>
+		friend Matrix4x4<T> 	operator/( const Matrix4x4<T>& a, const T& factor );
+		
+		Matrix4x4<Real>& 		operator/=( const Real& factor);
+		Matrix4x4<Real>& 		operator*=( const Real& factor);
+		Matrix4x4<Real>& 		operator+=( const Real& factor);
+		Matrix4x4<Real>& 		operator-=( const Real& factor);
 
 		template <class T>
-		friend inline Matrix4x4<T> operator+ (const Matrix4x4<T>& A, const Matrix4x4<T>& B);
+		friend Matrix4x4<T> 	operator+ (const Matrix4x4<T>& A, const Matrix4x4<T>& B);
 		template <class T>
-		friend inline Matrix4x4<T> operator- (const Matrix4x4<T>& A, const Matrix4x4<T>& B);
+		friend Matrix4x4<T> 	operator- (const Matrix4x4<T>& A, const Matrix4x4<T>& B);
 		template <class T>
-		friend inline Matrix4x4<T> operator* (const Matrix4x4<T>& A, const Matrix4x4<T>& B);
-		
+		friend Matrix4x4<T> 	operator* (const Matrix4x4<T>& A, const Matrix4x4<T>& B);
 		template <class T>
-		friend inline Vector3<T> operator* ( const Matrix4x4<T>& A, const Vector4<T>& u);
-		
+		friend Vector3<T> 		operator* ( const Matrix4x4<T>& A, const Vector4<T>& u);
 		template <class T>
-		friend inline Vector3<T> operator* ( const Matrix4x4<T>& A, const Vector3<T>& u);
-		
+		friend Vector3<T> 		operator* ( const Matrix4x4<T>& A, const Vector3<T>& u);
 		//@}
-		
-		
 		/*! @name Translate and Scalar */
 		//@{
-		Matrix4x4<Real> MakeTranslate (const Vector3<Real>& v) const;
-		Matrix4x4<Real> MakeTranslate (const Vector4<Real>& v) const;
-		Matrix4x4<Real> MakeTranslate (const Real& v0,const Real& v1,const Real& v2) const;
-		
-		Matrix4x4<Real> MakeScalar (const Vector3<Real>& v) const;
-
+		Matrix4x4<Real> 		MakeTranslate (const Vector3<Real>& v) const;
+		Matrix4x4<Real> 		MakeTranslate (const Vector4<Real>& v) const;
+		Matrix4x4<Real> 		MakeTranslate (const Real& v0,const Real& v1,const Real& v2) const;
+		Matrix4x4<Real> 		MakeScalar (const Vector3<Real>& v) const;
 		//@}
-		
 		/*! @name Projection */
-		static Matrix4x4<Real> MakeProjectionMatrix (const Real& fovy, const Real aspectRation, const Real& near, const Real& far) ;
-		static Matrix4x4<Real> MakeViewMatrix       (const Vector3<Real>& eyes, const Vector3<Real>& position, const Vector3<Real>& up) ;
+		static Matrix4x4<Real> 	MakeProjectionMatrix (const Real& fovy, const Real aspectRation, const Real& near, const Real& far) ;
+		static Matrix4x4<Real> 	MakeViewMatrix       (const Vector3<Real>& eyes, const Vector3<Real>& position, const Vector3<Real>& up) ;
 		//@}
 		/*! @name Rotation  */
 		//@{ 
-		void FromHeadPitchRoll(Real headDegrees, Real pitchDegrees, Real rollDegrees);
-		void Rotate(const Vector3<Real>& axis, Real& degrees);
-		void ToHeadPitchRoll(Real &headDegrees, Real &pitchDegrees, Real &rollDegrees) const;
+		void 					FromHeadPitchRoll(Real headDegrees, Real pitchDegrees, Real rollDegrees);
+		void 					Rotate(const Vector3<Real>& axis, Real& degrees);
+		void 					ToHeadPitchRoll(Real &headDegrees, Real &pitchDegrees, Real &rollDegrees) const;
 		//@}
 		
 		/*! @name Matrix Function  */
 		//@{ 
 				
-		Matrix4x4<Real> Identity ();
+		Matrix4x4<Real> 		Identity ();
+		Real 					Determinant () const;
+		Matrix4x4<Real> 		Inverse () const;
+		bool 					IsSymetric ();
 		
-		Real Determinant () const;
-		
-		Matrix4x4<Real> Inverse () const;
-		//Inquiry
-		bool IsSymetric ();
-		
-//		const Real* ToRealPtr( void ) const 
-		
-		Real* ToRealPtr( void );
+		const Real* 			ToRealPtr( void ) const; 
+		Real* 					ToRealPtr( void );
 		
 		template <class T>
-		friend  inline std::ostream& operator<< (std::ostream & s, const Matrix4x4<T>& A);
+		friend std::ostream&	operator<< (std::ostream & s, const Matrix4x4<T>& A);
 		//@}
 		
 	private:

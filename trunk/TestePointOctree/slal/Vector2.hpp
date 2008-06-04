@@ -132,8 +132,8 @@ namespace LAL {
   	   	/*!  */
 		Real 				Length( void );
 		void 				Normalize( void );
-		Vector2<Real> 		Morm( void );
-		const Real* 		ToRealPtr( void ) const;
+		Vector2<Real> 		Norm( void );
+		const Real* 	    ToRealPtr( void ) const;
 		Real* 				ToRealPtr( void );
 		
 		//@}
