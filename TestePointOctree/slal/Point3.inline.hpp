@@ -7,9 +7,9 @@
 template<class Real>
 Point3<Real>::Point3()
 {
-	this->x 		= static_cast< Real > (0);
-	this->y 		= static_cast< Real > (0);
-	this->z 		= static_cast< Real > (0);
+	this->x = static_cast< Real > (0);
+	this->y = static_cast< Real > (0);
+	this->z = static_cast< Real > (0);
 
 };
 

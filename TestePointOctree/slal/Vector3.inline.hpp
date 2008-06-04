@@ -76,13 +76,7 @@ inline void Vector3<Real>::Set( const Real& x, const Real& y, const Real& z )
 template<class Real>
 inline Real Vector3<Real>::operator[]( int index ) const
 {
-	if ( index > 2)
-	{
-		std::cerr << "[ERROR] Vector3 operator[]"        << std::endl
-		<< "        Out of the vector size. " << std::endl
-		<< "        Accepts, 0 , 1 , 2 only." << std::endl;
-		exit(1);
-	}
+	assert( ( index >= 0 ) && ( index < 3 ) );
 
 	return ( ( &x )[ index ] );
 
@@ -91,14 +85,7 @@ inline Real Vector3<Real>::operator[]( int index ) const
 template<class Real>
 inline Real& Vector3<Real>::operator[]( int index ) 
 {
-	if ( index > 2)
-	{
-		std::cerr << "[ERROR] Vector3 operator[]"        << std::endl
-		<< "        Out of the vector size. " << std::endl
-		<< "        Accepts, 0 , 1 , 2 only." << std::endl;
-		exit(1);
-	}
-
+	assert( ( index >= 0 ) && ( index < 3 ) );
 
 	return ( ( &x )[ index ] );
 

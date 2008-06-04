@@ -3,174 +3,134 @@
 
 
 #include <cmath>
+#include <cassert>
+
 #include "Quaternion.hpp"
 
 
 template <class Real>
 Quaternion<Real>::Quaternion()
 {
-    mW = static_cast<Real> (1.0);
-    mX = static_cast<Real> (0.0);
-    mY = static_cast<Real> (0.0);
-    mZ = static_cast<Real> (0.0);
+    w = static_cast<Real> (1.0);
+    x = static_cast<Real> (0.0);
+    y = static_cast<Real> (0.0);
+    z = static_cast<Real> (0.0);
 };
 						
 template<class Real>
-Quaternion<Real>::Quaternion ( const Quaternion<Real>& pQuaternion)
+Quaternion<Real>::Quaternion( const Quaternion<Real>& quat )
 :
-	mW(pQuaternion.mW),
-	mX(pQuaternion.mX),
-	mY(pQuaternion.mY),
-	mZ(pQuaternion.mZ)
+	w( quat.w ),
+	x( quat.x ),
+	y( quat.y ),
+	z( quat.z )
 {};
 
 template<class Real>
-Quaternion<Real>::Quaternion ( const Real& pW, const Real& pX, const Real& pY, const Real& pZ ) 
+Quaternion<Real>::Quaternion( const Real& w, const Real& x, const Real& y, const Real& z ) 
 :
-	mW(pW),
-	mX(pX),
-	mY(pY),
-	mZ(pZ)
-	
+	w(w),
+	x(x),
+	y(y),
+	z(z)
 {};
 
 template<class Real>
-Quaternion<Real>::Quaternion ( const Real& pAngle ,const Vector3<Real>& pAxis)
+Quaternion<Real>::Quaternion( const Real& angle ,const Vector3<Real>& axis )
 {
-    const Real lenght = axis.lenght();
+    const Real lenght = axis.Lenght();
+    
     if (lenght < 1E-8)
     {	// Null rotation
-    	wxyz[0] = 1.0; wxyz[1] = 0.0;      wxyz[2] = 0.0;      wxyz[3] = 0.0;      
+    	w =  static_cast<Real> (1.0);; x =  static_cast<Real> (0.0); y =  static_cast<Real> (0.0); z =  static_cast<Real> (0.0);      
     }
     else
     {
-    	const Real sin_half_angle = sin(pAngle * 0.5);
+    	const Real sin_half_angle = sin(angle * 0.5);
     	
-    	wxyz[0] = cos(pAngle * 0.5);
-    	wxyz[1] = sin_half_angle*pAxis[0]/lenght;
-    	wxyz[2] = sin_half_angle*pAxis[1]/lenght;
-    	wxyz[3] = sin_half_angle*pAxis[2]/lenght;
+    	w = cos(angle * 0.5);
+    	x = sin_half_angle*axis[0]/lenght;
+    	y = sin_half_angle*axis[1]/lenght;
+    	z = sin_half_angle*axis[2]/lenght;
     	
     }
-};
-
-//Gets and Sets
-template<class Real>
-inline Real Quaternion<Real>::x() const
-{
-	return ( this->mX );
-};
-
-template<class Real>
-inline Real Quaternion<Real>::y() const
-{
-	return ( this->mY );
-};
-
-template<class Real>
-inline Real Quaternion<Real>::z() const
-{
-	return ( this->mZ );
-};
-
-template<class Real>
-inline Real Quaternion<Real>::w() const
-{
-	return ( this->mW );
 };
 
 //Operator
 
+
 template<class Real>
-inline Quaternion<Real>::operator Real * ()
+inline Real Quaternion<Real>::operator[]( int index ) const
 {
-	return  wxyz;
+	assert( ( index >= 0 ) && ( index < 4 ) );
+
+	return ( ( &w )[ index ] );
+
+};
+
+template<class Real>
+inline Real& Quaternion<Real>::operator[]( int index ) 
+{
+	assert( ( index >= 0 ) && ( index < 4 ) );
+	
+	return ( ( &w )[ index ] );
+
+};
+
+template<class Real>
+inline void Quaternion<Real>::SetAngle( const Real& angle )
+{
+	w = angle;
 }
 
 template<class Real>
-inline Real Quaternion<Real>::operator [] ( int i) const
+inline void Quaternion<Real>::SetAxis( const Vector3<Real>& axis )
 {
-	if ( i > 3)
-	{
-		std::cerr << "[ERROR] Quaternion operator[]"        << std::endl
-		<< "        Out of the vector size. " << std::endl
-		<< "        Accepts, 0 , 1 , 2 only." << std::endl;
-		exit(1);
-	}
-
-	return (wxyz[i]);
-
+	x = axis.x;
+	y = axis.y;
+	z = axis.z;
 };
 
 template<class Real>
-inline Real& Quaternion<Real>::operator [] ( int i) 
-{
-	if ( i > 3)
-	{
-		std::cerr << "[ERROR] Quaternion operator[]"        << std::endl
-		<< "        Out of the vector size. " << std::endl
-		<< "        Accepts, 0 , 1 , 2 only." << std::endl;
-		exit(1);
-	}
-
-
-	return (wxyz[i]);
-
-};
-template<class Real>
-inline void Quaternion<Real>::setAngle (const Real& pAngle)
-{
-	mW = pAngle;
-}
-
-template<class Real>
-inline void Quaternion<Real>::setAxis  (const Vector3<Real>& pAxis)
-{
-	mX = pAxis.mX;
-	mY = pAxis.mY;
-	mZ = pAxis.mZ;
-};
-
-template<class Real>
-inline void Quaternion<Real>::setAxis  (const Real& pX, const Real& pY, const Real& pZ)
+inline void Quaternion<Real>::SetAxis( const Real& x, const Real& y, const Real& z )
 {
 	
-	mX = pX;
-	mY = pY;
-	mZ = pZ;
+	this->x = x;
+	this->y = y;
+	this->z = z;
 
 };
 	
 template<class Real>
-inline Vector3<Real> Quaternion<Real>::axis () const
+inline Vector3<Real> Quaternion<Real>::Axis() const
 {
-	return ( Vector3<Real> (mX,mY,mZ) );
+	return ( Vector3<Real> (x,y,z) );
 };
 
 template<class Real>
-inline Real Quaternion<Real>::angle() const
+inline Real Quaternion<Real>::Angle() const
 {
-	return ( mW ); 
+	return ( w ); 
 }
 
 
 template <class Real>
-inline Quaternion<Real>& Quaternion<Real>::operator= (const Quaternion<Real>& pQuaternion)
+inline Quaternion<Real>& Quaternion<Real>::operator=( const Quaternion<Real>& quat ) 
 {
-	mW = pQuaternion.mW;
-    mX = pQuaternion.mX;
-    mY = pQuaternion.mY;
-    mZ = pQuaternion.mZ;
+	w = quat.w;
+    x = quat.x;
+    y = quat.y;
+    z = quat.z;
     return *this;
 }
 
 template <class Real>
-inline Quaternion<Real>& Quaternion<Real>::operator *= (const Real& pFactor)
+inline Quaternion<Real>& Quaternion<Real>::operator*=( const Real& factor )
 {
-	mW *= pFactor;
-	mX *= pFactor;
-	mY *= pFactor; 
-	mZ *= pFactor;
+	w *= factor;
+	x *= factor;
+	y *= factor; 
+	z *= factor;
 	
 	return *this;
 }
@@ -178,23 +138,23 @@ inline Quaternion<Real>& Quaternion<Real>::operator *= (const Real& pFactor)
 //------------------------------------------------------------------------------
 //
 template<class Real>
-inline Quaternion<Real>& Quaternion<Real>::operator /= (const Real& pFactor)
+inline Quaternion<Real>& Quaternion<Real>::operator/=( const Real& factor )
 {
-	mW /= pFactor;
-	mX /= pFactor; 
-	mY /= pFactor; 
-	mZ /= pFactor; 
+	w /= factor;
+	x /= factor; 
+	y /= factor; 
+	z /= factor; 
 		
 	return *this;
 }
 
 template <class Real>
-inline Quaternion<Real> operator* (const Quaternion<Real>& a, const Quaternion<Real>& b)
+inline Quaternion<Real> operator*( const Quaternion<Real>& a, const Quaternion<Real>& b )
 {
-  return Quaternion<Real>( a.mW*b.mW - a.mX*b.mX - a.mY*b.mY - a.mZ*b.mZ,
-						   a.mW*b.mX + a.mX*b.mW + a.mY*b.mZ - a.mZ*b.mY,
-						   a.mW*b.mY - a.mX*b.mZ + a.mY*b.mW + a.mZ*b.mX,
-				           a.mW*b.mZ + a.mX*b.mY - a.mY*b.mX + a.mZ*b.mW  );
+  return Quaternion<Real>( a.w*b.w - a.x*b.x - a.y*b.y - a.z*b.z,
+						   a.w*b.x + a.x*b.w + a.y*b.z - a.z*b.y,
+						   a.w*b.y - a.x*b.z + a.y*b.w + a.z*b.x,
+				           a.w*b.z + a.x*b.y - a.y*b.x + a.z*b.w  );
   		  
 //  res.w = w*r.w - x*r.x - y*r.y - z*r.z;
 //   res.x = w*r.x + x*r.w + y*r.z - z*r.y;
@@ -204,133 +164,134 @@ inline Quaternion<Real> operator* (const Quaternion<Real>& a, const Quaternion<R
 }
 
 template <class Real>
-inline Vector3<Real> Quaternion<Real>::Rotate(const Vector3<Real>& v) const
+inline Vector3<Real> Quaternion<Real>::Rotate( const Vector3<Real>& v ) const
 {
-    Quaternion<Real> lQuaternio(1.0,v.x, v.y, v.z);
+    Quaternion<Real> quat(1.0,v.x, v.y, v.z);
     
-    lQuaternio = *this*lQuaternio*(~(*this));
+    quat = (*this) * quat * (~(*this));
     
-    return Vector3<Real> (lQuaternio.mX, lQuaternio.mY, lQuaternio.mZ);
+    return Vector3<Real> (quat.x, quat.y, quat.z);
 }
 
 
 template <class Real>
-inline void Quaternion<Real>::To3x3Matrix (Matrix3x3<Real>& pRotMatrix) const
+inline void Quaternion<Real>::To3x3Matrix( Matrix3x3<Real>& rotationMatrix ) const
 {
-    Real x  = static_cast<Real> (2.0)*mX;
-    Real y  = static_cast<Real> (2.0)*mY;
-    Real z  = static_cast<Real> (2.0)*mZ;
-    Real wx = x*mW;
-    Real wy = y*mW;
-    Real wz = z*mW;
-    Real xx = x*mX;
-    Real xy = y*mX;
-    Real xz = z*mX;
-    Real yy = y*mY;
-    Real yz = z*mY;
-    Real zz = z*mZ;
+    Real x  = static_cast<Real> (2.0)*x;
+    Real y  = static_cast<Real> (2.0)*y;
+    Real z  = static_cast<Real> (2.0)*z;
+    Real wx = x*w;
+    Real wy = y*w;
+    Real wz = z*w;
+    Real xx = x*x;
+    Real xy = y*x;
+    Real xz = z*x;
+    Real yy = y*y;
+    Real yz = z*y;
+    Real zz = z*z;
 
-    pRotMatrix(0,0) = static_cast<Real>(1.0) -(yy+zz);
-    pRotMatrix(0,1) = xy-wz;
-    pRotMatrix(0,2) = xz+wy;
-    pRotMatrix(1,0) = xy+wz;
-    pRotMatrix(1,1) = static_cast<Real>(1.0) -(xx+zz);
-    pRotMatrix(1,2) = yz-wx;
-    pRotMatrix(2,0) = xz-wy;
-    pRotMatrix(2,1) = yz+wx;
-    pRotMatrix(2,2) = static_cast<Real> (1.0) - (xx+yy);
+    rotationMatrix(0,0) = static_cast<Real>(1.0) -(yy+zz);
+    rotationMatrix(0,1) = xy-wz;
+    rotationMatrix(0,2) = xz+wy;
+    rotationMatrix(1,0) = xy+wz;
+    rotationMatrix(1,1) = static_cast<Real>(1.0) -(xx+zz);
+    rotationMatrix(1,2) = yz-wx;
+    rotationMatrix(2,0) = xz-wy;
+    rotationMatrix(2,1) = yz+wx;
+    rotationMatrix(2,2) = static_cast<Real> (1.0) - (xx+yy);
 }
 
 template <class Real>
-inline void Quaternion<Real>::To4x4Matrix(Matrix4x4<Real> &pRotMatrix) const 
+inline void Quaternion<Real>::To4x4Matrix( Matrix4x4<Real>& rotationMatrix ) const 
 {
-    Real x  = static_cast<Real> (2.0)*mX;
-    Real y  = static_cast<Real> (2.0)*mY;
-    Real z  = static_cast<Real> (2.0)*mZ;
-    Real wx = x*mW;
-    Real wy = y*mW;
-    Real wz = z*mW;
-    Real xx = x*mX;
-    Real xy = y*mX;
-    Real xz = z*mX;
-    Real yy = y*mY;
-    Real yz = z*mY;
-    Real zz = z*mZ;
+    Real x  = static_cast<Real> (2.0)*x;
+    Real y  = static_cast<Real> (2.0)*y;
+    Real z  = static_cast<Real> (2.0)*z;
+    Real wx = x*w;
+    Real wy = y*w;
+    Real wz = z*w;
+    Real xx = x*x;
+    Real xy = y*x;
+    Real xz = z*x;
+    Real yy = y*y;
+    Real yz = z*y;
+    Real zz = z*z;
 
-    pRotMatrix(0,0) = static_cast<Real>(1.0) -(yy+zz);
-    pRotMatrix(0,1) = xy-wz;
-    pRotMatrix(0,2) = xz+wy;
-    pRotMatrix(1,0) = xy+wz;
-    pRotMatrix(1,1) = static_cast<Real>(1.0) -(xx+zz);
-    pRotMatrix(1,2) = yz-wx;
-    pRotMatrix(2,0) = xz-wy;
-    pRotMatrix(2,1) = yz+wx;
-    pRotMatrix(2,2) = static_cast<Real> (1.0) - (xx+yy);
-    pRotMatrix(3,0) = pRotMatrix(3,1) = pRotMatrix(3,2) = pRotMatrix(0,3) = pRotMatrix(1,3) = pRotMatrix(2,3) = static_cast<Real> (0.0);
-    pRotMatrix(3,3) = static_cast<Real>(1.0);
+    rotationMatrix(0,0) = static_cast<Real>(1.0) -(yy+zz);
+    rotationMatrix(0,1) = xy-wz;
+    rotationMatrix(0,2) = xz+wy;
+    rotationMatrix(1,0) = xy+wz;
+    rotationMatrix(1,1) = static_cast<Real>(1.0) -(xx+zz);
+    rotationMatrix(1,2) = yz-wx;
+    rotationMatrix(2,0) = xz-wy;
+    rotationMatrix(2,1) = yz+wx;
+    rotationMatrix(2,2) = static_cast<Real> (1.0) - (xx+yy);
+    rotationMatrix(3,0) = rotationMatrix(3,1) = rotationMatrix(3,2) = rotationMatrix(0,3) = rotationMatrix(1,3) = rotationMatrix(2,3) = static_cast<Real> (0.0);
+    rotationMatrix(3,3) = static_cast<Real>(1.0);
   }
 
 template <class Real>
 inline Matrix4x4<Real> Quaternion<Real>::To4x4Matrix() const 
 {
 	
-	Matrix4x4<Real> pRotMatrix;
+	Matrix4x4<Real> rotationMatrix;
 	
-    Real x  = static_cast<Real> (2.0)*mX;
-    Real y  = static_cast<Real> (2.0)*mY;
-    Real z  = static_cast<Real> (2.0)*mZ;
-    Real wx = x*mW;
-    Real wy = y*mW;
-    Real wz = z*mW;
-    Real xx = x*mX;
-    Real xy = y*mX;
-    Real xz = z*mX;
-    Real yy = y*mY;
-    Real yz = z*mY;
-    Real zz = z*mZ;
+    Real x  = static_cast<Real> (2.0)*x;
+    Real y  = static_cast<Real> (2.0)*y;
+    Real z  = static_cast<Real> (2.0)*z;
+    Real wx = x*w;
+    Real wy = y*w;
+    Real wz = z*w;
+    Real xx = x*x;
+    Real xy = y*x;
+    Real xz = z*x;
+    Real yy = y*y;
+    Real yz = z*y;
+    Real zz = z*z;
 
-    pRotMatrix(0,0) = static_cast<Real>(1.0) -(yy+zz);
-    pRotMatrix(0,1) = xy-wz;
-    pRotMatrix(0,2) = xz+wy;
-    pRotMatrix(1,0) = xy+wz;
-    pRotMatrix(1,1) = static_cast<Real>(1.0) -(xx+zz);
-    pRotMatrix(1,2) = yz-wx;
-    pRotMatrix(2,0) = xz-wy;
-    pRotMatrix(2,1) = yz+wx;
-    pRotMatrix(2,2) = static_cast<Real> (1.0) - (xx+yy);
-    pRotMatrix(3,0) = pRotMatrix(3,1) = pRotMatrix(3,2) = pRotMatrix(0,3) = pRotMatrix(1,3) = pRotMatrix(2,3) = static_cast<Real> (0.0);
-    pRotMatrix(3,3) = static_cast<Real>(1.0);
+    rotationMatrix(0,0) = static_cast<Real>(1.0) -(yy+zz);
+    rotationMatrix(0,1) = xy-wz;
+    rotationMatrix(0,2) = xz+wy;
+    rotationMatrix(1,0) = xy+wz;
+    rotationMatrix(1,1) = static_cast<Real>(1.0) -(xx+zz);
+    rotationMatrix(1,2) = yz-wx;
+    rotationMatrix(2,0) = xz-wy;
+    rotationMatrix(2,1) = yz+wx;
+    rotationMatrix(2,2) = static_cast<Real> (1.0) - (xx+yy);
+    rotationMatrix(3,0) = rotationMatrix(3,1) = rotationMatrix(3,2) = rotationMatrix(0,3) = rotationMatrix(1,3) = rotationMatrix(2,3) = static_cast<Real> (0.0);
+    rotationMatrix(3,3) = static_cast<Real>(1.0);
     
-    return (pRotMatrix);
+    return (rotationMatrix);
   }
 
 template <class Real>
-inline void Quaternion<Real>::To4x4Matrix( Real * pRotMatrix) const {
+inline void Quaternion<Real>::To4x4Matrix( Real * rotationMatrix ) const 
+{
 	
-    Real x  = static_cast<Real> (2.0)*mX;
-    Real y  = static_cast<Real> (2.0)*mY;
-    Real z  = static_cast<Real> (2.0)*mZ;
-    Real wx = x*mW;
-    Real wy = y*mW;
-    Real wz = z*mW;
-    Real xx = x*mX;
-    Real xy = y*mX;
-    Real xz = z*mX;
-    Real yy = y*mY;
-    Real yz = z*mY;
-    Real zz = z*mZ;
+    Real x  = static_cast<Real> (2.0)*x;
+    Real y  = static_cast<Real> (2.0)*y;
+    Real z  = static_cast<Real> (2.0)*z;
+    Real wx = x*w;
+    Real wy = y*w;
+    Real wz = z*w;
+    Real xx = x*x;
+    Real xy = y*x;
+    Real xz = z*x;
+    Real yy = y*y;
+    Real yz = z*y;
+    Real zz = z*z;
     
-    pRotMatrix[0] = static_cast<Real>(1.0) -(yy+zz);;
-    pRotMatrix[1] = xy+wz;
-    pRotMatrix[2] = xz-wy;
-    pRotMatrix[4] = xy-wz;
-    pRotMatrix[5] = static_cast<Real>(1.0) -(xx+zz);
-    pRotMatrix[6] = yz+wx;
-    pRotMatrix[8] = xz+wy;
-    pRotMatrix[9] = yz-wx;
-    pRotMatrix[10] = static_cast<Real> (1.0) - (xx+yy);
-    pRotMatrix[12] = pRotMatrix[13] = pRotMatrix[14] = pRotMatrix[3] = pRotMatrix[7] = pRotMatrix[11] =  static_cast<Real> (0.0);
-    pRotMatrix[15] = static_cast<Real> (1.0);
+    rotationMatrix[0] = static_cast<Real>(1.0) -(yy+zz);;
+    rotationMatrix[1] = xy+wz;
+    rotationMatrix[2] = xz-wy;
+    rotationMatrix[4] = xy-wz;
+    rotationMatrix[5] = static_cast<Real>(1.0) -(xx+zz);
+    rotationMatrix[6] = yz+wx;
+    rotationMatrix[8] = xz+wy;
+    rotationMatrix[9] = yz-wx;
+    rotationMatrix[10] = static_cast<Real> (1.0) - (xx+yy);
+    rotationMatrix[12] = rotationMatrix[13] = rotationMatrix[14] = rotationMatrix[3] = rotationMatrix[7] = rotationMatrix[11] =  static_cast<Real> (0.0);
+    rotationMatrix[15] = static_cast<Real> (1.0);
  }
 
 
@@ -338,46 +299,46 @@ inline void Quaternion<Real>::To4x4Matrix( Real * pRotMatrix) const {
 
 //----------------------------------------------------------------------------
 template <class Real>
-inline void  Quaternion<Real>::FromRotationMatrix ( const Matrix4x4<Real>& pRotMatrix )
+inline void  Quaternion<Real>::FromRotationMatrix( const Matrix4x4<Real>& rotationMatrix )
 {
-	  const Real onePlusTrace = static_cast<Real> (1.0)  + pRotMatrix[0][0] + pRotMatrix[1][1] + pRotMatrix[2][2];
+	  const Real onePlusTrace = static_cast<Real> (1.0)  + rotationMatrix[0][0] + rotationMatrix[1][1] + rotationMatrix[2][2];
 
 	  if (onePlusTrace > 1E-5)
 	    {
 	      // Direct computation
 	      const Real s = sqrt(onePlusTrace) * static_cast<Real> (2.0) ;
-	      mX = (pRotMatrix[2][1] - pRotMatrix[1][2]) / s;
-	      mY = (pRotMatrix[0][2] - pRotMatrix[2][0]) / s;
-	      mZ = (pRotMatrix[1][0] - pRotMatrix[0][1]) / s;
-	      mW = static_cast<Real> (0.25)  * s;
+	      x = (rotationMatrix[2][1] - rotationMatrix[1][2]) / s;
+	      y = (rotationMatrix[0][2] - rotationMatrix[2][0]) / s;
+	      z = (rotationMatrix[1][0] - rotationMatrix[0][1]) / s;
+	      w = static_cast<Real> (0.25)  * s;
 	    }
 	  else
 	    {
 	      // Computation depends on major diagonal term
-	      if ((pRotMatrix[0][0] > pRotMatrix[1][1])&(pRotMatrix[0][0] > pRotMatrix[2][2]))
+	      if ((rotationMatrix[0][0] > rotationMatrix[1][1])&(rotationMatrix[0][0] > rotationMatrix[2][2]))
 		{ 
-		  const Real s = sqrt(1.0 + pRotMatrix[0][0] - pRotMatrix[1][1] - pRotMatrix[2][2]) * static_cast<Real> (2.0) ; 
-		  mX = static_cast<Real> (0.25) * s;
-		  mY = (pRotMatrix[0][1] + pRotMatrix[1][0]) / s; 
-		  mZ = (pRotMatrix[0][2] + pRotMatrix[2][0]) / s; 
-		  mW = (pRotMatrix[1][2] - pRotMatrix[2][1]) / s;
+		  const Real s = sqrt(1.0 + rotationMatrix[0][0] - rotationMatrix[1][1] - rotationMatrix[2][2]) * static_cast<Real> (2.0) ; 
+		  x = static_cast<Real> (0.25) * s;
+		  y = (rotationMatrix[0][1] + rotationMatrix[1][0]) / s; 
+		  z = (rotationMatrix[0][2] + rotationMatrix[2][0]) / s; 
+		  w = (rotationMatrix[1][2] - rotationMatrix[2][1]) / s;
 		}
 	      else
-		if (pRotMatrix[1][1] > pRotMatrix[2][2])
+		if (rotationMatrix[1][1] > rotationMatrix[2][2])
 		  { 
-		    const Real s = sqrt(1.0 + pRotMatrix[1][1] - pRotMatrix[0][0] - pRotMatrix[2][2]) * static_cast<Real> (2.0) ; 
-		    mX = (pRotMatrix[0][1] + pRotMatrix[1][0]) / s; 
-		    mY = static_cast<Real> (0.25) * s;
-		    mZ = (pRotMatrix[1][2] + pRotMatrix[2][1]) / s; 
-		    mW = (pRotMatrix[0][2] - pRotMatrix[2][0]) / s;
+		    const Real s = sqrt(1.0 + rotationMatrix[1][1] - rotationMatrix[0][0] - rotationMatrix[2][2]) * static_cast<Real> (2.0) ; 
+		    x = (rotationMatrix[0][1] + rotationMatrix[1][0]) / s; 
+		    y = static_cast<Real> (0.25) * s;
+		    z = (rotationMatrix[1][2] + rotationMatrix[2][1]) / s; 
+		    w = (rotationMatrix[0][2] - rotationMatrix[2][0]) / s;
 		  }
 		else
 		  { 
-		    const Real s = sqrt(1.0 + pRotMatrix[2][2] - pRotMatrix[0][0] - pRotMatrix[1][1]) * static_cast<Real> (2.0) ; 
-		    mX = (pRotMatrix[0][2] + pRotMatrix[2][0]) / s; 
-		    mY = (pRotMatrix[1][2] + pRotMatrix[2][1]) / s; 
-		    mZ = static_cast<Real> (0.25) * s;
-		    mW = (pRotMatrix[0][1] - pRotMatrix[1][0]) / s;
+		    const Real s = sqrt(1.0 + rotationMatrix[2][2] - rotationMatrix[0][0] - rotationMatrix[1][1]) * static_cast<Real> (2.0) ; 
+		    x = (rotationMatrix[0][2] + rotationMatrix[2][0]) / s; 
+		    y = (rotationMatrix[1][2] + rotationMatrix[2][1]) / s; 
+		    z = static_cast<Real> (0.25) * s;
+		    w = (rotationMatrix[0][1] - rotationMatrix[1][0]) / s;
 		  }
 	    }
 	  
@@ -386,19 +347,19 @@ inline void  Quaternion<Real>::FromRotationMatrix ( const Matrix4x4<Real>& pRotM
 }
 
 template <class Real>
-inline void  Quaternion<Real>::FromAxisAngle(const Vector3<Real> &axis, const Real& degrees)
+inline void  Quaternion<Real>::FromAxisAngle( const Vector3<Real> &axis, const Real& degrees )
 {
     Real halfTheta = static_cast<Real> (Math::degreesToRadians(degrees) * 0.5f);
     
     Real s = std::sin(halfTheta);
     
-    mW = std::cos(halfTheta);
-    mX = axis.x * s;
-    mY = axis.y * s;
-    mZ = axis.z * s;
+    w = std::cos(halfTheta);
+    x = axis.x * s;
+    y = axis.y * s;
+    z = axis.z * s;
 }
 template <class Real>
-inline void  Quaternion<Real>::FromHeadPitchRoll(Real headDegrees, Real pitchDegrees, Real rollDegrees)
+inline void  Quaternion<Real>::FromHeadPitchRoll( const Real& headDegrees, const Real& pitchDegrees, const Real& rollDegrees)
 {
     Matrix4x4<Real> m;
     m.FromHeadPitchRoll(headDegrees, pitchDegrees, rollDegrees);
@@ -410,7 +371,7 @@ inline void  Quaternion<Real>::ToAxisAngle( Vector3<Real>& axis, Real& degrees )
 {
     // Converts this quaternion to an axis and an angle.
 
-    Real sinHalfThetaSq = static_cast< Real >(1) - mW * mW;
+    Real sinHalfThetaSq = static_cast< Real >(1) - w * w;
 
     // Guard against numerical imprecision and identity quaternions.
     if (sinHalfThetaSq <= static_cast< Real >(0))
@@ -422,9 +383,9 @@ inline void  Quaternion<Real>::ToAxisAngle( Vector3<Real>& axis, Real& degrees )
     {
         Real invSinHalfTheta = static_cast< Real >(1) / std::sqrt(sinHalfThetaSq);
 
-        axis[0] = mX * invSinHalfTheta;
-        axis[1] = mY * invSinHalfTheta;	
-        axis[2] = mZ * invSinHalfTheta;
+        axis[0] = x * invSinHalfTheta;
+        axis[1] = y * invSinHalfTheta;	
+        axis[2] = z * invSinHalfTheta;
         degrees = Math::radiansToDegrees(2.0f * std::acos(w));
     }
 }
@@ -432,125 +393,125 @@ inline void  Quaternion<Real>::ToAxisAngle( Vector3<Real>& axis, Real& degrees )
 
 // Reference: Stan Melax, Game Programming Gems
 template <class Real>
-inline void  Quaternion<Real>::ToRotationArc(Vector3<Real> &u, Vector3<Real> &v) 
+inline void  Quaternion<Real>::ToRotationArc( Vector3<Real> &u, Vector3<Real> &v ) 
 {
 
 	u.Normalize();
 	v.Normalize();
-	Vector3<Real> w = u ^ v;
+	Vector3<Real> axis = u ^ v;
 
 	Real d = u*v;
 	Real s = std::sqrt((1+d)*2);
 
-	mW = s * static_cast<Real> (0.5);  
-	mX = w.x / s;
-	mY = w.y / s;
-	mZ = w.z / s; 
+	w = s * static_cast<Real> (0.5);  
+	x = axis.x / s;
+	y = axis.y / s;
+	z = axis.z / s; 
 
 }
 
 
 template <class Real>
-inline  Vector3<Real> operator*(const Quaternion<Real>& pQuaternion, const Vector3<Real>& v)
+inline  Vector3<Real> operator*( const Quaternion<Real>& quat, const Vector3<Real>& v )
 {
-  return pQuaternion.Rotate(v);
+  return quat.Rotate(v);
 }
 
 template < class Real>
-inline Quaternion<Real>& Quaternion<Real>::operator*= (const Quaternion<Real>& pQuaternion)
+inline Quaternion<Real>& Quaternion<Real>::operator*=( const Quaternion<Real>& quat )
 {
-  *this = (*this)*pQuaternion;
+  *this = (*this)*quat;
   return *this;
 }
 
 template <class Real>
-inline Quaternion<Real> Quaternion<Real>::operator* (const Real& pFactor) const
+inline Quaternion<Real> Quaternion<Real>::operator*( const Real& factor ) const
 {
 	
-	return Quaternion<Real>(mW * pFactor, mX * pFactor, mY * pFactor, mZ * pFactor);
+	return Quaternion<Real>(w * factor, x * factor, y * factor, z * factor);
 }
 
 //------------------------------------------------------------------------------
 //
 template <class Real>
-inline Quaternion<Real> Quaternion<Real>::operator/ (const Real& pFactor) const
+inline Quaternion<Real> Quaternion<Real>::operator/( const Real& factor ) const
 {
 
-	return Quaternion<Real>(mW / pFactor, mX / pFactor, mY / pFactor, mZ / pFactor);
+	return Quaternion<Real>(w / factor, x / factor, y / factor, z / factor);
 
 }
 
 template <class Real>
-inline Quaternion<Real>  Quaternion<Real>::operator- ( ) const
+inline Quaternion<Real>  Quaternion<Real>::operator-() const
 {
-	return Quaternion<Real> ( -mW , -mX, -mY, -mZ );
+	return Quaternion<Real> ( -w , -x, -y, -z );
 
 }
 // Conjugate
 template <class Real>
-inline Quaternion<Real> Quaternion<Real>::operator~ () const
+inline Quaternion<Real> Quaternion<Real>::operator~() const
 {
-	return Quaternion<Real> (mW , -mX, -mY, -mZ );
+	return Quaternion<Real> (w , -x, -y, -z );
 }
 
 template <class Real>
-inline Real Quaternion<Real>::Length () const
+inline Real Quaternion<Real>::Length() const
 {
-    return std::sqrt(  mX*mX +  mY*mY +  mZ*mZ + mW*mW );
+    return std::sqrt(  x*x +  y*y +  z*z + w*w );
 }
 
 template <class Real>
-inline Real Quaternion<Real>::Norm () const
+inline Real Quaternion<Real>::Norm() const
 {
-    return   ( mX*mX + mY*mY +  mZ*mZ + mW*mW ) ;
+    return   ( x*x + y*y +  z*z + w*w ) ;
 }
 
 
 template <class Real>
-inline void Quaternion<Real>::Normalize ()
+inline void Quaternion<Real>::Normalize()
 {
-    Real lLength = sqrt(  mX*mX +  mY*mY +  mZ*mZ + mW*mW );
+    Real lLength = sqrt(  x*x +  y*y +  z*z + w*w );
 
     if (lLength > 1e-06f)
     {
         Real lInvLength =  static_cast<Real> (1.0) / lLength;
         
-        mW *= lInvLength;
-        mX *= lInvLength;
-        mY *= lInvLength;
-        mZ *= lInvLength;
+        w *= lInvLength;
+        x *= lInvLength;
+        y *= lInvLength;
+        z *= lInvLength;
     }
     else
     {
-        mW = static_cast<Real> (1.0);
-        mX = static_cast<Real> (0.0);
-        mY = static_cast<Real> (0.0);
-        mZ = static_cast<Real> (0.0);
+        w = static_cast<Real> (1.0);
+        x = static_cast<Real> (0.0);
+        y = static_cast<Real> (0.0);
+        z = static_cast<Real> (0.0);
     }
 
 }
 
 template <class Real>
-inline void Quaternion<Real>::Identity ()
+inline void Quaternion<Real>::Identity()
 {
-	this->mW = static_cast<Real> (1);
-	this->mX = static_cast<Real> (0);
-	this->mY = static_cast<Real> (0);
-	this->mZ = static_cast<Real> (0);
+	this->w = static_cast<Real> (1);
+	this->x = static_cast<Real> (0);
+	this->y = static_cast<Real> (0);
+	this->z = static_cast<Real> (0);
 
 }
 
 
 template <class Real>
-inline Quaternion<Real> Quaternion<Real>::Normalized ()
+inline Quaternion<Real> Quaternion<Real>::Normalized()
 {
-    Real lLength = sqrt(  mX*mX +  mY*mY +  mZ*mZ + mW*mW );
+    Real lLength = sqrt(  x*x +  y*y +  z*z + w*w );
 
     if (lLength > 1e-06f)
     {
         Real lInvLength =  static_cast<Real> (1.0) / lLength;
         
-        return Quaternion<Real> (mW * lInvLength, mX * lInvLength, mY * lInvLength, mZ * lInvLength );
+        return Quaternion<Real> (w * lInvLength, x * lInvLength, y * lInvLength, z * lInvLength );
             
     }
     else
@@ -563,15 +524,15 @@ inline Quaternion<Real> Quaternion<Real>::Normalized ()
 
 
 template <class Real>
-inline Quaternion<Real> Quaternion<Real>::Inverse () const
+inline Quaternion<Real> Quaternion<Real>::Inverse() const
 {
-	Real lNorm =   mX*mX +  mY*mY +  mZ*mZ + mW*mW ;
+	Real lNorm =   x*x +  y*y +  z*z + w*w ;
 	
     if (lNorm > static_cast<Real> (0.0))
     {
         Real lInvNorm = static_cast<Real> (1.0) / lNorm;
         
-        return Quaternion<Real> (mW * lInvNorm, -mX * lInvNorm, -mY * lInvNorm, -mZ * lInvNorm );        
+        return Quaternion<Real> (w * lInvNorm, -x * lInvNorm, -y * lInvNorm, -z * lInvNorm );        
     }
     else
     {	// Return as a flag error !!
@@ -581,48 +542,48 @@ inline Quaternion<Real> Quaternion<Real>::Inverse () const
 }
 
 template <class Real>
-inline void  Quaternion<Real>::Invert () 
+inline void  Quaternion<Real>::Invert() 
 {
-	Real lNorm =   mX*mX +  mY*mY +  mZ*mZ + mW*mW ;
+	Real lNorm =   x*x +  y*y +  z*z + w*w ;
 	
     if (lNorm > static_cast<Real> (0.0))
     {
         Real lInvNorm = static_cast<Real> (1.0) / lNorm;
         
-        mW *= lInvNorm;
-       -mX *= lInvNorm; 
-       -mY *= lInvNorm; 
-       -mZ *= lInvNorm;
+        w *= lInvNorm;
+       -x *= lInvNorm; 
+       -y *= lInvNorm; 
+       -z *= lInvNorm;
         
     }
     else
     {
-        mW = static_cast<Real> (1.0);
-        mX = static_cast<Real> (0.0);
-        mY = static_cast<Real> (0.0);
-        mZ = static_cast<Real> (0.0);   
+        w = static_cast<Real> (1.0);
+        x = static_cast<Real> (0.0);
+        y = static_cast<Real> (0.0);
+        z = static_cast<Real> (0.0);   
     }
 
 }
 
 template <class Real>
-inline Real Quaternion<Real>::Dot (const Quaternion<Real>& pQuaternion) const
+inline Real Quaternion<Real>::Dot ( const Quaternion<Real>& quat ) const
 {
     Real lScalar = static_cast<Real> (0.0);
         
-    lScalar +=  mW * pQuaternion.mW +
-    			mX * pQuaternion.mX +
-    			mY * pQuaternion.mY +
-    			mZ * pQuaternion.mZ ;
+    lScalar +=  w * quat.w +
+    			x * quat.x +
+    			y * quat.y +
+    			z * quat.z ;
     
     return lScalar;
 }
 //--
 
 template<class Real>
-inline std::ostream& operator<< (std::ostream & s, const Quaternion<Real>& pQuaternion)
+inline std::ostream& operator<<( std::ostream & s, const Quaternion<Real>& quat )
 {
-	s << " Quaternion " << " w = " << pQuaternion.w() << " x = " << pQuaternion.x() << " ,y = " << pQuaternion.y() << " ,z = " << pQuaternion.z() << std::endl;
+	s << " Quaternion " << " w = " << quat.w << " x = " << quat.x << " ,y = " << quat.y << " ,z = " << quat.z << std::endl;
 
 	return s;
 };

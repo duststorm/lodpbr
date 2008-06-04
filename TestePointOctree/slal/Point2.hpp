@@ -116,7 +116,7 @@ namespace LAL
         	  p1.x() / p2.x();
         	  p1.x() / p2.y();
         	  \endcode */
-    	  const Point2<Real>& 	operator/= ( const Point2<Real>& p );
+    	  Point2<Real>& 		operator/=( const Point2<Real>& p );
     	  /*!@see operator+= */
     	  Point2<Real> 			operator+ (const Point2<Real>& p ) const;
     	  /*! This operation return a vector that has direction ...*/
