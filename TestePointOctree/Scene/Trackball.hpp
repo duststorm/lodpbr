@@ -1,8 +1,8 @@
 #ifndef TRACKBALL_HPP_
 #define TRACKBALL_HPP_
 
-#include "Quaternion.hpp"
-#include "Matrix4x4.hpp"
+#include "slal/Quaternion.hpp"
+#include "slal/Matrix4x4.hpp"
 
 
 template < class Real>

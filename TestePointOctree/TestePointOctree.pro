@@ -40,9 +40,9 @@ HEADERS += interface/myMainWindow.hpp \
     surfels/MergeEllipses.hpp \
     slal/Matrix4x4.hpp \
     slal/Vector4.hpp \
-    slal/Camera.hpp \
-    slal/Trackball.hpp \
-    slal/Trackball.inline.hpp \
+    Scene/Camera.hpp \
+    Scene/Trackball.hpp \
+    Scene/Trackball.inline.hpp \
     slal/Quaternion.hpp \
     slal/Quaternion.inline.hpp \
     slal/Math.hpp \
@@ -61,9 +61,9 @@ SOURCES += main.cpp \
     openGLFrame/GLFrame.cpp \
     openGLFrame/support/arcball.cpp \
     surfels/ply.c \
-    slal/Camera.cpp \
+    Scene/Camera.cpp \
     slal/Quaternion.cpp \
-    slal/Trackball.cpp \
+    Scene/Trackball.cpp \
     slal/Math.cpp \
     slal/Vector3.cpp \
     slal/Point2.cpp \
