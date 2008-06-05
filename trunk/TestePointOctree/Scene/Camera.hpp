@@ -2,11 +2,11 @@
 #define LAL_CAMERA_HPP_
 
 
-#include "Matrix4x4.hpp"
-#include "Vector3.hpp"
-#include "Vector4.hpp"
-#include "Trackball.hpp"
-#include "Quaternion.hpp"
+#include "slal/Matrix4x4.hpp"
+#include "slal/Vector3.hpp"
+#include "slal/Vector4.hpp"
+#include "Scene/Trackball.hpp"
+#include "slal/Quaternion.hpp"
 
 /*!
 *@class Camera

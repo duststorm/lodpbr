@@ -15,7 +15,7 @@
 #include "surfels/surfel.hpp"
 #include "surfels/surfels.hpp"
 
-#include "slal/Camera.hpp"
+#include "Scene/Camera.hpp"
 
 class GLFrame : public QGLWidget
 {
