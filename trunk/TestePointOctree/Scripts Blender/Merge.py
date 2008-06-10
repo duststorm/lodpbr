@@ -1,15 +1,19 @@
 import Blender
 import math
-import multiarray
-import LinearAlgebra as la
+#mport multiarray
+#mport LinearAlgebra as la
+import numpy 
+
 import Ellipse
 
 from Blender.Mathutils import Vector, Matrix ,Intersect, DotVecs, ProjectVecs, CrossVecs, LineIntersect
 from Blender  import Scene, Draw, BGL, Window , Mesh ,Mathutils , Object
 
+
+from numpy.linalg import eig
+from numpy import *
+
 from math           import *
-from LinearAlgebra  import *
-from multiarray     import *
 from Ellipse        import Ellipse
 
 EPSILON = 0.001
@@ -130,7 +134,7 @@ class Merge:
         
         #print cov, "MATRIX"
                
-        eigenvec = la.eigenvectors(cov)
+        eigenvec = eig(cov)
         
         #print len(eigenvec[0]) ,' PRIMEIRO ',eigenvec[0]
                                      
