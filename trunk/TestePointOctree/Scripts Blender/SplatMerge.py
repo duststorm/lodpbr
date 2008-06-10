@@ -96,9 +96,6 @@ EVENT_EXIT = 0
 
 '''    Tab Face -
 '''
-
-
-
 # Pega o centro e a normal dos Splats Selecionados
 getSplat = Draw.Create( 1 )
 # Events
@@ -262,7 +259,7 @@ def buttonevents(evt):
         
         lambda1 = merge.EigenValues()[0]
         lambda2 = merge.EigenValues()[1]
-        ratio  = sqrt (lambda1/lambda2)
+        ratio  = sqrt (lambda2/lambda1)
         
         listEllipse.append(Ellipse(merge.Center(),merge.A()*merge.EigenValues()[0],merge.B()*merge.EigenValues()[1],45.0,"Ellipse"+str(index)))
 
@@ -297,9 +294,7 @@ def buttonevents(evt):
         
         w = merge.EigenVectors()[0]
         #w.normalize()
-        lambda1 = merge.EigenValues()[0]
-        lambda2 = merge.EigenValues()[1]
-        ratio  = sqrt (lambda1/lambda2)
+
         me.verts.extend(listEllipse[-1].Center() + (w*merge.A()*merge.EigenValues()[0]))
         
         m = merge.EigenVectors()[1]
