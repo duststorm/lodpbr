@@ -375,6 +375,7 @@ template <class Real > class Surfel
 			 	glVertex3fv((*it)->ToRealPtr());
 			}
 			
+			
 
 	 }
 
