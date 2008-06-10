@@ -1,12 +1,9 @@
 import Blender
 import math
-import multiarray
-import LinearAlgebra as la
 
 from Blender.Mathutils import *
 from math              import *
-from LinearAlgebra     import *
-from multiarray        import *
+
 
 
 def perpendicular(v):
