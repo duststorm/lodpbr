@@ -1,15 +1,23 @@
 import Blender
 import math
-import multiarray
-import LinearAlgebra as la
+#import multiarray
+#import LinearAlgebra as la
 import Ellipse
+import numpy as nu
+import scipy.linalg as sc
 
 from Blender.Mathutils import Vector, Matrix ,Intersect, DotVecs, ProjectVecs, CrossVecs, LineIntersect
 from Blender  import Scene, Draw, BGL, Window , Mesh ,Mathutils , Object
 
+from numpy.linalg import eig, eigh
+from numpy import *
+
+from scipy.linalg import eig, eigh
+from scipy import *
+
 from math           import *
-from LinearAlgebra  import *
-from multiarray     import *
+#from LinearAlgebra  import *
+#from multiarray     import *
 from Ellipse        import Ellipse
 
 EPSILON = 0.001
@@ -130,7 +138,11 @@ class Merge:
        
        #print cov, "MATRIX"
              
-       eigenvec = la.eigenvectors(cov)
+       #eigenvec = la.eigenvectors(cov)
+       eigenvec = sc.eig(cov)
+       
+       #print 'LA',eigenvec
+       print 'NUMPY',eigenvec
        
        #print len(eigenvec[0]) ,' PRIMEIRO ',eigenvec[0]
                                    
@@ -213,9 +225,12 @@ class Merge:
          correlationYZ += ((i.y - self.mCenter.y) * (i.z - self.mCenter.z))
                        
            
-       return array([[(N*correlationXX), (N*correlationXY) , (N*correlationXZ)],
-                     [(N*correlationXY), (N*correlationYY) , (N*correlationYZ)],
-                     [(N*correlationXZ), (N*correlationYZ) , (N*correlationZZ)]])    
-       
-
+#       return array([[(N*correlationXX), (N*correlationXY) , (N*correlationXZ)],
+#                     [(N*correlationXY), (N*correlationYY) , (N*correlationYZ)],
+#                     [(N*correlationXZ), (N*correlationYZ) , (N*correlationZZ)]])    
+       # PORRA era so mudar a porra do array para array do numpy ou seja [ [] ,[] ] 2x2 
+       # para [(),()]
+       return array([ ( (N*correlationXX), (N*correlationXY) , (N*correlationXZ) ),
+                      ( (N*correlationXY), (N*correlationYY) , (N*correlationYZ) ),
+                      ( (N*correlationXZ), (N*correlationYZ) , (N*correlationZZ) ) ])    
 
