@@ -1,7 +1,7 @@
 import Blender
 import math
-#import multiarray
-#import LinearAlgebra as la
+import multiarray
+import LinearAlgebra as la
 import Ellipse
 import numpy as nu
 import scipy.linalg as sc
@@ -16,8 +16,8 @@ from scipy.linalg import eig, eigh
 from scipy import *
 
 from math           import *
-#from LinearAlgebra  import *
-#from multiarray     import *
+from LinearAlgebra  import *
+from multiarray     import *
 from Ellipse        import Ellipse
 
 EPSILON = 0.001
@@ -138,8 +138,8 @@ class Merge:
        
        #print cov, "MATRIX"
              
-       #eigenvec = la.eigenvectors(cov)
-       eigenvec = sc.eig(cov)
+       eigenvec = la.eigenvectors(cov)
+       #eigenvec = sc.eig(cov)
        
        #print 'LA',eigenvec
        print 'NUMPY',eigenvec
@@ -148,7 +148,7 @@ class Merge:
                                    
        self.mEigenVector = [Blender.Mathutils.Vector(eigenvec[1][0]),Blender.Mathutils.Vector(eigenvec[1][1]),Blender.Mathutils.Vector(eigenvec[1][2])]
              
-       self.mEigenValues = [eigenvec[0][0],eigenvec[0][1],eigenvec[0][2]]
+       self.mEigenValues = [eigenvec[0][1],eigenvec[0][0],eigenvec[0][2]]
        
        for i in range(len(self.mEigenValues)-1):
            for j  in range(1,len(self.mEigenValues)):
@@ -164,6 +164,8 @@ class Merge:
        self.mEigenVector[1].normalize()      
        self.mNormal.normalize()
        m = Matrix(self.mEigenVector[0],self.mEigenVector[1],self.mNormal)
+       
+       print 'NUMPY',eigenvec
        #m.transpose()
        #m.invert()
        lplano = []
