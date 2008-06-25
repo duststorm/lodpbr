@@ -393,10 +393,10 @@ template <class Real>
 inline std::ostream& operator<< (std::ostream & s, const Matrix4x4<Real>& a)
 {
 			s << "Matrix 4x4" << std::endl 
-			<< " m[ 1 ].y = " << a[ 0 ].x << " ,m[ 1 ].z = " << a[ 0 ].y << " ,m[ 1 ].w = " << a[ 0 ].z << " ,a41 = " <<a[ 0 ].w << std::endl
-			<< " m[ 2 ].y = " << a[ 1 ].x << " ,m[ 2 ].z = " << a[ 1 ].y << " ,m[ 2 ].w = " << a[ 1 ].z << " ,a42 = " <<a[ 1 ].w << std::endl
-			<< " m[ 3 ].y = " << a[ 2 ].x << " ,m[ 3 ].z = " << a[ 2 ].y << " ,m[ 3 ].w = " << a[ 2 ].z << " ,a43 = " <<a[ 2 ].w << std::endl
-			<< " a41 = " << a[ 3 ].x << " ,a42 = " << a[ 3 ].y << " ,a43 = " << a[ 3 ].z << " ,a44 = " << a[ 3 ].w << std::endl;
+			<< " m[ 1 ].x = " << a[ 0 ].x << " ,m[ 1 ].y = " << a[ 0 ].y << " ,m[ 1 ].z = " << a[ 0 ].z << " ,m[ 4 ].w = " << a[ 0 ].w << std::endl
+			<< " m[ 2 ].x = " << a[ 1 ].x << " ,m[ 2 ].y = " << a[ 1 ].y << " ,m[ 2 ].z = " << a[ 1 ].z << " ,m[ 4 ].w = " << a[ 1 ].w << std::endl
+			<< " m[ 3 ].x = " << a[ 2 ].x << " ,m[ 3 ].y = " << a[ 2 ].y << " ,m[ 3 ].z = " << a[ 2 ].z << " ,m[ 4 ].w = " << a[ 2 ].w << std::endl
+			<< " m[ 4 ].x = " << a[ 3 ].x << " ,m[ 4 ].y = " << a[ 3 ].y << " ,m[ 4 ].z = " << a[ 3 ].z << " ,m[ 4 ].w = " << a[ 3 ].w << std::endl;
 
 	return ( s );
 };
@@ -506,20 +506,20 @@ Matrix4x4<Real> Matrix4x4<Real>::MakeScalar (const Vector3<Real>& v) const
 	( v.x ,0.0, 0.0, 0.0,
 	  0.0, v.y, 0.0, 0.0,
 	  0.0, 0.0, v.z, 0.0,
-	  0.0, 0.0, 0.0 , 0.0, 1.0) 
+	  0.0, 0.0, 0.0 ,1.0) 
 	);
 }
 
 
 template <class Real>
-Matrix4x4<Real> Matrix4x4<Real>::MakeProjectionMatrix(const Real& fov, const Real aspectRation, const Real& near, const Real& far) 
+Matrix4x4<Real> Matrix4x4<Real>::MakePespectiveProjectionMatrix(const Real& fov, const Real& aspectRation, const Real& near, const Real& far) 
 {
 
 
 	Real c 					= static_cast<Real> (1.0 / std::tan(LAL::Math::degreesToRadians(fov) * 0.5) );
 	Real aspectRationInv 	= static_cast<Real> (1.0 / aspectRation);
 	Real fovy 				= static_cast<Real> (2.0 * std::atan(aspectRationInv / c));
-	Real xScale 			= static_cast<Real> (1.0 / tanf(0.5 * fovy));
+	Real xScale 			= static_cast<Real> (1.0 / std::tan(0.5 * fovy));
 	Real yScale 			= static_cast<Real> (xScale / aspectRationInv);
 
 	Matrix4x4<Real> lProjectionMatrix;
@@ -550,6 +550,15 @@ Matrix4x4<Real> Matrix4x4<Real>::MakeProjectionMatrix(const Real& fov, const Rea
 
 
 };
+
+template <class Real>
+Matrix4x4<Real> Matrix4x4<Real>::MakeOrthographicProjectionMatrix (const Real& left, const Real& right,const Real& bottom, const Real& top, const Real& near, const Real& far) 
+{
+	return Matrix4x4<Real>( (2 / (right - left) ), 0.0, 				  0.0, 					 -(right + left)  /( right - left),
+							0.0, 				   (2 / ( top - bottom) ),0.0, 					 -( top + bottom )/( top - bottom ),
+							0.0,                   0.0,                   (2 / ( far - near) ),  -( far + near )  /( far - near ), 
+							0.0,                   0.0,                   0.0,                    1.0 );
+}
 
 template <class Real>
 Matrix4x4<Real> Matrix4x4<Real>::MakeViewMatrix(const Vector3<Real>& eyes, const Vector3<Real>& position, const Vector3<Real>& up) 
