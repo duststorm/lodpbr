@@ -158,9 +158,9 @@ void GLFrame::LODSelection( OctreeNode<float,Surfel<float>* > * pNode, int& cont
 						else 
 							glColor3f(1.0,1.0,1.0);
 
-						lInternalNode->surfel()->draw();
-						//										LAL::Point3<float> p = lInternalNode->surfel()->Center();
-						//					glVertex3fv( lInternalNode->surfel()->Center());
+						//lInternalNode->surfel()->draw();
+						LAL::Point3<float> p = lInternalNode->surfel()->Center();
+						glVertex3fv( p.ToRealPtr() );
 						cont++;
 
 					}
@@ -332,17 +332,23 @@ void GLFrame::drawBox(LAL::BoundingBox3<T> BBox){
 void GLFrame::resizeGL(int width, int height)
 {
     glViewport(0, 0, width, height);
+    camera.setWindowSize(width,height);
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
     GLfloat x = GLfloat(width) / height;
-    camera.setProjectionMatrix(45.0,x,0.1,1000);
-    glLoadMatrixf((~camera.projectionMatrix()).ToRealPtr());
+    camera.setProjectionMatrix(90.0,x,0.1,1000);
+    
+    if (width <= height)
+      camera.setProjectionMatrix(-1.0f, 1.0f, -1.0f, 1.0f*(GLfloat(height)/width),-10.0f,10.0f);
+    else                              
+      camera.setProjectionMatrix(-1.0f, 1.0f*(GLfloat(width)/height), -1.0f, 1.0f,-10.0f,10.0f);
+    
+    glLoadMatrixf((~camera.orthographicProjectionMatrix()).ToRealPtr());//((~camera.pespectiveProjectionMatrix()).ToRealPtr());
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
     mCenterX =  static_cast<float> (width*0.5);
     mCenterY =  static_cast<float> (height*0.5);
-    
-    camera.setWindowSize(width,height);
+       
 }
 
 void GLFrame::paintGL()
@@ -350,9 +356,10 @@ void GLFrame::paintGL()
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
-    glLoadMatrixf((~camera.viewMatrix()).ToRealPtr());
+    glMultMatrixf((~camera.viewMatrix()).ToRealPtr());
     
-       
+    std::cout << ~camera.viewMatrix();
+    
     if ( surfels.surfels.size() != 0 )
     {
     	if (renderMode_A == Points)

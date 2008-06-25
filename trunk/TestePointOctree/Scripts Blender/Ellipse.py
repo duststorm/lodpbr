@@ -160,7 +160,7 @@ class Ellipse:
       return points
   
     def Area(self):
-        return (pi*self.mA*self.mB)
+        return (4*pi*self.mA*self.mB)
     
     def ResizeA(self,pA):
         self.mA = pA

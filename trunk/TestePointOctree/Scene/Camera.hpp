@@ -40,8 +40,8 @@ namespace LAL{
     	
         Camera()
         {
-        	mZoomRadius =  5.0f;
-        	mMinRadius  =  1.0f;
+        	mZoomRadius = 0.0f;
+        	mMinRadius  = 1.0f;
         	mMaxRadius  = 10.0f;
         	
         	mInitalPosition = Vector3(0.0,0.0,0.0);
@@ -85,10 +85,10 @@ namespace LAL{
         		//LAL::Quaternion<float> cameraRotation = ~mTrackball.orientation();
             	       		       		
                 // Transform vectors based on camera's rotation matrix
-                //mUp   = mOrientation.rotate(Vector3::UNIT_Y);
+                mUp   = mOrientation.Rotate(Vector3::UNIT_Y);
                 mEyes = mOrientation.Rotate(Vector3::UNIT_Z);
                 
-                mEyes =    mPosition - (mEyes * mZoomRadius);
+                mEyes =     (mEyes * mZoomRadius) - mPosition; 
          
                 // Update the eye point based on a radius away from the lookAt position
                // mEyes = cameraRotation.Rotate(mEyes);
@@ -98,9 +98,14 @@ namespace LAL{
         }
         
 
-        Matrix4x4 projectionMatrix()
+        Matrix4x4 pespectiveProjectionMatrix()
         {
-                return mProjectionMatrix;
+                return mPespectiveProjectionMatrix;
+        }
+        
+        Matrix4x4 orthographicProjectionMatrix()
+        {
+                return mOrthographicProjectionMatrix;
         }
 
         Vector3 position()
@@ -160,9 +165,21 @@ namespace LAL{
             mZNearPlane  = pZNearPlane;
             mZFarPlane   = pZFarPlane;
             
-            mProjectionMatrix = Matrix4x4::MakeProjectionMatrix(mFieldOfView, mAspectRatio, mZNearPlane, mZFarPlane);
+            mPespectiveProjectionMatrix = Matrix4x4::MakePespectiveProjectionMatrix(mFieldOfView, mAspectRatio, mZNearPlane, mZFarPlane);
         }
 
+        void setProjectionMatrix (const float& left, const float& right,const float& bottom, const float& top, const float& near, const float& far) 
+        {
+        	mLeft        = left;
+        	mRight       = right;
+        	mBottom      = bottom;  
+        	mTop         = top;
+        	
+            mZNearPlane  = near;
+            mZFarPlane   = far;
+                       
+            mOrthographicProjectionMatrix = Matrix4x4::MakeOrthographicProjectionMatrix(mLeft,mRight,mBottom,mTop,mZNearPlane,mZFarPlane);
+        }        
 
         void onRotationBegin( int x, int y)
         {
@@ -274,6 +291,9 @@ namespace LAL{
 
         void setWindowSize(int width, int height)
         {   
+        	mWidth = width;
+        	mHeight = height;
+        	
             mTrackball.setBounds(width, height);	        
         }
 
@@ -296,6 +316,9 @@ namespace LAL{
     	Vector3 mEyes;
     	Vector3 mUp;
 
+    	float mWidth;
+    	float mHeight;
+    	
     	float mZoomRadius;
     	float mMinRadius;
     	float mMaxRadius;
@@ -304,12 +327,22 @@ namespace LAL{
 
     	Matrix4x4 mTranslationMatrix;
 
+    	// Pespective
     	float mFieldOfView ;
     	float mAspectRatio ;
+    	
+    	// Othographic
+    	float mLeft;
+    	float mRight;
+    	float mBottom;
+    	float mTop;
+    	
     	float mZNearPlane  ;
     	float mZFarPlane   ;
 
-    	Matrix4x4 mProjectionMatrix;
+        Matrix4x4 mPespectiveProjectionMatrix;
+
+        Matrix4x4 mOrthographicProjectionMatrix;
     };
 
 }/* LAL :: NAMESPACE */

@@ -109,7 +109,9 @@ namespace LAL {
 		Matrix4x4<Real> 		MakeScalar (const Vector3<Real>& v) const;
 		//@}
 		/*! @name Projection */
-		static Matrix4x4<Real> 	MakeProjectionMatrix (const Real& fovy, const Real aspectRation, const Real& near, const Real& far) ;
+		static Matrix4x4<Real> 	MakePespectiveProjectionMatrix (const Real& fovy, const Real& aspectRation, const Real& near, const Real& far) ;
+		static Matrix4x4<Real> 	MakeOrthographicProjectionMatrix (const Real& left, const Real& right,const Real& bottom, const Real& top, const Real& near, const Real& far) ;
+					
 		static Matrix4x4<Real> 	MakeViewMatrix       (const Vector3<Real>& eyes, const Vector3<Real>& position, const Vector3<Real>& up) ;
 		//@}
 		/*! @name Rotation  */
