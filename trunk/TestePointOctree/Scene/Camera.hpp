@@ -50,8 +50,8 @@ namespace LAL{
         	mAccumPitchDegrees = 0.0f;
         	mBehavior = FIRST_PERSON;
        	
-        	mPosition = Vector3(0.0,0.0,0.0);
-        	mEyes = Vector3(0.0,0.0,1.0);
+        	mPosition = Vector3(0.0,0.0,-1.0);
+        	mEyes = Vector3(0.0,0.0,0.0);
         	mUp = Vector3(0.0,1.0,0.0);
         	mTrackball = Trackball();
         	
