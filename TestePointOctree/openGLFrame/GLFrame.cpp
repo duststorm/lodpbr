@@ -339,11 +339,11 @@ void GLFrame::resizeGL(int width, int height)
     camera.setProjectionMatrix(90.0,x,0.1,1000);
     
     if (width <= height)
-      camera.setProjectionMatrix(-1.0f, 1.0f, -1.0f, 1.0f*(GLfloat(height)/width),-10.0f,10.0f);
+      camera.setProjectionMatrix(-1.0f, 1.0f, -1.0f, 1.0f/*(GLfloat(height)/width)*/,-10.0f,10.0f);
     else                              
-      camera.setProjectionMatrix(-1.0f, 1.0f*(GLfloat(width)/height), -1.0f, 1.0f,-10.0f,10.0f);
+      camera.setProjectionMatrix(-1.0f, 1.0f/*(GLfloat(width)/height)*/, -1.0f, 1.0f,-10.0f,10.0f);
     
-    glLoadMatrixf((~camera.orthographicProjectionMatrix()).ToRealPtr());//((~camera.pespectiveProjectionMatrix()).ToRealPtr());
+    glLoadMatrixf((~camera.pespectiveProjectionMatrix()).ToRealPtr());//((~camera.orthographicProjectionMatrix()).ToRealPtr());
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
     mCenterX =  static_cast<float> (width*0.5);
@@ -372,8 +372,7 @@ void GLFrame::paintGL()
     	}
     	DrawGroud();
     }
-
-
+    
 }
 
 void GLFrame::keyPressEvent(QKeyEvent * event)
