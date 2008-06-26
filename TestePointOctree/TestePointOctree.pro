@@ -13,7 +13,8 @@ INCLUDEPATH += . \
     .ui \
     interface \
     openGLFrame \
-    openGLFrame/suport
+    openGLFrame/suport \
+    /home/fmc/glew/include
 
 # Input
 HEADERS += interface/myMainWindow.hpp \
@@ -78,7 +79,8 @@ FORMS += ui/interface.ui
 # matrixLibrary/Vector3.cpp
 # LIBRARIES
 unix:LIBS = -lCGAL \
-    -llapack
+    -llapack \
+    -L/home/fmc/glew/lib
 
 # Output
 unix:MOC_DIR = .moc
