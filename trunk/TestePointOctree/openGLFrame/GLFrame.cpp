@@ -1,5 +1,3 @@
-#include <GL/glew.h>
-
 #include <QtGui>
 #include <QtOpenGL>
 
@@ -33,8 +31,69 @@ GLFrame::GLFrame(QWidget *parent):QGLWidget(parent)
 	Threshold = 0.01;
 	CameraStep = 0.01;
 	mode = true;
-
     
+
+	Surfel<float> * s = new Surfel<float>(LAL::Point3<float>(2.127096,-0.876474,1.482297),
+			LAL::Vector3<float>(-0.291764,-0.174345,0.940467),1.0f,1.0f,0.0f);
+
+	s->SetMinorAxis(std::make_pair(1.0,LAL::Vector3<float>(0.807313, 0.482415, 0.339886)));
+	s->SetMajorAxis(std::make_pair(2.0,LAL::Vector3<float>(-0.512952, 0.858417, 0.000000)));
+
+	std::list<Surfel<float>* > sl;
+
+	sl.push_back(s);
+
+	s = new Surfel<float>(LAL::Point3<float>(0.459231, 0.489174, 1.334823),
+			LAL::Vector3<float>(0.444927, -0.059414, 0.893594),1.0f,1.0f,0.0f);
+
+	s->SetMinorAxis(std::make_pair(1.0,LAL::Vector3<float>(0.879801, -0.157404, -0.448525)));
+	s->SetMajorAxis(std::make_pair(2.0,LAL::Vector3<float>(0.167304, 0.985745, -0.017761)));
+
+	sl.push_back(s);
+
+	MergeEllipses<float> me(sl);
+	
+	
+	
+	su = me.NewSurfel();
+	
+
+	
+	p1  = su.Center() + su.MajorAxis().second*su.MajorAxis().first;
+	p11 = p1 + su.MinorAxis().second*su.MinorAxis().first;
+	p12 = p1 - su.MinorAxis().second*su.MinorAxis().first;
+	
+	p2 = su.Center() - su.MajorAxis().second*su.MajorAxis().first;
+	p21 = p2 + su.MinorAxis().second*su.MinorAxis().first;
+	p22 = p2 - su.MinorAxis().second*su.MinorAxis().first;
+	
+	LAL::Vector3<float> n =  su.MinorAxis().second^su.MajorAxis().second;
+	
+	camera.SetUp(su.MinorAxis().second);
+	camera.SetPosition(LAL::Vector3<float>(su.Center().x,su.Center().y,su.Center().z));
+	camera.SetEyes(LAL::Vector3<float>(su.Center().x,su.Center().y,su.Center().z)+su.Normal()*(10.0f));
+		
+	pxmax = std::max(p11.x,p12.x);
+	paux = std::max(p21.x,p22.x);
+	
+	pxmax = std::max(pxmax,paux);
+
+	pymax = std::max(p11.y,p12.y);
+	paux = std::max(p21.y,p22.y);
+	
+	pymax = std::max(pymax,paux);
+	
+	pxmin = std::min(p11.x,p12.x);
+	paux = std::min(p21.x,p22.x);
+	
+	pxmin = std::min(pxmin,paux);
+
+	pymin = std::min(p11.y,p12.y);
+	paux = std::min(p21.y,p22.y);
+	
+	pymin = std::min(pymin,paux);
+	
+	
 }
 
 void GLFrame::SetThreshold(const float& t)
@@ -67,7 +126,7 @@ void GLFrame::SIZE(OctreeNode<float,Surfel<float>* > * pNode, long int& cont,std
 		for(int i = 0; i < 8; ++i)
 			SIZE(lInternalNode->son[i],cont,oi);
 				
-		oi[lInternalNode->level()].push_back(lInternalNode->perpendicularError(camera.eyes()));  
+		oi[lInternalNode->level()].push_back(lInternalNode->perpendicularError(camera.Eyes()));  
 				
 		cont += sizeof(*lInternalNode);
 	}
@@ -78,66 +137,66 @@ void GLFrame::SIZE(OctreeNode<float,Surfel<float>* > * pNode, long int& cont,std
 void GLFrame::LODSelection( OctreeNode<float,Surfel<float>* > * pNode, int& cont)
 {
 		
-	// declare texture size, the actual data will be a vector 
-	    // of size texSize*texSize*4
-	    int texSize = 2;
-	    // create test data
-	    float* data = (float*)malloc(4*texSize*texSize*sizeof(float));
-	    float* result = (float*)malloc(4*texSize*texSize*sizeof(float));
-	    for (int i=0; i<texSize*texSize*4; i++)
-	        data[i] = i+1.0;
-	    // set up glut to get valid GL context and 
-	    // get extension entry points
-	    glewInit();
-	    // viewport transform for 1:1 pixel=texel=data mapping
-	    glMatrixMode(GL_PROJECTION);
-	    glLoadIdentity();
-	    gluOrtho2D(0.0,texSize,0.0,texSize);
-	    glMatrixMode(GL_MODELVIEW);
-	    glLoadIdentity();
-	    glViewport(0,0,texSize,texSize);
-	    // create FBO and bind it (that is, use offscreen render target)
-	    GLuint fb;
-	    glGenFramebuffersEXT(1,&fb); 
-	    glBindFramebufferEXT(GL_FRAMEBUFFER_EXT,fb);
-	    // create texture
-	    GLuint tex;
-	    glGenTextures (1, &tex);
-	    glBindTexture(GL_TEXTURE_RECTANGLE_ARB,tex);
-	    // set texture parameters
-	    glTexParameteri(GL_TEXTURE_RECTANGLE_ARB, 
-	                    GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-	    glTexParameteri(GL_TEXTURE_RECTANGLE_ARB, 
-	                    GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-	    glTexParameteri(GL_TEXTURE_RECTANGLE_ARB, 
-	                    GL_TEXTURE_WRAP_S, GL_CLAMP);
-	    glTexParameteri(GL_TEXTURE_RECTANGLE_ARB, 
-	                    GL_TEXTURE_WRAP_T, GL_CLAMP);
-	    // define texture with floating point format
-	    glTexImage2D(GL_TEXTURE_RECTANGLE_ARB,0,GL_RGBA32F_ARB,
-	                 texSize,texSize,0,GL_RGBA,GL_FLOAT,0);
-	    // attach texture
-	    glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, 
-	                              GL_COLOR_ATTACHMENT0_EXT, 
-	                              GL_TEXTURE_RECTANGLE_ARB,tex,0);
-	    // transfer data to texture
-	    glTexSubImage2D(GL_TEXTURE_RECTANGLE_ARB,0,0,0,texSize,texSize,
-	                    GL_RGBA,GL_FLOAT,data);
-	    // and read back
-	    glReadBuffer(GL_COLOR_ATTACHMENT0_EXT);
-	    glReadPixels(0, 0, texSize, texSize,GL_RGBA,GL_FLOAT,result);
-	    // print out results
-	    std::cout << "Data before roundtrip:" << std::endl;
-	    for (int i=0; i<texSize*texSize*4; i++)
-	    	std::cout << " data " << data[i] << std::endl;
-	    std::cout << "Data after roundtrip:" << std::endl;
-	    for (int i=0; i<texSize*texSize*4; i++)
-	    	std::cout << " result " << result[i] << std::endl;
-	    // clean up
-	    free(data);
-	    free(result);
-	    glDeleteFramebuffersEXT (1,&fb);
-	    glDeleteTextures (1,&tex);
+//	// declare texture size, the actual data will be a vector 
+//	    // of size texSize*texSize*4
+//	    int texSize = 2;
+//	    // create test data
+//	    float* data = (float*)malloc(4*texSize*texSize*sizeof(float));
+//	    float* result = (float*)malloc(4*texSize*texSize*sizeof(float));
+//	    for (int i=0; i<texSize*texSize*4; i++)
+//	        data[i] = i+1.0;
+//	    // set up glut to get valid GL context and 
+//	    // get extension entry points
+//	    glewInit();
+//	    // viewport transform for 1:1 pixel=texel=data mapping
+//	    glMatrixMode(GL_PROJECTION);
+//	    glLoadIdentity();
+//	    gluOrtho2D(0.0,texSize,0.0,texSize);
+//	    glMatrixMode(GL_MODELVIEW);
+//	    glLoadIdentity();
+//	    glViewport(0,0,texSize,texSize);
+//	    // create FBO and bind it (that is, use offscreen render target)
+//	    GLuint fb;
+//	    glGenFramebuffersEXT(1,&fb); 
+//	    glBindFramebufferEXT(GL_FRAMEBUFFER_EXT,fb);
+//	    // create texture
+//	    GLuint tex;
+//	    glGenTextures (1, &tex);
+//	    glBindTexture(GL_TEXTURE_RECTANGLE_ARB,tex);
+//	    // set texture parameters
+//	    glTexParameteri(GL_TEXTURE_RECTANGLE_ARB, 
+//	                    GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+//	    glTexParameteri(GL_TEXTURE_RECTANGLE_ARB, 
+//	                    GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+//	    glTexParameteri(GL_TEXTURE_RECTANGLE_ARB, 
+//	                    GL_TEXTURE_WRAP_S, GL_CLAMP);
+//	    glTexParameteri(GL_TEXTURE_RECTANGLE_ARB, 
+//	                    GL_TEXTURE_WRAP_T, GL_CLAMP);
+//	    // define texture with floating point format
+//	    glTexImage2D(GL_TEXTURE_RECTANGLE_ARB,0,GL_RGBA32F_ARB,
+//	                 texSize,texSize,0,GL_RGBA,GL_FLOAT,0);
+//	    // attach texture
+//	    glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, 
+//	                              GL_COLOR_ATTACHMENT0_EXT, 
+//	                              GL_TEXTURE_RECTANGLE_ARB,tex,0);
+//	    // transfer data to texture
+//	    glTexSubImage2D(GL_TEXTURE_RECTANGLE_ARB,0,0,0,texSize,texSize,
+//	                    GL_RGBA,GL_FLOAT,data);
+//	    // and read back
+//	    glReadBuffer(GL_COLOR_ATTACHMENT0_EXT);
+//	    glReadPixels(0, 0, texSize, texSize,GL_RGBA,GL_FLOAT,result);
+//	    // print out results
+//	    std::cout << "Data before roundtrip:" << std::endl;
+//	    for (int i=0; i<texSize*texSize*4; i++)
+//	    	std::cout << " data " << data[i] << std::endl;
+//	    std::cout << "Data after roundtrip:" << std::endl;
+//	    for (int i=0; i<texSize*texSize*4; i++)
+//	    	std::cout << " result " << result[i] << std::endl;
+//	    // clean up
+//	    free(data);
+//	    free(result);
+//	    glDeleteFramebuffersEXT (1,&fb);
+//	    glDeleteTextures (1,&tex);
 
 	
 	if ( pNode->isLeaf() == true )
@@ -147,7 +206,7 @@ void GLFrame::LODSelection( OctreeNode<float,Surfel<float>* > * pNode, int& cont
 
 		for(std::list< Surfel<float>* >::iterator surfe = lp.begin(); surfe != lp.end(); ++surfe )
 		{
-			LAL::Vector3<float> eyeInverse =  camera.eyes();
+			LAL::Vector3<float> eyeInverse =  camera.Eyes();
 			LAL::Vector3<float> p ((*surfe)->Center().x,(*surfe)->Center().y,(*surfe)->Center().z);
 			LAL::Vector3<float> dir = p - eyeInverse;
 
@@ -194,8 +253,8 @@ void GLFrame::LODSelection( OctreeNode<float,Surfel<float>* > * pNode, int& cont
 		}
 		else
 		{
-			LAL::Vector3<float> v (camera.eyes());
-			LAL::Vector3<float> eyeInverse = camera.eyes();
+			LAL::Vector3<float> v (camera.Eyes());
+			LAL::Vector3<float> eyeInverse = camera.Eyes();
 
 			LAL::Vector3<float> p (lInternalNode->surfel()->Center().x,lInternalNode->surfel()->Center().y,lInternalNode->surfel()->Center().z);
 			LAL::Vector3<float> dir =  p - eyeInverse ;
@@ -304,12 +363,13 @@ void GLFrame::initializeGL()
 	
 
 }
-
-
-
+              
+                
 
 void GLFrame::drawPoints() {
    
+
+		
    glDisable(GL_LIGHTING);		
    glPointSize(3.0);
    glBegin(GL_POINTS);
@@ -317,12 +377,26 @@ void GLFrame::drawPoints() {
    int cont = 0;
    
    LODSelection(octree.root,cont);
+        
+    
    
+   //me.NewSurfel().draw();
+   
+   glVertex3fv( su.Center().ToRealPtr() );
+      
    std::cout << "Total " <<  mode << " = " << cont << std::endl;
-     
+   su.draw(); 
    glEnd();
+
+   //glBegin(GL_TRIANGLE_FAN);
+   	
+   //glEnd();
+   
    glEnable(GL_LIGHTING);
    glPointSize(1.0);
+   
+   
+   
 }
 
 void GLFrame::calLimits()
@@ -346,8 +420,12 @@ void GLFrame::calLimits()
     std::cout << octree.root->itemPtrCount() <<  " AAA" << std::endl;
     
     octree.split();
+    
+    //frame begin
+    
     octree.Merge();
     
+    // matar
     
     
     
@@ -400,19 +478,21 @@ void GLFrame::drawBox(LAL::BoundingBox3<T> BBox){
 void GLFrame::resizeGL(int width, int height)
 {
     glViewport(0, 0, width, height);
-    camera.setWindowSize(width,height);
+    camera.SetWindowSize(width,height);
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
     GLfloat x = GLfloat(width) / height;
-    camera.setProjectionMatrix(90.0,x,0.1,1000);
+    camera.SetProjectionMatrix(90.0,x,0.1,1000);
     
-    if (width <= height)
-      camera.setProjectionMatrix(-1.0f, 1.0f, -1.0f, 1.0f/*(GLfloat(height)/width)*/,-10.0f,10.0f);
-    else                              
-      camera.setProjectionMatrix(-1.0f, 1.0f/*(GLfloat(width)/height)*/, -1.0f, 1.0f,-10.0f,10.0f);
+    camera.SetProjectionMatrix(p21.x, p22.x, p11.y, p12.y/*(GLfloat(height)/width)*/,-10.0f,10.0f);
     
-    //glLoadMatrixf((~camera.pespectiveProjectionMatrix()).ToRealPtr());
-    glLoadMatrixf((~camera.orthographicProjectionMatrix()).ToRealPtr());
+//    if (width <= height)
+//      camera.SetProjectionMatrix(pxmin, pxmax, pymin, pymax/*(GLfloat(height)/width)*/,-10.0f,10.0f);
+//    else                              
+//      camera.SetProjectionMatrix(-2.0f, 2.0f/*(GLfloat(width)/height)*/, -2.0f, 2.0f,-10.0f,10.0f);
+    
+    //glLoadMatrixf((~camera.PespectiveProjectionMatrix()).ToRealPtr());
+    glLoadMatrixf((~camera.OrthographicProjectionMatrix()).ToRealPtr());
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
     mCenterX =  static_cast<float> (width*0.5);
@@ -425,9 +505,12 @@ void GLFrame::paintGL()
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
-    glMultMatrixf((~camera.viewMatrix()).ToRealPtr());
+//    gluLookAt( camera.Eyes().x,camera.Eyes().y,camera.Eyes().z,
+// 		   	  camera.Position().x,camera.Position().y,camera.Position().z,
+// 		   	  camera.Up().x,camera.Up().y,camera.Up().z);
+    glMultMatrixf((~camera.ViewMatrix()).ToRealPtr());
     
-    std::cout << ~camera.viewMatrix();
+    std::cout << ~camera.ViewMatrix();
     
     if ( surfels.surfels.size() != 0 )
     {
@@ -449,24 +532,24 @@ void GLFrame::keyPressEvent(QKeyEvent * event)
 //	QMessageBox::information( 0, "MessageBox", "Key pressed" );
 	if (event->key() == Qt::Key_W)
 	{
-		camera.moveForward(CameraStep);	
+		camera.MoveForward(CameraStep);	
 		
 	}
 	else if (event->key() == Qt::Key_S){
-		camera.moveForward(-CameraStep);
+		camera.MoveForward(-CameraStep);
 	 	
 	}
 	else if (event->key() == Qt::Key_A){
-		camera.strafeRight(CameraStep);   	
+		camera.StrafeRight(CameraStep);   	
 	
 	}
 	else if (event->key() == Qt::Key_D){
-		camera.strafeRight(-CameraStep);   	
+		camera.StrafeRight(-CameraStep);   	
 	
 	}
 	else if (event->key() == Qt::Key_R){
 	
-		camera.reset();
+		camera.Reset();
 	}
 	else {}
 	updateGL();
@@ -479,7 +562,7 @@ void GLFrame::mousePressEvent(QMouseEvent *event)
 	 
     if (event->button() == Qt::MidButton) 
     {
-    	camera.onRotationBegin(event->x(),event->y());
+    	camera.OnRotationBegin(event->x(),event->y());
     	updateGL(); 
     }
     else if (event->button() == Qt::RightButton) 
@@ -492,7 +575,7 @@ void GLFrame::mousePressEvent(QMouseEvent *event)
 
 void GLFrame::wheelEvent(QWheelEvent *e) 
 {
-   camera.zoom(e->delta()/120.0);
+   camera.Zoom(e->delta()/120.0);
    updateGL();
 }
 
@@ -508,7 +591,7 @@ void GLFrame::mouseMoveEvent(QMouseEvent *event)
       
     }else if (event->buttons() & Qt::MidButton)  {
  	
-    	camera.onRotationMove(event->x(), event->y());
+    	camera.OnRotationMove(event->x(), event->y());
     }
     
     /*!

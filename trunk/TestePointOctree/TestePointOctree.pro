@@ -11,10 +11,9 @@ DEPENDPATH += . \
 INCLUDEPATH += . \
     ui \
     .ui \
+    GLSLKernel \
     interface \
-    openGLFrame \
-    openGLFrame/suport \
-    /home/fmc/glew/include
+    openGLFrame
 
 # Input
 HEADERS += interface/myMainWindow.hpp \
@@ -78,9 +77,8 @@ FORMS += ui/interface.ui
 
 # matrixLibrary/Vector3.cpp
 # LIBRARIES
-unix:LIBS = -lCGAL \
-    -llapack \
-    -L/home/fmc/glew/lib
+unix:LIBS = -L/tmp/workspace/TestePointOctree/GLSLKernel \
+    -lglslKernel
 
 # Output
 unix:MOC_DIR = .moc
