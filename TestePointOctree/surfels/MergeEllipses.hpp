@@ -167,6 +167,9 @@ public:
 
 		mNewMinorAxis.first *= mNewMinorValue;
 		mNewMajorAxis.first *= mNewMajorValue;
+		
+		
+		
 	}
 
 	Point3 Mean (const std::list<Point3* >& pPoint3List)

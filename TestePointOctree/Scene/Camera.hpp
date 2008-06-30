@@ -57,38 +57,39 @@ namespace LAL{
         	
         	mFieldOfView = 90.0;
         	mAspectRatio = 1.0f;
-        	mZNearPlane  = 0.001f;
-        	mZFarPlane   = 1000.0f;
+        	mNearPlane  = 0.001f;
+        	mFarPlane   = 1000.0f;
         	
         };
         
-        void moveForward( float Distance )
+        void MoveForward( float Distance )
         {
         	mPosition +=  ( (mPosition - (mEyes )) * Distance);
         }
         
-        void moveUpward( float Distance )
+        void MoveUpward( float Distance )
         {
-        	mPosition = mPosition + (Vector3::UNIT_Y*Distance);
+        	mPosition = mPosition + (mEyes*Distance);
         }
 
-        void strafeRight ( float Distance )
+        void StrafeRight ( float Distance )
         {
                     
         	mPosition +=  ( ((mPosition - (mEyes ))^mUp) *Distance);
         }
 
-        Matrix4x4 viewMatrix()
+        Matrix4x4 ViewMatrix()
         {
             
                 // Get the inverse of the arcball's rotation matrix
         		//LAL::Quaternion<float> cameraRotation = ~mTrackball.orientation();
             	       		       		
                 // Transform vectors based on camera's rotation matrix
-                mUp   = mOrientation.Rotate(Vector3::UNIT_Y);
+        		mUp = mOrientation.Rotate(Vector3::UNIT_Y);
+                
                 mEyes = mOrientation.Rotate(Vector3::UNIT_Z);
                 
-                mEyes =     (mEyes * mZoomRadius) - mPosition; 
+                mEyes =  (mEyes * mZoomRadius) - mPosition; 
          
                 // Update the eye point based on a radius away from the lookAt position
                // mEyes = cameraRotation.Rotate(mEyes);
@@ -97,102 +98,133 @@ namespace LAL{
             
         }
         
+        Matrix4x4 ViewMatrix( Vector3& pEyes, Vector3& pPosition, Vector3& pUp )
+        {
+            
+           return Matrix4x4::MakeViewMatrix(pEyes, pPosition, pUp);
+            
+        }
+        
 
-        Matrix4x4 pespectiveProjectionMatrix()
+        Matrix4x4 PespectiveProjectionMatrix()
         {
                 return mPespectiveProjectionMatrix;
         }
         
-        Matrix4x4 orthographicProjectionMatrix()
+        Matrix4x4 OrthographicProjectionMatrix()
         {
                 return mOrthographicProjectionMatrix;
         }
 
-        Vector3 position()
+        Vector3 Position()
         {
         	return mPosition;
         }
-        Vector3 eyes()
+        
+        void SetPosition( const Vector3& pPosition)
+        {
+        	mPosition = pPosition;
+        }
+        
+        Vector3 Eyes()
         {
         	return mEyes;
+        	
         }
-
-        float fieldOfView()
+        
+        void SetEyes( const Vector3& pEyes )
+        {
+        	 mEyes = pEyes;
+        }
+               
+        Vector3 Up()
+        {
+        	return mUp;
+        }
+        
+        void SetUp( const Vector3& pUp )
+        {
+        	mUp = pUp;
+        }        
+        
+        
+        float FieldOfView()
         {
         	return mFieldOfView;
         }
         
-        void setFieldOfView( const float& pFieldOfView)
+        void SetFieldOfView( const float& pFieldOfView)
         {
-            setProjectionMatrix(pFieldOfView, mAspectRatio, mZNearPlane, mZFarPlane);
+        	mFieldOfView = pFieldOfView;
+            SetProjectionMatrix(pFieldOfView, mAspectRatio, mNearPlane, mFarPlane);
         }
 
-        float aspectRatio()
+        float AspectRatio()
         {
         	return mAspectRatio;
         }
 
-        void setAspectRatio( const float& pAspectRatio)
+        void SetAspectRatio( const float& pAspectRatio)
         {
-            setProjectionMatrix( mFieldOfView, pAspectRatio, mZNearPlane, mZFarPlane);
+            SetProjectionMatrix( mFieldOfView, pAspectRatio, mNearPlane, mFarPlane);
         }
         
-        float zNearPlane()
+        float NearPlane()
         {
-        	return mZNearPlane;
+        	return mNearPlane;
         }
         
-        void setZNearPlane(const float& pZNearPlane)
+        void SetNearPlane(const float& pNearPlane)
         {
-        	setProjectionMatrix(mFieldOfView, mAspectRatio, pZNearPlane, mZFarPlane);
+        	SetProjectionMatrix(mFieldOfView, mAspectRatio, pNearPlane, mFarPlane);
         }
 
-        float zFarPlane()
+        float FarPlane()
         {
-        	return mZFarPlane;
+        	return mFarPlane;
         }
         
-        void setZFarPlane(const float& pZFarPlane)
+        void SetFarPlane(const float& pFarPlane)
         {
-        	setProjectionMatrix(mFieldOfView, mAspectRatio, mZNearPlane, pZFarPlane);
+        	SetProjectionMatrix(mFieldOfView, mAspectRatio, mNearPlane, pFarPlane);
         }
 
-        void setProjectionMatrix(float pFieldOfView, float pAspectRatio, float pZNearPlane, float pZFarPlane)
+        void SetProjectionMatrix(float pFieldOfView, float pAspectRatio, float pNearPlane, float pFarPlane)
         {
             mFieldOfView = pFieldOfView;
             
             mAspectRatio = pAspectRatio;
-            mZNearPlane  = pZNearPlane;
-            mZFarPlane   = pZFarPlane;
+            mNearPlane  = pNearPlane;
+            mFarPlane   = pFarPlane;
             
-            mPespectiveProjectionMatrix = Matrix4x4::MakePespectiveProjectionMatrix(mFieldOfView, mAspectRatio, mZNearPlane, mZFarPlane);
+            mPespectiveProjectionMatrix = Matrix4x4::MakePespectiveProjectionMatrix(mFieldOfView, mAspectRatio, mNearPlane, mFarPlane);
         }
 
-        void setProjectionMatrix (const float& left, const float& right,const float& bottom, const float& top, const float& near, const float& far) 
+        void SetProjectionMatrix (const float& left, const float& right,const float& bottom, const float& top, const float& near, const float& far) 
         {
         	mLeft        = left;
         	mRight       = right;
         	mBottom      = bottom;  
         	mTop         = top;
         	
-            mZNearPlane  = near;
-            mZFarPlane   = far;
+            mNearPlane  = near;
+            mFarPlane   = far;
                        
-            mOrthographicProjectionMatrix = Matrix4x4::MakeOrthographicProjectionMatrix(mLeft,mRight,mBottom,mTop,mZNearPlane,mZFarPlane);
+            mOrthographicProjectionMatrix = Matrix4x4::MakeOrthographicProjectionMatrix(mLeft,mRight,mBottom,mTop,mNearPlane,mFarPlane);
         }        
 
-        void onRotationBegin( int x, int y)
+        void OnRotationBegin( int x, int y)
         {
-            mTrackball.beginTracking(x,y);
+            mTrackball.BeginTracking(x,y);
 
         }
-        void onRotationMove(int x, int y)
+        void OnRotationMove(int x, int y)
         {
-            mTrackball.tracking(x,y);
-            mOrientation = ~mTrackball.orientation();
+            mTrackball.Tracking(x,y);
+            mOrientation = ~mTrackball.Orientation();
         }
 
-        void rotate(float headingDegrees, float pitchDegrees, float rollDegrees)
+        void Rotate(float headingDegrees, float pitchDegrees, float rollDegrees)
         {
             // Rotates the camera based on its current behavior.
             // Note that not all behaviors support rolling.
@@ -204,18 +236,18 @@ namespace LAL{
             switch (mBehavior)
             {
             case FIRST_PERSON:
-                rotateFirstPerson(headingDegrees, pitchDegrees);
+                RotateFirstPerson(headingDegrees, pitchDegrees);
                 break;
 
             case FLIGHT:
-                rotateFlight(headingDegrees, pitchDegrees, rollDegrees);
+                RotateFlight(headingDegrees, pitchDegrees, rollDegrees);
                 break;
             }
 
 
         }
 
-        void rotateFlight(float headingDegrees, float pitchDegrees, float rollDegrees)
+        void RotateFlight(float headingDegrees, float pitchDegrees, float rollDegrees)
         {
             // Implements the rotation logic for the flight style camera behavior.
 
@@ -225,7 +257,7 @@ namespace LAL{
             mOrientation *= rot;
         }
 
-        void rotateFirstPerson(float headingDegrees, float pitchDegrees)
+        void RotateFirstPerson(float headingDegrees, float pitchDegrees)
         {
             // Implements the rotation logic for the first person style and
             // spectator style camera behaviors. Roll is ignored.
@@ -263,7 +295,7 @@ namespace LAL{
             }
         }
 
-        void setBehavior(CameraBehavior newBehavior)
+        void SetBehavior(CameraBehavior newBehavior)
         {
             if (mBehavior == FLIGHT and newBehavior == FIRST_PERSON)
             {
@@ -276,12 +308,12 @@ namespace LAL{
             mBehavior = newBehavior;
         }
         
-        inline CameraBehavior getBehavior() const
+        inline CameraBehavior GetBehavior() const
         { 
         	return mBehavior; 
         }
         
-        void zoom(float mouseWheelDelta)
+        void Zoom(float mouseWheelDelta)
         {
             // Change the radius from the camera to the model based on wheel scrolling
             mZoomRadius -= mouseWheelDelta * mZoomRadius * 0.1f;
@@ -289,18 +321,18 @@ namespace LAL{
             mZoomRadius  = std::max ( mMinRadius, mZoomRadius );
         }
 
-        void setWindowSize(int width, int height)
+        void SetWindowSize(int width, int height)
         {   
         	mWidth = width;
         	mHeight = height;
         	
-            mTrackball.setBounds(width, height);	        
+            mTrackball.SetBounds(width, height);	        
         }
 
-         void reset()
+         void Reset()
         {
             mPosition = mInitalPosition;
-            mTrackball.reset();
+            mTrackball.Reset();
         }
 
        
@@ -337,8 +369,8 @@ namespace LAL{
     	float mBottom;
     	float mTop;
     	
-    	float mZNearPlane  ;
-    	float mZFarPlane   ;
+    	float mNearPlane  ;
+    	float mFarPlane   ;
 
         Matrix4x4 mPespectiveProjectionMatrix;
 

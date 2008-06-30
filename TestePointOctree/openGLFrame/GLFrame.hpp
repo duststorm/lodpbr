@@ -43,6 +43,12 @@ public:
     Octree<float,Surfel<float>* > octree;
     
     LAL::Point3<float> midlePoint;
+    
+    Surfel<float> su;
+	float pxmax,pymax, paux;
+	float pxmin,pymin;
+	
+	LAL::Point3<float> p1,p2,p11,p12,p21,p22;
                       
 public slots:
 	

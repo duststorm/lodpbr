@@ -298,7 +298,7 @@ public:
     		mSurfel = lMerge.NewPtrSurfel();
     		
     		ComputePerpendicularError(mode);
-    		
+    		//ComputeTangencialError();
         }else
         {
         	mSurfel = NULL;
@@ -336,7 +336,6 @@ public:
         				Vector3 ni = son[index]->surfel()->Normal();
         				
         				di = mSurfel->MajorAxis().first * ( std::sqrt(1.0 - (n*ni) * (n*ni)  ) );
-
 
         				epMax = ( ( mSurfel->Center() - son[index]->surfel()->Center() ) * n + di );
         				epMin =	( ( mSurfel->Center() - son[index]->surfel()->Center() ) * n - di );
