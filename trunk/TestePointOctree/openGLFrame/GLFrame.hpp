@@ -1,7 +1,6 @@
 #ifndef MYGLFRAME_H
 #define MYGLFRAME_H
 
- 
 #include <QGLWidget>
 #include <vector>
 

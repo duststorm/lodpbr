@@ -98,10 +98,10 @@ template <class Real > class Surfel
 	 								   mID(id)
 	 	  {
 		 	mColor = Color(0.0,0.0,0.0); 
-		 	mNormal.normalize();
+		 	mNormal.Normalize();
 		 	Vector3 lV = Perpendicular(mNormal);
 		 	Vector3 lU = mNormal ^ lV;
-		 	lU.normalize();
+		 	lU.Normalize();
 		 	mMinorAxis = std::make_pair(mSplatRadius,lV);
 		 	mMajorAxis = std::make_pair(mSplatRadius,lU);
 	 	  };	

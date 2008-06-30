@@ -6,6 +6,16 @@
 namespace LAL
 {
 
+/*!
+*@class BoundingBox3.
+*@brief Class that represent a Box in 3D.
+*@details coming soon , but ... coming soon  ... wait ¬¬.
+*@author Felipe Moura.
+*@version 1.0.
+*@date 25-Feb-2008.
+*@todo Give a model, polygon, ellipse ... and so one, with it coords point creat a Box.
+*/ 
+
 template < class Real> 
 class BoundingBox3
 {
@@ -83,7 +93,6 @@ public:
 	
 	inline const Point3<Real>& max() const 
 	{
-		
 		return ( this->max_ );
 	};
 	
