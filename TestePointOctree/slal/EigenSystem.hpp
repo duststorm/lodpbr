@@ -458,10 +458,6 @@ namespace LAL
 		std::pair<Real, Vector3> mMajorAxis;
 		std::pair<Real, Vector3> mNormal;
 
-		static const int	None						= 0;
-		static const int 	HasThreeRealRoots 			= 1;
-		static const int	HasAllRealRootsAndEqual 	= 2;
-		static const int	HasOnlyOneRealRoot 			= 3;
 
 	};	
 	
