@@ -31,20 +31,39 @@ GLFrame::GLFrame(QWidget *parent):QGLWidget(parent)
 	Threshold = 0.01;
 	CameraStep = 0.01;
 	mode = true;
-    
+   
+	
+	su1 =  Surfel<float>(LAL::Point3<float>(7.938756, 8.396816, 5.958447),
+			LAL::Vector3<float>(0.000000, 0.000000, 1.000000),1.0f,1.0f,0.0f);
+	
+	su1.SetMinorAxis(std::make_pair(1.0,LAL::Vector3<float>(1.000000, 0.000000, 0.000000)));
+	su1.SetMajorAxis(std::make_pair(1.5,LAL::Vector3<float>(0.000000, 1.000000, 0.00000)));
+	
+	su2 = Surfel<float>(LAL::Point3<float>(6.632136, 7.704408, 5.995052),
+				LAL::Vector3<float>(0.000000, 0.000000, 1.000000),1.0f,1.0f,0.0f);
+	
+	su2.SetMinorAxis(std::make_pair(1.0,LAL::Vector3<float>(1.000000, 0.000000, 0.000000)));
+	su2.SetMajorAxis(std::make_pair(1.5,LAL::Vector3<float>(0.000000, 1.000000, 0.000000)));
 
+	
+	su3 = Surfel<float>(LAL::Point3<float>(7.285446, 8.050611, 5.976750),
+				LAL::Vector3<float>(0.000000, 0.000000, 1.000000),1.0f,1.0f,0.0f);
+	
+	su3.SetMinorAxis(std::make_pair(2.48653545051,LAL::Vector3<float>(0.460895, -0.887455, 0.000000)));
+	su3.SetMajorAxis(std::make_pair(1.91656134622,LAL::Vector3<float>(-0.887455, -0.460895, 0.000000)));
+	
 	Surfel<float> * s = new Surfel<float>(LAL::Point3<float>(2.127096,-0.876474,1.482297),
 			LAL::Vector3<float>(-0.291764,-0.174345,0.940467),1.0f,1.0f,0.0f);
 
-	s->SetMinorAxis(std::make_pair(1.0,LAL::Vector3<float>(0.807313, 0.482415, 0.339886)));
-	s->SetMajorAxis(std::make_pair(2.0,LAL::Vector3<float>(-0.512952, 0.858417, 0.000000)));
+	s->SetMinorAxis(std::make_pair(1.0,LAL::Vector3<float>(0.807313f, 0.482415f, 0.339886f)));
+	s->SetMajorAxis(std::make_pair(2.0,LAL::Vector3<float>(-0.512952f, 0.858417f, 0.000000f)));
 
 	std::list<Surfel<float>* > sl;
 
 	sl.push_back(s);
 
-	s = new Surfel<float>(LAL::Point3<float>(0.459231, 0.489174, 1.334823),
-			LAL::Vector3<float>(0.444927, -0.059414, 0.893594),1.0f,1.0f,0.0f);
+	s = new Surfel<float>(LAL::Point3<float>(0.459231f, 0.489174f, 1.334823f),
+			LAL::Vector3<float>(0.444927f, -0.059414f, 0.893594f),1.0f,1.0f,0.0f);
 
 	s->SetMinorAxis(std::make_pair(1.0,LAL::Vector3<float>(0.879801, -0.157404, -0.448525)));
 	s->SetMajorAxis(std::make_pair(2.0,LAL::Vector3<float>(0.167304, 0.985745, -0.017761)));
@@ -59,20 +78,22 @@ GLFrame::GLFrame(QWidget *parent):QGLWidget(parent)
 	
 
 	
-	p1  = su.Center() + su.MajorAxis().second*su.MajorAxis().first;
-	p11 = p1 + su.MinorAxis().second*su.MinorAxis().first;
-	p12 = p1 - su.MinorAxis().second*su.MinorAxis().first;
+	p1  = su.Center() + (su.MajorAxis().second*su.MajorAxis().first);
+	p11 = p1 + (su.MinorAxis().second*su.MinorAxis().first);
+	p12 = p1 - (su.MinorAxis().second*su.MinorAxis().first);
 	
-	p2 = su.Center() - su.MajorAxis().second*su.MajorAxis().first;
-	p21 = p2 + su.MinorAxis().second*su.MinorAxis().first;
-	p22 = p2 - su.MinorAxis().second*su.MinorAxis().first;
+	p2 = su.Center() - (su.MajorAxis().second*su.MajorAxis().first);
+	p21 = p2 + (su.MinorAxis().second*su.MinorAxis().first);
+	p22 = p2 - (su.MinorAxis().second*su.MinorAxis().first);
 	
 	LAL::Vector3<float> n =  su.MinorAxis().second^su.MajorAxis().second;
 	
-	camera.SetUp(su.MinorAxis().second);
-	camera.SetPosition(LAL::Vector3<float>(su.Center().x,su.Center().y,su.Center().z));
-	camera.SetEyes(LAL::Vector3<float>(su.Center().x,su.Center().y,su.Center().z)+su.Normal()*(10.0f));
+//	camera.SetUp(su3.MinorAxis().second);
+//	camera.SetPosition(LAL::Vector3<float>(su3.Center().x,su3.Center().y,su3.Center().z));
+//	camera.SetEyes(LAL::Vector3<float>(su3.Center().x,su3.Center().y,su3.Center().z)+(-su3.Normal()*10.0f));
 		
+ 
+	
 	pxmax = std::max(p11.x,p12.x);
 	paux = std::max(p21.x,p22.x);
 	
@@ -136,67 +157,6 @@ void GLFrame::SIZE(OctreeNode<float,Surfel<float>* > * pNode, long int& cont,std
 
 void GLFrame::LODSelection( OctreeNode<float,Surfel<float>* > * pNode, int& cont)
 {
-		
-//	// declare texture size, the actual data will be a vector 
-//	    // of size texSize*texSize*4
-//	    int texSize = 2;
-//	    // create test data
-//	    float* data = (float*)malloc(4*texSize*texSize*sizeof(float));
-//	    float* result = (float*)malloc(4*texSize*texSize*sizeof(float));
-//	    for (int i=0; i<texSize*texSize*4; i++)
-//	        data[i] = i+1.0;
-//	    // set up glut to get valid GL context and 
-//	    // get extension entry points
-//	    glewInit();
-//	    // viewport transform for 1:1 pixel=texel=data mapping
-//	    glMatrixMode(GL_PROJECTION);
-//	    glLoadIdentity();
-//	    gluOrtho2D(0.0,texSize,0.0,texSize);
-//	    glMatrixMode(GL_MODELVIEW);
-//	    glLoadIdentity();
-//	    glViewport(0,0,texSize,texSize);
-//	    // create FBO and bind it (that is, use offscreen render target)
-//	    GLuint fb;
-//	    glGenFramebuffersEXT(1,&fb); 
-//	    glBindFramebufferEXT(GL_FRAMEBUFFER_EXT,fb);
-//	    // create texture
-//	    GLuint tex;
-//	    glGenTextures (1, &tex);
-//	    glBindTexture(GL_TEXTURE_RECTANGLE_ARB,tex);
-//	    // set texture parameters
-//	    glTexParameteri(GL_TEXTURE_RECTANGLE_ARB, 
-//	                    GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-//	    glTexParameteri(GL_TEXTURE_RECTANGLE_ARB, 
-//	                    GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-//	    glTexParameteri(GL_TEXTURE_RECTANGLE_ARB, 
-//	                    GL_TEXTURE_WRAP_S, GL_CLAMP);
-//	    glTexParameteri(GL_TEXTURE_RECTANGLE_ARB, 
-//	                    GL_TEXTURE_WRAP_T, GL_CLAMP);
-//	    // define texture with floating point format
-//	    glTexImage2D(GL_TEXTURE_RECTANGLE_ARB,0,GL_RGBA32F_ARB,
-//	                 texSize,texSize,0,GL_RGBA,GL_FLOAT,0);
-//	    // attach texture
-//	    glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, 
-//	                              GL_COLOR_ATTACHMENT0_EXT, 
-//	                              GL_TEXTURE_RECTANGLE_ARB,tex,0);
-//	    // transfer data to texture
-//	    glTexSubImage2D(GL_TEXTURE_RECTANGLE_ARB,0,0,0,texSize,texSize,
-//	                    GL_RGBA,GL_FLOAT,data);
-//	    // and read back
-//	    glReadBuffer(GL_COLOR_ATTACHMENT0_EXT);
-//	    glReadPixels(0, 0, texSize, texSize,GL_RGBA,GL_FLOAT,result);
-//	    // print out results
-//	    std::cout << "Data before roundtrip:" << std::endl;
-//	    for (int i=0; i<texSize*texSize*4; i++)
-//	    	std::cout << " data " << data[i] << std::endl;
-//	    std::cout << "Data after roundtrip:" << std::endl;
-//	    for (int i=0; i<texSize*texSize*4; i++)
-//	    	std::cout << " result " << result[i] << std::endl;
-//	    // clean up
-//	    free(data);
-//	    free(result);
-//	    glDeleteFramebuffersEXT (1,&fb);
-//	    glDeleteTextures (1,&tex);
 
 	
 	if ( pNode->isLeaf() == true )
@@ -206,9 +166,9 @@ void GLFrame::LODSelection( OctreeNode<float,Surfel<float>* > * pNode, int& cont
 
 		for(std::list< Surfel<float>* >::iterator surfe = lp.begin(); surfe != lp.end(); ++surfe )
 		{
-			LAL::Vector3<float> eyeInverse =  camera.Eyes();
+			LAL::Vector3<float> eye =  camera.Eyes();
 			LAL::Vector3<float> p ((*surfe)->Center().x,(*surfe)->Center().y,(*surfe)->Center().z);
-			LAL::Vector3<float> dir = p - eyeInverse;
+			LAL::Vector3<float> dir = p - eye;
 
 			dir.Normalize();
 
@@ -233,7 +193,8 @@ void GLFrame::LODSelection( OctreeNode<float,Surfel<float>* > * pNode, int& cont
 					glColor3f(0.0,0.0,1.0);
 				else 
 					glColor3f(1.0,1.0,1.0);
-				glVertex3fv((*surfe)->Center().ToRealPtr());
+				//glVertex3fv((*surfe)->Center().ToRealPtr());
+				(*surfe)->draw();
 				cont++;
 			}
 
@@ -253,7 +214,6 @@ void GLFrame::LODSelection( OctreeNode<float,Surfel<float>* > * pNode, int& cont
 		}
 		else
 		{
-			LAL::Vector3<float> v (camera.Eyes());
 			LAL::Vector3<float> eyeInverse = camera.Eyes();
 
 			LAL::Vector3<float> p (lInternalNode->surfel()->Center().x,lInternalNode->surfel()->Center().y,lInternalNode->surfel()->Center().z);
@@ -266,7 +226,7 @@ void GLFrame::LODSelection( OctreeNode<float,Surfel<float>* > * pNode, int& cont
 			if ( cosNDir < lInternalNode->normalCone())
 			{
 					
-				if ( (lInternalNode->perpendicularError(v) >= 0) && (lInternalNode->perpendicularError(v) < Threshold))
+				if ( (lInternalNode->perpendicularError(eyeInverse) < Threshold))
 					{
 						glPointSize(1.0);
 
@@ -285,9 +245,9 @@ void GLFrame::LODSelection( OctreeNode<float,Surfel<float>* > * pNode, int& cont
 						else 
 							glColor3f(1.0,1.0,1.0);
 
-						//lInternalNode->surfel()->draw();
+						lInternalNode->surfel()->draw();
 						LAL::Point3<float> p = lInternalNode->surfel()->Center();
-						glVertex3fv( p.ToRealPtr() );
+						//glVertex3fv( p.ToRealPtr() );
 						cont++;
 
 					}
@@ -370,6 +330,7 @@ void GLFrame::drawPoints() {
    
 
 		
+   //glDisable(GL_DEPTH_TEST);
    glDisable(GL_LIGHTING);		
    glPointSize(3.0);
    glBegin(GL_POINTS);
@@ -382,19 +343,33 @@ void GLFrame::drawPoints() {
    
    //me.NewSurfel().draw();
    
-   glVertex3fv( su.Center().ToRealPtr() );
+   //glVertex3fv( su.Center().ToRealPtr() );
       
    std::cout << "Total " <<  mode << " = " << cont << std::endl;
-   su.draw(); 
+   //su.draw(); 
+//   su1.draw();
+//   su2.draw();
+   
    glEnd();
-
-   //glBegin(GL_TRIANGLE_FAN);
-   	
-   //glEnd();
    
-   glEnable(GL_LIGHTING);
-   glPointSize(1.0);
-   
+//   glColor3f(1.0,0.0,0.0);
+//   glBegin(GL_TRIANGLE_FAN);
+//   su3.draw();
+//   glEnd();
+//
+//   glColor3f(0.0,1.0,0.0);
+//   glBegin(GL_TRIANGLE_FAN);
+//   su1.draw();
+//   glEnd();
+//
+//   glBegin(GL_TRIANGLE_FAN);
+//   su2.draw();
+//   glEnd();
+//   
+//   glEnable(GL_LIGHTING);
+//   glPointSize(1.0);
+//   
+//   glEnable(GL_DEPTH_TEST);
    
    
 }
@@ -477,22 +452,25 @@ void GLFrame::drawBox(LAL::BoundingBox3<T> BBox){
 
 void GLFrame::resizeGL(int width, int height)
 {
+	
+	float p = std::sqrt(su3.MajorAxis().first*su3.MajorAxis().first + su3.MinorAxis().first*su3.MinorAxis().first);
+	
     glViewport(0, 0, width, height);
     camera.SetWindowSize(width,height);
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
     GLfloat x = GLfloat(width) / height;
     camera.SetProjectionMatrix(90.0,x,0.1,1000);
-    
-    camera.SetProjectionMatrix(p21.x, p22.x, p11.y, p12.y/*(GLfloat(height)/width)*/,-10.0f,10.0f);
+          
+    //camera.SetProjectionMatrix(-p,p,-p,p/*(GLfloat(height)/width)*/,-100.0f,100.0f);
     
 //    if (width <= height)
 //      camera.SetProjectionMatrix(pxmin, pxmax, pymin, pymax/*(GLfloat(height)/width)*/,-10.0f,10.0f);
 //    else                              
 //      camera.SetProjectionMatrix(-2.0f, 2.0f/*(GLfloat(width)/height)*/, -2.0f, 2.0f,-10.0f,10.0f);
     
-    //glLoadMatrixf((~camera.PespectiveProjectionMatrix()).ToRealPtr());
-    glLoadMatrixf((~camera.OrthographicProjectionMatrix()).ToRealPtr());
+    glLoadMatrixf((~camera.PespectiveProjectionMatrix()).ToRealPtr());
+    //glLoadMatrixf((~camera.OrthographicProjectionMatrix()).ToRealPtr());
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
     mCenterX =  static_cast<float> (width*0.5);

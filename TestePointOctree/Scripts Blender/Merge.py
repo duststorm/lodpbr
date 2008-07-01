@@ -3,8 +3,8 @@ import math
 import multiarray
 import LinearAlgebra as la
 import Ellipse
-import numpy as nu
-import scipy.linalg as sc
+import numpy.linalg as nu
+#import scipy.linalg as sc
 
 from Blender.Mathutils import Vector, Matrix ,Intersect, DotVecs, ProjectVecs, CrossVecs, LineIntersect
 from Blender  import Scene, Draw, BGL, Window , Mesh ,Mathutils , Object
@@ -12,8 +12,8 @@ from Blender  import Scene, Draw, BGL, Window , Mesh ,Mathutils , Object
 from numpy.linalg import eig, eigh
 from numpy import *
 
-from scipy.linalg import eig, eigh
-from scipy import *
+#from scipy.linalg import eig, eigh
+#from scipy import *
 
 from math           import *
 from LinearAlgebra  import *
@@ -138,8 +138,8 @@ class Merge:
        
        #print cov, "MATRIX"
              
-       eigenvec = la.eigenvectors(cov)
-       #eigenvec = sc.eig(cov)
+       #eigenvec = la.eigenvectors(cov)
+       eigenvec = nu.eig(cov)
        
        #print 'LA',eigenvec
        print 'NUMPY',eigenvec
@@ -148,7 +148,7 @@ class Merge:
                                    
        self.mEigenVector = [Blender.Mathutils.Vector(eigenvec[1][0]),Blender.Mathutils.Vector(eigenvec[1][1]),Blender.Mathutils.Vector(eigenvec[1][2])]
              
-       self.mEigenValues = [eigenvec[0][1],eigenvec[0][0],eigenvec[0][2]]
+       self.mEigenValues = [eigenvec[0][0],eigenvec[0][1],eigenvec[0][2]]
        
        for i in range(len(self.mEigenValues)-1):
            for j  in range(1,len(self.mEigenValues)):
