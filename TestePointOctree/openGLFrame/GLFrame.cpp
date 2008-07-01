@@ -88,9 +88,9 @@ GLFrame::GLFrame(QWidget *parent):QGLWidget(parent)
 	
 	LAL::Vector3<float> n =  su.MinorAxis().second^su.MajorAxis().second;
 	
-//	camera.SetUp(su3.MinorAxis().second);
-//	camera.SetPosition(LAL::Vector3<float>(su3.Center().x,su3.Center().y,su3.Center().z));
-//	camera.SetEyes(LAL::Vector3<float>(su3.Center().x,su3.Center().y,su3.Center().z)+(-su3.Normal()*10.0f));
+	camera.SetUp(su3.MinorAxis().second);
+	camera.SetPosition(LAL::Vector3<float>(su3.Center().x,su3.Center().y,su3.Center().z));
+	camera.SetEyes(LAL::Vector3<float>(su3.Center().x,su3.Center().y,su3.Center().z)+(-su3.Normal()*10.0f));
 		
  
 	
@@ -330,7 +330,7 @@ void GLFrame::drawPoints() {
    
 
 		
-   //glDisable(GL_DEPTH_TEST);
+   glDisable(GL_DEPTH_TEST);
    glDisable(GL_LIGHTING);		
    glPointSize(3.0);
    glBegin(GL_POINTS);
@@ -350,26 +350,27 @@ void GLFrame::drawPoints() {
 //   su1.draw();
 //   su2.draw();
    
+   su3.SetMinorAxis(std::make_pair(su3.MajorAxis().first,su3.MinorAxis().second));
    glEnd();
    
-//   glColor3f(1.0,0.0,0.0);
-//   glBegin(GL_TRIANGLE_FAN);
-//   su3.draw();
-//   glEnd();
-//
-//   glColor3f(0.0,1.0,0.0);
-//   glBegin(GL_TRIANGLE_FAN);
-//   su1.draw();
-//   glEnd();
-//
-//   glBegin(GL_TRIANGLE_FAN);
-//   su2.draw();
-//   glEnd();
-//   
-//   glEnable(GL_LIGHTING);
-//   glPointSize(1.0);
-//   
-//   glEnable(GL_DEPTH_TEST);
+   glColor3f(1.0,0.0,0.0);
+   glBegin(GL_TRIANGLE_FAN);
+   su3.draw();
+   glEnd();
+
+   glColor3f(0.0,1.0,0.0);
+   glBegin(GL_TRIANGLE_FAN);
+   su1.draw();
+   glEnd();
+
+   glBegin(GL_TRIANGLE_FAN);
+   su2.draw();
+   glEnd();
+   
+   glEnable(GL_LIGHTING);
+   glPointSize(1.0);
+   
+   glEnable(GL_DEPTH_TEST);
    
    
 }
@@ -460,17 +461,17 @@ void GLFrame::resizeGL(int width, int height)
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
     GLfloat x = GLfloat(width) / height;
-    camera.SetProjectionMatrix(90.0,x,0.1,1000);
+    //camera.SetProjectionMatrix(90.0,x,0.1,1000);
           
-    //camera.SetProjectionMatrix(-p,p,-p,p/*(GLfloat(height)/width)*/,-100.0f,100.0f);
+    camera.SetProjectionMatrix(-p,p,-p,p/*(GLfloat(height)/width)*/,-100.0f,100.0f);
     
 //    if (width <= height)
 //      camera.SetProjectionMatrix(pxmin, pxmax, pymin, pymax/*(GLfloat(height)/width)*/,-10.0f,10.0f);
 //    else                              
 //      camera.SetProjectionMatrix(-2.0f, 2.0f/*(GLfloat(width)/height)*/, -2.0f, 2.0f,-10.0f,10.0f);
     
-    glLoadMatrixf((~camera.PespectiveProjectionMatrix()).ToRealPtr());
-    //glLoadMatrixf((~camera.OrthographicProjectionMatrix()).ToRealPtr());
+    //glLoadMatrixf((~camera.PespectiveProjectionMatrix()).ToRealPtr());
+    glLoadMatrixf((~camera.OrthographicProjectionMatrix()).ToRealPtr());
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
     mCenterX =  static_cast<float> (width*0.5);

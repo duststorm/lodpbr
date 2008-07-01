@@ -244,16 +244,34 @@ public:
     }
        
     
+    
+    // Por que passando como const VEctor3& eye , da error de disqualified  ....
+    // Paper Sequential Point Tree
+    virtual Real perpendicularError (Vector3 eye) const
+    {
+    	
+    	if (mSurfel != NULL) 
+    	{
+    		Real cos = mSurfel->Normal().Norm() * eye.Norm();
+    	
+    		Real ImageError = (ep*std::sqrt(1- cos*cos))/eye.Length();
+    	
+    		return ImageError;
+    	}
+    	
+    	return HUGE_VAL;
+    }
+    // Será usando Frame Buffer Object
     virtual Real tangencialError (const Vector3& eye) const
     {
     	return 1.0;
     }
-    
+    // Será a junção dos dois erros anteriores
     virtual Real geometricError (const Vector3& eye) const
     {
     	return 1.0;
     }
-    
+    // Juntas os oitos filhos (se tiver) usando técnica L21 do Progressive Splatting
     virtual ItemPtr merge(bool mode) 
     {
     	ItemPtrList lLeafSurfel;
@@ -395,23 +413,7 @@ public:
         	
         }
           
-            
-        // Por que passando como const VEctor3& eye , da error de disqualified  ....
-        
-        virtual Real perpendicularError (Vector3 eye) const
-        {
-        	
-        	if (mSurfel != NULL) 
-        	{
-        		Real cos = mSurfel->Normal().Norm() * eye.Norm();
-        	
-        		Real ImageError = (ep*std::sqrt(1- cos*cos))/eye.Length();
-        	
-        		return ImageError;
-        	}
-        	
-        	return HUGE_VAL;
-        }
+
     
 private:
 	

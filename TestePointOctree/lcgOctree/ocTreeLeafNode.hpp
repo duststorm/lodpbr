@@ -84,20 +84,25 @@ public:
             OctreeInternalNode * newOctreeInternalNode = new OctreeInternalNode ();
             fatherPtr = newOctreeInternalNode;
             newOctreeInternalNode->son[0] = this;
+            
             for (int i = 0; i < 8; i++) newOctreeInternalNode->son[i] = new OctreeLeafNode ();
             std::list<ItemPtr> oldPtrList = PtrList;
             
             Point3 m;
             
+            // Calcular o Centróide do nó
             for (listItemPtrIterator pi = oldPtrList.begin (); pi != oldPtrList.end(); ++pi)
             {
             	m += (*pi)->Center();
             }
             
             m /= PtrList.size();
+            
             newOctreeInternalNode->setMean(m);
+            
             PtrList.clear();
             
+            // Redistribui os Pontos entre os novos filhos
             for (listItemPtrIterator pi = oldPtrList.begin (); pi != oldPtrList.end(); ++pi) {
                 newOctreeInternalNode->insert (world, level + 1, *pi, fatherPtr);
             }
@@ -191,11 +196,13 @@ public:
     	return PtrList;
     }
     
+    // O splat
     virtual ItemPtr surfel() const
     {
     	return NULL;
     }
     
+    // Cria novo splat apartir dos pontos da folha
     virtual ItemPtr merge(bool mode) 
     {
     	if (PtrList.size() > 0)
@@ -207,7 +214,7 @@ public:
 
     	return NULL;
     }
-    
+    // Ver o paper FastMesh - Pajarola e Cone of Normal Eurographics das antigas
     Real normalCone() const
     {
     	if (PtrList.size() > 0) 
