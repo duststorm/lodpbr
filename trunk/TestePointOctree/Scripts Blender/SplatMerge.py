@@ -323,6 +323,13 @@ def buttonevents(evt):
         print 'EixoB ' ,listEllipse[1].EixoB()
         print 'B ' ,listEllipse[1].B()
         
+        print 'center TOTAL' ,listEllipse[-1].Center()        
+        print 'normal TOTAL' ,listEllipse[-1].Normal()
+        print 'EixoA TOTAL' ,listEllipse[-1].EixoA()
+        print 'A TOTAL' ,listEllipse[-1].A()
+        print 'EixoB TOTAL' ,listEllipse[-1].EixoB()
+        print 'B TOTAL' ,listEllipse[-1].B()
+        
         #print 'Pontos Projetados',merge.PontosProjetados()
         
         
@@ -419,8 +426,8 @@ def buttonevents(evt):
         print merge.EigenVectors()[1],'major'
         print merge.EigenVectors()[2],'normal'
         
-        print merge.EigenValues()[0],' Values minor'
-        print merge.EigenValues()[1],' Values major'
+        print merge.EigenValues()[0]*merge.A(),' Values minor A'
+        print merge.EigenValues()[1]*merge.B(),' Values major B'
         print merge.EigenValues()[2],' Values Normal'
         
         print polyline1 

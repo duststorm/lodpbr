@@ -44,7 +44,7 @@ public:
     
     LAL::Point3<float> midlePoint;
     
-    Surfel<float> su;
+    Surfel<float> su , su1,su2,su3;
 	float pxmax,pymax, paux;
 	float pxmin,pymin;
 	
