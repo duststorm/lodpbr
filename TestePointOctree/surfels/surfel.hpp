@@ -363,14 +363,14 @@ template <class Real > class Surfel
 
 	 }
 	 
-	 void draw()
+	 void draw(int p = 8)
 	 {
 		 
-		 	ListPtrPoint3 lBoundaries = this->BoundariesSamples(50);
+		 	ListPtrPoint3 lBoundaries = this->BoundariesSamples(p);
  		 	
 			for(ListPtrPoint3Iterator it = lBoundaries.begin();it != lBoundaries.end();++it)
 			{		
-				glPointSize(1.5);
+				glPointSize(1.0);
 							
 			 	glVertex3fv((*it)->ToRealPtr());
 			}

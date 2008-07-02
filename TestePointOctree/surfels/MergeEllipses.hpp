@@ -32,7 +32,10 @@ public:
 	typedef std::list<PtrSurfel>				  PtrSurfelContainer;
 	typedef typename SurfelContainer::iterator 	  SurfelIterator;
 	typedef typename PtrSurfelContainer::iterator PtrSurfelIterator;
-		
+	
+	MergeEllipses( )
+	{}
+	
 	MergeEllipses( const MergeEllipses<Real>& mMerge)
 	{
 		mEllipses 		= mMerge.mEllipses;
@@ -215,6 +218,8 @@ public:
 	 }
 	
 	virtual ~MergeEllipses(){};
+	
+	// Pontos Projetados no plano to novo splat
 	std::list<Point3* > 		mProjectedPoint;
 	
 private:
