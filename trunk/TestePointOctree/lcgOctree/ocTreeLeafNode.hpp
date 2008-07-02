@@ -183,12 +183,12 @@ public:
     
     virtual Real tangencialError (const Vector3& eye) const
     {
-    	return 1.0;
+    	return HUGE_VAL;
     }
     
     virtual Real geometricError (const Vector3& eye) const
     {
-    	return 1.0;
+    	return HUGE_VAL;
     }
     
     virtual ItemPtrList itemList () const

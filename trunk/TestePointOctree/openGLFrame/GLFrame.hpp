@@ -15,6 +15,7 @@
 #include "surfels/surfels.hpp"
 
 #include "Scene/Camera.hpp"
+#include "surfels/MergeEllipses.hpp"
 
 class GLFrame : public QGLWidget
 {
@@ -44,7 +45,13 @@ public:
     
     LAL::Point3<float> midlePoint;
     
-    Surfel<float> su , su1,su2,su3;
+    Surfel<float>*  su;
+    Surfel<float>* su1;
+    Surfel<float>*su2;
+    Surfel<float>*su3;
+    
+    MergeEllipses<float> me;
+    
 	float pxmax,pymax, paux;
 	float pxmin,pymin;
 	

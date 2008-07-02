@@ -87,9 +87,9 @@ namespace LAL{
                 // Transform vectors based on camera's rotation matrix
         		mUp = mOrientation.Rotate(Vector3::UNIT_Y);
                 
-                mEyes = mOrientation.Rotate(Vector3::UNIT_Z);
+        		mEyes = mOrientation.Rotate(Vector3::UNIT_Z);
                 
-                mEyes =  (mEyes * mZoomRadius) - mPosition; 
+              	mEyes =  (mEyes * mZoomRadius) - mPosition; 
          
                 // Update the eye point based on a radius away from the lookAt position
                // mEyes = cameraRotation.Rotate(mEyes);
@@ -98,11 +98,16 @@ namespace LAL{
             
         }
         
+        Matrix4x4 ViewMatrixNormal()
+        {
+       
+        	return Matrix4x4::MakeViewMatrix(mEyes, mPosition, mUp);
+           
+        }
+                
         Matrix4x4 ViewMatrix( Vector3& pEyes, Vector3& pPosition, Vector3& pUp )
         {
-            
-           return Matrix4x4::MakeViewMatrix(pEyes, pPosition, pUp);
-            
+        	return Matrix4x4::MakeViewMatrix(pEyes, pPosition, pUp);
         }
         
 

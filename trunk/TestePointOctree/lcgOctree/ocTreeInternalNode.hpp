@@ -8,6 +8,7 @@
 #include <list>
 #include <set>
 #include <map>
+#include <GL/gl.h> 
 
 //[Project includes]
 #include "ocTreeRefine.hpp"
@@ -16,6 +17,7 @@
 
 #include "surfels/MergeEllipses.hpp"
 #include "slal/Math.hpp"
+#include "Scene/Camera.hpp"
 
 ///
 /// This represents an internal Octree Node. These point to eight 
@@ -246,7 +248,7 @@ public:
     
     
     // Por que passando como const VEctor3& eye , da error de disqualified  ....
-    // Paper Sequential Point Tree
+    // Paper Sequential Point Trees
     virtual Real perpendicularError (Vector3 eye) const
     {
     	
@@ -261,22 +263,161 @@ public:
     	
     	return HUGE_VAL;
     }
-    // Será usando Frame Buffer Object
+    // Paper Sequential Point Trees
     virtual Real tangencialError (const Vector3& eye) const
     {
-    	return 1.0;
+    	return HUGE_VAL;
     }
     // Será a junção dos dois erros anteriores
     virtual Real geometricError (const Vector3& eye) const
     {
-    	return 1.0;
+    	return HUGE_VAL;
     }
+    
+    void ComputeTangencialError (bool mode, MergeEllipses &Merge)
+    {
+    	LAL::Camera camera;
+    	
+        glViewport(0, 0, 32, 32);
+        camera.SetWindowSize(32,32);
+        glMatrixMode(GL_PROJECTION);
+        glLoadIdentity();
+        
+        camera.SetProjectionMatrix(-Merge.MajorAxis().first,Merge.MajorAxis().first,-Merge.MinorAxis().first,Merge.MinorAxis().first,-100.0f,100.0f);
+       
+        glLoadMatrixf((~camera.OrthographicProjectionMatrix()).ToRealPtr());
+        glMatrixMode(GL_MODELVIEW);
+        glLoadIdentity();
+        
+        glMultMatrixf((~camera.ViewMatrixNormal()).ToRealPtr());
+        
+        glDrawBuffer(GL_BACK);
+        glColor3f(1.0,0.0,0.0);
+        glBegin(GL_TRIANGLE_FAN);
+        	Merge.NewSurfel().draw(8);
+        glEnd();
+        glColor3f(0.0,1.0,0.0);
+    	int cont = 0;
+    	typename std::list<Point3* >::iterator it;
+        for( it = Merge.mProjectedPoint.begin(); it != Merge.mProjectedPoint.end(); ++it  )
+        {
+        	if ( (cont % 8) == 0)
+        		glBegin(GL_TRIANGLE_FAN);
+        			glVertex3fv(  (*it)->ToRealPtr()  );
+        			
+        		cont++;		
+        	if ( (cont % 8) == 0)
+        		glEnd();
+        	       	
+        }
+        glFlush();
+        GLfloat *outputBuffer = new GLfloat[32 * 32 * 4];
+        glReadBuffer(GL_BACK);
+        glReadPixels(0, 0, 32, 32, GL_RGBA, GL_FLOAT, &outputBuffer[0]);
+        
+        
+        
+        float red   = 0 ;
+        float green = 0;
+        
+        for (int i = 0; i < 4096; i+=4) 
+        {
+            red   += outputBuffer[i + 0];
+            green += outputBuffer[i + 1];            	                  
+        }
+        
+        std::cout << "red " << red << std::endl;
+        std::cout << "green " << green << std::endl;
+    }
+
+    void ComputePerpendicularError (bool mode)
+    {
+    	std::list<Real> lEpMin;
+    	std::list<Real> lEpMax;
+
+    	Real epMax = static_cast<Real>(0);
+    	Real epMin = static_cast<Real>(0);
+
+    	Real di	   = static_cast<Real>(0);
+
+    	Real lNormalConeCos = static_cast<Real>(1);
+    	Real lNormalConeSin = static_cast<Real>(1);
+    	Real lTempCos		= static_cast<Real>(1);
+
+    	Vector3 n  = mSurfel->Normal();
+
+    	if (mode  == true)
+    	{
+
+    		for (int index = 0; index < 8; ++index) 
+    		{
+
+    			if (son[index]->surfel() != NULL)
+    			{
+
+    				Vector3 ni = son[index]->surfel()->Normal();
+
+    				di = mSurfel->MajorAxis().first * ( std::sqrt(1.0 - (n*ni) * (n*ni)  ) );
+
+    				epMax = ( ( mSurfel->Center() - son[index]->surfel()->Center() ) * n + di );
+    				epMin =	( ( mSurfel->Center() - son[index]->surfel()->Center() ) * n - di );
+
+    				lTempCos = ni * n;
+
+    				if (lTempCos < lNormalConeCos )
+    				{
+    					lNormalConeCos = lTempCos;
+    					lNormalConeSin = son[index]->normalCone();
+    				}
+
+    				lEpMin.push_back(epMin);
+    				lEpMax.push_back(epMax);
+
+    			}
+
+    		}
+
+    	}else
+    	{
+
+    		ItemPtrList lp = this->itemList();
+
+    		for (listItemPtrIterator it = lp.begin (); it != lp.end(); ++it)
+    		{
+
+    			di = (*it)->MajorAxis().first * (std::sqrt(1.0 - (n*(*it)->Normal() ) * (n*(*it)->Normal() )  ) );
+
+    			epMax = ( ( mSurfel->Center() - (*it)->Center() ) * n + di );
+    			epMin =	( ( mSurfel->Center() - (*it)->Center() ) * n - di );
+
+    			lEpMin.push_back(epMin);
+    			lEpMax.push_back(epMax);
+
+    		}
+
+    	}
+
+
+    	ep = *(std::max_element(lEpMax.begin(),lEpMax.end())) - (*std::min_element(lEpMin.begin(),lEpMin.end())) ;
+
+
+    	mNormalCone =  std::sqrt(1.0 - (lNormalConeSin*lNormalConeSin)) * lNormalConeCos -
+    				   lNormalConeSin * std::sqrt(1.0 - (lNormalConeCos*lNormalConeCos));
+
+    	if ( mNormalCone < static_cast<Real>(0) )
+    		mNormalCone = static_cast<Real>(1);
+    	else 
+    		mNormalCone = std::sqrt(1.0 - (mNormalCone*mNormalCone));
+
+    }
+            
+
+    
     // Juntas os oitos filhos (se tiver) usando técnica L21 do Progressive Splatting
     virtual ItemPtr merge(bool mode) 
     {
     	ItemPtrList lLeafSurfel;
-    	
-    	
+       	
     	if ( mode == true)
     	{
 
@@ -316,7 +457,7 @@ public:
     		mSurfel = lMerge.NewPtrSurfel();
     		
     		ComputePerpendicularError(mode);
-    		//ComputeTangencialError();
+    		ComputeTangencialError(mode,lMerge);
         }else
         {
         	mSurfel = NULL;
@@ -326,95 +467,7 @@ public:
     	return mSurfel;
     }
     
-    void ComputePerpendicularError (bool mode)
-        {
-        	std::list<Real> lEpMin;
-        	std::list<Real> lEpMax;
-
-        	Real epMax = static_cast<Real>(0);
-        	Real epMin = static_cast<Real>(0);
-        	
-        	Real di	   = static_cast<Real>(0);
-        	        	        	
-        	Real lNormalConeCos = static_cast<Real>(1);
-        	Real lNormalConeSin = static_cast<Real>(1);
-        	Real lTempCos		= static_cast<Real>(1);
-        	
-        	Vector3 n  = mSurfel->Normal();
-        	
-        	if (mode  == true)
-        	{
-        	
-        		for (int index = 0; index < 8; ++index) 
-        		{
-
-        			if (son[index]->surfel() != NULL)
-        			{
-        				
-        				Vector3 ni = son[index]->surfel()->Normal();
-        				
-        				di = mSurfel->MajorAxis().first * ( std::sqrt(1.0 - (n*ni) * (n*ni)  ) );
-
-        				epMax = ( ( mSurfel->Center() - son[index]->surfel()->Center() ) * n + di );
-        				epMin =	( ( mSurfel->Center() - son[index]->surfel()->Center() ) * n - di );
-        				
-        				lTempCos = ni * n;
-        				
-        				if (lTempCos < lNormalConeCos )
-        				{
-        					lNormalConeCos = lTempCos;
-        					lNormalConeSin = son[index]->normalCone();
-        				}
-        					
-        				
-        				lEpMin.push_back(epMin);
-        				lEpMax.push_back(epMax);
-
-        			}
-        			
-
-        		}
-        		
-        	}else
-        	{
-
-        		ItemPtrList lp = this->itemList();
-
-        		
-        		for (listItemPtrIterator it = lp.begin (); it != lp.end(); ++it)
-        		{
-        			
-        				di = (*it)->MajorAxis().first * (std::sqrt(1.0 - (n*(*it)->Normal() ) * (n*(*it)->Normal() )  ) );
-
-        				epMax = ( ( mSurfel->Center() - (*it)->Center() ) * n + di );
-        				epMin =	( ( mSurfel->Center() - (*it)->Center() ) * n - di );
-        				
-        				lEpMin.push_back(epMin);
-        				lEpMax.push_back(epMax);
-
-
-        		}
-
-        	}
-        		
-
-        	ep = *(std::max_element(lEpMax.begin(),lEpMax.end())) - (*std::min_element(lEpMin.begin(),lEpMin.end())) ;
-        	
-        	       	       	       	
-        	mNormalCone =  std::sqrt(1.0 - (lNormalConeSin*lNormalConeSin)) * lNormalConeCos 
-        										-
-        				lNormalConeSin * std::sqrt(1.0 - (lNormalConeCos*lNormalConeCos));
-        	
-        	if ( mNormalCone < static_cast<Real>(0) )
-        		mNormalCone = static_cast<Real>(1);
-        	else 
-        	   	mNormalCone = std::sqrt(1.0 - (mNormalCone*mNormalCone));
-        	
-        	
-        }
-          
-
-    
+      
 private:
 	
 	  Point3 	mean_;

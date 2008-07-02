@@ -7,7 +7,6 @@
 #include <stdlib.h>
 
 #include "GLFrame.hpp"
-#include "surfels/MergeEllipses.hpp"
 
 
 #define DA_APLICACAO_PASSADA 0
@@ -33,34 +32,41 @@ GLFrame::GLFrame(QWidget *parent):QGLWidget(parent)
 	mode = true;
    
 	
-	su1 =  Surfel<float>(LAL::Point3<float>(7.938756, 8.396816, 5.958447),
+	su1 =  new Surfel<float>(LAL::Point3<float>(7.938756, 8.396816, 5.958447),
 			LAL::Vector3<float>(0.000000, 0.000000, 1.000000),1.0f,1.0f,0.0f);
 	
-	su1.SetMinorAxis(std::make_pair(1.0,LAL::Vector3<float>(1.000000, 0.000000, 0.000000)));
-	su1.SetMajorAxis(std::make_pair(1.5,LAL::Vector3<float>(0.000000, 1.000000, 0.00000)));
+	su1->SetMinorAxis(std::make_pair(0.1,LAL::Vector3<float>(1.000000, 0.000000, 0.000000)));
+	su1->SetMajorAxis(std::make_pair(0.5,LAL::Vector3<float>(0.000000, 1.000000, 0.00000)));
 	
-	su2 = Surfel<float>(LAL::Point3<float>(6.632136, 7.704408, 5.995052),
+	su2 =  new Surfel<float>(LAL::Point3<float>(6.632136, 7.704408, 5.995052),
 				LAL::Vector3<float>(0.000000, 0.000000, 1.000000),1.0f,1.0f,0.0f);
 	
-	su2.SetMinorAxis(std::make_pair(1.0,LAL::Vector3<float>(1.000000, 0.000000, 0.000000)));
-	su2.SetMajorAxis(std::make_pair(1.5,LAL::Vector3<float>(0.000000, 1.000000, 0.000000)));
+	su2->SetMinorAxis(std::make_pair(0.4,LAL::Vector3<float>(1.000000, 0.000000, 0.000000)));
+	su2->SetMajorAxis(std::make_pair(0.2,LAL::Vector3<float>(0.000000, 1.000000, 0.000000)));
 
 	
-	su3 = Surfel<float>(LAL::Point3<float>(7.285446, 8.050611, 5.976750),
+	su3 = new Surfel<float>(LAL::Point3<float>(7.285446, 8.050611, 5.976750),
 				LAL::Vector3<float>(0.000000, 0.000000, 1.000000),1.0f,1.0f,0.0f);
 	
-	su3.SetMinorAxis(std::make_pair(2.48653545051,LAL::Vector3<float>(0.460895, -0.887455, 0.000000)));
-	su3.SetMajorAxis(std::make_pair(1.91656134622,LAL::Vector3<float>(-0.887455, -0.460895, 0.000000)));
+	su3->SetMinorAxis(std::make_pair(2.48653545051,LAL::Vector3<float>(0.460895, -0.887455, 0.000000)));
+	su3->SetMajorAxis(std::make_pair(1.91656134622,LAL::Vector3<float>(-0.887455, -0.460895, 0.000000)));
 	
 	Surfel<float> * s = new Surfel<float>(LAL::Point3<float>(2.127096,-0.876474,1.482297),
 			LAL::Vector3<float>(-0.291764,-0.174345,0.940467),1.0f,1.0f,0.0f);
 
+	
+    
+	
+	
+	
 	s->SetMinorAxis(std::make_pair(1.0,LAL::Vector3<float>(0.807313f, 0.482415f, 0.339886f)));
 	s->SetMajorAxis(std::make_pair(2.0,LAL::Vector3<float>(-0.512952f, 0.858417f, 0.000000f)));
 
 	std::list<Surfel<float>* > sl;
 
-	sl.push_back(s);
+	//sl.push_back(s);
+	
+	
 
 	s = new Surfel<float>(LAL::Point3<float>(0.459231f, 0.489174f, 1.334823f),
 			LAL::Vector3<float>(0.444927f, -0.059414f, 0.893594f),1.0f,1.0f,0.0f);
@@ -68,53 +74,28 @@ GLFrame::GLFrame(QWidget *parent):QGLWidget(parent)
 	s->SetMinorAxis(std::make_pair(1.0,LAL::Vector3<float>(0.879801, -0.157404, -0.448525)));
 	s->SetMajorAxis(std::make_pair(2.0,LAL::Vector3<float>(0.167304, 0.985745, -0.017761)));
 
-	sl.push_back(s);
+	sl.push_back(su1);
+	sl.push_back(su2);
 
-	MergeEllipses<float> me(sl);
+	me = MergeEllipses<float>(sl);
 	
-	
-	
-	su = me.NewSurfel();
-	
+	int view = 100;
+	glPushMatrix();
+	glViewport(0, 0, view,view );
+	camera.SetWindowSize(view,view);
+	glMatrixMode(GL_PROJECTION);
 
 	
-	p1  = su.Center() + (su.MajorAxis().second*su.MajorAxis().first);
-	p11 = p1 + (su.MinorAxis().second*su.MinorAxis().first);
-	p12 = p1 - (su.MinorAxis().second*su.MinorAxis().first);
+	std::cout << me.mProjectedPoint.size() << "AAAAA" << std::endl;
 	
-	p2 = su.Center() - (su.MajorAxis().second*su.MajorAxis().first);
-	p21 = p2 + (su.MinorAxis().second*su.MinorAxis().first);
-	p22 = p2 - (su.MinorAxis().second*su.MinorAxis().first);
+	su = me.NewPtrSurfel();
 	
-	LAL::Vector3<float> n =  su.MinorAxis().second^su.MajorAxis().second;
 	
-	camera.SetUp(su3.MinorAxis().second);
-	camera.SetPosition(LAL::Vector3<float>(su3.Center().x,su3.Center().y,su3.Center().z));
-	camera.SetEyes(LAL::Vector3<float>(su3.Center().x,su3.Center().y,su3.Center().z)+(-su3.Normal()*10.0f));
+//	camera.SetUp(su1->MinorAxis().second);
+//	camera.SetPosition(LAL::Vector3<float>(su1->Center().x,su1->Center().y,su1->Center().z));
+//	camera.SetEyes(LAL::Vector3<float>(su1->Center().x,su1->Center().y,su1->Center().z)+(-su1->Normal()*1.0f));
 		
- 
-	
-	pxmax = std::max(p11.x,p12.x);
-	paux = std::max(p21.x,p22.x);
-	
-	pxmax = std::max(pxmax,paux);
 
-	pymax = std::max(p11.y,p12.y);
-	paux = std::max(p21.y,p22.y);
-	
-	pymax = std::max(pymax,paux);
-	
-	pxmin = std::min(p11.x,p12.x);
-	paux = std::min(p21.x,p22.x);
-	
-	pxmin = std::min(pxmin,paux);
-
-	pymin = std::min(p11.y,p12.y);
-	paux = std::min(p21.y,p22.y);
-	
-	pymin = std::min(pymin,paux);
-	
-	
 }
 
 void GLFrame::SetThreshold(const float& t)
@@ -133,9 +114,7 @@ void GLFrame::SetMode(bool t)
 
 void GLFrame::SIZE(OctreeNode<float,Surfel<float>* > * pNode, long int& cont,std::map < int , std::vector<float> >& oi)
 {
-	
-	
- 	
+	 	
 	if ( pNode->isLeaf() == true )
 	{
 		cont += sizeof(*pNode); 
@@ -151,7 +130,6 @@ void GLFrame::SIZE(OctreeNode<float,Surfel<float>* > * pNode, long int& cont,std
 				
 		cont += sizeof(*lInternalNode);
 	}
-
 	
 }
 
@@ -320,16 +298,13 @@ void GLFrame::initializeGL()
 	glEnable(GL_DEPTH_TEST);      //depth-buffering
 
 	glEnable(GL_NORMALIZE);
-	
 
 }
               
                 
 
 void GLFrame::drawPoints() {
-   
 
-		
    glDisable(GL_DEPTH_TEST);
    glDisable(GL_LIGHTING);		
    glPointSize(3.0);
@@ -338,34 +313,51 @@ void GLFrame::drawPoints() {
    int cont = 0;
    
    LODSelection(octree.root,cont);
-        
-    
-   
+           
    //me.NewSurfel().draw();
    
    //glVertex3fv( su.Center().ToRealPtr() );
       
    std::cout << "Total " <<  mode << " = " << cont << std::endl;
-   //su.draw(); 
-//   su1.draw();
+//   su3.draw(); 
+//   su1->draw();
 //   su2.draw();
-   
-   su3.SetMinorAxis(std::make_pair(su3.MajorAxis().first,su3.MinorAxis().second));
+      
    glEnd();
    
-   glColor3f(1.0,0.0,0.0);
-   glBegin(GL_TRIANGLE_FAN);
-   su3.draw();
-   glEnd();
-
-   glColor3f(0.0,1.0,0.0);
-   glBegin(GL_TRIANGLE_FAN);
-   su1.draw();
-   glEnd();
-
-   glBegin(GL_TRIANGLE_FAN);
-   su2.draw();
-   glEnd();
+      glColor3f(1.0,0.0,0.0);
+      glBegin(GL_TRIANGLE_FAN);
+      me.NewSurfel().draw();
+      glEnd();
+      glColor3f(0.0,1.0,0.0);
+    std::list<LAL::Point3<float>* >::iterator it;
+   cont = 0;
+   for( it = me.mProjectedPoint.begin(); it != me.mProjectedPoint.end(); ++it  )
+   {
+   	if ( (cont % 8) == 0)
+   		glBegin(GL_TRIANGLE_FAN);
+   		
+   			glVertex3fv(  (*it)->ToRealPtr()  );
+   			
+   		cont++;		
+   	if ( (cont % 8) == 0)
+   		glEnd();
+   	       	
+   }
+//   
+//   glColor3f(1.0,0.0,0.0);
+//   glBegin(GL_TRIANGLE_FAN);
+//   me.NewSurfel().draw();
+//   glEnd();
+//
+//   glColor3f(0.0,1.0,0.0);
+//   glBegin(GL_TRIANGLE_FAN);
+//   su1->draw();
+//   glEnd();
+//
+//   glBegin(GL_TRIANGLE_FAN);
+//   su2->draw();
+//   glEnd();
    
    glEnable(GL_LIGHTING);
    glPointSize(1.0);
@@ -397,13 +389,15 @@ void GLFrame::calLimits()
     
     octree.split();
     
+    GLuint fbo;
     //frame begin
+    glPushMatrix();
+       	octree.Merge();
+    glPopMatrix();
     
-    octree.Merge();
-    
-    // matar
-    
-    
+    	    
+    // frame end
+     
     
     long int cont = 0;
     
@@ -453,9 +447,7 @@ void GLFrame::drawBox(LAL::BoundingBox3<T> BBox){
 
 void GLFrame::resizeGL(int width, int height)
 {
-	
-	float p = std::sqrt(su3.MajorAxis().first*su3.MajorAxis().first + su3.MinorAxis().first*su3.MinorAxis().first);
-	
+		
     glViewport(0, 0, width, height);
     camera.SetWindowSize(width,height);
     glMatrixMode(GL_PROJECTION);
@@ -463,7 +455,9 @@ void GLFrame::resizeGL(int width, int height)
     GLfloat x = GLfloat(width) / height;
     //camera.SetProjectionMatrix(90.0,x,0.1,1000);
           
-    camera.SetProjectionMatrix(-p,p,-p,p/*(GLfloat(height)/width)*/,-100.0f,100.0f);
+    //camera.SetProjectionMatrix(-p,p,-p,p/*(GLfloat(height)/width)*/,-100.0f,100.0f);
+   // camera.SetProjectionMatrix(-su1->MajorAxis().first,su1->MajorAxis().first,-su1->MinorAxis().first,su1->MinorAxis().first/*(GLfloat(height)/width)*/,-100.0f,100.0f);
+    
     
 //    if (width <= height)
 //      camera.SetProjectionMatrix(pxmin, pxmax, pymin, pymax/*(GLfloat(height)/width)*/,-10.0f,10.0f);
@@ -471,11 +465,86 @@ void GLFrame::resizeGL(int width, int height)
 //      camera.SetProjectionMatrix(-2.0f, 2.0f/*(GLfloat(width)/height)*/, -2.0f, 2.0f,-10.0f,10.0f);
     
     //glLoadMatrixf((~camera.PespectiveProjectionMatrix()).ToRealPtr());
+   // glLoadMatrixf((~camera.OrthographicProjectionMatrix()).ToRealPtr());
+//    glMatrixMode(GL_MODELVIEW);
+//    glLoadIdentity();
+//    mCenterX =  static_cast<float> (width*0.5);
+//    mCenterY =  static_cast<float> (height*0.5);
+//    
+    glLoadIdentity();
+    
+	camera.SetUp(me.MinorAxis().second);
+	camera.SetPosition(LAL::Vector3<float>(me.Center().x,me.Center().y,me.Center().z));
+	camera.SetEyes(LAL::Vector3<float>(me.Center().x,me.Center().y,me.Center().z)+(-me.Normal()*1.0f));
+    
+    camera.SetProjectionMatrix(-me.MajorAxis().first,me.MajorAxis().first,-me.MinorAxis().first,me.MinorAxis().first,-100.0f,100.0f);
+   
     glLoadMatrixf((~camera.OrthographicProjectionMatrix()).ToRealPtr());
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
-    mCenterX =  static_cast<float> (width*0.5);
-    mCenterY =  static_cast<float> (height*0.5);
+    
+    glMultMatrixf((~camera.ViewMatrixNormal()).ToRealPtr());
+    
+    glClearColor(0.0f,0.0f,0.0f,0.0f);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glDrawBuffer(GL_BACK);
+    glColor3f(1.0,0.0,0.0);
+    
+    glDisable(GL_DEPTH_TEST);
+    glBegin(GL_TRIANGLE_FAN);
+    	me.NewSurfel().draw(8);
+    glEnd();
+    glColor3f(0.0,1.0,0.0);
+	int cont = 0;
+	std::list<LAL::Point3<float>* >::iterator it;
+
+    for( it = me.mProjectedPoint.begin(); it != me.mProjectedPoint.end(); ++it  )
+    {
+    	if ( (cont % 8) == 0)
+    		glBegin(GL_TRIANGLE_FAN);
+    		
+    			glVertex3fv(  (*it)->ToRealPtr()  );
+    			
+    		cont++;		
+    	if ( (cont % 8) == 0)
+    		glEnd();
+    	       	
+    }
+		
+//	   glBegin(GL_TRIANGLE_FAN);
+//	   su1->draw();
+//	   glEnd();
+//
+//	   glBegin(GL_TRIANGLE_FAN);
+//	   su2->draw();
+//	   glEnd();
+	   
+    glFlush();
+    
+    glEnable(GL_DEPTH_TEST);
+    GLfloat *outputBuffer = new GLfloat[width * height * 4];
+    glReadBuffer(GL_BACK);
+    glReadPixels(0, 0, width , height, GL_RGBA, GL_FLOAT, &outputBuffer[0]);
+    glPopMatrix();
+    
+    
+    float red   = 0 ;
+    float green = 0;
+    
+    for (int i = 0; i < width * height * 4; i+=4) 
+    {
+        red   += outputBuffer[i + 0];
+        green += outputBuffer[i + 1];            	                  
+    }
+    
+    std::cout << "cont " << me.mProjectedPoint.size() << std::endl;
+    std::cout << "red " << red << std::endl;
+      
+    std::cout << "green " << green << std::endl;
+    
+    std::cout << "% " << green/(red+green) << std::endl;
+	
+
        
 }
 
@@ -484,13 +553,9 @@ void GLFrame::paintGL()
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
-//    gluLookAt( camera.Eyes().x,camera.Eyes().y,camera.Eyes().z,
-// 		   	  camera.Position().x,camera.Position().y,camera.Position().z,
-// 		   	  camera.Up().x,camera.Up().y,camera.Up().z);
-    glMultMatrixf((~camera.ViewMatrix()).ToRealPtr());
-    
-    std::cout << ~camera.ViewMatrix();
-    
+
+    glMultMatrixf((~camera.ViewMatrixNormal()).ToRealPtr());
+           
     if ( surfels.surfels.size() != 0 )
     {
     	if (renderMode_A == Points)
@@ -508,7 +573,7 @@ void GLFrame::paintGL()
 
 void GLFrame::keyPressEvent(QKeyEvent * event)
 {
-//	QMessageBox::information( 0, "MessageBox", "Key pressed" );
+
 	if (event->key() == Qt::Key_W)
 	{
 		camera.MoveForward(CameraStep);	
@@ -532,7 +597,6 @@ void GLFrame::keyPressEvent(QKeyEvent * event)
 	}
 	else {}
 	updateGL();
-
 		
 }
 
