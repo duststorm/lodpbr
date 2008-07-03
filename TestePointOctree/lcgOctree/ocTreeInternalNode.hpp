@@ -274,9 +274,14 @@ public:
     	return HUGE_VAL;
     }
     
-    void ComputeTangencialError (bool mode, MergeEllipses &Merge)
+    void ComputeTangencialError (MergeEllipses &Merge)
     {
     	LAL::Camera camera;
+    	
+    	camera.SetUp(Merge.MinorAxis().second);
+    	camera.SetPosition(LAL::Vector3<float>(Merge.Center().x,Merge.Center().y,Merge.Center().z));
+    	camera.SetEyes(LAL::Vector3<float>(Merge.Center().x,Merge.Center().y,Merge.Center().z)+(-Merge.Normal()*1.0f));
+   	
     	
         glViewport(0, 0, 32, 32);
         camera.SetWindowSize(32,32);
@@ -284,18 +289,23 @@ public:
         glLoadIdentity();
         
         camera.SetProjectionMatrix(-Merge.MajorAxis().first,Merge.MajorAxis().first,-Merge.MinorAxis().first,Merge.MinorAxis().first,-100.0f,100.0f);
-       
         glLoadMatrixf((~camera.OrthographicProjectionMatrix()).ToRealPtr());
+        
         glMatrixMode(GL_MODELVIEW);
         glLoadIdentity();
-        
+         
         glMultMatrixf((~camera.ViewMatrixNormal()).ToRealPtr());
-        
+              
+        glClearColor(0.0f,0.0f,0.0f,0.0f);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         glDrawBuffer(GL_BACK);
+        glDisable(GL_DEPTH_TEST);
+        
         glColor3f(1.0,0.0,0.0);
         glBegin(GL_TRIANGLE_FAN);
         	Merge.NewSurfel().draw(8);
         glEnd();
+        
         glColor3f(0.0,1.0,0.0);
     	int cont = 0;
     	typename std::list<Point3* >::iterator it;
@@ -310,15 +320,15 @@ public:
         		glEnd();
         	       	
         }
+        
         glFlush();
+        glEnable(GL_DEPTH_TEST);
         GLfloat *outputBuffer = new GLfloat[32 * 32 * 4];
         glReadBuffer(GL_BACK);
         glReadPixels(0, 0, 32, 32, GL_RGBA, GL_FLOAT, &outputBuffer[0]);
-        
-        
-        
-        float red   = 0 ;
-        float green = 0;
+                
+        float red   = 0.0f;
+        float green = 0.0f;
         
         for (int i = 0; i < 4096; i+=4) 
         {
@@ -328,6 +338,7 @@ public:
         
         std::cout << "red " << red << std::endl;
         std::cout << "green " << green << std::endl;
+        std::cout << " P " << 100.f*(green/(green+red)) << "%" << std::endl;
     }
 
     void ComputePerpendicularError (bool mode)
@@ -457,7 +468,7 @@ public:
     		mSurfel = lMerge.NewPtrSurfel();
     		
     		ComputePerpendicularError(mode);
-    		ComputeTangencialError(mode,lMerge);
+    		ComputeTangencialError(lMerge);
         }else
         {
         	mSurfel = NULL;
@@ -481,3 +492,4 @@ private:
 
 
 #endif /*OCTREEINTERNALNODE_HPP_*/
+

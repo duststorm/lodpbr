@@ -79,12 +79,6 @@ GLFrame::GLFrame(QWidget *parent):QGLWidget(parent)
 
 	me = MergeEllipses<float>(sl);
 	
-	int view = 100;
-	glPushMatrix();
-	glViewport(0, 0, view,view );
-	camera.SetWindowSize(view,view);
-	glMatrixMode(GL_PROJECTION);
-
 	
 	std::cout << me.mProjectedPoint.size() << "AAAAA" << std::endl;
 	
@@ -391,10 +385,23 @@ void GLFrame::calLimits()
     
     GLuint fbo;
     //frame begin
-    glPushMatrix();
-       	octree.Merge();
-    glPopMatrix();
     
+    //save viewport and set up new one
+//    int viewport[4];
+//    glGetIntegerv(GL_VIEWPORT,(int*)viewport);
+    glPushAttrib(GL_ALL_ATTRIB_BITS);  
+    glPushMatrix();
+    	octree.Merge();
+    glPopMatrix();
+    glPopAttrib();
+    
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    GLfloat x = GLfloat(width()) / height();
+    camera.SetProjectionMatrix(90.0,x,0.1,1000);
+    glLoadMatrixf((~camera.PespectiveProjectionMatrix()).ToRealPtr());
+    
+//    glViewport(viewport[0],viewport[1],viewport[2],viewport[3]);
     	    
     // frame end
      
@@ -453,99 +460,19 @@ void GLFrame::resizeGL(int width, int height)
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
     GLfloat x = GLfloat(width) / height;
-    //camera.SetProjectionMatrix(90.0,x,0.1,1000);
+    camera.SetProjectionMatrix(90.0,x,0.1,1000);
           
-    //camera.SetProjectionMatrix(-p,p,-p,p/*(GLfloat(height)/width)*/,-100.0f,100.0f);
-   // camera.SetProjectionMatrix(-su1->MajorAxis().first,su1->MajorAxis().first,-su1->MinorAxis().first,su1->MinorAxis().first/*(GLfloat(height)/width)*/,-100.0f,100.0f);
+//    camera.SetProjectionMatrix(-p,p,-p,p/*(GLfloat(height)/width)*/,-100.0f,100.0f);
+//    camera.SetProjectionMatrix(-su1->MajorAxis().first,su1->MajorAxis().first,-su1->MinorAxis().first,su1->MinorAxis().first/*(GLfloat(height)/width)*/,-100.0f,100.0f);
     
-    
-//    if (width <= height)
-//      camera.SetProjectionMatrix(pxmin, pxmax, pymin, pymax/*(GLfloat(height)/width)*/,-10.0f,10.0f);
-//    else                              
-//      camera.SetProjectionMatrix(-2.0f, 2.0f/*(GLfloat(width)/height)*/, -2.0f, 2.0f,-10.0f,10.0f);
-    
-    //glLoadMatrixf((~camera.PespectiveProjectionMatrix()).ToRealPtr());
-   // glLoadMatrixf((~camera.OrthographicProjectionMatrix()).ToRealPtr());
-//    glMatrixMode(GL_MODELVIEW);
-//    glLoadIdentity();
-//    mCenterX =  static_cast<float> (width*0.5);
-//    mCenterY =  static_cast<float> (height*0.5);
-//    
-    glLoadIdentity();
-    
-	camera.SetUp(me.MinorAxis().second);
-	camera.SetPosition(LAL::Vector3<float>(me.Center().x,me.Center().y,me.Center().z));
-	camera.SetEyes(LAL::Vector3<float>(me.Center().x,me.Center().y,me.Center().z)+(-me.Normal()*1.0f));
-    
-    camera.SetProjectionMatrix(-me.MajorAxis().first,me.MajorAxis().first,-me.MinorAxis().first,me.MinorAxis().first,-100.0f,100.0f);
-   
-    glLoadMatrixf((~camera.OrthographicProjectionMatrix()).ToRealPtr());
+    glLoadMatrixf((~camera.PespectiveProjectionMatrix()).ToRealPtr());
+//    glLoadMatrixf((~camera.OrthographicProjectionMatrix()).ToRealPtr());
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
+    mCenterX =  static_cast<float> (width*0.5);
+    mCenterY =  static_cast<float> (height*0.5);
     
-    glMultMatrixf((~camera.ViewMatrixNormal()).ToRealPtr());
-    
-    glClearColor(0.0f,0.0f,0.0f,0.0f);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    glDrawBuffer(GL_BACK);
-    glColor3f(1.0,0.0,0.0);
-    
-    glDisable(GL_DEPTH_TEST);
-    glBegin(GL_TRIANGLE_FAN);
-    	me.NewSurfel().draw(8);
-    glEnd();
-    glColor3f(0.0,1.0,0.0);
-	int cont = 0;
-	std::list<LAL::Point3<float>* >::iterator it;
-
-    for( it = me.mProjectedPoint.begin(); it != me.mProjectedPoint.end(); ++it  )
-    {
-    	if ( (cont % 8) == 0)
-    		glBegin(GL_TRIANGLE_FAN);
-    		
-    			glVertex3fv(  (*it)->ToRealPtr()  );
-    			
-    		cont++;		
-    	if ( (cont % 8) == 0)
-    		glEnd();
-    	       	
-    }
-		
-//	   glBegin(GL_TRIANGLE_FAN);
-//	   su1->draw();
-//	   glEnd();
-//
-//	   glBegin(GL_TRIANGLE_FAN);
-//	   su2->draw();
-//	   glEnd();
-	   
-    glFlush();
-    
-    glEnable(GL_DEPTH_TEST);
-    GLfloat *outputBuffer = new GLfloat[width * height * 4];
-    glReadBuffer(GL_BACK);
-    glReadPixels(0, 0, width , height, GL_RGBA, GL_FLOAT, &outputBuffer[0]);
-    glPopMatrix();
-    
-    
-    float red   = 0 ;
-    float green = 0;
-    
-    for (int i = 0; i < width * height * 4; i+=4) 
-    {
-        red   += outputBuffer[i + 0];
-        green += outputBuffer[i + 1];            	                  
-    }
-    
-    std::cout << "cont " << me.mProjectedPoint.size() << std::endl;
-    std::cout << "red " << red << std::endl;
-      
-    std::cout << "green " << green << std::endl;
-    
-    std::cout << "% " << green/(red+green) << std::endl;
-	
-
-       
+          
 }
 
 void GLFrame::paintGL()
@@ -554,7 +481,7 @@ void GLFrame::paintGL()
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
 
-    glMultMatrixf((~camera.ViewMatrixNormal()).ToRealPtr());
+    glMultMatrixf((~camera.ViewMatrix()).ToRealPtr());
            
     if ( surfels.surfels.size() != 0 )
     {
@@ -659,4 +586,75 @@ void GLFrame::mouseMoveEvent(QMouseEvent *event)
     lastPos = event->pos();
 }
 
-
+//glLoadIdentity();
+//   
+//	camera.SetUp(me.MinorAxis().second);
+//	camera.SetPosition(LAL::Vector3<float>(me.Center().x,me.Center().y,me.Center().z));
+//	camera.SetEyes(LAL::Vector3<float>(me.Center().x,me.Center().y,me.Center().z)+(-me.Normal()*1.0f));
+//   
+//   camera.SetProjectionMatrix(-me.MajorAxis().first,me.MajorAxis().first,-me.MinorAxis().first,me.MinorAxis().first,-100.0f,100.0f);
+//  
+//   glLoadMatrixf((~camera.OrthographicProjectionMatrix()).ToRealPtr());
+//   glMatrixMode(GL_MODELVIEW);
+//   glLoadIdentity();
+//   
+//   glMultMatrixf((~camera.ViewMatrixNormal()).ToRealPtr());
+//   
+//   glClearColor(0.0f,0.0f,0.0f,0.0f);
+//   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+//   glDrawBuffer(GL_BACK);
+//   glColor3f(1.0,0.0,0.0);
+//   
+//   glDisable(GL_DEPTH_TEST);
+//   glBegin(GL_TRIANGLE_FAN);
+//   	me.NewSurfel().draw(8);
+//   glEnd();
+//   glColor3f(0.0,1.0,0.0);
+//	int cont = 0;
+//	std::list<LAL::Point3<float>* >::iterator it;
+//
+//   for( it = me.mProjectedPoint.begin(); it != me.mProjectedPoint.end(); ++it  )
+//   {
+//   	if ( (cont % 8) == 0)
+//   		glBegin(GL_TRIANGLE_FAN);
+//   		
+//   			glVertex3fv(  (*it)->ToRealPtr()  );
+//   			
+//   		cont++;		
+//   	if ( (cont % 8) == 0)
+//   		glEnd();
+//   	       	
+//   }
+//		
+////	   glBegin(GL_TRIANGLE_FAN);
+////	   su1->draw();
+////	   glEnd();
+////
+////	   glBegin(GL_TRIANGLE_FAN);
+////	   su2->draw();
+////	   glEnd();
+//	   
+//   glFlush();
+//   
+//   glEnable(GL_DEPTH_TEST);
+//   GLfloat *outputBuffer = new GLfloat[width * height * 4];
+//   glReadBuffer(GL_BACK);
+//   glReadPixels(0, 0, width , height, GL_RGBA, GL_FLOAT, &outputBuffer[0]);
+//   glPopMatrix();
+//   
+//   
+//   float red   = 0 ;
+//   float green = 0;
+//   
+//   for (int i = 0; i < width * height * 4; i+=4) 
+//   {
+//       red   += outputBuffer[i + 0];
+//       green += outputBuffer[i + 1];            	                  
+//   }
+//   
+//   std::cout << "cont " << me.mProjectedPoint.size() << std::endl;
+//   std::cout << "red " << red << std::endl;
+//     
+//   std::cout << "green " << green << std::endl;
+//   
+//   std::cout << "% " << green/(red+green) << std::endl;
