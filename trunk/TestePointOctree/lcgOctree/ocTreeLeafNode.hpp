@@ -176,7 +176,7 @@ public:
     
     /// FUNCOES CRIADAS POR MIN
     
-    virtual Real perpendicularError (Vector3 eye) const
+    virtual Real perpendicularError (Vector3& eye) const
     {
     	return HUGE_VAL;
     }
@@ -186,7 +186,7 @@ public:
     	return HUGE_VAL;
     }
     
-    virtual Real geometricError (const Vector3& eye) const
+    virtual Real geometricError ( Vector3& eye) const
     {
     	return HUGE_VAL;
     }

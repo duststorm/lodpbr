@@ -93,11 +93,11 @@ class OctreeNode {
             
     virtual ItemPtr merge (bool mode = true) = 0;
     
-    virtual Real perpendicularError ( Vector3 eye) const = 0;
+    virtual Real perpendicularError ( Vector3& eye) const = 0;
     
     virtual Real tangencialError (const Vector3& eye) const = 0;
     
-    virtual Real geometricError	(const Vector3& eye) const = 0;
+    virtual Real geometricError	( Vector3& eye) const = 0;
     
     virtual Real normalCone () const = 0;
     

@@ -249,16 +249,16 @@ public:
     
     // Por que passando como const VEctor3& eye , da error de disqualified  ....
     // Paper Sequential Point Trees
-    virtual Real perpendicularError (Vector3 eye) const
+    virtual Real perpendicularError (Vector3& eye) const
     {
     	
     	if (mSurfel != NULL) 
     	{
-    		Real cos = mSurfel->Normal().Norm() * eye.Norm();
-    	
-    		Real ImageError = (ep*std::sqrt(1- cos*cos))/eye.Length();
-    	
-    		return ImageError;
+//    		Real cos = mSurfel->Normal().Norm() * eye.Norm();
+//    	
+//    		Real ImageError = (ep*std::sqrt(1- cos*cos))/eye.Length();
+//    	
+//    		return ImageError;
     	}
     	
     	return HUGE_VAL;
@@ -269,14 +269,17 @@ public:
     	return HUGE_VAL;
     }
     // Será a junção dos dois erros anteriores
-    virtual Real geometricError (const Vector3& eye) const
+    virtual Real geometricError (Vector3& eye) const
     {
-    	return HUGE_VAL;
+    	
+    	return (mGeometricError/eye.Length());
+    	
     }
     
-    void ComputeTangencialError (MergeEllipses &Merge)
+    Real ComputeTangencialError (MergeEllipses &Merge)
     {
     	LAL::Camera camera;
+    	Real et;
     	
     	camera.SetUp(Merge.MinorAxis().second);
     	camera.SetPosition(LAL::Vector3<float>(Merge.Center().x,Merge.Center().y,Merge.Center().z));
@@ -336,21 +339,28 @@ public:
             green += outputBuffer[i + 1];            	                  
         }
         
-        std::cout << "red " << red << std::endl;
-        std::cout << "green " << green << std::endl;
-        std::cout << " P " << 100.f*(green/(green+red)) << "%" << std::endl;
+        delete[] outputBuffer;
+        
+//        std::cout << "red " << red << std::endl;
+//        std::cout << "green " << green << std::endl;
+//        std::cout << " P " << 100.f*(green/(green+red)) << "%" << std::endl;
+        
+        et = static_cast<Real> ( 1- (green/(green+red)) );
+        
+        return ( et );
     }
 
-    void ComputePerpendicularError (bool mode)
+    Real ComputePerpendicularError (bool mode)
     {
     	std::list<Real> lEpMin;
     	std::list<Real> lEpMax;
 
-    	Real epMax = static_cast<Real>(0);
-    	Real epMin = static_cast<Real>(0);
+    	Real epMax 			= static_cast<Real>(0);
+    	Real epMin 			= static_cast<Real>(0);
 
-    	Real di	   = static_cast<Real>(0);
-
+    	Real di	   			= static_cast<Real>(0);
+    	Real ep				= static_cast<Real>(0);  
+    	
     	Real lNormalConeCos = static_cast<Real>(1);
     	Real lNormalConeSin = static_cast<Real>(1);
     	Real lTempCos		= static_cast<Real>(1);
@@ -420,6 +430,7 @@ public:
     	else 
     		mNormalCone = std::sqrt(1.0 - (mNormalCone*mNormalCone));
 
+    	return ( ep );
     }
             
 
@@ -467,8 +478,13 @@ public:
         	MergeEllipses lMerge = MergeEllipses(lLeafSurfel);
     		mSurfel = lMerge.NewPtrSurfel();
     		
-    		ComputePerpendicularError(mode);
-    		ComputeTangencialError(lMerge);
+    		Real ep,et;
+    		
+    		ep = ComputePerpendicularError(mode);
+    		et = ComputeTangencialError(lMerge);
+    		
+    		mGeometricError = std::sqrt( (ep*ep) + (et*et) ); 
+    			
         }else
         {
         	mSurfel = NULL;
@@ -486,7 +502,8 @@ private:
 	  
 	  int 		mlevel;
 	  
-	  Real ep;
+	  Real mGeometricError;
+	  
 	  Real mNormalCone;
 };
 

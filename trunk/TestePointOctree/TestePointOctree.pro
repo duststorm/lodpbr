@@ -77,7 +77,7 @@ FORMS += ui/interface.ui
 
 # matrixLibrary/Vector3.cpp
 # LIBRARIES
-unix:LIBS = -L/tmp/workspace/TestePointOctree/GLSLKernel \
+unix:LIBS = -LGLSLKernel \
     -lglslKernel
 
 # Output
