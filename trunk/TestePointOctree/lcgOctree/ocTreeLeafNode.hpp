@@ -181,7 +181,7 @@ public:
     	return HUGE_VAL;
     }
     
-    virtual Real tangencialError (const Vector3& eye) const
+    virtual Real tangencialError ( Vector3& eye) const
     {
     	return HUGE_VAL;
     }

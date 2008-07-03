@@ -95,7 +95,7 @@ class OctreeNode {
     
     virtual Real perpendicularError ( Vector3& eye) const = 0;
     
-    virtual Real tangencialError (const Vector3& eye) const = 0;
+    virtual Real tangencialError ( Vector3& eye) const = 0;
     
     virtual Real geometricError	( Vector3& eye) const = 0;
     

@@ -251,21 +251,42 @@ public:
     // Paper Sequential Point Trees
     virtual Real perpendicularError (Vector3& eye) const
     {
-    	
+  	
     	if (mSurfel != NULL) 
     	{
-//    		Real cos = mSurfel->Normal().Norm() * eye.Norm();
-//    	
-//    		Real ImageError = (ep*std::sqrt(1- cos*cos))/eye.Length();
-//    	
-//    		return ImageError;
+    		Real cos = mSurfel->Normal().Norm() * eye.Norm();
+    		
+    		std::cout << " sin"<< std::sqrt(1.0 - cos*cos)  << std::endl;
+    		std::cout << " cos"<< cos << std::endl;
+    		std::cout << " acos"<< std::acos(cos) << std::endl;
+    		
+    		Real ImageError = (epp*std::sqrt(1.0 - cos*cos))/eye.Length();
+    	
+    		return ImageError;
     	}
     	
     	return HUGE_VAL;
     }
     // Paper Sequential Point Trees
-    virtual Real tangencialError (const Vector3& eye) const
+    virtual Real tangencialError (Vector3& eye) const
     {
+    	
+    	if (mSurfel != NULL) 
+    	{
+    		Real cos = mSurfel->Normal().Norm() * eye.Norm();
+
+    		std::cout << " sin"<< std::sqrt(1.0 - cos*cos)  << std::endl;
+    		std::cout << " cos"<< cos << std::endl;
+    		std::cout << " acos"<< std::acos(cos) << std::endl;
+    		
+    		Real ImageError = (ett*cos)/eye.Length();
+    	
+    		std::cout << " et "<< ImageError << std::endl;
+    		
+    		return ImageError;
+    	}
+    	
+    	
     	return HUGE_VAL;
     }
     // Será a junção dos dois erros anteriores
@@ -345,7 +366,7 @@ public:
 //        std::cout << "green " << green << std::endl;
 //        std::cout << " P " << 100.f*(green/(green+red)) << "%" << std::endl;
         
-        et = static_cast<Real> ( 1- (green/(green+red)) );
+        et = static_cast<Real> ( (1.0f - (green/(green+red)) ) )  ;
         
         return ( et );
     }
@@ -482,7 +503,8 @@ public:
     		
     		ep = ComputePerpendicularError(mode);
     		et = ComputeTangencialError(lMerge);
-    		
+    		ett = et;
+    		epp = ep;
     		mGeometricError = std::sqrt( (ep*ep) + (et*et) ); 
     			
         }else
@@ -501,6 +523,8 @@ private:
 	  ItemPtr 	mSurfel;
 	  
 	  int 		mlevel;
+	  
+	  Real ett,epp;
 	  
 	  Real mGeometricError;
 	  
