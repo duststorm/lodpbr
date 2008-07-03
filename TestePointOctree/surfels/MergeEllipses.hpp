@@ -110,15 +110,15 @@ public:
 
 
 		ListPtrPoint3 		lPoints;
-		ListPtrPoint3 		lBoundariesPoints;
+		ListPtrPoint3 		lPtrBoundariesPoints;
 		PtrPoint3 			lPoint;
 
 
 		for (PtrSurfelIterator itEllipse = mEllipses.begin(); itEllipse != mEllipses.end(); ++itEllipse)
 		{
-			lBoundariesPoints = (*itEllipse)->BoundariesSamples(8);
+			lPtrBoundariesPoints = (*itEllipse)->PtrBoundariesSamples(8);
 
-			for(ListPtrPoint3Iterator it = lBoundariesPoints.begin();it != lBoundariesPoints.end();++it)
+			for(ListPtrPoint3Iterator it = lPtrBoundariesPoints.begin();it != lPtrBoundariesPoints.end();++it)
 			{
 
 				lPoint = ProjectPointToPlane(mNewNormal,mNewCenter,(*(*it)) );
@@ -126,7 +126,7 @@ public:
 
 			}
 
-			lBoundariesPoints.clear();
+			lPtrBoundariesPoints.clear();
 		}
 
 		mProjectedPoint.clear();

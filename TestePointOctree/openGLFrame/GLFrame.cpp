@@ -120,7 +120,7 @@ void GLFrame::SIZE(OctreeNode<float,Surfel<float>* > * pNode, long int& cont,std
 		for(int i = 0; i < 8; ++i)
 			SIZE(lInternalNode->son[i],cont,oi);
 				
-		oi[lInternalNode->level()].push_back(lInternalNode->perpendicularError(camera.Eyes()));  
+		//oi[lInternalNode->level()].push_back(lInternalNode->perpendicularError(camera.Eyes()));  
 				
 		cont += sizeof(*lInternalNode);
 	}
@@ -166,7 +166,7 @@ void GLFrame::LODSelection( OctreeNode<float,Surfel<float>* > * pNode, int& cont
 				else 
 					glColor3f(1.0,1.0,1.0);
 				//glVertex3fv((*surfe)->Center().ToRealPtr());
-				(*surfe)->draw();
+				(*surfe)->draw(20);
 				cont++;
 			}
 
@@ -198,7 +198,7 @@ void GLFrame::LODSelection( OctreeNode<float,Surfel<float>* > * pNode, int& cont
 			if ( cosNDir < lInternalNode->normalCone())
 			{
 					
-				if ( (lInternalNode->perpendicularError(eyeInverse) < Threshold))
+				if ( (lInternalNode->geometricError(eyeInverse) < Threshold))
 					{
 						glPointSize(1.0);
 
@@ -217,7 +217,7 @@ void GLFrame::LODSelection( OctreeNode<float,Surfel<float>* > * pNode, int& cont
 						else 
 							glColor3f(1.0,1.0,1.0);
 
-						lInternalNode->surfel()->draw();
+						lInternalNode->surfel()->draw(20);
 						LAL::Point3<float> p = lInternalNode->surfel()->Center();
 						//glVertex3fv( p.ToRealPtr() );
 						cont++;

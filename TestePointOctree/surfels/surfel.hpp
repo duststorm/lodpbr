@@ -48,8 +48,11 @@ template <class Real > class Surfel
 	 typedef LAL::Color         Color;
 
 
+	 typedef std::list<Point3>       			ListPoint3;
+	 typedef typename ListPoint3::iterator  	ListPoint3Iterator;
 	 typedef std::list<Point3* >       			ListPtrPoint3;
 	 typedef typename ListPtrPoint3::iterator  	ListPtrPoint3Iterator;
+	 
 
 	 Surfel ()
 	 {
@@ -310,7 +313,7 @@ template <class Real > class Surfel
 
 	 }	   
 	   	 
-	 std::list<Point3* > BoundariesSamples(unsigned int pSteps) const
+	 std::list<Point3* > PtrBoundariesSamples(unsigned int pSteps) const
 	 { 
 
 		 if (pSteps == 0)
@@ -363,20 +366,69 @@ template <class Real > class Surfel
 
 	 }
 	 
+	 std::list<Point3> BoundariesSamples(unsigned int pSteps) const
+	 { 
+
+		 if (pSteps == 0)
+		 {
+			 pSteps = 4;
+		 }
+		 	 
+		 std::list<Point3> lPoints;
+
+		 Real lAlpha 			= 0.0;     
+		 Real lSinAlpha 		= 0.0;
+		 Real lCosAlpha 		= 0.0;
+
+		 Real lX 				= 0.0;
+		 Real lY 				= 0.0;
+		 Real lFactor 			= 0.0;
+
+		 Real lCos				= 0.0;
+		 Real lSin				= 0.0;
+		 Vector3 lDirection     = Vector3();
+		 
+		 Real i = 0;
+
+		 while (i < 360) 
+		 {
+
+			 lAlpha = ( i / 180 ) * LAL::Math::PI;       
+			 lSinAlpha =  sin( lAlpha );
+			 lCosAlpha =  cos( lAlpha );
+
+
+			 lX = mMinorAxis.first * lCosAlpha;
+
+			 lY = mMajorAxis.first * lSinAlpha;
+
+			 lFactor = sqrt( lX*lX + lY*lY );
+
+			 lCos = lX / lFactor;
+			 lSin = lY / lFactor;
+
+			 lDirection = (mMinorAxis.second * lCos) + (mMajorAxis.second * lSin);
+		 
+			 lPoints.push_back( Point3( (mCenter + (lDirection * lFactor)) ) );
+
+			 i = i + (360.0 / pSteps);
+			 
+		 } 
+
+		 return lPoints;
+
+	 }
+	 
 	 void draw(int p = 8)
 	 {
 		 
-		 	ListPtrPoint3 lBoundaries = this->BoundariesSamples(p);
- 		 	
-			for(ListPtrPoint3Iterator it = lBoundaries.begin();it != lBoundaries.end();++it)
+		 	ListPoint3 lBoundaries = this->BoundariesSamples(p);
+		 	glPointSize(1.0);
+			for(ListPoint3Iterator it = lBoundaries.begin();it != lBoundaries.end();++it)
 			{		
-				glPointSize(1.0);
-							
-			 	glVertex3fv((*it)->ToRealPtr());
+				glVertex3fv( it->ToRealPtr());
 			}
 			
-			
-
 	 }
 
  private:
