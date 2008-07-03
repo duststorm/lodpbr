@@ -186,19 +186,19 @@ void GLFrame::LODSelection( OctreeNode<float,Surfel<float>* > * pNode, int& cont
 		}
 		else
 		{
-			LAL::Vector3<float> eyeInverse = camera.Eyes();
+			LAL::Vector3<float> eye = camera.Eyes();
 
 			LAL::Vector3<float> p (lInternalNode->surfel()->Center().x,lInternalNode->surfel()->Center().y,lInternalNode->surfel()->Center().z);
-			LAL::Vector3<float> dir =  p - eyeInverse ;
+			LAL::Vector3<float> dir =  p - camera.Position() ;
 
-			dir.Normalize();
-			
-			float cosNDir = (dir * lInternalNode->surfel()->Normal());
+						
+			float cosNDir = (dir.Norm() * lInternalNode->surfel()->Normal());
 
 			if ( cosNDir < lInternalNode->normalCone())
 			{
-					
-				if ( (lInternalNode->geometricError(eyeInverse) < Threshold))
+				
+				
+				if ( (lInternalNode->tangencialError(eye) < Threshold))
 					{
 						glPointSize(1.0);
 
