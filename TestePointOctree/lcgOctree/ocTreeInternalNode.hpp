@@ -367,6 +367,7 @@ public:
 //        std::cout << " P " << 100.f*(green/(green+red)) << "%" << std::endl;
         
         et = static_cast<Real> ( (1.0f - (green/(green+red)) ) )  ;
+        et *= Merge.MajorAxis().first;
         
         return ( et );
     }
@@ -503,8 +504,7 @@ public:
     		
     		ep = ComputePerpendicularError(mode);
     		et = ComputeTangencialError(lMerge);
-    		ett = et;
-    		epp = ep;
+    		   		
     		mGeometricError = std::sqrt( (ep*ep) + (et*et) ); 
     			
         }else
