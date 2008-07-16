@@ -198,7 +198,7 @@ void GLFrame::LODSelection( OctreeNode<float,Surfel<float>* > * pNode, int& cont
 			{
 				
 				
-				if ( (lInternalNode->tangencialError(eye) < Threshold))
+				if ( (lInternalNode->geometricError(eye) < Threshold))
 					{
 						glPointSize(1.0);
 
