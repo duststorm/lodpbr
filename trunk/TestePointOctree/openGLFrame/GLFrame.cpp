@@ -27,7 +27,7 @@ GLFrame::GLFrame(QWidget *parent):QGLWidget(parent)
 	
 	surfels = Surfels<float>();
 	
-	Threshold = 0.0;
+	Threshold = 1.0;
 	CameraStep = 0.01;
 	mode = true;
    
