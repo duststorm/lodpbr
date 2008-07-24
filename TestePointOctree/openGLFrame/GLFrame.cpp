@@ -164,7 +164,7 @@ void GLFrame::LODSelection( OctreeNode<float,Surfel<float>* > * pNode, int& cont
 				else if ( pNode->level() == 7 )
 					glColor3f(0.0,0.0,1.0);
 				else 
-					glColor3f(1.0,1.0,1.0);
+					glColor3f(0.5,0.5,0.5);
 				//glVertex3fv((*surfe)->Center().ToRealPtr());
 				(*surfe)->draw(20);
 				cont++;
@@ -189,16 +189,16 @@ void GLFrame::LODSelection( OctreeNode<float,Surfel<float>* > * pNode, int& cont
 			LAL::Vector3<float> eye = camera.Eyes();
 
 			LAL::Vector3<float> p (lInternalNode->surfel()->Center().x,lInternalNode->surfel()->Center().y,lInternalNode->surfel()->Center().z);
-			LAL::Vector3<float> dir =  p - camera.Position() ;
+			LAL::Vector3<float> dir =  p - eye ;
 
 						
 			float cosNDir = (dir.Norm() * lInternalNode->surfel()->Normal());
 
-			if ( cosNDir < lInternalNode->normalCone())
+			if ( cosNDir < 0.0 )
 			{
 				
-				
-				if ( (lInternalNode->geometricError(eye) < Threshold))
+			
+				if ( (lInternalNode->geometricError(eye) < Threshold) )
 					{
 						glPointSize(1.0);
 
@@ -207,7 +207,7 @@ void GLFrame::LODSelection( OctreeNode<float,Surfel<float>* > * pNode, int& cont
 						else if ( lInternalNode->level() == 3 )
 							glColor3f(1.0,0.0,1.0);
 						else if ( lInternalNode->level() == 4 )
-							glColor3f(1.0,1.0,0.0);
+							glColor3f(0.4,0.4,0.0);
 						else if ( lInternalNode->level() == 5 )
 							glColor3f(0.0,1.0,0.0);
 						else if ( lInternalNode->level() == 6 )
@@ -215,10 +215,10 @@ void GLFrame::LODSelection( OctreeNode<float,Surfel<float>* > * pNode, int& cont
 						else if ( lInternalNode->level() == 7 )
 							glColor3f(0.0,0.0,1.0);
 						else 
-							glColor3f(1.0,1.0,1.0);
+							glColor3f(0.5,0.5,0.5);
 
 						lInternalNode->surfel()->draw(20);
-						LAL::Point3<float> p = lInternalNode->surfel()->Center();
+						//LAL::Point3<float> p = lInternalNode->surfel()->Center();
 						//glVertex3fv( p.ToRealPtr() );
 						cont++;
 
@@ -274,7 +274,8 @@ void GLFrame::initializeGL()
 
 	GLfloat light_position[] = {0.0, 0.5, 10.0, 0.0};
 	
-	glClearColor(0.5f, 0.5f, 0.5f, 1.0f);           //cor fundo
+	//glClearColor(0.5f, 0.5f, 0.5f, 1.0f);           //cor fundo
+	glClearColor(1.0f, 1.0f, 1.0f, 0.0f);           //cor fundo
 	glShadeModel(GL_SMOOTH);                      	//gouraud
 	glMaterialfv(GL_FRONT_AND_BACK,GL_DIFFUSE, luzDifusa);//refletancia do material
 	glMaterialfv(GL_FRONT_AND_BACK,GL_SPECULAR, especularidade);//refletancia do material
@@ -319,25 +320,6 @@ void GLFrame::drawPoints() {
       
    glEnd();
    
-      glColor3f(1.0,0.0,0.0);
-      glBegin(GL_TRIANGLE_FAN);
-      me.NewSurfel().draw();
-      glEnd();
-      glColor3f(0.0,1.0,0.0);
-    std::list<LAL::Point3<float>* >::iterator it;
-   cont = 0;
-   for( it = me.mProjectedPoint.begin(); it != me.mProjectedPoint.end(); ++it  )
-   {
-   	if ( (cont % 8) == 0)
-   		glBegin(GL_TRIANGLE_FAN);
-   		
-   			glVertex3fv(  (*it)->ToRealPtr()  );
-   			
-   		cont++;		
-   	if ( (cont % 8) == 0)
-   		glEnd();
-   	       	
-   }
 //   
 //   glColor3f(1.0,0.0,0.0);
 //   glBegin(GL_TRIANGLE_FAN);
@@ -493,7 +475,7 @@ void GLFrame::paintGL()
 
 
     	}
-    	DrawGroud();
+    	//DrawGroud();
     }
     
 }
