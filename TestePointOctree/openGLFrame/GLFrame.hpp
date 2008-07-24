@@ -72,7 +72,7 @@ protected:
 
 private:
     void draw();
-    void drawPoints();
+    void drawPoints(int& cont);
     void model();
     void LODSelection( OctreeNode<float,Surfel<float>* > * pNode, int& cont);
     void SIZE( OctreeNode<float,Surfel<float>* > * pNode, long int& cont,std::map < int , std::vector<float> >& oi);
