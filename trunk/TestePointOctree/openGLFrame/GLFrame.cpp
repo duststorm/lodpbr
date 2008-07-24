@@ -149,7 +149,7 @@ void GLFrame::LODSelection( OctreeNode<float,Surfel<float>* > * pNode, int& cont
 			if ( cosNDir < 0.0)
 			{
 				//						LAL::Point3<float> point = (*surfe)->Center();
-				glPointSize((*surfe)->MajorAxis().first);
+				glPointSize(3.0);
 				//(*surfe)->draw();
 				if ( pNode->level() == 2 )
 					glColor3f(1.0,0.0,0.0);
@@ -200,7 +200,7 @@ void GLFrame::LODSelection( OctreeNode<float,Surfel<float>* > * pNode, int& cont
 			
 				if ( (lInternalNode->geometricError(eye) < Threshold) )
 					{
-						glPointSize(lInternalNode->surfel()->MajorAxis().first);
+						glPointSize(3.0);
 
 						if ( lInternalNode->level() == 2 )
 							glColor3f(1.0,0.0,0.0);
@@ -299,22 +299,22 @@ void GLFrame::initializeGL()
               
                 
 
-void GLFrame::drawPoints() {
+void GLFrame::drawPoints(int& cont) {
 
    glDisable(GL_DEPTH_TEST);
    glDisable(GL_LIGHTING);		
    glPointSize(3.0);
    glBegin(GL_POINTS);
    
-   int cont = 0;
+   
    
    LODSelection(octree.root,cont);
            
    //me.NewSurfel().draw();
    
    //glVertex3fv( su.Center().ToRealPtr() );
-   //renderText(20, 20, QString("Hello World"));
-   std::cout << "Total " <<  mode << " = " << cont << std::endl;
+   
+
 //   su3.draw(); 
 //   su1->draw();
 //   su2.draw();
@@ -465,13 +465,20 @@ void GLFrame::paintGL()
     glLoadIdentity();
 
     glMultMatrixf((~camera.ViewMatrix()).ToRealPtr());
-           
-  
+    
+    int cont = 0;
+    
     if ( surfels.surfels.size() != 0 )
     {
     	if (renderMode_A == Points)
     	{
-    		drawPoints();
+    		drawPoints(cont);
+    		glColor3f(1.0,1.0,1.0);
+    		renderText(10,5,QString("___________________________"));
+    		renderText(10,25,QString("Number of Points :"));renderText(145,25,QString::number(cont));
+    		renderText(10,30,QString("___________________________"));
+    		
+    		
 //    		for (OctreeIterator<float, Surfel<float>* > oi = octree.begin();oi != octree.end();++oi )
 //    			drawBox(octree.box(oi));
 
