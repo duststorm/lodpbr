@@ -1,30 +1,30 @@
 #ifndef TRACKBALL_HPP_
 #define TRACKBALL_HPP_
 
-#include "slal/Quaternion.hpp"
-#include "slal/Matrix4x4.hpp"
+#include "math/Quaternion.hpp"
+#include "math/Matrix4x4.hpp"
 
 
 template < class Real>
-	class Trackball 
+	class Trackball
 	{
 	  private:
-		  
+
 	    int width, height;
-	
-	    LAL::Quaternion<Real> mOrientation; 
+
+	    LAL::Quaternion<Real> mOrientation;
 	    LAL::Quaternion<Real> startOrientation;
-	    
+
 	    LAL::Vector3<Real> startVector;
 	    LAL::Vector3<Real> endVector;
-	    
+
 	    void MapToSphere(LAL::Vector3<Real> &v);
-	    
+
 	  public:
 	    Trackball(int w,  int h):width( w ), height( h ) {}
-	
+
 	    Trackball() {}
-	    
+
 	    void SetBounds (int pw, int ph)
 	    {
 	    	width = pw;

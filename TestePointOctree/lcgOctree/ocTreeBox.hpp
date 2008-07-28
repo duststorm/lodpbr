@@ -1,6 +1,6 @@
 /*
 **	octreeBox.h - implements an octant container.
-**  
+**
 
   Program:   trgl
   Module:    $RCSfile: octreeBox.h,v $
@@ -9,15 +9,15 @@
   Version:   $Revision: 1.5 $
 
 **      Created: Apr 28 2004.
-**	
+**
 **	purpose:  A box describing an octant for an octree.
 */
 
 #ifndef __OCTREE_BOX__
 #define __OCTREE_BOX__
 
-#include "slal/BoundingBox3.hpp"
-#include "slal/Point3.hpp"
+#include "math/BoundingBox3.hpp"
+#include "math/Point3.hpp"
 
 namespace lcgOctree {
 ///
@@ -53,7 +53,7 @@ double distance(const LAL::Point3<Real>& q, const LAL::Point3<Real>& p)
     return sqrt( b );
 }
 };
-   
+
 ///
 /// A class describing the geometry of an octant
 ///
@@ -64,7 +64,7 @@ public:
 
 typedef typename LAL::Point3<Real> Point3;
 typedef typename LAL::BoundingBox3<Real> Bbox3;
-    
+
 /// Constructor
 /// @param p1 first corner of box
 /// @param p2 second corner of box
@@ -147,13 +147,13 @@ bool intersect (const Point3& p) const {
 /// @return whether the boxes do intersect.
 ///
 bool intersect (const Box_3& box2) const {
-  
+
   Point3 Amin = this->min();
   Point3 Amax = this->max();
 
   Point3 Bmin = box2.min();
-  Point3 Bmax = box2.max(); 
-      
+  Point3 Bmax = box2.max();
+
   return lcgOctree::OctMAX (Amin.x, Bmin.x) < lcgOctree::OctMIN(Amax.x, Bmax.x) &&
          lcgOctree::OctMAX (Amin.y, Bmin.y) < lcgOctree::OctMIN(Amax.y, Bmax.y) &&
          lcgOctree::OctMAX (Amin.z, Bmin.z) < lcgOctree::OctMIN(Amax.z, Bmax.z);
@@ -233,7 +233,7 @@ Real distance(const Point3& p) const
     return lcgOctree::distance ( p, cls );
 }
 
-/// Return the box center 
+/// Return the box center
    Point3 center () const {
 
       Point3 pmin = this->min();
@@ -248,7 +248,7 @@ Real distance(const Point3& p) const
    /// Returns the radius of the smallest sphere which containts the box
    Real radius () const {
 
-        // 0.5*deltaside*sqrt(3) 
+        // 0.5*deltaside*sqrt(3)
         return 0.5*(this->max().x() - this->min().x())*1.73205081;
    }
 
