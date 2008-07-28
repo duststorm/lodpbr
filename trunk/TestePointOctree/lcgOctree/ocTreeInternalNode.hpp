@@ -8,7 +8,7 @@
 #include <list>
 #include <set>
 #include <map>
-#include <GL/gl.h> 
+#include <GL/gl.h>
 
 //[Project includes]
 #include "ocTreeRefine.hpp"
@@ -16,46 +16,46 @@
 #include "ocTreeLeafNode.hpp"
 
 #include "surfels/MergeEllipses.hpp"
-#include "slal/Math.hpp"
+#include "math/Math.hpp"
 #include "Scene/Camera.hpp"
 
 ///
-/// This represents an internal Octree Node. These point to eight 
+/// This represents an internal Octree Node. These point to eight
 /// son nodes each.
 ///
 template <class Real, class ItemPtr, class Refine = OverflowRefine<Real,ItemPtr> >
 class OctreeInternalNode : public OctreeNode<Real, ItemPtr, Refine> {
 
-    typedef OctreeNode<Real, ItemPtr, Refine> OctreeNode;      
+    typedef OctreeNode<Real, ItemPtr, Refine> OctreeNode;
 
     typedef  LAL::Point3<Real>   Point3;  ///< A Point in 3D
     typedef  LAL::Vector3<Real>  Vector3;  ///< A Point in 3D
-    typedef  MergeEllipses<Real> MergeEllipses; 
-    
+    typedef  MergeEllipses<Real> MergeEllipses;
+
     typedef Box_3<Real> Box3; ///< Octant box type
     typedef std::list<ItemPtr> ItemPtrList; ///< List of items stored inside leaf nodes
     typedef std::set<ItemPtr> ItemPtrSet;   ///< Return type of overlap
     typedef typename std::set<ItemPtr>::iterator ItemPtrSetIterator;
     typedef typename std::list<ItemPtr>::iterator ItemPtrListIterator;
     typedef typename std::list<ItemPtr>::iterator 		listItemPtrIterator;
-       
+
     friend class OctreeLeafNode<Real, ItemPtr, Refine>; ///< Leaf nodes are friends
     friend class OctreeIterator<Real, ItemPtr, Refine>; ///< Octree iterators are friends
-    
+
 public:
-	
+
 	OctreeNode* son[8];
 
 	virtual void setMean ( const Point3& m)
 	{
 		this->mean_ = m;
 	}
-	
+
 	virtual Point3 mean () const
 	{
 		return this->mean_;
 	}
-	
+
 	/// constructor
     OctreeInternalNode () {
        son [0] = son [1] = son [2] = son [3] =
@@ -89,7 +89,7 @@ public:
             }
             mult *= 2;
         }
-        return son[index]->searchLeaf (Box3 (Point3(min[0], min[1], min[2]), 
+        return son[index]->searchLeaf (Box3 (Point3(min[0], min[1], min[2]),
                                              Point3(max[0], max[1], max[2])), p);
     }
 
@@ -101,30 +101,30 @@ public:
     virtual void insert (const Box3& world, int level, const ItemPtr p, OctreeNode*& fatherPtr) {
 
     	mlevel = level;
-    	
+
         for (int index = 0; index < 8; ++index) {
             Box3 suboctant = world.coords(index,mean_);
-            
+
             // It is necessary to define a method do_intersect (Box_3, Item)
             if (lcgOctree::checkIntersection(suboctant, p))
             {
               	son[index]->insert(suboctant, level+1, p, son[index]);
             }
-            
-            
+
+
         }
     }
 
-    
-    virtual void split (const Box3& world, int level, OctreeNode*& fatherPtr) 
+
+    virtual void split (const Box3& world, int level, OctreeNode*& fatherPtr)
     {
         for (int index = 0; index < 8; ++index) {
         	Box3 suboctant = world.coords(index,mean_);
         	son[index]->split(suboctant,level + 1,son[index]);
         }
     }
-    
-    
+
+
     /// Returns the number of pointers to items inserted into this node
     virtual int itemPtrCount () const {
         int sum = 0;
@@ -149,18 +149,18 @@ public:
                for (ItemPtrSetIterator pi = temp_overlap.begin (); pi != temp_overlap.end(); ++pi){
                    internal_overlap.insert(*pi);
                }
-           }  
+           }
        }
 
        return internal_overlap;
     }
-        
+
     /// Returns the euclidean distance between p and the closest object stored
     /// in the octree
     ///
     /// @param world dimensions of this node
     /// @param best best estimate (closest object) found so far
-    /// @param p Point in relation to which the distance will be computed 
+    /// @param p Point in relation to which the distance will be computed
     /// @return euclidean distance
     ///
     virtual Real distance (const Box3& world, Real best, const Point3& p) const
@@ -174,8 +174,8 @@ public:
     ///
     /// @param world dimensions of this node
     /// @param best best estimate (closest object) found so far
-    /// @param p Point in relation to which the distance will be computed 
-    /// @param clsPt closest point  
+    /// @param p Point in relation to which the distance will be computed
+    /// @param clsPt closest point
     /// @return euclidean distance
     ///
     virtual Real distance (const Box3& world, Real best, const Point3& p, Point3& clsPt) const
@@ -183,11 +183,11 @@ public:
     	typedef typename std::less<Real> lessReal;
     	typedef std::multimap <Real, int, lessReal > multimapReal;
         typedef typename std::multimap <Real, int, lessReal >::iterator multimapRealIterator;
-        
+
         multimapReal iSon;
-        
+
         for (int i = 0; i < 8; ++i)
-        { 
+        {
             iSon.insert (std::pair <Real, int> (world.coords(i,mean_).distance(p), i));
         }
         for (multimapRealIterator j = iSon.begin (); j != iSon.end(); ++j)
@@ -202,134 +202,134 @@ public:
             }
         }
         return best;
-    }   
-    
+    }
+
     /// Returns true or false depending on whether this is leaf node or not
     virtual bool isLeaf () const { return false; }
-    
-    
+
+
     /// FUNCOES QUE EU CRIEI Otimizar isso
-    
+
     virtual ItemPtrList itemList () const
     {
     	ItemPtrList  leafList;
-    	
+
     	for (int sonIndex = 0; sonIndex < 8 ; ++sonIndex)
     	{
     		ItemPtrList  temp_Leaf = son[sonIndex]->itemList();
-    		
+
     		if (!temp_Leaf.empty()){
     			for (ItemPtrListIterator pi = temp_Leaf.begin (); pi != temp_Leaf.end(); ++pi){
     				leafList.push_back(*pi);
     			}
-    		}  
-    		
+    		}
+
     	}
-    	
+
     	return leafList;
     }
-    
+
     virtual int level () const
     {
     	return mlevel;
     }
-    
+
     virtual Real normalCone() const
     {
-    	return mNormalCone;	
+    	return mNormalCone;
     }
-    
-     
+
+
     virtual ItemPtr surfel() const
     {
     	return mSurfel;
     }
-       
-    
-    
+
+
+
     // Por que passando como const VEctor3& eye , da error de disqualified  ....
     // Paper Sequential Point Trees
     virtual Real perpendicularError (Vector3& eye) const
     {
-  	
-    	if (mSurfel != NULL) 
-    	{
-    		Real cos = mSurfel->Normal().Norm() * eye.Norm();
-    		
-    		std::cout << " sin"<< std::sqrt(1.0 - cos*cos)  << std::endl;
-    		std::cout << " cos"<< cos << std::endl;
-    		std::cout << " acos"<< std::acos(cos) << std::endl;
-    		
-    		Real ImageError = (epp*std::sqrt(1.0 - cos*cos))/eye.Length();
-    	
-    		return ImageError;
-    	}
-    	
-    	return HUGE_VAL;
-    }
-    // Paper Sequential Point Trees
-    virtual Real tangencialError (Vector3& eye) const
-    {
-    	
-    	if (mSurfel != NULL) 
+
+    	if (mSurfel != NULL)
     	{
     		Real cos = mSurfel->Normal().Norm() * eye.Norm();
 
     		std::cout << " sin"<< std::sqrt(1.0 - cos*cos)  << std::endl;
     		std::cout << " cos"<< cos << std::endl;
     		std::cout << " acos"<< std::acos(cos) << std::endl;
-    		
-    		Real ImageError = (ett*cos)/eye.Length();
-    	
-    		std::cout << " et "<< ImageError << std::endl;
-    		
+
+    		Real ImageError = (epp*std::sqrt(1.0 - cos*cos))/eye.Length();
+
     		return ImageError;
     	}
-    	
-    	
+
+    	return HUGE_VAL;
+    }
+    // Paper Sequential Point Trees
+    virtual Real tangencialError (Vector3& eye) const
+    {
+
+    	if (mSurfel != NULL)
+    	{
+    		Real cos = mSurfel->Normal().Norm() * eye.Norm();
+
+    		std::cout << " sin"<< std::sqrt(1.0 - cos*cos)  << std::endl;
+    		std::cout << " cos"<< cos << std::endl;
+    		std::cout << " acos"<< std::acos(cos) << std::endl;
+
+    		Real ImageError = (ett*cos)/eye.Length();
+
+    		std::cout << " et "<< ImageError << std::endl;
+
+    		return ImageError;
+    	}
+
+
     	return HUGE_VAL;
     }
     // Será a junção dos dois erros anteriores
     virtual Real geometricError (Vector3& eye) const
     {
-    	
+
     	return (mGeometricError/eye.Length());
-    	
+
     }
-    
+
     Real ComputeTangencialError (MergeEllipses &Merge)
     {
     	LAL::Camera camera;
     	Real et;
-    	
+
     	camera.SetUp(Merge.MinorAxis().second);
     	camera.SetPosition(LAL::Vector3<float>(Merge.Center().x,Merge.Center().y,Merge.Center().z));
     	camera.SetEyes(LAL::Vector3<float>(Merge.Center().x,Merge.Center().y,Merge.Center().z)+(-Merge.Normal()*1.0f));
-   	
-    	
+
+
         glViewport(0, 0, 32, 32);
         camera.SetWindowSize(32,32);
         glMatrixMode(GL_PROJECTION);
         glLoadIdentity();
-        
+
         camera.SetProjectionMatrix(-Merge.MajorAxis().first,Merge.MajorAxis().first,-Merge.MinorAxis().first,Merge.MinorAxis().first,-100.0f,100.0f);
         glLoadMatrixf((~camera.OrthographicProjectionMatrix()).ToRealPtr());
-        
+
         glMatrixMode(GL_MODELVIEW);
         glLoadIdentity();
-         
+
         glMultMatrixf((~camera.ViewMatrixNormal()).ToRealPtr());
-              
+
         glClearColor(0.0f,0.0f,0.0f,0.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         glDrawBuffer(GL_BACK);
         glDisable(GL_DEPTH_TEST);
-        
+
         glColor3f(1.0,0.0,0.0);
         glBegin(GL_TRIANGLE_FAN);
         	Merge.NewSurfel().draw(8);
         glEnd();
-        
+
         glColor3f(0.0,1.0,0.0);
     	int cont = 0;
     	typename std::list<Point3* >::iterator it;
@@ -338,37 +338,37 @@ public:
         	if ( (cont % 8) == 0)
         		glBegin(GL_TRIANGLE_FAN);
         			glVertex3fv(  (*it)->ToRealPtr()  );
-        			
-        		cont++;		
+
+        		cont++;
         	if ( (cont % 8) == 0)
         		glEnd();
-        	       	
+
         }
-        
+
         glFlush();
         glEnable(GL_DEPTH_TEST);
         GLfloat *outputBuffer = new GLfloat[32 * 32 * 4];
         glReadBuffer(GL_BACK);
         glReadPixels(0, 0, 32, 32, GL_RGBA, GL_FLOAT, &outputBuffer[0]);
-                
+
         float red   = 0.0f;
         float green = 0.0f;
-        
-        for (int i = 0; i < 4096; i+=4) 
+
+        for (int i = 0; i < 4096; i+=4)
         {
             red   += outputBuffer[i + 0];
-            green += outputBuffer[i + 1];            	                  
+            green += outputBuffer[i + 1];
         }
-        
+
         delete[] outputBuffer;
-        
+
 //        std::cout << "red " << red << std::endl;
 //        std::cout << "green " << green << std::endl;
 //        std::cout << " P " << 100.f*(green/(green+red)) << "%" << std::endl;
-        
+
         et = static_cast<Real> ( (1.0f - (green/(green+red)) ) )  ;
         et *= Merge.MajorAxis().first;
-        
+
         return ( et );
     }
 
@@ -381,8 +381,8 @@ public:
     	Real epMin 			= static_cast<Real>(0);
 
     	Real di	   			= static_cast<Real>(0);
-    	Real ep				= static_cast<Real>(0);  
-    	
+    	Real ep				= static_cast<Real>(0);
+
     	Real lNormalConeCos = static_cast<Real>(1);
     	Real lNormalConeSin = static_cast<Real>(1);
     	Real lTempCos		= static_cast<Real>(1);
@@ -392,7 +392,7 @@ public:
     	if (mode  == true)
     	{
 
-    		for (int index = 0; index < 8; ++index) 
+    		for (int index = 0; index < 8; ++index)
     		{
 
     			if (son[index]->surfel() != NULL)
@@ -449,23 +449,23 @@ public:
 
     	if ( mNormalCone < static_cast<Real>(0) )
     		mNormalCone = static_cast<Real>(1);
-    	else 
+    	else
     		mNormalCone = std::sqrt(1.0 - (mNormalCone*mNormalCone));
 
     	return ( ep );
     }
-            
 
-    
+
+
     // Juntas os oitos filhos (se tiver) usando técnica L21 do Progressive Splatting
-    virtual ItemPtr merge(bool mode) 
+    virtual ItemPtr merge(bool mode)
     {
     	ItemPtrList lLeafSurfel;
-       	
+
     	if ( mode == true)
     	{
 
-    		for (int index = 0; index < 8; ++index) 
+    		for (int index = 0; index < 8; ++index)
     		{
     			if (son[index]->merge(mode) != NULL)
     			{
@@ -474,60 +474,60 @@ public:
     			else
     			{
     		   		ItemPtrList  temp_Leaf = son[index]->itemList();
-    		    		
+
     		    		if (!temp_Leaf.empty()){
     		    			for (ItemPtrListIterator pi = temp_Leaf.begin (); pi != temp_Leaf.end(); ++pi){
     		    				lLeafSurfel.push_back(*pi);
     		    			}
-    		    		}  
+    		    		}
     			}
-    				
+
     		}
 
     	}else
     	{
-    		for (int index = 0; index < 8; ++index) 
+    		for (int index = 0; index < 8; ++index)
     		{
-    			son[index]->merge(mode); 
+    			son[index]->merge(mode);
 
     		}
-    		
+
 	   		lLeafSurfel = this->itemList();
      	}
-            	   	
+
         if (lLeafSurfel.size() > 0)
         {
         	MergeEllipses lMerge = MergeEllipses(lLeafSurfel);
     		mSurfel = lMerge.NewPtrSurfel();
-    		
+
     		Real ep,et;
-    		
+
     		ep = ComputePerpendicularError(mode);
     		et = ComputeTangencialError(lMerge);
-    		   		
-    		mGeometricError = std::sqrt( (ep*ep) + (et*et) ); 
-    			
+
+    		mGeometricError = std::sqrt( (ep*ep) + (et*et) );
+
         }else
         {
         	mSurfel = NULL;
         }
-               
-        	
+
+
     	return mSurfel;
     }
-    
-      
+
+
 private:
-	
+
 	  Point3 	mean_;
 	  ItemPtr 	mSurfel;
-	  
+
 	  int 		mlevel;
-	  
+
 	  Real ett,epp;
-	  
+
 	  Real mGeometricError;
-	  
+
 	  Real mNormalCone;
 };
 

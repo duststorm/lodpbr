@@ -1,8 +1,8 @@
 #ifndef __OCTREE_INTERSECT__
 #define __OCTREE_INTERSECT__
 
-#include "slal/BoundingBox3.hpp"
-#include "slal/Point3.hpp"
+#include "math/BoundingBox3.hpp"
+#include "math/Point3.hpp"
 #include "surfels/surfel.hpp"
 
 /// defines methods dependent on the geometry of the itens into the octree.

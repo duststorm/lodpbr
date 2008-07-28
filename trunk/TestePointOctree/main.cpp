@@ -2,12 +2,12 @@
 #include <iostream>
 #include <list>
 #include <algorithm>
-#include <ctime> 
+#include <ctime>
 
 #include "interface/myMainWindow.hpp"
 
-#include "slal/Vector3.hpp"
-#include "slal/Math.hpp"
+#include "math/Vector3.hpp"
+#include "math/Math.hpp"
 
 class ppp{
 public:
@@ -39,9 +39,9 @@ public:
     {
   	  return ( this->my );
     };
-    
-	
-	
+
+
+
     inline  float operator [] ( unsigned int i)  const
     {
 //  	  if ( i > 1 )
@@ -54,8 +54,8 @@ public:
 
   	  return (xy[i]);
     };
-    
-    inline  float& operator [] ( unsigned int i)  
+
+    inline  float& operator [] ( unsigned int i)
 
     {
 //  	  if ( i > 1 )
@@ -69,9 +69,9 @@ public:
 
   	  return (xy[i]);
     };
-    
 
-	
+
+
 	union
 	{
 		struct
@@ -81,8 +81,8 @@ public:
 		};
 		float xy[2];
 	};
-	         
-    
+
+
 };
 
 
@@ -93,16 +93,16 @@ int main(int argc, char *argv[])
 //	pp  p2(1.0,1.0);
 //	LAL::Vector3<float> v(1.0,1.0,0.0);
 //	LAL::Vector3<float> u(1.0,0.0,0.0);
-//	
+//
 //	std::cout << std::sqrt(2)*0.5 << "  =  " << u.norm() * v.norm() << std::endl;
-//			
-//	
+//
+//
 //	time_t start,end,startc,endc ;
 //	time (&start);
 //	unsigned long int i = 0;
 //	while(i  < 2000000000)
 //	{
-//		
+//
 //		p2.my = p2.mx + p2.my;
 //		i++;
 //	}
@@ -125,14 +125,14 @@ int main(int argc, char *argv[])
 //	dif = difftime (endc,startc);
 //
 //	std::cout << dif<< " minha" <<std::endl;
-//		
-	
+//
+
     QApplication app(argc, argv);
     if (!QGLFormat::hasOpenGL()) {
         cerr << "This system has no OpenGL support" << endl;
         return 1;
     }
-	
+
 	MyMainWindow * form = new MyMainWindow;
 	form->show();
 
@@ -144,14 +144,14 @@ int main(int argc, char *argv[])
 
 /*LAL::Vector3<double> g(3.0,4.0,-5.0);
 
-	
-	
+
+
 	a = p[1] - q[0];
 	p[1] = 3.8898;
 	//std::cout << C;
 	std::cout << p ;
 	std::cout << p.r() << p.g() << p.b() <<std::endl;
-	
+
 
 g =  A * g;
 
@@ -161,7 +161,7 @@ double * array;
 g = LAL::Vector3<double>(-209.9019,1737.5126,0.0);
 
 array = C.getArray();
-	
+
 std::cout << B[1][1] << B(2,1) ;
 B[1][1] = 54545.32443;
 
@@ -173,9 +173,9 @@ std::cout <<  " Result "<< array[0] << " - " << array[1]<<" - "<< array[2] << st
 
 /*
  * 	CPPL::dsymatrix C_lapack = CPPL::dsymatrix(3) ;
-	
+
 	std::vector<double> w1;
-	
+
 	C_lapack(0,0) = 1.5;
 	C_lapack(0,1) = 0.5;
 	C_lapack(0,2) = 0.75;
@@ -185,56 +185,56 @@ std::cout <<  " Result "<< array[0] << " - " << array[1]<<" - "<< array[2] << st
 	C_lapack(2,0) = 0.75;
 	C_lapack(2,1) = 0.25;
 	C_lapack(2,2) = 0.5;/
-	
+
 	C_lapack.dsyev(w1,1);
-	
+
 	std::cout << w1[0] << w1[1] << w1[2];
-	
+
 	std::cout << C_lapack;
-	
+
 	std::list<LAL::Point3<double>* >  pt;
-	
+
 	LAL::Point3<double> pm = LAL::Point3<double>( 1,-1,2 );
-	
+
 
 	pt.push_back( new LAL::Point3<double>(-1,-2,1) );
 	pt.push_back( new LAL::Point3<double>(1,0,2)   );
 	pt.push_back( new LAL::Point3<double>(2,-1,3)  );
 	pt.push_back( new LAL::Point3<double>(2,-1,2)  );
-	
+
 	LAL::CubicEquation<double> resolve = LAL::CubicEquation<double>(pt,pm);
-	
-	LAL::Vector3<double> Eigenvector[3]; 
-	
+
+	LAL::Vector3<double> Eigenvector[3];
+
 	double Eigenvalue[3];
-	
+
 	LAL::Eigen<double> eigen = LAL::Eigen<double>(pt,pm);
-	
+
 	std::cout << "ww " << eigen.m_afEigenvalue[0] << " | "<< eigen.m_akEigenvector[0];// *  resolve.mEigenvalue[0] << std::endl;
 	std::cout << "ww " << eigen.m_afEigenvalue[1] << " | "<< eigen.m_akEigenvector[1];// *  resolve.mEigenvalue[0] << std::endl;
 	std::cout << "ww " << eigen.m_afEigenvalue[2] << " | "<< eigen.m_akEigenvector[2];// *  resolve.mEigenvalue[0] << std::endl;
-	
-	
+
+
 	resolve.Eigensolver(C,Eigenvalue,Eigenvector);
-	
+
 	std::cout << "Eita " << Eigenvalue[0] << " | "<< Eigenvector[0];// *  resolve.mEigenvalue[0] << std::endl;
 	std::cout << "Eita " << Eigenvalue[1] << " | "<< Eigenvector[1];// *  resolve.mEigenvalue[0] << std::endl;
 	std::cout << "Eita " << Eigenvalue[2] << " | "<< Eigenvector[2];// *  resolve.mEigenvalue[0] << std::endl;
-	
-		
+
+
 	std::cout << "Eita ZERO " << resolve.mEigenvector[0] * resolve.mEigenvector[1] << std::endl;
-	
+
 	LAL::Vector3<double> v1 (1.0,2.0,-2.0);
 	LAL::Vector3<double> v2 (3.0,0.0,1.0);
 	LAL::Vector3<double> v3 (B.col(2));
-	
+
 
 	v3 = v2 ^ v1;
-	
+
 	std::cout << "v1 " << v1;
 	std::cout << "v2 " << v2;
 	std::cout << "v3 " << v3;
- * 
+ *
  * */
 
 

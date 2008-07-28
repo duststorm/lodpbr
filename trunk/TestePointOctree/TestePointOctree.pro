@@ -20,12 +20,12 @@ HEADERS += interface/myMainWindow.hpp \
     openGLFrame/GLFrame.hpp \
     openGLFrame/support/arcball.hpp \
     openGLFrame/support/atmatrix.hpp \
-    slal/Vector3.hpp \
+    math/Vector3.hpp \
     lcgOctree/ocTree.hpp \
     lcgOctree/ocTreeIntersection.hpp \
-    slal/Point3.hpp \
-    slal/Matrix3x3.hpp \
-    slal/BoundingBox3.hpp \
+    math/Point3.hpp \
+    math/Matrix3x3.hpp \
+    math/BoundingBox3.hpp \
     lcgOctree/ocTreeBox.hpp \
     surfels/surfel.hpp \
     surfels/ply.h \
@@ -35,43 +35,43 @@ HEADERS += interface/myMainWindow.hpp \
     lcgOctree/ocTreeNode.hpp \
     lcgOctree/ocTreeIterator.hpp \
     lcgOctree/ocTreeRefine.hpp \
-    slal/Color.hpp \
-    slal/EigenSystem.hpp \
     surfels/MergeEllipses.hpp \
-    slal/Matrix4x4.hpp \
-    slal/Vector4.hpp \
     Scene/Camera.hpp \
     Scene/Trackball.hpp \
     Scene/Trackball.inline.hpp \
-    slal/Quaternion.hpp \
-    slal/Quaternion.inline.hpp \
-    slal/Math.hpp \
-    slal/Vector2.hpp \
-    slal/Point2.hpp \
-    slal/Point2.inline.hpp \
-    slal/Vector3.inline.hpp \
-    slal/Vector4.inline.hpp \
-    slal/Matrix3x3.inline.hpp \
-    slal/Matrix4x4.inline.hpp \
-    slal/Point3.inline.hpp \
-    slal/Vector2.hpp \
-    slal/Vector2.inline.hpp
+     math/Color.hpp \
+    math/EigenSystem.hpp \
+    math/Matrix4x4.hpp \
+    math/Vector4.hpp \
+    math/Quaternion.hpp \
+    math/Quaternion.inline.hpp \
+    math/Math.hpp \
+    math/Vector2.hpp \
+    math/Point2.hpp \
+    math/Point2.inline.hpp \
+    math/Vector3.inline.hpp \
+    math/Vector4.inline.hpp \
+    math/Matrix3x3.inline.hpp \
+    math/Matrix4x4.inline.hpp \
+    math/Point3.inline.hpp \
+    math/Vector2.hpp \
+    math/Vector2.inline.hpp
 SOURCES += main.cpp \
     interface/myMainWindow.cpp \
     openGLFrame/GLFrame.cpp \
     openGLFrame/support/arcball.cpp \
     surfels/ply.c \
     Scene/Camera.cpp \
-    slal/Quaternion.cpp \
     Scene/Trackball.cpp \
-    slal/Math.cpp \
-    slal/Vector3.cpp \
-    slal/Point2.cpp \
-    slal/Vector4.cpp \
-    slal/Matrix3x3.cpp \
-    slal/Matrix4x4.cpp \
-    slal/Point3.cpp \
-    slal/Vector2.cpp
+    math/Quaternion.cpp \
+    math/Math.cpp \
+    math/Vector3.cpp \
+    math/Point2.cpp \
+    math/Vector4.cpp \
+    math/Matrix3x3.cpp \
+    math/Matrix4x4.cpp \
+    math/Point3.cpp \
+    math/Vector2.cpp
 QT += opengl
 FORMS += ui/interface.ui
 

@@ -8,34 +8,34 @@
 
 #include "surfel.hpp"
 
-#include "slal/Point3.hpp"
-#include "slal/Vector3.hpp"
-#include "slal/EigenSystem.hpp"
+#include "math/Point3.hpp"
+#include "math/Vector3.hpp"
+#include "math/EigenSystem.hpp"
 
 
 template <class Real> class MergeEllipses
 {
 public:
-	
-	typedef LAL::Point3<Real>    				Point3; 
+
+	typedef LAL::Point3<Real>    				Point3;
 	typedef LAL::Vector3<Real>   				Vector3;
 	typedef LAL::Matrix3x3<Real> 				Matrix3x3;
-	
+
 	typedef LAL::Point3<Real>*					PtrPoint3;
 	typedef std::list<Point3>					ListPoint3;
 	typedef std::list<Point3* >       			ListPtrPoint3;
 	typedef typename ListPtrPoint3::iterator   	ListPtrPoint3Iterator;
-	
+
 	typedef Surfel<Real>						  Surfel;
 	typedef Surfel*								  PtrSurfel;
 	typedef std::list<Surfel> 					  SurfelContainer;
 	typedef std::list<PtrSurfel>				  PtrSurfelContainer;
 	typedef typename SurfelContainer::iterator 	  SurfelIterator;
 	typedef typename PtrSurfelContainer::iterator PtrSurfelIterator;
-	
+
 	MergeEllipses( )
 	{}
-	
+
 	MergeEllipses( const MergeEllipses<Real>& mMerge)
 	{
 		mEllipses 		= mMerge.mEllipses;
@@ -52,51 +52,51 @@ public:
 
 		mNewMajorValue 	= mMerge.mNewMajorValue;
 	}
-	
+
 	MergeEllipses( const PtrSurfelContainer& pEllipses , const Point3& pNewCenter , const Vector3& pNewNormal)
 	: mEllipses(pEllipses)
 	{
 		mNewCenter = pNewCenter;
 		mNewNormal = pNewNormal;
 	};
-	
+
 	MergeEllipses( const PtrSurfelContainer& pEllipses )
-	: mEllipses(pEllipses) 
+	: mEllipses(pEllipses)
 	{
-		
+
 		NewCenterAndNormal();
 		ProjectPoints();
 		NewAxis();
-					
+
 	};
-		
+
 	Surfel NewSurfel()
 	{
 		return ( Surfel(mNewCenter,mNewNormal,mNewMinorAxis,mNewMajorAxis,1) );
 	}
-	
+
 	Surfel * NewPtrSurfel()
 	{
 
 		return ( new Surfel(mNewCenter,mNewNormal,mNewMinorAxis,mNewMajorAxis,1) );
 	}
-	
+
 	// functions
 	void NewCenterAndNormal ()
 	{
 		Point3  lSomaCenterAreas;
 		Vector3 lSomaNormalAreas;
 		Real    lSomaAreas = 0.0;
-		
-			
+
+
 		for (PtrSurfelIterator itEllipse = mEllipses.begin(); itEllipse != mEllipses.end(); ++itEllipse)
 		{
 			lSomaCenterAreas += (*itEllipse)->Area() * (*itEllipse)->Center();
 			lSomaNormalAreas += (*itEllipse)->Area() * (*itEllipse)->Normal();
 			lSomaAreas       += (*itEllipse)->Area();
-			
+
 		}
-		
+
 		if (lSomaAreas != 0)
 		{
 			mNewCenter = lSomaCenterAreas / lSomaAreas;
@@ -156,7 +156,7 @@ public:
 		{
 			lPoint = m*(*(*it));
 
-			lFactor = ( ( ( lPoint.x - lCenter.x ) * (lPoint.x - lCenter.x ) ) / (mNewMinorAxis.first) + 
+			lFactor = ( ( ( lPoint.x - lCenter.x ) * (lPoint.x - lCenter.x ) ) / (mNewMinorAxis.first) +
 						( ( lPoint.y - lCenter.y ) * (lPoint.y - lCenter.y ) ) / (mNewMajorAxis.first) );
 
 			lFactors.push_back(lFactor);
@@ -170,9 +170,9 @@ public:
 
 		mNewMinorAxis.first *= mNewMinorValue;
 		mNewMajorAxis.first *= mNewMajorValue;
-		
-		
-		
+
+
+
 	}
 
 	Point3 Mean (const std::list<Point3* >& pPoint3List)
@@ -185,7 +185,7 @@ public:
 			lMean += (*(*it));
 		}
 
-		lMean /= pPoint3List.size();  
+		lMean /= pPoint3List.size();
 
 		return ( lMean );
 
@@ -195,50 +195,50 @@ public:
 	{
 
 		return  (new Point3 (  pPoint - ( (  (pPoint - pCenter) * pNormal  ) * pNormal)  ));
-	}	
+	}
 
-	 const Point3 Center () const 
-	 { 
-		 return  ( this->mNewCenter ) ; 
+	 const Point3 Center () const
+	 {
+		 return  ( this->mNewCenter ) ;
 	 };
-	 
-	 const Vector3 Normal() const 
-	 { 
-		 return (this->mNewNormal); 
+
+	 const Vector3 Normal() const
+	 {
+		 return (this->mNewNormal);
 	 };
-	 
+
 	 std::pair<Real,Vector3> MinorAxis() const
 	 {
-		 return (this->mNewMinorAxis); 
+		 return (this->mNewMinorAxis);
 	 }
 
 	 std::pair<Real,Vector3> MajorAxis() const
 	 {
-		 return (this->mNewMajorAxis); 
+		 return (this->mNewMajorAxis);
 	 }
-	
+
 	virtual ~MergeEllipses(){};
-	
+
 	// Pontos Projetados no plano to novo splat
 	std::list<Point3* > 		mProjectedPoint;
-	
+
 private:
-	
+
 	// Lista de Ellipses a sofrem "merge"
 	PtrSurfelContainer 			mEllipses;
 
 	Point3	 					mNewCenter;
-	
+
 	Vector3 					mNewNormal;
-	
+
 	std::pair<Real,Vector3> 	mNewMinorAxis;
-	
+
 	std::pair<Real,Vector3> 	mNewMajorAxis;
-	
+
 	Real 						mNewMinorValue;
-	
+
 	Real 						mNewMajorValue;
-		
+
 
 };
 
