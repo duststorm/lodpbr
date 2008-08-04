@@ -18,8 +18,6 @@ INCLUDEPATH += . \
 # Input
 HEADERS += interface/myMainWindow.hpp \
     openGLFrame/GLFrame.hpp \
-    openGLFrame/support/arcball.hpp \
-    openGLFrame/support/atmatrix.hpp \
     math/Vector3.hpp \
     lcgOctree/ocTree.hpp \
     lcgOctree/ocTreeIntersection.hpp \
