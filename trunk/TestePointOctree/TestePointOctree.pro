@@ -38,24 +38,15 @@ HEADERS += interface/myMainWindow.hpp \
     surfels/MergeEllipses.hpp \
     Scene/Camera.hpp \
     Scene/Trackball.hpp \
-    Scene/Trackball.inline.hpp \
-     math/Color.hpp \
+    math/Color.hpp \
     math/EigenSystem.hpp \
     math/Matrix4x4.hpp \
     math/Vector4.hpp \
     math/Quaternion.hpp \
-    math/Quaternion.inline.hpp \
     math/Math.hpp \
     math/Vector2.hpp \
     math/Point2.hpp \
-    math/Point2.inline.hpp \
-    math/Vector3.inline.hpp \
-    math/Vector4.inline.hpp \
-    math/Matrix3x3.inline.hpp \
-    math/Matrix4x4.inline.hpp \
-    math/Point3.inline.hpp \
-    math/Vector2.hpp \
-    math/Vector2.inline.hpp
+    math/Vector2.hpp
 SOURCES += main.cpp \
     interface/myMainWindow.cpp \
     openGLFrame/GLFrame.cpp \
