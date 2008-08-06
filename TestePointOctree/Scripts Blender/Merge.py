@@ -138,8 +138,8 @@ class Merge:
        
        #print cov, "MATRIX"
              
-       #eigenvec = la.eigenvectors(cov)
-       eigenvec = nu.eig(cov)
+       eigenvec = la.eigenvectors(cov)
+       #eigenvec = nu.eig(cov)
        
        #print 'LA',eigenvec
        print 'NUMPY',eigenvec

@@ -282,22 +282,28 @@ namespace LAL{
             }
 
             Quaternion rot;
-
-            // Rotate camera about the world y axis.
-            // Note the order the quaternions are multiplied. That is important!
-            if (headingDegrees != 0.0f)
-            {
-                rot.FromAxisAngle(Vector3::UNIT_Y, headingDegrees);
-                mOrientation = rot * mOrientation;
-            }
-
-            // Rotate camera about its local x axis.
-            // Note the order the quaternions are multiplied. That is important!
-            if (pitchDegrees != 0.0f)
-            {
-                rot.FromAxisAngle(Vector3::UNIT_X, pitchDegrees);
-                mOrientation = mOrientation * rot;
-            }
+            
+            rot.FromHeadPitchRoll(headingDegrees,0.0f,pitchDegrees);
+            mOrientation  =  rot * mOrientation ;
+            
+//            // Rotate camera about the world y axis.
+//            // Note the order the quaternions are multiplied. That is important!
+//            if (headingDegrees != 0.0f)
+//            {
+//                rot.FromAxisAngle(Vector3::UNIT_Y, headingDegrees);
+//                mOrientation = mOrientation * rot;
+//                mOrientation.Normalize();
+//            }
+//
+//            // Rotate camera about its local x axis.
+//            // Note the order the quaternions are multiplied. That is important!
+//            if (pitchDegrees != 0.0f)
+//            {
+//                rot.FromAxisAngle(Vector3::UNIT_Z, pitchDegrees);
+//                mOrientation = rot * mOrientation;
+//                mOrientation.Normalize();
+//            }
+            
         }
 
         void SetBehavior(CameraBehavior newBehavior)
