@@ -562,16 +562,16 @@ void GLFrame::mouseMoveEvent(QMouseEvent *event)
      *  tudo o que eu queria para implementar a First Person Camera !  
     */
     
-//    float heading = 0.0f;
-//    float pitch = 0.0f;
+//     float heading = 0.0f;
+//     float pitch = 0.0f;
 //    float roll = 0.0f;
 //
-//    pitch = (static_cast<float>(event->x()) - mCenterX) * 0.2;
-//    heading = -(static_cast<float>(event->y()) - mCenterY) * 0.2;
+//     pitch = (static_cast<float>(event->x()) - mCenterX) * 0.2;
+//     heading = -(static_cast<float>(event->y()) - mCenterY) * 0.2;
 //
-//    camera.rotate(heading, pitch, 0.0f);
+//    camera.Rotate(heading, pitch, 0.0f);
 //
-//    //mouse.moveToWindowCenter();
+//    mouse.moveToWindowCenter();
 //    QCursor::setPos(mapToGlobal(QPoint(static_cast<int>(width()*0.5),static_cast<int>(height()*0.5))));
  	updateGL();
     lastPos = event->pos();
