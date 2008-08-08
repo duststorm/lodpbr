@@ -483,22 +483,23 @@ namespace LAL {
 	inline Matrix4x4<Real> operator*( const Matrix4x4<Real>& a, const Matrix4x4<Real>& b )
 	{
 		return ( Matrix4x4<Real>
-		( 
+		(
+		  // Row 1	
 		  a[ 0 ].x * b[ 0 ].x + a[ 0 ].y * b[ 1 ].x + a[ 0 ].z * b[ 2 ].x + a[ 0 ].w * b[ 3 ].x,
 		  a[ 0 ].x * b[ 0 ].y + a[ 0 ].y * b[ 1 ].y + a[ 0 ].z * b[ 2 ].y + a[ 0 ].w * b[ 3 ].y, 
 		  a[ 0 ].x * b[ 0 ].z + a[ 0 ].y * b[ 1 ].z + a[ 0 ].z * b[ 2 ].z + a[ 0 ].w * b[ 3 ].z,
 		  a[ 0 ].x * b[ 0 ].w + a[ 0 ].y * b[ 1 ].w + a[ 0 ].z * b[ 2 ].w + a[ 0 ].w * b[ 3 ].w,
-
+		  // Row 2
 		  a[ 1 ].x * b[ 0 ].x + a[ 1 ].y * b[ 1 ].x + a[ 1 ].z * b[ 2 ].x + a[ 1 ].w * b[ 3 ].x,
 		  a[ 1 ].x * b[ 0 ].y + a[ 1 ].y * b[ 1 ].y + a[ 1 ].z * b[ 2 ].y + a[ 1 ].w * b[ 3 ].y,
 		  a[ 1 ].x * b[ 0 ].z + a[ 1 ].y * b[ 1 ].z + a[ 1 ].z * b[ 2 ].z + a[ 1 ].w * b[ 3 ].z, 
 		  a[ 1 ].x * b[ 0 ].w + a[ 1 ].y * b[ 1 ].w + a[ 1 ].z * b[ 2 ].w + a[ 1 ].w * b[ 3 ].w,
-
+		  // Row 3
 		  a[ 2 ].x * b[ 0 ].x + a[ 2 ].y * b[ 1 ].x + a[ 2 ].z * b[ 2 ].x + a[ 2 ].w * b[ 3 ].x,
 		  a[ 2 ].x * b[ 0 ].y + a[ 2 ].y * b[ 1 ].y + a[ 2 ].z * b[ 2 ].y + a[ 2 ].w * b[ 3 ].y,
 		  a[ 2 ].x * b[ 0 ].z + a[ 2 ].y * b[ 1 ].z + a[ 2 ].z * b[ 2 ].z + a[ 2 ].w * b[ 3 ].z,
 		  a[ 2 ].x * b[ 0 ].w + a[ 2 ].y * b[ 1 ].w + a[ 2 ].z * b[ 2 ].w + a[ 2 ].w * b[ 3 ].w,
-
+		  // Row 4
 		  a[ 3 ].x * b[ 0 ].x + a[ 3 ].y * b[ 1 ].x + a[ 3 ].z * b[ 2 ].x + a[ 3 ].w * b[ 3 ].x,
 		  a[ 3 ].x * b[ 0 ].y + a[ 3 ].y * b[ 1 ].y + a[ 3 ].z * b[ 2 ].y + a[ 3 ].w * b[ 3 ].y,
 		  a[ 3 ].x * b[ 0 ].z + a[ 3 ].y * b[ 1 ].z + a[ 3 ].z * b[ 2 ].z + a[ 3 ].w * b[ 3 ].z,
