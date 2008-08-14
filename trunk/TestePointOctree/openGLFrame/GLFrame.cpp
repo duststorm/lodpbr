@@ -492,7 +492,16 @@ void GLFrame::paintGL()
 void GLFrame::keyPressEvent(QKeyEvent * event)
 {
 
-	if (event->key() == Qt::Key_W)
+	if (event->key() == Qt::Key_Q)
+	{
+		camera.MoveUpward(CameraStep);
+
+	}else if (event->key() == Qt::Key_E)
+	{
+		camera.MoveUpward(-CameraStep);
+
+	}	
+	else if (event->key() == Qt::Key_W)
 	{
 		camera.MoveForward(CameraStep);
 
@@ -523,7 +532,7 @@ void GLFrame::mousePressEvent(QMouseEvent *event)
 
     if (event->button() == Qt::MidButton)
     {
-    	camera.OnRotationBegin(event->x(),event->y());
+    	//camera.OnRotationBegin(event->x(),event->y());
     	updateGL();
     }
     else if (event->button() == Qt::RightButton)
@@ -552,7 +561,7 @@ void GLFrame::mouseMoveEvent(QMouseEvent *event)
 
     }else if (event->buttons() & Qt::MidButton)  {
 
-    	camera.OnRotationMove(event->x(), event->y());
+    	//camera.OnRotationMove(event->x(), event->y());
     }
 
     /*!
@@ -562,17 +571,18 @@ void GLFrame::mouseMoveEvent(QMouseEvent *event)
      *  tudo o que eu queria para implementar a First Person Camera !
     */
 
-//     float heading = 0.0f;
-//     float pitch = 0.0f;
-//    float roll = 0.0f;
-//
-//     pitch = (static_cast<float>(event->x()) - mCenterX) * 0.2;
-//     heading = -(static_cast<float>(event->y()) - mCenterY) * 0.2;
-//
-//    camera.Rotate(heading, pitch, 0.0f);
-//
+    float heading = 0.0f;
+    float pitch = 0.0f;
+    float roll = 0.0f;
+   
+    pitch = (static_cast<float>(event->x()) - mCenterX) * 0.2;
+    heading = -(static_cast<float>(event->y()) - mCenterY) * 0.2;
+
+    camera.rotate(heading, pitch, 0.0f);
+
 //    mouse.moveToWindowCenter();
-//    QCursor::setPos(mapToGlobal(QPoint(static_cast<int>(width()*0.5),static_cast<int>(height()*0.5))));
+    
+    QCursor::setPos(mapToGlobal(QPoint(static_cast<int>(mCenterX),static_cast<int>(mCenterY))));
  	updateGL();
     lastPos = event->pos();
 }

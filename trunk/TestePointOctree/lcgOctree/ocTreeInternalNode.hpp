@@ -303,8 +303,8 @@ public:
     	Real et;
 
     	camera.SetUp(Merge.MinorAxis().second);
-    	camera.SetPosition(LAL::Vector3<float>(Merge.Center().x,Merge.Center().y,Merge.Center().z));
-    	camera.SetEyes(LAL::Vector3<float>(Merge.Center().x,Merge.Center().y,Merge.Center().z)+(-Merge.Normal()*1.0f));
+    	camera.SetEyes(LAL::Vector3<float>(Merge.Center().x,Merge.Center().y,Merge.Center().z));
+    	camera.SetFocus(LAL::Vector3<float>(Merge.Center().x,Merge.Center().y,Merge.Center().z)+(-Merge.Normal()*1.0f));
 
 
         glViewport(0, 0, 32, 32);
