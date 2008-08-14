@@ -7,6 +7,7 @@
 #include "Math.hpp"
 #include "Vector4.hpp" 
 #include "Vector3.hpp"
+#include "Matrix3x3.hpp"
 
   
 
@@ -30,6 +31,7 @@ namespace LAL {
 		
 		friend class Vector3<Real>;
 		friend class Vector4<Real>;
+		friend class Matrix3x3<Real>;
 	
 		/*! @name Defining a Matrix4x4 */
 		//@{
@@ -37,6 +39,7 @@ namespace LAL {
 		Matrix4x4();
 		 /*! Copy constructor. */ 
 		Matrix4x4( const Matrix4x4<Real>& a );
+		inline Matrix4x4<Real>& operator=( const Matrix3x3<Real>& a);
 		inline Matrix4x4<Real>& operator=( const Matrix4x4<Real>& a);
 		
 		/*! Copy constructor for a Matrix with another type */
@@ -311,6 +314,21 @@ namespace LAL {
 
 	}
 
+	template <class Real>
+	inline Matrix4x4<Real>& Matrix4x4<Real>::operator=( const Matrix3x3<Real>& a)
+	{
+
+		m[ 0 ].x = a[ 0 ].x; m[ 0 ].y = a[ 0 ].y; m[ 0 ].z = a[ 0 ].z; m[ 0 ].w = a[ 0 ].w; 
+		m[ 1 ].x = a[ 1 ].x; m[ 1 ].y = a[ 1 ].y; m[ 1 ].z = a[ 1 ].z; m[ 1 ].w = a[ 1 ].w;
+		m[ 2 ].x = a[ 2 ].x; m[ 2 ].y = a[ 2 ].y; m[ 2 ].z = a[ 2 ].z; m[ 2 ].w = a[ 2 ].w;
+		
+		m[ 3 ].x = static_cast< Real > ( 0 ); 
+		m[ 3 ].y = static_cast< Real > ( 0 ); 
+		m[ 3 ].z = static_cast< Real > ( 0 ); 
+		m[ 3 ].w = static_cast< Real > ( 0 );
+
+		return ( *this );
+	};
 
 	template <class Real>
 	inline Matrix4x4<Real>& Matrix4x4<Real>::operator=( const Matrix4x4<Real>& a)
@@ -323,7 +341,7 @@ namespace LAL {
 
 		return ( *this );
 	};
-
+	
 	// FRIEND FUNCRealIONS
 
 	template <class Real>

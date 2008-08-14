@@ -48,13 +48,20 @@ namespace LAL{
 
         	mOrientation = Quaternion(1.0,0.0,0.0,0.0);
         	mAccumPitchDegrees = 0.0f;
+        	
+            pitchDegrees = 0.0f;
+            headingDegrees = 0.0f;
+            rollDegrees = 0.0f;
+            
         	mBehavior = FIRST_PERSON;
 
-        	mPosition = Vector3(0.0,0.0,-1.0);
+        	mFocus = Vector3(0.0,0.0,1.0);
         	mEyes = Vector3(0.0,0.0,0.0);
         	mUp = Vector3(0.0,1.0,0.0);
         	mTrackball = Trackball();
 
+        	mViewMatrix.Identity();
+        	
         	mFieldOfView = 90.0;
         	mAspectRatio = 1.0f;
         	mNearPlane  = 0.001f;
@@ -64,50 +71,63 @@ namespace LAL{
 
         void MoveForward( float Distance )
         {
-        	mPosition +=  ( (mPosition - (mEyes )) * Distance);
+        	mEyes +=  ( mFocus * Distance);
         }
 
         void MoveUpward( float Distance )
         {
-        	mPosition = mPosition + (mEyes*Distance);
+        	mEyes += (mUp*Distance);
         }
 
         void StrafeRight ( float Distance )
         {
 
-        	mPosition +=  ( ((mPosition - (mEyes.Norm() ))^mUp) *Distance);
+        	mEyes +=  ( ((mEyes - (mFocus.Norm() ))^mUp) *Distance);
         }
 
         Matrix4x4 ViewMatrix()
         {
-
+      	
+            mViewMatrix = mOrientation.To4x4Matrix();
+        
+            xAxis.Set(mViewMatrix[0][0], mViewMatrix[0][1], mViewMatrix[0][2]);
+            yAxis.Set(mViewMatrix[1][0], mViewMatrix[1][1], mViewMatrix[1][2]);
+            zAxis.Set(mViewMatrix[2][0], mViewMatrix[2][1], mViewMatrix[2][2]);
+            
+            mFocus = -zAxis;
+            
+            mViewMatrix[0][3] = -(xAxis * mEyes);
+            mViewMatrix[1][3] = -(yAxis * mEyes);
+            mViewMatrix[2][3] = -(zAxis * mEyes);
+            
+            return mViewMatrix;
+        	
                 // Get the inverse of the arcball's rotation matrix
         		//LAL::Quaternion<float> cameraRotation = ~mTrackball.orientation();
 
                 // Transform vectors based on camera's rotation matrix
-        		mUp = mOrientation.Rotate(Vector3::UNIT_Y);
-
-        		mEyes = mOrientation.Rotate(Vector3::UNIT_Z);
-
-              	mEyes =  (mEyes * mZoomRadius) - mPosition;
+//        		mUp = mOrientation.Rotate(Vector3::UNIT_Y);
+//
+//        		mEyes = mOrientation.Rotate(Vector3::UNIT_Z);
+//
+//              	mEyes =  (mEyes * mZoomRadius) - mPosition;
 
                 // Update the eye point based on a radius away from the lookAt position
                // mEyes = cameraRotation.Rotate(mEyes);
 
-                return Matrix4x4::MakeViewMatrix(mEyes, mPosition, mUp);
-
+              
         }
 
         Matrix4x4 ViewMatrixNormal()
         {
 
-        	return Matrix4x4::MakeViewMatrix(mEyes, mPosition, mUp);
+        	return Matrix4x4::MakeViewMatrix(mEyes, mFocus, mUp);
 
         }
 
-        Matrix4x4 ViewMatrix( Vector3& pEyes, Vector3& pPosition, Vector3& pUp )
+        Matrix4x4 ViewMatrix( Vector3& pEyes, Vector3& pFocus, Vector3& pUp )
         {
-        	return Matrix4x4::MakeViewMatrix(pEyes, pPosition, pUp);
+        	return Matrix4x4::MakeViewMatrix(pEyes, pFocus, pUp);
         }
 
 
@@ -121,14 +141,14 @@ namespace LAL{
                 return mOrthographicProjectionMatrix;
         }
 
-        Vector3 Position()
+        Vector3 Focus()
         {
-        	return mPosition;
+        	return mFocus;
         }
 
-        void SetPosition( const Vector3& pPosition)
+        void SetFocus( const Vector3& pFocus)
         {
-        	mPosition = pPosition;
+        	mFocus = pFocus;
         }
 
         Vector3 Eyes()
@@ -229,6 +249,105 @@ namespace LAL{
             mOrientation = ~mTrackball.Orientation();
         }
 
+        void rotate(float headingDegrees, float pitchDegrees, float rollDegrees)
+        {
+            // Rotates the camera based on its current behavior.
+            // Note that not all behaviors support rolling.
+
+            pitchDegrees = -pitchDegrees;
+            headingDegrees = -headingDegrees;
+            rollDegrees = -rollDegrees;
+
+            switch (mBehavior)
+            {
+            case FIRST_PERSON:
+                rotateFirstPerson(headingDegrees, pitchDegrees);
+                break;
+
+            case FLIGHT:
+                
+                break;
+            }
+
+            
+        }
+
+        
+        void rotateFirstPerson(float headingDegrees, float pitchDegrees)
+        {
+            // Implements the rotation logic for the first person style and
+            // spectator style camera behaviors. Roll is ignored.
+
+            mAccumPitchDegrees += pitchDegrees;
+
+            if (mAccumPitchDegrees > 90.0f)
+            {
+                pitchDegrees = 90.0f - (mAccumPitchDegrees - pitchDegrees);
+                mAccumPitchDegrees = 90.0f;
+            }
+
+            if (mAccumPitchDegrees < -90.0f)
+            {
+                pitchDegrees = -90.0f - (mAccumPitchDegrees - pitchDegrees);
+                mAccumPitchDegrees = -90.0f;
+            }
+
+            Quaternion rot;
+
+            // Rotate camera about the world y axis.
+            // Note the order the quaternions are multiplied. That is important!
+            if (headingDegrees != 0.0f)
+            {
+                rot.FromAxisAngle(Vector3::UNIT_Y, headingDegrees);
+                mOrientation = mOrientation * rot;
+            }
+
+            // Rotate camera about its local x axis.
+            // Note the order the quaternions are multiplied. That is important!
+            if (pitchDegrees != 0.0f)
+            {
+                rot.FromAxisAngle(Vector3::UNIT_X, pitchDegrees);
+                mOrientation = rot * mOrientation;
+            }
+             mOrientation.Normalize();
+        }
+
+
+        void lookAt(const Vector3 &eye, const Vector3 &focus, const Vector3 &up)
+        {
+            mEyes = eye;
+
+            zAxis = eye - focus;
+            zAxis.Normalize();
+
+            mFocus = -zAxis;
+
+            xAxis = (up ^ zAxis);
+            xAxis.Normalize();
+
+            yAxis = (zAxis ^ xAxis);
+            yAxis.Normalize();
+            
+            mViewMatrix[0][0] = xAxis.x;
+            mViewMatrix[0][1] = xAxis.y;
+            mViewMatrix[0][2] = xAxis.z;
+            mViewMatrix[0][3] = -(xAxis * eye);
+
+            mViewMatrix[1][0] = yAxis.x;
+            mViewMatrix[1][1] = yAxis.y;
+            mViewMatrix[1][2] = yAxis.z;
+            mViewMatrix[1][3] = -(yAxis * eye);
+
+            mViewMatrix[2][0] = zAxis.x;
+            mViewMatrix[2][1] = zAxis.y;
+            mViewMatrix[2][2] = zAxis.z;    
+            mViewMatrix[2][3] = -(zAxis * eye);
+
+            // Extract the pitch angle from the view matrix.
+            mAccumPitchDegrees = Math::radiansToDegrees(std::asin(mViewMatrix[2][1]));
+
+            mOrientation.FromRotationMatrix(mViewMatrix);
+        }
       
         void Zoom(float mouseWheelDelta)
         {
@@ -248,7 +367,7 @@ namespace LAL{
 
          void Reset()
         {
-            mPosition = mInitalPosition;
+            mEyes = mInitalPosition;
             mTrackball.Reset();
         }
 
@@ -259,12 +378,21 @@ namespace LAL{
 
     	Quaternion mOrientation;
     	float mAccumPitchDegrees;
+    	
+        float pitchDegrees;
+        float headingDegrees;
+        float rollDegrees;
+    	
     	CameraBehavior mBehavior;
 
-    	Vector3 mPosition;
-    	Vector3 mEyes;
-    	Vector3 mUp;
-
+    	Vector3 mFocus;    //Where the camera looked at
+    	Vector3 mEyes;	   //Where the camera is	
+    	Vector3 mUp;	   //Self Documentation	
+    	
+    	Vector3 xAxis;
+    	Vector3 yAxis;
+    	Vector3 zAxis;    	
+    	
     	float mWidth;
     	float mHeight;
 
@@ -274,7 +402,7 @@ namespace LAL{
 
     	Trackball mTrackball;
 
-    	Matrix4x4 mTranslationMatrix;
+    	Matrix4x4 mViewMatrix;
 
     	// Pespective
     	float mFieldOfView ;

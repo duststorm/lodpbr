@@ -103,8 +103,7 @@ namespace LAL{
 		void 					FromRotationMatrix( const Matrix4x4<Real>& rotationMatrix );
 		void 					FromAxisAngle( const Vector3<Real>& axis, const Real& degrees );
 		void 					FromHeadPitchRoll( const Real& headDegrees, const Real& pitchDegrees, const Real& rollDegrees);
-		void 					FromMatrix( const Matrix4x4<Real>& m );
-		
+	
 		void 					ToAxisAngle( Vector3<Real>& axis, Real& degrees ) const;
 		void 					ToHeadPitchRoll( const Real& headDegrees, const Real& pitchDegrees, const Real& rollDegrees ) const;
 		void 					ToRotationArc( Vector3<Real> &u, Vector3<Real> &v );
@@ -328,18 +327,18 @@ namespace LAL{
 	template <class Real>
 	inline void Quaternion<Real>::To4x4Matrix( Matrix4x4<Real>& rotationMatrix ) const 
 	{
-	    Real x  = static_cast<Real> (2.0)*x;
-	    Real y  = static_cast<Real> (2.0)*y;
-	    Real z  = static_cast<Real> (2.0)*z;
-	    Real wx = x*w;
-	    Real wy = y*w;
-	    Real wz = z*w;
-	    Real xx = x*x;
-	    Real xy = y*x;
-	    Real xz = z*x;
-	    Real yy = y*y;
-	    Real yz = z*y;
-	    Real zz = z*z;
+	    Real lx  = static_cast<Real> (2.0)*this->x;
+	    Real ly  = static_cast<Real> (2.0)*this->y;
+	    Real lz  = static_cast<Real> (2.0)*this->z;
+	    Real wx = lx*w;
+	    Real wy = ly*w;
+	    Real wz = lz*w;
+	    Real xx = lx*x;
+	    Real xy = ly*x;
+	    Real xz = lz*x;
+	    Real yy = ly*y;
+	    Real yz = lz*y;
+	    Real zz = lz*z;
 
 	    rotationMatrix(0,0) = static_cast<Real>(1.0) -(yy+zz);
 	    rotationMatrix(0,1) = xy-wz;
@@ -360,18 +359,18 @@ namespace LAL{
 		
 		Matrix4x4<Real> rotationMatrix;
 		
-	    Real x  = static_cast<Real> (2.0)*x;
-	    Real y  = static_cast<Real> (2.0)*y;
-	    Real z  = static_cast<Real> (2.0)*z;
-	    Real wx = x*w;
-	    Real wy = y*w;
-	    Real wz = z*w;
-	    Real xx = x*x;
-	    Real xy = y*x;
-	    Real xz = z*x;
-	    Real yy = y*y;
-	    Real yz = z*y;
-	    Real zz = z*z;
+	    Real lx  = static_cast<Real> (2.0)*this->x;
+	    Real ly  = static_cast<Real> (2.0)*this->y;
+	    Real lz  = static_cast<Real> (2.0)*this->z;
+	    Real wx = lx*w;
+	    Real wy = ly*w;
+	    Real wz = lz*w;
+	    Real xx = lx*x;
+	    Real xy = ly*x;
+	    Real xz = lz*x;
+	    Real yy = ly*y;
+	    Real yz = lz*y;
+	    Real zz = lz*z;
 
 	    rotationMatrix(0,0) = static_cast<Real>(1.0) -(yy+zz);
 	    rotationMatrix(0,1) = xy-wz;
