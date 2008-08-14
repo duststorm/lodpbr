@@ -75,7 +75,7 @@ namespace LAL{
         void StrafeRight ( float Distance )
         {
 
-        	mPosition +=  ( ((mPosition - (mEyes ))^mUp) *Distance);
+        	mPosition +=  ( ((mPosition - (mEyes.Norm() ))^mUp) *Distance);
         }
 
         Matrix4x4 ViewMatrix()
@@ -229,101 +229,7 @@ namespace LAL{
             mOrientation = ~mTrackball.Orientation();
         }
 
-        void Rotate(float headingDegrees, float pitchDegrees, float rollDegrees)
-        {
-            // Rotates the camera based on its current behavior.
-            // Note that not all behaviors support rolling.
-
-            pitchDegrees = -pitchDegrees;
-            headingDegrees = -headingDegrees;
-            rollDegrees = -rollDegrees;
-
-            switch (mBehavior)
-            {
-            case FIRST_PERSON:
-                RotateFirstPerson(headingDegrees, pitchDegrees);
-                break;
-
-            case FLIGHT:
-                RotateFlight(headingDegrees, pitchDegrees, rollDegrees);
-                break;
-            }
-
-
-        }
-
-        void RotateFlight(float headingDegrees, float pitchDegrees, float rollDegrees)
-        {
-            // Implements the rotation logic for the flight style camera behavior.
-
-            Quaternion rot;
-
-            rot.FromHeadPitchRoll(headingDegrees, pitchDegrees, rollDegrees);
-            mOrientation *= rot;
-        }
-
-        void RotateFirstPerson(float headingDegrees, float pitchDegrees)
-        {
-            // Implements the rotation logic for the first person style and
-            // spectator style camera behaviors. Roll is ignored.
-
-            mAccumPitchDegrees += pitchDegrees;
-
-            if (mAccumPitchDegrees > 90.0f)
-            {
-                pitchDegrees = 90.0f - (mAccumPitchDegrees - pitchDegrees);
-                mAccumPitchDegrees = 90.0f;
-            }
-
-            if (mAccumPitchDegrees < -90.0f)
-            {
-                pitchDegrees = -90.0f - (mAccumPitchDegrees - pitchDegrees);
-                mAccumPitchDegrees = -90.0f;
-            }
-
-            Quaternion rot;
-            
-            rot.FromHeadPitchRoll(headingDegrees,0.0f,pitchDegrees);
-            mOrientation  =  rot * mOrientation ;
-            
-//            // Rotate camera about the world y axis.
-//            // Note the order the quaternions are multiplied. That is important!
-//            if (headingDegrees != 0.0f)
-//            {
-//                rot.FromAxisAngle(Vector3::UNIT_Y, headingDegrees);
-//                mOrientation = mOrientation * rot;
-//                mOrientation.Normalize();
-//            }
-//
-//            // Rotate camera about its local x axis.
-//            // Note the order the quaternions are multiplied. That is important!
-//            if (pitchDegrees != 0.0f)
-//            {
-//                rot.FromAxisAngle(Vector3::UNIT_Z, pitchDegrees);
-//                mOrientation = rot * mOrientation;
-//                mOrientation.Normalize();
-//            }
-            
-        }
-
-        void SetBehavior(CameraBehavior newBehavior)
-        {
-            if (mBehavior == FLIGHT and newBehavior == FIRST_PERSON)
-            {
-                // Moving from flight-simulator mode to first-person.
-                // Need to ignore camera roll, but retain existing pitch and heading.
-
-//                lookAt(m_eye, m_eye + m_zAxis.inverse(), WORLD_YAXIS);
-            }
-
-            mBehavior = newBehavior;
-        }
-
-        inline CameraBehavior GetBehavior() const
-        {
-        	return mBehavior;
-        }
-
+      
         void Zoom(float mouseWheelDelta)
         {
             // Change the radius from the camera to the model based on wheel scrolling
