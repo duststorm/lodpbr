@@ -44,7 +44,8 @@ HEADERS += interface/myMainWindow.hpp \
     math/Math.hpp \
     math/Vector2.hpp \
     math/Point2.hpp \
-    math/Vector2.hpp
+    math/Vector2.hpp \
+    Scene/camera.h
 SOURCES += main.cpp \
     interface/myMainWindow.cpp \
     openGLFrame/GLFrame.cpp \
@@ -60,7 +61,8 @@ SOURCES += main.cpp \
     math/Matrix3x3.cpp \
     math/Matrix4x4.cpp \
     math/Point3.cpp \
-    math/Vector2.cpp
+    math/Vector2.cpp \
+    Scene/camera.cpp
 QT += opengl
 FORMS += ui/interface.ui
 

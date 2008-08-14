@@ -840,11 +840,11 @@ namespace LAL {
 				0.0,0.0,0.0,1.0);	
 	}
 
-	//template <class Real>
-	//const Real* Matrix4x4<Real>::ToRealPtr( void ) const 
-	//{
-	//	return m[ 0 ].ToFloatPtr();
-	//}
+	template <class Real>
+	const Real* Matrix4x4<Real>::ToRealPtr( void ) const 
+	{
+		return m[ 0 ].ToFloatPtr();
+	}
 
 	template <class Real>
 	Real* Matrix4x4<Real>::ToRealPtr( void ) 
