@@ -575,10 +575,10 @@ void GLFrame::mouseMoveEvent(QMouseEvent *event)
     float pitch = 0.0f;
     float roll = 0.0f;
    
-    pitch = (static_cast<float>(event->x()) - mCenterX) * 0.2;
+    pitch = -(static_cast<float>(event->x()) - mCenterX) * 0.2;
     heading = -(static_cast<float>(event->y()) - mCenterY) * 0.2;
 
-    camera.rotate(heading, pitch, 0.0f);
+    camera.rotate(pitch,heading, 0.0f);
 
 //    mouse.moveToWindowCenter();
     

@@ -3,7 +3,7 @@
 
 #include <iostream>
 
-#include "Vector3.hpp" 
+#include "Vector3.hpp"
 #include "Point3.hpp"
 
 
@@ -13,24 +13,26 @@ namespace LAL {
 
 *@class Matrix3x3.
 *@brief Class that represent a dense 3x3 Matrix and Homogeneous Coordinate ..
-*@details coming soon , but ... coming soon  ... wait ¬¬.
+*@details ...
 *@author Felipe Moura.
+*@email fmc@cos.ufrj.br
 *@version 1.0.
-*@todo OpenGL interface and a C style array, Why MakeView ans MakeProjection dont need The Transpose?
+*@todo OpenGL interface and a C style array.
+*@todo Row or Column major ?
 
   \nosubgrouping */
 
 	template<class Real> class Matrix3x3
 	{
 	private:
-		
-		Vector3<Real> m[ 3 ];		
+
+		Vector3<Real> m[ 3 ];
 
 	public:
 
 		friend class Vector3<Real>;
 		friend class Point3<Real>;
-		/*! @name Defining a Matrix4x4 */
+		/*! @name Defining a Matrix3x3 */
 		//@{
 		Matrix3x3();
 		Matrix3x3( Real a11, Real a12, Real a13,Real a21, Real a22, Real a23,Real a31, Real a32, Real a33 );
@@ -45,14 +47,14 @@ namespace LAL {
 		//@{
 		const Vector3<Real>& 	operator[]( int rowIndex ) const;
 		Vector3<Real>& 			operator[]( int rowIndex );
-		
+
 		Real 					operator()( int i, int j )  	const;
 		Real& 					operator()( int i, int j );
-		// Return Colum
+		// Return Column
 		Vector3<Real> 			Column( int index ) const;
 		Vector3<Real> 			Row( int index ) const;
-		//@}	
-		// 
+		//@}
+		//
 		/*! @name Algebraic computations */
 		//@{
 		Matrix3x3<Real>  		operator-() const;
@@ -71,26 +73,26 @@ namespace LAL {
 		friend Matrix3x3<T> 	operator-( const Matrix3x3<T>& a, const Matrix3x3<T>& b );
 		template <class T>
 		friend Matrix3x3<T> 	operator*( const Matrix3x3<T>& a, const Matrix3x3<T>& b );
-		
+
 		template <class T>
 		friend Vector3<T> 		operator*( const Matrix3x3<T>& a, const Vector3<T>& v );
 		template <class T>
 		friend Point3<T>  		operator*( const Matrix3x3<T>& a, const Point3<T>& p );
 		//@}
-	
-		
+
+
 		/*! @name Matrix Function  */
 		//@{
 		template <class T>
 		friend  std::ostream& 	operator<< ( std::ostream & s, const Matrix3x3<T>& a );
-		
+
 		const Real* 			ToRealPtr( void ) const ;
-		
+
 		Real* 					ToRealPtr( void );
-	
+
 		bool 					IsSymetric();
 		Matrix3x3<Real> 		Identity();
-		
+
 		//@}
 
 	};
@@ -98,7 +100,7 @@ namespace LAL {
 	template <class Real>
 	Matrix3x3<Real>::Matrix3x3()
 	{
-		this->m[ 0 ].x = static_cast<Real>(1); this->m[ 0 ].y = static_cast<Real>(0); this->m[ 0 ].z = static_cast<Real>(0); 
+		this->m[ 0 ].x = static_cast<Real>(1); this->m[ 0 ].y = static_cast<Real>(0); this->m[ 0 ].z = static_cast<Real>(0);
 		this->m[ 1 ].x = static_cast<Real>(0); this->m[ 1 ].y = static_cast<Real>(1); this->m[ 1 ].z = static_cast<Real>(0);
 		this->m[ 2 ].x = static_cast<Real>(0); this->m[ 2 ].y = static_cast<Real>(0); this->m[ 2 ].z = static_cast<Real>(1);
 	};
@@ -106,7 +108,7 @@ namespace LAL {
 	template <class Real>
 	Matrix3x3<Real>::Matrix3x3( Real a11, Real a12, Real a13,Real a21, Real a22, Real a23,Real a31, Real a32, Real a33 )
 	{
-		this->m[ 0 ].x = a11; this->m[ 0 ].y = a12; this->m[ 0 ].z = a13; 
+		this->m[ 0 ].x = a11; this->m[ 0 ].y = a12; this->m[ 0 ].z = a13;
 		this->m[ 1 ].x = a21; this->m[ 1 ].y = a22; this->m[ 1 ].z = a23;
 		this->m[ 2 ].x = a31; this->m[ 2 ].y = a32; this->m[ 2 ].z = a33;
 	};
@@ -114,7 +116,7 @@ namespace LAL {
 	template <class Real>
 	Matrix3x3<Real>::Matrix3x3( const Vector3<Real>& row1, const Vector3<Real>& row2, const Vector3<Real>& row3 )
 	{
-		this->m[ 0 ].x = row1.x; this->m[ 0 ].y = row1.y; this->m[ 0 ].z = row1.z; 
+		this->m[ 0 ].x = row1.x; this->m[ 0 ].y = row1.y; this->m[ 0 ].z = row1.z;
 		this->m[ 1 ].x = row2.x; this->m[ 1 ].y = row2.y; this->m[ 1 ].z = row2.z;
 		this->m[ 2 ].x = row3.x; this->m[ 2 ].y = row3.y; this->m[ 2 ].z = row3.z;
 	};
@@ -122,7 +124,7 @@ namespace LAL {
 	template <class Real>
 	Matrix3x3<Real>::Matrix3x3( const Point3<Real>& row1, const Point3<Real>& row2, const Point3<Real>& row3 )
 	{
-		this->m[ 0 ].x = row1.x; this->m[ 0 ].y = row1.y; this->m[ 0 ].z = row1.z; 
+		this->m[ 0 ].x = row1.x; this->m[ 0 ].y = row1.y; this->m[ 0 ].z = row1.z;
 		this->m[ 1 ].x = row2.x; this->m[ 1 ].y = row2.y; this->m[ 1 ].z = row2.z;
 		this->m[ 2 ].x = row3.x; this->m[ 2 ].y = row3.y; this->m[ 2 ].z = row3.z;
 	};
@@ -169,7 +171,7 @@ namespace LAL {
 	}
 
 	template <class Real>
-	Real& Matrix3x3<Real>::operator()( int i, int j )  
+	Real& Matrix3x3<Real>::operator()( int i, int j )
 	{
 
 		if( i<0 || j<0 || i>=3 || j>=3 ){
@@ -201,7 +203,7 @@ namespace LAL {
 	}
 
 	template <class Real>
-	Vector3<Real> Matrix3x3<Real>::Row( int i ) const  
+	Vector3<Real> Matrix3x3<Real>::Row( int i ) const
 	{
 
 		if( i<0 || i>=3 ){
@@ -219,7 +221,7 @@ namespace LAL {
 	inline Matrix3x3<Real>& Matrix3x3<Real>::operator=( const Matrix3x3<Real>& a )
 	{
 
-		this->m[0].x = a[ 0 ].x; this->m[0].y = a[ 0 ].y; this->m[0].z = a[ 0 ].z; 
+		this->m[0].x = a[ 0 ].x; this->m[0].y = a[ 0 ].y; this->m[0].z = a[ 0 ].z;
 		this->m[1].x = a[ 1 ].x; this->m[1].y = a[ 1 ].y; this->m[1].z = a[ 1 ].z;
 		this->m[2].x = a[ 2 ].x; this->m[2].y = a[ 2 ].y; this->m[2].z = a[ 2 ].z;
 
@@ -258,7 +260,7 @@ namespace LAL {
 		( a[ 0 ].x + b[ 0 ].x, a[ 0 ].y + b[ 0 ].y, a[ 0 ].z + b[ 0 ].z,
 		  a[ 1 ].x + b[ 1 ].x, a[ 1 ].y + b[ 1 ].y, a[ 1 ].z + b[ 1 ].z,
 		  a[ 2 ].x + b[ 2 ].x, a[ 2 ].y + b[ 2 ].y, a[ 2 ].z + b[ 2 ].z )
-		);	
+		);
 	};
 
 	template <class Real>
@@ -269,7 +271,7 @@ namespace LAL {
 		( a[ 0 ].x - b.m[0].x, a[ 0 ].y - b.m[0].y, a[ 0 ].z - b.m[0].z,
 		  a[ 1 ].x - b.m[1].x, a[ 1 ].y - b.m[1].y, a[ 1 ].z - b.m[1].z,
 		  a[ 2 ].x - b.m[2].x, a[ 2 ].y - b.m[2].y, a[ 2 ].z - b.m[2].z )
-		);	
+		);
 	};
 
 	template <class Real>
@@ -280,7 +282,7 @@ namespace LAL {
 		( a[ 0 ].x * factor, a[ 0 ].y * factor, a[ 0 ].z * factor,
 		  a[ 1 ].x * factor, a[ 1 ].y * factor, a[ 1 ].z * factor,
 		  a[ 2 ].x * factor, a[ 2 ].y * factor, a[ 2 ].z * factor )
-		);	
+		);
 
 	};
 
@@ -314,7 +316,7 @@ namespace LAL {
 		( a[ 0 ].x * d, a[ 0 ].y * d, a[ 0 ].z * d,
 		  a[ 1 ].x * d, a[ 1 ].y * d, a[ 1 ].z * d,
 		  a[ 2 ].x * d, a[ 2 ].y * d, a[ 2 ].z * d )
-		);	
+		);
 	};
 
 
@@ -333,7 +335,7 @@ namespace LAL {
 		  a[ 2 ].x * b[ 0 ].x + a[ 2 ].y * b[ 1 ].x + a[ 2 ].z * b[ 2 ].x,
 		  a[ 2 ].x * b[ 0 ].y + a[ 2 ].y * b[ 1 ].y + a[ 2 ].z * b[ 2 ].y,
 		  a[ 2 ].x * b[ 0 ].z + a[ 2 ].y * b[ 1 ].z + a[ 2 ].z * b[ 2 ].z )
-		); 
+		);
 
 	};
 
@@ -344,7 +346,7 @@ namespace LAL {
 		( a[ 0 ].x * u.x + a[ 0 ].y * u.y + a[ 0 ].z * u.z,
 	      a[ 1 ].x * u.x + a[ 1 ].y * u.y + a[ 1 ].z * u.z,
 	      a[ 2 ].x * u.x + a[ 2 ].y * u.y + a[ 2 ].z * u.z )
-		); 
+		);
 
 	};
 
@@ -355,14 +357,14 @@ namespace LAL {
 		( a[ 0 ].x * p.x + a[ 0 ].y * p.y + a[ 0 ].z * p.z,
 	      a[ 1 ].x * p.x + a[ 1 ].y * p.y + a[ 1 ].z * p.z,
 	      a[ 2 ].x * p.x + a[ 2 ].y * p.y + a[ 2 ].z * p.z )
-		); 
+		);
 
 	};
 
 	template <class Real>
 	inline std::ostream& operator<< (std::ostream & s, const Matrix3x3<Real>& a)
 	{
-		s << "Matrix 3x3" << std::endl 
+		s << "Matrix 3x3" << std::endl
 		<< " a11 = " << a[ 0 ].x << " ,a12 = " << a[ 0 ].y << " ,a13 = " << a[ 0 ].z << std::endl
 		<< " a21 = " << a[ 1 ].x << " ,a22 = " << a[ 1 ].y << " ,a23 = " << a[ 1 ].z << std::endl
 		<< " a31 = " << a[ 2 ].x << " ,a32 = " << a[ 2 ].y << " ,a33 = " << a[ 2 ].z << std::endl;
@@ -371,13 +373,13 @@ namespace LAL {
 	};
 
 	template <class Real>
-	const Real* Matrix3x3<Real>::ToRealPtr( void ) const 
+	const Real* Matrix3x3<Real>::ToRealPtr( void ) const
 	{
 		return m[0].ToFloatPtr();
 	}
 
 	template <class Real>
-	Real* Matrix3x3<Real>::ToRealPtr( void ) 
+	Real* Matrix3x3<Real>::ToRealPtr( void )
 	{
 		return m[0].ToRealPtr();
 	}
@@ -385,8 +387,8 @@ namespace LAL {
 	template <class Real>
 	bool Matrix3x3<Real>::IsSymetric ()
 	{
-		if ( (m[0].y == m[1].x) and  
-				(m[0].z == m[2].x) and	
+		if ( (m[0].y == m[1].x) and
+				(m[0].z == m[2].x) and
 				(m[2].y == m[1].z) )
 		{
 			return true;
@@ -400,13 +402,13 @@ namespace LAL {
 	{
 		return Matrix3x3<Real>(1.0,0.0,0.0,
 				0.0,1.0,0.0,
-				0.0,0.0,1.0);	
+				0.0,0.0,1.0);
 	}
 	template <class Real>
 	Matrix3x3<Real>::~Matrix3x3(){};
 
 
-	
+
 
 }/* LAL :: NAMESPACE */
 

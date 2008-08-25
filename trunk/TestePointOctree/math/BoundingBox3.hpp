@@ -26,6 +26,7 @@ private:
 
 public:
 
+
 	BoundingBox3 ( )
 	{
 		this->min_ = Point3<Real> ();

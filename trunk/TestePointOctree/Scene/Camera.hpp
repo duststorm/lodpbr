@@ -48,11 +48,11 @@ namespace LAL{
 
         	mOrientation = Quaternion(1.0,0.0,0.0,0.0);
         	mAccumPitchDegrees = 0.0f;
-        	
+
             pitchDegrees = 0.0f;
             headingDegrees = 0.0f;
             rollDegrees = 0.0f;
-            
+
         	mBehavior = FIRST_PERSON;
 
         	mFocus = Vector3(0.0,0.0,1.0);
@@ -61,7 +61,7 @@ namespace LAL{
         	mTrackball = Trackball();
 
         	mViewMatrix.Identity();
-        	
+
         	mFieldOfView = 90.0;
         	mAspectRatio = 1.0f;
         	mNearPlane  = 0.001f;
@@ -87,21 +87,21 @@ namespace LAL{
 
         Matrix4x4 ViewMatrix()
         {
-      	
+
             mViewMatrix = mOrientation.To4x4Matrix();
-        
+
             xAxis.Set(mViewMatrix[0][0], mViewMatrix[0][1], mViewMatrix[0][2]);
             yAxis.Set(mViewMatrix[1][0], mViewMatrix[1][1], mViewMatrix[1][2]);
             zAxis.Set(mViewMatrix[2][0], mViewMatrix[2][1], mViewMatrix[2][2]);
-            
+
             mFocus = -zAxis;
-            
+
             mViewMatrix[0][3] = -(xAxis * mEyes);
             mViewMatrix[1][3] = -(yAxis * mEyes);
             mViewMatrix[2][3] = -(zAxis * mEyes);
-            
+
             return mViewMatrix;
-        	
+
                 // Get the inverse of the arcball's rotation matrix
         		//LAL::Quaternion<float> cameraRotation = ~mTrackball.orientation();
 
@@ -115,7 +115,7 @@ namespace LAL{
                 // Update the eye point based on a radius away from the lookAt position
                // mEyes = cameraRotation.Rotate(mEyes);
 
-              
+
         }
 
         Matrix4x4 ViewMatrixNormal()
@@ -265,14 +265,14 @@ namespace LAL{
                 break;
 
             case FLIGHT:
-                
+
                 break;
             }
 
-            
+
         }
 
-        
+
         void rotateFirstPerson(float headingDegrees, float pitchDegrees)
         {
             // Implements the rotation logic for the first person style and
@@ -327,7 +327,7 @@ namespace LAL{
 
             yAxis = (zAxis ^ xAxis);
             yAxis.Normalize();
-            
+
             mViewMatrix[0][0] = xAxis.x;
             mViewMatrix[0][1] = xAxis.y;
             mViewMatrix[0][2] = xAxis.z;
@@ -340,15 +340,15 @@ namespace LAL{
 
             mViewMatrix[2][0] = zAxis.x;
             mViewMatrix[2][1] = zAxis.y;
-            mViewMatrix[2][2] = zAxis.z;    
+            mViewMatrix[2][2] = zAxis.z;
             mViewMatrix[2][3] = -(zAxis * eye);
 
             // Extract the pitch angle from the view matrix.
-            mAccumPitchDegrees = Math::radiansToDegrees(std::asin(mViewMatrix[2][1]));
+            mAccumPitchDegrees = Math::RAD2DEG * (std::asin(mViewMatrix[2][1]));
 
             mOrientation.FromRotationMatrix(mViewMatrix);
         }
-      
+
         void Zoom(float mouseWheelDelta)
         {
             // Change the radius from the camera to the model based on wheel scrolling
@@ -378,21 +378,21 @@ namespace LAL{
 
     	Quaternion mOrientation;
     	float mAccumPitchDegrees;
-    	
+
         float pitchDegrees;
         float headingDegrees;
         float rollDegrees;
-    	
+
     	CameraBehavior mBehavior;
 
     	Vector3 mFocus;    //Where the camera looked at
-    	Vector3 mEyes;	   //Where the camera is	
-    	Vector3 mUp;	   //Self Documentation	
-    	
+    	Vector3 mEyes;	   //Where the camera is
+    	Vector3 mUp;	   //Self Documentation
+
     	Vector3 xAxis;
     	Vector3 yAxis;
-    	Vector3 zAxis;    	
-    	
+    	Vector3 zAxis;
+
     	float mWidth;
     	float mHeight;
 
