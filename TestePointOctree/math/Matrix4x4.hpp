@@ -5,11 +5,11 @@
 #include <iostream>
 // [Project Includes]
 #include "Math.hpp"
-#include "Vector4.hpp" 
+#include "Vector4.hpp"
 #include "Vector3.hpp"
 #include "Matrix3x3.hpp"
 
-  
+
 
 namespace LAL {
 
@@ -17,31 +17,32 @@ namespace LAL {
 
 *@class Matrix4x4.
 *@brief Class that represent a dense 4x4 Matrix and Homogeneous Coordinate ..
-*@details coming soon , but ... coming soon  ... wait ¬¬.
+*@details ...
 *@author Felipe Moura.
+*@email fmc@cos.ufrj.br
 *@version 1.0.
-*@todo OpenGL interface and a C style array, Why MakeView ans MakeProjection dont need The Transpose?
-*@todo Não deu certo integrar por que minha nova 3x3 e 4x4 matrix estavam colum major , por isso dava dando bugs ...
+*@todo OpenGL interface and a C style array,
+*@todo Keep supporting Homogeneous Coordinates ?
 
   \nosubgrouping */
 
 	template<class Real> class Matrix4x4
 	{
 	public:
-		
+
 		friend class Vector3<Real>;
 		friend class Vector4<Real>;
 		friend class Matrix3x3<Real>;
-	
+
 		/*! @name Defining a Matrix4x4 */
 		//@{
 		/*! Default constructor. All value is set to 0. */
 		Matrix4x4();
-		 /*! Copy constructor. */ 
+		 /*! Copy constructor. */
 		Matrix4x4( const Matrix4x4<Real>& a );
 		inline Matrix4x4<Real>& operator=( const Matrix3x3<Real>& a);
 		inline Matrix4x4<Real>& operator=( const Matrix4x4<Real>& a);
-		
+
 		/*! Copy constructor for a Matrix with another type */
 		template <class T>
 		Matrix4x4( const Matrix4x4<T>& a );
@@ -50,44 +51,44 @@ namespace LAL {
 		Matrix4x4( const Vector4<Real>& row1, const Vector4<Real>& row2, const Vector4<Real>& row3, const Vector4<Real>& row4 );
 		/*! Constructor. Three Vector3 representing the three  first rows*/
 		Matrix4x4( const Vector3<Real>& row1, const Vector3<Real>& row1, const Vector3<Real>& row3);
-		
+
 		 /*! Constructor. Taking 16 arguments. */
-		Matrix4x4( Real a11, Real a12, Real a13, Real a14, 
+		Matrix4x4( Real a11, Real a12, Real a13, Real a14,
 				   Real a21, Real a22, Real a23, Real a24,
-				   Real a31, Real a32, Real a31, Real a34, 
+				   Real a31, Real a32, Real a31, Real a34,
 				   Real a41, Real a42, Real a43, Real a44 );
-		
+
 		virtual ~Matrix4x4();
-		
+
 		//@}
 		/*! @name Accessing the value */
 		//@{
-				
+
 		const Vector4<Real>& 	operator[]( int rowIndex ) const;
 		Vector4<Real>& 			operator[]( int rowIndex );
-		
+
 		Real  					operator()( int i, int j ) const;
 		Real& 					operator()( int i, int j );
 		// Return Colum
 		Vector4<Real> 			Column ( int index ) const;
 		Vector4<Real> 			Row ( int index ) const;
 
-		
+
 		//@}
-		
+
 		/*! @name Algebraic computations */
 		//@{
 		Matrix4x4<Real> 		operator~() const;
 		Matrix4x4<Real>  		operator-() const;
 		Matrix4x4<Real>  		operator+() const;
-		
+
 		template <class T>
 		friend Matrix4x4<T> 	operator*( const T& factor, const Matrix4x4<T>& a );
 		template <class T>
 		friend Matrix4x4<T> 	operator*( const Matrix4x4<T>& a, const T& factor );
 		template <class T>
 		friend Matrix4x4<T> 	operator/( const Matrix4x4<T>& a, const T& factor );
-		
+
 		Matrix4x4<Real>& 		operator/=( const Real& factor);
 		Matrix4x4<Real>& 		operator*=( const Real& factor);
 		Matrix4x4<Real>& 		operator+=( const Real& factor);
@@ -114,35 +115,35 @@ namespace LAL {
 		/*! @name Projection */
 		static Matrix4x4<Real> 	MakePespectiveProjectionMatrix (const Real& fovy, const Real& aspectRation, const Real& near, const Real& far) ;
 		static Matrix4x4<Real> 	MakeOrthographicProjectionMatrix (const Real& left, const Real& right,const Real& bottom, const Real& top, const Real& near, const Real& far) ;
-					
+
 		static Matrix4x4<Real> 	MakeViewMatrix       (const Vector3<Real>& eyes, const Vector3<Real>& position, const Vector3<Real>& up) ;
 		//@}
 		/*! @name Rotation  */
-		//@{ 
+		//@{
 		void 					FromHeadPitchRoll(Real headDegrees, Real pitchDegrees, Real rollDegrees);
 		void 					Rotate(const Vector3<Real>& axis, Real& degrees);
 		void 					ToHeadPitchRoll(Real &headDegrees, Real &pitchDegrees, Real &rollDegrees) const;
 		//@}
-		
+
 		/*! @name Matrix Function  */
-		//@{ 
-				
+		//@{
+
 		Matrix4x4<Real> 		Identity ();
 		Real 					Determinant () const;
 		Matrix4x4<Real> 		Inverse () const;
 		bool 					IsSymetric ();
-		
-		const Real* 			ToRealPtr( void ) const; 
+
+		const Real* 			ToRealPtr( void ) const;
 		Real* 					ToRealPtr( void );
-		
+
 		template <class T>
 		friend std::ostream&	operator<< (std::ostream & s, const Matrix4x4<T>& A);
 		//@}
-		
+
 	private:
-		
+
 	Vector4<Real> m[4];
-	
+
 	}; // End Interface
 
 
@@ -155,7 +156,7 @@ namespace LAL {
 		m[ 0 ].w =  static_cast< Real > ( 0 );
 
 		m[ 1 ].x =  static_cast< Real > ( 0 );
-		m[ 1 ].y =  static_cast< Real > ( 1 ); 
+		m[ 1 ].y =  static_cast< Real > ( 1 );
 		m[ 1 ].z =  static_cast< Real > ( 0 );
 		m[ 1 ].w =  static_cast< Real > ( 0 );
 
@@ -164,7 +165,7 @@ namespace LAL {
 		m[ 2 ].z =  static_cast< Real > ( 1 );
 		m[ 2 ].w =  static_cast< Real > ( 0 );
 
-		m[ 3 ].x =  static_cast< Real > ( 0 ); 
+		m[ 3 ].x =  static_cast< Real > ( 0 );
 		m[ 3 ].y =  static_cast< Real > ( 0 );
 		m[ 3 ].z =  static_cast< Real > ( 0 );
 		m[ 3 ].w =  static_cast< Real > ( 1 );
@@ -173,17 +174,18 @@ namespace LAL {
 	template <class Real>
 	Matrix4x4<Real>::Matrix4x4( const Matrix4x4<Real>& a )
 	{
-		m[ 0 ].x = a[ 0 ].x; m[ 0 ].y = a[ 0 ].y; m[ 0 ].z = a[ 0 ].z; m[ 0 ].w = a[ 0 ].w; 
+		m[ 0 ].x = a[ 0 ].x; m[ 0 ].y = a[ 0 ].y; m[ 0 ].z = a[ 0 ].z; m[ 0 ].w = a[ 0 ].w;
 		m[ 1 ].x = a[ 1 ].x; m[ 1 ].y = a[ 1 ].y; m[ 1 ].z = a[ 1 ].z; m[ 1 ].w = a[ 1 ].w;
 		m[ 2 ].x = a[ 2 ].x; m[ 2 ].y = a[ 2 ].y; m[ 2 ].z = a[ 2 ].z; m[ 2 ].w = a[ 2 ].w;
 		m[ 3 ].x = a[ 3 ].x; m[ 3 ].y = a[ 3 ].y; m[ 3 ].z = a[ 3 ].z; m[ 3 ].w = a[ 3 ].w;
+
 	}
 
 	template <class Real>
 	template <class T>
 	Matrix4x4<Real>::Matrix4x4( const Matrix4x4<T>& a )
 	{
-		m[ 0 ].x = a[ 0 ].x; m[ 0 ].y = a[ 0 ].y; m[ 0 ].z = a[ 0 ].z; m[ 0 ].w = a[ 0 ].w; 
+		m[ 0 ].x = a[ 0 ].x; m[ 0 ].y = a[ 0 ].y; m[ 0 ].z = a[ 0 ].z; m[ 0 ].w = a[ 0 ].w;
 		m[ 1 ].x = a[ 1 ].x; m[ 1 ].y = a[ 1 ].y; m[ 1 ].z = a[ 1 ].z; m[ 1 ].w = a[ 1 ].w;
 		m[ 2 ].x = a[ 2 ].x; m[ 2 ].y = a[ 2 ].y; m[ 2 ].z = a[ 2 ].z; m[ 2 ].w = a[ 2 ].w;
 		m[ 3 ].x = a[ 3 ].x; m[ 3 ].y = a[ 3 ].y; m[ 3 ].z = a[ 3 ].z; m[ 3 ].w = a[ 3 ].w;
@@ -192,11 +194,11 @@ namespace LAL {
 
 	template <class Real>
 	Matrix4x4<Real>::Matrix4x4( Real a00, Real a01,Real  a02,Real  a03,
-								Real a10,Real  a11,Real  a12,Real  a13, 
+								Real a10,Real  a11,Real  a12,Real  a13,
 								Real a20,Real  a21,Real  a22,Real  a23,
 								Real a30,Real  a31,Real  a32,Real  a33 )
 	{
-		m[ 0 ].x = a00; m[ 0 ].y = a01; m[ 0 ].z = a02; m[ 0 ].w = a03; 
+		m[ 0 ].x = a00; m[ 0 ].y = a01; m[ 0 ].z = a02; m[ 0 ].w = a03;
 		m[ 1 ].x = a10; m[ 1 ].y = a11; m[ 1 ].z = a12; m[ 1 ].w = a13;
 		m[ 2 ].x = a20; m[ 2 ].y = a21; m[ 2 ].z = a22; m[ 2 ].w = a23;
 		m[ 3 ].x = a30; m[ 3 ].y = a31; m[ 3 ].z = a32; m[ 3 ].w = a33;
@@ -219,8 +221,6 @@ namespace LAL {
 		m[ 2 ].x = row3.x; m[ 2 ].y = row3.y; m[ 2 ].z = row3.z; m[ 2 ].w = static_cast< Real > ( 0 ) ;
 		m[ 3 ].x = static_cast< Real > ( 0 ); m[ 3 ].y = static_cast< Real > ( 0 ); m[ 3 ].z =	static_cast< Real > ( 0 ) ; m[ 3 ].w = static_cast< Real > ( 1 );
 	};
-
-
 
 	// transpose
 	template <class Real>
@@ -267,7 +267,7 @@ namespace LAL {
 	}
 
 	template <class Real>
-	Real& Matrix4x4<Real>::operator()( int i, int j )  
+	Real& Matrix4x4<Real>::operator()( int i, int j )
 	{
 
 		if( i<0 || j<0 || i>=4 || j>=4 ){
@@ -299,7 +299,7 @@ namespace LAL {
 	}
 
 	template <class Real>
-	Vector4<Real> Matrix4x4<Real>::Row( int i ) const  
+	Vector4<Real> Matrix4x4<Real>::Row( int i ) const
 	{
 
 		if( i<0 || i>=4 )
@@ -318,14 +318,14 @@ namespace LAL {
 	inline Matrix4x4<Real>& Matrix4x4<Real>::operator=( const Matrix3x3<Real>& a)
 	{
 
-		m[ 0 ].x = a[ 0 ].x; m[ 0 ].y = a[ 0 ].y; m[ 0 ].z = a[ 0 ].z; m[ 0 ].w = a[ 0 ].w; 
-		m[ 1 ].x = a[ 1 ].x; m[ 1 ].y = a[ 1 ].y; m[ 1 ].z = a[ 1 ].z; m[ 1 ].w = a[ 1 ].w;
-		m[ 2 ].x = a[ 2 ].x; m[ 2 ].y = a[ 2 ].y; m[ 2 ].z = a[ 2 ].z; m[ 2 ].w = a[ 2 ].w;
-		
-		m[ 3 ].x = static_cast< Real > ( 0 ); 
-		m[ 3 ].y = static_cast< Real > ( 0 ); 
-		m[ 3 ].z = static_cast< Real > ( 0 ); 
-		m[ 3 ].w = static_cast< Real > ( 0 );
+		m[ 0 ].x = a[ 0 ].x; m[ 0 ].y = a[ 0 ].y; m[ 0 ].z = a[ 0 ].z; m[ 0 ].w = static_cast< Real > ( 0 );
+		m[ 1 ].x = a[ 1 ].x; m[ 1 ].y = a[ 1 ].y; m[ 1 ].z = a[ 1 ].z; m[ 1 ].w = static_cast< Real > ( 0 );
+		m[ 2 ].x = a[ 2 ].x; m[ 2 ].y = a[ 2 ].y; m[ 2 ].z = a[ 2 ].z; m[ 2 ].w = static_cast< Real > ( 0 );
+
+		m[ 3 ].x = static_cast< Real > ( 0 );
+		m[ 3 ].y = static_cast< Real > ( 0 );
+		m[ 3 ].z = static_cast< Real > ( 0 );
+		m[ 3 ].w = static_cast< Real > ( 1 );
 
 		return ( *this );
 	};
@@ -334,14 +334,14 @@ namespace LAL {
 	inline Matrix4x4<Real>& Matrix4x4<Real>::operator=( const Matrix4x4<Real>& a)
 	{
 
-		m[ 0 ].x = a[ 0 ].x; m[ 0 ].y = a[ 0 ].y; m[ 0 ].z = a[ 0 ].z; m[ 0 ].w = a[ 0 ].w; 
+		m[ 0 ].x = a[ 0 ].x; m[ 0 ].y = a[ 0 ].y; m[ 0 ].z = a[ 0 ].z; m[ 0 ].w = a[ 0 ].w;
 		m[ 1 ].x = a[ 1 ].x; m[ 1 ].y = a[ 1 ].y; m[ 1 ].z = a[ 1 ].z; m[ 1 ].w = a[ 1 ].w;
 		m[ 2 ].x = a[ 2 ].x; m[ 2 ].y = a[ 2 ].y; m[ 2 ].z = a[ 2 ].z; m[ 2 ].w = a[ 2 ].w;
 		m[ 3 ].x = a[ 3 ].x; m[ 3 ].y = a[ 3 ].y; m[ 3 ].z = a[ 3 ].z; m[ 3 ].w = a[ 3 ].w;
 
 		return ( *this );
 	};
-	
+
 	// FRIEND FUNCRealIONS
 
 	template <class Real>
@@ -374,10 +374,10 @@ namespace LAL {
 
 		return ( Matrix4x4<Real>
 		( a[ 0 ].x + b[ 0 ].x, a[ 0 ].y + b[ 0 ].y, a[ 0 ].z + b[ 0 ].z, a[ 0 ].w + b[ 0 ].w,
-		  a[ 1 ].x + b[ 1 ].x, a[ 1 ].y + b[ 1 ].y, a[ 1 ].z + b[ 1 ].z, a[ 1 ].w + b[ 1 ].w, 
+		  a[ 1 ].x + b[ 1 ].x, a[ 1 ].y + b[ 1 ].y, a[ 1 ].z + b[ 1 ].z, a[ 1 ].w + b[ 1 ].w,
 		  a[ 2 ].x + b[ 2 ].x, a[ 2 ].y + b[ 2 ].y, a[ 2 ].z + b[ 2 ].z, a[ 2 ].w + b[ 2 ].w,
 		  a[ 3 ].x + b[ 3 ].x, a[ 3 ].y + b[ 3 ].y, a[ 3 ].z + b[ 3 ].z, a[ 3 ].w + b[ 3 ].w )
-		);	
+		);
 	};
 
 	template <class Real>
@@ -389,7 +389,7 @@ namespace LAL {
 		  a[ 1 ].x - b[ 1 ].x, a[ 1 ].y - b[ 1 ].y, a[ 1 ].z - b[ 1 ].z, a[ 1 ].w - b[ 1 ].w,
 		  a[ 2 ].x - b[ 2 ].x, a[ 2 ].y - b[ 2 ].y, a[ 2 ].z - b[ 2 ].z, a[ 2 ].w - b[ 2 ].w,
 		  a[ 3 ].x - b[ 3 ].x, a[ 3 ].y - b[ 3 ].y, a[ 3 ].z - b[ 3 ].z, a[ 3 ].w - b[ 3 ].w)
-		);	
+		);
 	};
 
 	template <class Real>
@@ -399,9 +399,9 @@ namespace LAL {
 		return ( Matrix4x4<Real>
 		( a[ 0 ].x * factor, a[ 0 ].y * factor, a[ 0 ].z * factor, a[ 0 ].w * factor,
 		  a[ 1 ].x * factor, a[ 1 ].y * factor, a[ 1 ].z * factor, a[ 1 ].w * factor,
-		  a[ 2 ].x * factor, a[ 2 ].y * factor, a[ 2 ].z * factor, a[ 2 ].w * factor, 
+		  a[ 2 ].x * factor, a[ 2 ].y * factor, a[ 2 ].z * factor, a[ 2 ].w * factor,
 		  a[ 3 ].x * factor, a[ 3 ].y * factor, a[ 3 ].z * factor, a[ 3 ].w * factor )
-		);	
+		);
 
 	};
 
@@ -412,9 +412,9 @@ namespace LAL {
 		return ( Matrix4x4<Real>
 		( a[ 0 ].x * factor, a[ 0 ].y * factor, a[ 0 ].z * factor, a[ 0 ].w * factor,
 		  a[ 1 ].x * factor, a[ 1 ].y * factor, a[ 1 ].z * factor, a[ 1 ].w * factor,
-		  a[ 2 ].x * factor, a[ 2 ].y * factor, a[ 2 ].z * factor, a[ 2 ].w * factor, 
+		  a[ 2 ].x * factor, a[ 2 ].y * factor, a[ 2 ].z * factor, a[ 2 ].w * factor,
 		  a[ 3 ].x * factor, a[ 3 ].y * factor, a[ 3 ].z * factor, a[ 3 ].w * factor)
-		);	
+		);
 	};
 
 	template <class Real>
@@ -423,7 +423,7 @@ namespace LAL {
 
 		m[ 0 ].x += factor; m[ 0 ].y += factor; m[ 0 ].z += factor; m[ 0 ].w += factor;
 		m[ 1 ].x += factor; m[ 1 ].y += factor; m[ 1 ].z += factor; m[ 1 ].w += factor;
-		m[ 2 ].x += factor; m[ 2 ].y += factor; m[ 2 ].z += factor; m[ 2 ].w += factor; 
+		m[ 2 ].x += factor; m[ 2 ].y += factor; m[ 2 ].z += factor; m[ 2 ].w += factor;
 		m[ 3 ].x += factor; m[ 3 ].y += factor; m[ 3 ].z += factor; m[ 3 ].w += factor;
 
 		return (*this);
@@ -435,7 +435,7 @@ namespace LAL {
 
 		m[ 0 ].x -= factor; m[ 0 ].y -= factor; m[ 0 ].z -= factor; m[ 0 ].w -= factor;
 		m[ 1 ].x -= factor; m[ 1 ].y -= factor; m[ 1 ].z -= factor; m[ 1 ].w -= factor;
-		m[ 2 ].x -= factor; m[ 2 ].y -= factor; m[ 2 ].z -= factor; m[ 2 ].w -= factor; 
+		m[ 2 ].x -= factor; m[ 2 ].y -= factor; m[ 2 ].z -= factor; m[ 2 ].w -= factor;
 		m[ 3 ].x -= factor; m[ 3 ].y -= factor; m[ 3 ].z -= factor; m[ 3 ].w -= factor;
 
 		return (*this);
@@ -457,7 +457,7 @@ namespace LAL {
 
 		m[ 0 ].x *= f; m[ 0 ].y *= f; m[ 0 ].z *= f; m[ 0 ].w *= f;
 		m[ 1 ].x *= f; m[ 1 ].y *= f; m[ 1 ].z *= f; m[ 1 ].w *= f;
-		m[ 2 ].x *= f; m[ 2 ].y *= f; m[ 2 ].z *= f; m[ 2 ].w *= f; 
+		m[ 2 ].x *= f; m[ 2 ].y *= f; m[ 2 ].z *= f; m[ 2 ].w *= f;
 		m[ 3 ].x *= f; m[ 3 ].y *= f; m[ 3 ].z *= f; m[ 3 ].w *= f;
 
 		return (*this);
@@ -469,7 +469,7 @@ namespace LAL {
 
 		m[ 0 ].x *= factor; m[ 0 ].y *= factor; m[ 0 ].z *= factor; m[ 0 ].w *= factor;
 		m[ 1 ].x *= factor; m[ 1 ].y *= factor; m[ 1 ].z *= factor; m[ 1 ].w *= factor;
-		m[ 2 ].x *= factor; m[ 2 ].y *= factor; m[ 2 ].z *= factor; m[ 2 ].w *= factor; 
+		m[ 2 ].x *= factor; m[ 2 ].y *= factor; m[ 2 ].z *= factor; m[ 2 ].w *= factor;
 		m[ 3 ].x *= factor; m[ 3 ].y *= factor; m[ 3 ].z *= factor; m[ 3 ].w *= factor;
 
 		return (*this);
@@ -491,9 +491,9 @@ namespace LAL {
 		return ( Matrix4x4<Real>
 		(	a[ 0 ].x * f, a[ 0 ].y * f, a[ 0 ].z * f, a[ 0 ].w * f,
 			a[ 1 ].x * f, a[ 1 ].y * f, a[ 1 ].z * f, a[ 1 ].w * f,
-			a[ 2 ].x * f, a[ 2 ].y * f, a[ 2 ].z * f, a[ 2 ].w * f, 
+			a[ 2 ].x * f, a[ 2 ].y * f, a[ 2 ].z * f, a[ 2 ].w * f,
 			a[ 3 ].x * f, a[ 3 ].y * f, a[ 3 ].z * f, a[ 3 ].w * f )
-		);	
+		);
 	};
 
 
@@ -502,15 +502,15 @@ namespace LAL {
 	{
 		return ( Matrix4x4<Real>
 		(
-		  // Row 1	
+		  // Row 1
 		  a[ 0 ].x * b[ 0 ].x + a[ 0 ].y * b[ 1 ].x + a[ 0 ].z * b[ 2 ].x + a[ 0 ].w * b[ 3 ].x,
-		  a[ 0 ].x * b[ 0 ].y + a[ 0 ].y * b[ 1 ].y + a[ 0 ].z * b[ 2 ].y + a[ 0 ].w * b[ 3 ].y, 
+		  a[ 0 ].x * b[ 0 ].y + a[ 0 ].y * b[ 1 ].y + a[ 0 ].z * b[ 2 ].y + a[ 0 ].w * b[ 3 ].y,
 		  a[ 0 ].x * b[ 0 ].z + a[ 0 ].y * b[ 1 ].z + a[ 0 ].z * b[ 2 ].z + a[ 0 ].w * b[ 3 ].z,
 		  a[ 0 ].x * b[ 0 ].w + a[ 0 ].y * b[ 1 ].w + a[ 0 ].z * b[ 2 ].w + a[ 0 ].w * b[ 3 ].w,
 		  // Row 2
 		  a[ 1 ].x * b[ 0 ].x + a[ 1 ].y * b[ 1 ].x + a[ 1 ].z * b[ 2 ].x + a[ 1 ].w * b[ 3 ].x,
 		  a[ 1 ].x * b[ 0 ].y + a[ 1 ].y * b[ 1 ].y + a[ 1 ].z * b[ 2 ].y + a[ 1 ].w * b[ 3 ].y,
-		  a[ 1 ].x * b[ 0 ].z + a[ 1 ].y * b[ 1 ].z + a[ 1 ].z * b[ 2 ].z + a[ 1 ].w * b[ 3 ].z, 
+		  a[ 1 ].x * b[ 0 ].z + a[ 1 ].y * b[ 1 ].z + a[ 1 ].z * b[ 2 ].z + a[ 1 ].w * b[ 3 ].z,
 		  a[ 1 ].x * b[ 0 ].w + a[ 1 ].y * b[ 1 ].w + a[ 1 ].z * b[ 2 ].w + a[ 1 ].w * b[ 3 ].w,
 		  // Row 3
 		  a[ 2 ].x * b[ 0 ].x + a[ 2 ].y * b[ 1 ].x + a[ 2 ].z * b[ 2 ].x + a[ 2 ].w * b[ 3 ].x,
@@ -523,7 +523,7 @@ namespace LAL {
 		  a[ 3 ].x * b[ 0 ].z + a[ 3 ].y * b[ 1 ].z + a[ 3 ].z * b[ 2 ].z + a[ 3 ].w * b[ 3 ].z,
 		  a[ 3 ].x * b[ 0 ].w + a[ 3 ].y * b[ 1 ].w + a[ 3 ].z * b[ 2 ].w + a[ 3 ].w * b[ 3 ].w)
 
-		); 
+		);
 
 	};
 
@@ -535,7 +535,7 @@ namespace LAL {
 	      a[ 1 ].x * v.x + a[ 1 ].y * v.y + a[ 1 ].z * v.z + a[ 1 ].w * v.w,
 	   	  a[ 2 ].x * v.x + a[ 2 ].y * v.y + a[ 2 ].z * v.z + a[ 2 ].w * v.w,
 	      a[ 3 ].x * v.x + a[ 3 ].y * v.y + a[ 3 ].z * v.z + a[ 3 ].w * v.w)
-		); 
+		);
 
 	};
 
@@ -543,9 +543,9 @@ namespace LAL {
 	inline Vector3<Real> operator*( const Matrix4x4<Real>& a, const Vector3<Real>& v )
 	{
 		return ( Vector3<Real>
-		( a[ 0 ].x * v.x + a[ 0 ].y * v.y + a[ 0 ].z * v.z, 
-	      a[ 1 ].x * v.x + a[ 1 ].y * v.y + a[ 1 ].z * v.z, 
-	      a[ 2 ].x * v.x + a[ 2 ].y * v.y + a[ 2 ].z * v.z) 
+		( a[ 0 ].x * v.x + a[ 0 ].y * v.y + a[ 0 ].z * v.z,
+	      a[ 1 ].x * v.x + a[ 1 ].y * v.y + a[ 1 ].z * v.z,
+	      a[ 2 ].x * v.x + a[ 2 ].y * v.y + a[ 2 ].z * v.z)
 	    );
 	};
 
@@ -553,7 +553,7 @@ namespace LAL {
 	template <class Real>
 	inline std::ostream& operator<< (std::ostream & s, const Matrix4x4<Real>& a)
 	{
-				s << "Matrix 4x4" << std::endl 
+				s << "Matrix 4x4" << std::endl
 				<< " m[ 1 ].x = " << a[ 0 ].x << " ,m[ 1 ].y = " << a[ 0 ].y << " ,m[ 1 ].z = " << a[ 0 ].z << " ,m[ 4 ].w = " << a[ 0 ].w << std::endl
 				<< " m[ 2 ].x = " << a[ 1 ].x << " ,m[ 2 ].y = " << a[ 1 ].y << " ,m[ 2 ].z = " << a[ 1 ].z << " ,m[ 4 ].w = " << a[ 1 ].w << std::endl
 				<< " m[ 3 ].x = " << a[ 2 ].x << " ,m[ 3 ].y = " << a[ 2 ].y << " ,m[ 3 ].z = " << a[ 2 ].z << " ,m[ 4 ].w = " << a[ 2 ].w << std::endl
@@ -565,12 +565,13 @@ namespace LAL {
 	template <class Real>
 	bool Matrix4x4<Real>::IsSymetric ()
 	{
-		if ( (m[ 0 ].y == m[ 1 ].x) and  
+		if ( 	(m[ 0 ].y == m[ 1 ].x) and
 				(m[ 0 ].z == m[ 2 ].x) and
 				(m[ 0 ].w == m[ 3 ].x) and
 				(m[ 2 ].y == m[ 1 ].z) and
 				(m[ 3 ].y == m[ 1 ].w) and
-				(m[ 3 ].z == m[ 2 ].w))
+				(m[ 3 ].z == m[ 2 ].w)
+			)
 		{
 			return true;
 		}
@@ -603,8 +604,8 @@ namespace LAL {
 		return ( Matrix4x4<Real>
 		( a00 * factor, a01 * factor, a02 * factor, a03 * factor,
 		  a10 * factor, a11 * factor, a12 * factor, a13 * factor,
-		  a20 * factor, a21 * factor, a22 * factor, a23 * factor, 
-		  a30 * factor, a31 * factor, a32 * factor, a33 * factor) 
+		  a20 * factor, a21 * factor, a22 * factor, a23 * factor,
+		  a30 * factor, a31 * factor, a32 * factor, a33 * factor)
 		);
 
 
@@ -615,7 +616,7 @@ namespace LAL {
 	Real	Matrix4x4<Real>::Determinant() const
 	{
 		Real value;
-		
+
 		value =
 			m[ 0 ].w * m[ 1 ].z * m[ 2 ].y * m[ 3 ].x-m[ 0 ].z * m[ 1 ].w * m[ 2 ].y * m[ 3 ].x-m[ 0 ].w * m[ 1 ].y * m[ 2 ].z * m[ 3 ].x+m[ 0 ].y * m[ 1 ].w    * m[ 2 ].z * m[ 3 ].x+
 			m[ 0 ].z * m[ 1 ].y * m[ 2 ].w * m[ 3 ].x-m[ 0 ].y * m[ 1 ].z * m[ 2 ].w * m[ 3 ].x-m[ 0 ].w * m[ 1 ].z * m[ 2 ].x * m[ 3 ].y+m[ 0 ].z * m[ 1 ].w    * m[ 2 ].x * m[ 3 ].y+
@@ -623,7 +624,7 @@ namespace LAL {
 			m[ 0 ].w * m[ 1 ].y * m[ 2 ].x * m[ 3 ].z-m[ 0 ].y * m[ 1 ].w * m[ 2 ].x * m[ 3 ].z-m[ 0 ].w * m[ 1 ].x * m[ 2 ].y * m[ 3 ].z+m[ 0 ].x * m[ 1 ].w    * m[ 2 ].y * m[ 3 ].z+
 			m[ 0 ].y * m[ 1 ].x * m[ 2 ].w * m[ 3 ].z-m[ 0 ].x * m[ 1 ].y * m[ 2 ].w * m[ 3 ].z-m[ 0 ].z * m[ 1 ].y * m[ 2 ].x * m[ 3 ].w+m[ 0 ].y * m[ 1 ].z    * m[ 2 ].x * m[ 3 ].w+
 			m[ 0 ].z * m[ 1 ].x * m[ 2 ].y * m[ 3 ].w-m[ 0 ].x * m[ 1 ].z * m[ 2 ].y * m[ 3 ].w-m[ 0 ].y * m[ 1 ].x * m[ 2 ].z * m[ 3 ].w+m[ 0 ].x * m[ 1 ].y    * m[ 2 ].z * m[ 3 ].w;
-		
+
 		return value;
 	}
 
@@ -634,7 +635,7 @@ namespace LAL {
 		( 0.0 ,0.0, 0.0, 0.0,
 		  0.0, 0.0, 0.0, 0.0,
 		  0.0, 0.0, 0.0, 0.0,
-		  v.x , v.y , v.z ,1.0) 
+		  v.x , v.y , v.z ,1.0)
 		);
 	}
 
@@ -645,7 +646,7 @@ namespace LAL {
 		( 0.0 ,0.0, 0.0, 0.0,
 		  0.0, 0.0, 0.0, 0.0,
 		  0.0, 0.0, 0.0, 0.0,
-		  v.x , v.y , v.z ,1.0) 
+		  v.x , v.y , v.z ,1.0)
 		);
 	}
 
@@ -656,7 +657,7 @@ namespace LAL {
 		( 0.0 ,0.0, 0.0, 0.0,
 		  0.0, 0.0, 0.0, 0.0,
 		  0.0, 0.0, 0.0, 0.0,
-		  v0 , v1 , v2 ,1.0) 
+		  v0 , v1 , v2 ,1.0)
 		);
 
 	}
@@ -667,17 +668,17 @@ namespace LAL {
 		( v.x ,0.0, 0.0, 0.0,
 		  0.0, v.y, 0.0, 0.0,
 		  0.0, 0.0, v.z, 0.0,
-		  0.0, 0.0, 0.0 ,1.0) 
+		  0.0, 0.0, 0.0 ,1.0)
 		);
 	}
 
 
 	template <class Real>
-	Matrix4x4<Real> Matrix4x4<Real>::MakePespectiveProjectionMatrix(const Real& fov, const Real& aspectRation, const Real& near, const Real& far) 
+	Matrix4x4<Real> Matrix4x4<Real>::MakePespectiveProjectionMatrix(const Real& fov, const Real& aspectRation, const Real& near, const Real& far)
 	{
 
 
-		Real c 					= static_cast<Real> (1.0 / std::tan(LAL::Math::degreesToRadians(fov) * 0.5) );
+		Real c 					= static_cast<Real> (1.0 / std::tan(LAL::Math::DEG2RAD * fov * 0.5) );
 		Real aspectRationInv 	= static_cast<Real> (1.0 / aspectRation);
 		Real fovy 				= static_cast<Real> (2.0 * std::atan(aspectRationInv / c));
 		Real xScale 			= static_cast<Real> (1.0 / std::tan(0.5 * fovy));
@@ -705,36 +706,33 @@ namespace LAL {
 		lProjectionMatrix[ 3 ].z = static_cast< Real >(-1);
 		lProjectionMatrix[ 3 ].w = static_cast< Real >(0);
 
-
 		return Matrix4x4<Real>(lProjectionMatrix);
-
-
 
 	};
 
 	template <class Real>
-	Matrix4x4<Real> Matrix4x4<Real>::MakeOrthographicProjectionMatrix (const Real& left, const Real& right,const Real& bottom, const Real& top, const Real& near, const Real& far) 
+	Matrix4x4<Real> Matrix4x4<Real>::MakeOrthographicProjectionMatrix (const Real& left, const Real& right,const Real& bottom, const Real& top, const Real& near, const Real& far)
 	{
 		return Matrix4x4<Real>( (2 / (right - left) ), 0.0, 				  0.0, 					 -(right + left)  /( right - left),
 								0.0, 				   (2 / ( top - bottom) ),0.0, 					 -( top + bottom )/( top - bottom ),
-								0.0,                   0.0,                   (2 / ( far - near) ),  -( far + near )  /( far - near ), 
+								0.0,                   0.0,                   (2 / ( far - near) ),  -( far + near )  /( far - near ),
 								0.0,                   0.0,                   0.0,                    1.0 );
 	}
 
 	template <class Real>
-	Matrix4x4<Real> Matrix4x4<Real>::MakeViewMatrix(const Vector3<Real>& eyes, const Vector3<Real>& position, const Vector3<Real>& up) 
+	Matrix4x4<Real> Matrix4x4<Real>::MakeViewMatrix(const Vector3<Real>& eyes, const Vector3<Real>& position, const Vector3<Real>& up)
 	{
 
 		Vector3<Real> zaxis = (eyes - position).Norm();
 		Vector3<Real> xaxis = (up ^ zaxis).Norm();
 		Vector3<Real> yaxis =  zaxis ^ xaxis;
 
-		return Matrix4x4<Real>( xaxis.x	   , xaxis.y		, xaxis.z, -(xaxis * eyes), 
-								yaxis.x	   , yaxis.y		, yaxis.z, -(yaxis * eyes), 
-								zaxis.x	   , zaxis.y		, zaxis.z, -(zaxis * eyes), 
+		return Matrix4x4<Real>( xaxis.x	   , xaxis.y		, xaxis.z, -(xaxis * eyes),
+								yaxis.x	   , yaxis.y		, yaxis.z, -(yaxis * eyes),
+								zaxis.x	   , zaxis.y		, zaxis.z, -(zaxis * eyes),
 								static_cast< Real > ( 0 ),
 								static_cast< Real > ( 0 ),
-								static_cast< Real > ( 0 ), 
+								static_cast< Real > ( 0 ),
 								static_cast< Real > ( 1 ) );
 
 
@@ -744,12 +742,12 @@ namespace LAL {
 	void Matrix4x4<Real>::FromHeadPitchRoll(Real headDegrees, Real pitchDegrees, Real rollDegrees)
 	{
 		// Constructs a rotation matrix based on a Euler Transform.
-		// I use the popular NASA standard airplane convention of 
+		// I use the popular NASA standard airplane convention of
 		// heading-pitch-roll (i.e., RzRxRy).
 
-		headDegrees = Math::degreesToRadians(headDegrees);
-		pitchDegrees = Math::degreesToRadians(pitchDegrees);
-		rollDegrees = Math::degreesToRadians(rollDegrees);
+		headDegrees 	= Math::DEG2RAD * headDegrees;
+		pitchDegrees 	= Math::DEG2RAD * pitchDegrees;
+		rollDegrees 	= Math::DEG2RAD * rollDegrees;
 
 		Real cosH = std::cos(headDegrees);
 		Real cosP = std::cos(pitchDegrees);
@@ -784,7 +782,7 @@ namespace LAL {
 	{
 
 
-		degrees = Math::degreesToRadians(degrees);
+		degrees = Math::DEG2RAD * degrees;
 
 		Real x = axis.x();
 		Real y = axis.y();
@@ -843,9 +841,9 @@ namespace LAL {
 			thetaY = static_cast< Real >(0);
 		}
 
-		headDegrees  = Math::radiansToDegrees(thetaY);
-		pitchDegrees = Math::radiansToDegrees(thetaX);
-		rollDegrees  = Math::radiansToDegrees(thetaZ);
+		headDegrees  = Math::RAD2DEG * (thetaY);
+		pitchDegrees = Math::RAD2DEG * (thetaX);
+		rollDegrees  = Math::RAD2DEG * (thetaZ);
 	}
 
 
@@ -855,17 +853,17 @@ namespace LAL {
 		return Matrix4x4<Real>(1.0,0.0,0.0,0.0,
 				0.0,1.0,0.0,0.0,
 				0.0,0.0,1.0,0.0,
-				0.0,0.0,0.0,1.0);	
+				0.0,0.0,0.0,1.0);
 	}
 
 	template <class Real>
-	const Real* Matrix4x4<Real>::ToRealPtr( void ) const 
+	const Real* Matrix4x4<Real>::ToRealPtr( void ) const
 	{
 		return m[ 0 ].ToFloatPtr();
 	}
 
 	template <class Real>
-	Real* Matrix4x4<Real>::ToRealPtr( void ) 
+	Real* Matrix4x4<Real>::ToRealPtr( void )
 	{
 		return m[ 0 ].ToRealPtr();
 	}
@@ -907,13 +905,13 @@ namespace LAL {
 //"\n  m[2][1] = 105 ,m[2][2] = 92 ,m[2][3] = 112 "
 //"\n  m[3][1] = 111 ,m[3][2] = 87 ,m[3][3] = 126 \n"  << m3 << std::endl;
 //
-//m3 = -m1 + m2; 
+//m3 = -m1 + m2;
 //std::cout << "#m3 = -m1+m2 = # "
 //"\n  m[1][1] = 28 ,m[1][2] = 6 ,m[1][3] = 12 "
 //"\n  m[2][1] = 10 ,m[2][2] = 15 ,m[2][3] = 15 "
 //"\n  m[3][1] = 9 ,m[3][2] = 11,m[3][3] = 14 \n"  << m3 << std::endl;
 //
-//m3 = (-m2) / (-2.0f); 
+//m3 = (-m2) / (-2.0f);
 //std::cout << "#m3 = 2.0* (-m2) = # "
 //"\n m[1][1] = -10 ,m[1][2] = -2 ,m[1][3] = -12 "
 //"\n m[2][1] =  -18 , m[2][2] = -14 ,m[2][3]  = -16 "

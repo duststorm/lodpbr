@@ -8,24 +8,42 @@
 
 #include "Vector3.hpp"
 
-namespace LAL { 
+namespace LAL {
+
+/*!
+*@class Vector4.
+*@brief Class that represent a Vector in 3D with w.
+*@details ...
+*@author Felipe Moura.
+*@email fmc@cos.ufrj.br
+*@version 1.0.
+*@date 25-Feb-2008.
+*@todo OpenGL interface and a C style array.
+*/
 
 	template <class Real>	class Vector4
 	{
 
 	public:
 
-		Real x;
-		Real y;
-		Real z;
-		Real w;
-
+    	/*! @name Members  */
+    	//@{
+    	Real x; /*!< x abscissa of space. */
+    	Real y; /*!< y abscissa of space. */
+    	Real z; /*!< z abscissa of space. */
+    	Real w; /*!< w abscissa of space. */
+    	//@}
 
 	public:
-		
-		friend class Vector3<Real>;
-		// VETOR  LINHA 
 
+		friend class Vector3<Real>;
+		// VETOR  LINHA
+
+		// VETOR COLUNA OU VETOR LINHA ??
+
+		/*! @name  Defining a Vector4 */
+		//@{
+		/*! Default constructor. Value is set to (0,0,0,0). */
 		Vector4();
 		template < class T >
 		Vector4 (const T* v);
@@ -33,67 +51,93 @@ namespace LAL {
 		Vector4( const Vector3<Real>& vector );
 		Vector4( const Vector3<Real>& vector, const Real& w);
 		Vector4( const Real& x, const Real& y, const Real& z, const Real& w );
-
+		//@}
 
 		//Operator
+
+		/*! @name Accessing the value */
+		//@{
+
+		/*!Conversion operator returning the memory address of the Point.
+		 * Useful to pass as a parameter to OpenGL functions:
+		 * \code
+		 * LAL:Vector3<float> pos, normal;
+		 * glNormal3fv(normal);
+		 * glVertex3fv(pos);
+		 * \endcode */
 
 		Real  					operator[]( int index ) const;
 
 		Real& 					operator[]( int index );
+		//@}
 
-		// Assignment Opertators with Scalar
-		
+		// Assignment Opertators
+		//With Scalar
+ 	  	/*! @name Algebraic computations */
+  	  	// @{
+
   	  	Vector4<Real>   		operator+ ( ) const;
   	  	Vector4<Real>   		operator- ( ) const;
-  	  	
+
 	    Vector4< Real >& 		operator+=( const Real& factor );
-		Vector4< Real >& 		operator-=( const Real& factor ); 
-		Vector4< Real >& 		operator*=( const Real& factor ); 
+		Vector4< Real >& 		operator-=( const Real& factor );
+		Vector4< Real >& 		operator*=( const Real& factor );
 		Vector4< Real >& 		operator/=( const Real& factor );
 
 		template <class T>
-		friend Vector4<T> 		operator*( const Vector4<T>& v, const T& factor ); 	
+		friend Vector4<T> 		operator*( const Vector4<T>& v, const T& factor );
 		template <class T>
-		friend Vector4<T> 		operator*( const T& factor, const Vector4<T>& v ); 
+		friend Vector4<T> 		operator*( const T& factor, const Vector4<T>& v );
 		template <class T>
-		friend Vector4<T> 		operator/( const Vector4<T>& v, const T& factor ); 	
+		friend Vector4<T> 		operator/( const Vector4<T>& v, const T& factor );
 		template <class T>
-		friend Vector4<T> 		operator+( const T& factor, const Vector4<T>& v );  
+		friend Vector4<T> 		operator+( const T& factor, const Vector4<T>& v );
 		template <class T>
 		friend Vector4<T> 		operator+( const Vector4<T>& v, const T& factor );
 		template <class T>
-		friend Vector4<T> 		operator-( const T& factor, const Vector4<T>& v );  
+		friend Vector4<T> 		operator-( const T& factor, const Vector4<T>& v );
 		template <class T>
-		friend Vector4<T> 		operator-( const Vector4<T>& v, const T& factor ); 
-		
-		
-		
+		friend Vector4<T> 		operator-( const Vector4<T>& v, const T& factor );
+
+
+
 		// Assignment with Vector
 		Vector4<Real>& 			operator= ( const Vector4<Real>& v );
 		Vector4<Real>& 			operator+=( const Vector4<Real>& v );
-		Vector4<Real>& 			operator-=( const Vector4<Real>& v ); 
-		Vector4<Real>& 			operator/=( const Vector4<Real>& v ); 
-		
+		Vector4<Real>& 			operator-=( const Vector4<Real>& v );
+		Vector4<Real>& 			operator/=( const Vector4<Real>& v );
+
 		bool 					operator==( const Vector4<Real>& v) const;
 		bool 					operator!=( const Vector4<Real>& v) const;
-		
+
 		Vector4<Real>  			operator-( const Vector4<Real>& v) const;
 		Vector4<Real>  			operator+( const Vector4<Real>& v) const;
-		
+
 		Real 					operator*( const Vector4<Real>& v) const;
 
+		//@}
+		//@{
+		/*! Output stream operator. Enables debugging code like:
+    	  \code
+    	  LAL::Vector3<> v(...);
+    	  std::cout << "Vector4" << " x = " << v.x << " ,y = " << v.y << " ,z = " << v.z << " ,w = " << v.w << std::endl;
+    	  \endcode */
 		template <class T>
 		friend std::ostream& 	operator<<(std::ostream & s, const Vector4<T>& v);
-		
+
+  	  	/*!@name Functions */
+  	  	//@{
+  	  	/*!  */
 		// AUXILIAR FUNCTIONS
+
 		Real 					Length( void );
 		Real					LengthSqr( void );
 		void 					Normalize( void );
 		Vector4<Real> 			Norm( void );
-		
+
 		const Real* 			ToRealPtr( void ) const ;
 		Real*	 				ToRealPtr( void ) ;
-
+		//@}
 		~Vector4 ();
 
 
@@ -167,13 +211,13 @@ namespace LAL {
 	inline Real Vector4<Real>::operator[]( int index ) const
 	{
 		assert( ( index >= 0 ) && ( index < 4 ) );
-		
+
 		return ( ( &x )[ index ] );
 
 	};
 
 	template<class Real>
-	inline Real& Vector4<Real>::operator[]( int index ) 
+	inline Real& Vector4<Real>::operator[]( int index )
 	{
 		assert( ( index >= 0 ) && ( index < 4 ) );
 
@@ -187,7 +231,7 @@ namespace LAL {
 	//With Scalar
 
 	template<class Real>
-	inline Vector4<Real> Vector4<Real>::operator+()  const  
+	inline Vector4<Real> Vector4<Real>::operator+()  const
 	{
 		return ( Vector4<Real> (this->x, this->y, this->z, this->w)  );
 	};
@@ -206,55 +250,55 @@ namespace LAL {
 	};
 
 	template<class Real>
-	inline Vector4< Real >& Vector4<Real>::operator+=( const Real&  factor ) 
-	{ 
-		this->x += factor; 
-		this->y += factor; 
+	inline Vector4< Real >& Vector4<Real>::operator+=( const Real&  factor )
+	{
+		this->x += factor;
+		this->y += factor;
 		this->z += factor;
 		this->w += factor;
 
-		return ( *this ); 
-	} 
+		return ( *this );
+	}
 
 	template<class Real>
-	inline Vector4< Real >& Vector4<Real>::operator-=( const Real&  factor ) 
-	{ 
-		this->x -= factor; 
-		this->y -= factor; 
+	inline Vector4< Real >& Vector4<Real>::operator-=( const Real&  factor )
+	{
+		this->x -= factor;
+		this->y -= factor;
 		this->z -= factor;
 		this->w -= factor;
 
-		return ( *this ); 
-	} 
+		return ( *this );
+	}
 
 	template<class Real>
-	inline Vector4< Real >& Vector4<Real>::operator*=( const Real& factor ) 
-	{ 
+	inline Vector4< Real >& Vector4<Real>::operator*=( const Real& factor )
+	{
 
 		this->x  *= factor;
 		this->y  *= factor;
 		this->z  *= factor;
 		this->w  *= factor;
 
-		return ( *this ); 
+		return ( *this );
 	}
 
 	template<class Real>
-	inline Vector4< Real >& Vector4<Real>::operator/=( const Real& factor ) 
-	{ 
+	inline Vector4< Real >& Vector4<Real>::operator/=( const Real& factor )
+	{
 		Real f = static_cast<Real>(1) / factor;
 
 		this->x *= f;
-		this->y *= f; 
+		this->y *= f;
 		this->z *= f;
 		this->w *= f;
 
-		return ( *this ); 
+		return ( *this );
 	}
 
 
 	template<class Real>
-	inline Vector4<Real> operator*( const Vector4<Real>& v, const Real& factor ) 	
+	inline Vector4<Real> operator*( const Vector4<Real>& v, const Real& factor )
 	{
 
 		return ( Vector4<Real>( v.x * factor, v.y * factor, v.z * factor, v.w * factor ) );
@@ -262,14 +306,14 @@ namespace LAL {
 	};
 
 	template<class Real>
-	inline Vector4<Real> operator*( const Real& factor, const Vector4<Real>& v ) 
+	inline Vector4<Real> operator*( const Real& factor, const Vector4<Real>& v )
 	{
 		return ( Vector4<Real>( v.x * factor, v.y * factor, v.z * factor, v.w * factor)	);
 
 	};
 
 	template<class Real>
-	inline Vector4<Real> operator/( const Vector4<Real>& v, const Real& factor ) 	
+	inline Vector4<Real> operator/( const Vector4<Real>& v, const Real& factor )
 	{
 
 		return (  Vector4<Real>( v.x / factor, v.y / factor, v.z / factor, v.w / factor) );
@@ -277,28 +321,28 @@ namespace LAL {
 	};
 
 	template<class Real>
-	inline Vector4<Real> operator+( const Real& factor, const Vector4<Real>& v )  
+	inline Vector4<Real> operator+( const Real& factor, const Vector4<Real>& v )
 	{
 		return ( Vector4<Real> ( v.x + factor, v.y + factor, v.z + factor, v.w + factor) );
 
 	};
 
 	template<class Real>
-	inline Vector4<Real> operator+( const Vector4<Real>& v, const Real& factor )  
-	{ 
+	inline Vector4<Real> operator+( const Vector4<Real>& v, const Real& factor )
+	{
 		return ( Vector4<Real> ( v.x + factor, v.y + factor, v.z + factor, v.w + factor) );
 
 	};
 
 	template<class Real>
-	inline Vector4<Real> operator-( const Real& factor, const Vector4<Real>& v )  
+	inline Vector4<Real> operator-( const Real& factor, const Vector4<Real>& v )
 	{
 		return ( Vector4<Real> ( factor - v.x , factor - v.y, factor - v.z, factor - v.w) );
 
 	};
 
 	template<class Real>
-	inline Vector4<Real> operator-( const Vector4<Real>& v, const Real& factor )  
+	inline Vector4<Real> operator-( const Vector4<Real>& v, const Real& factor )
 	{
 		return ( Vector4<Real> ( v.x - factor, v.y - factor, v.z - factor, v.w - factor) );
 
@@ -318,50 +362,50 @@ namespace LAL {
 	};
 
 	template<class Real>
-	inline Vector4< Real >& Vector4<Real>::operator+=(  const Vector4<Real>& v ) 
-	{ 
-		this->x += v.x; 
-		this->y += v.y; 
+	inline Vector4< Real >& Vector4<Real>::operator+=(  const Vector4<Real>& v )
+	{
+		this->x += v.x;
+		this->y += v.y;
 		this->z += v.z;
 		this->w += v.w;
 
-		return ( *this ); 
+		return ( *this );
 	}
 
 	template<class Real>
-	inline Vector4< Real >& Vector4<Real>::operator-=(  const Vector4<Real>& v ) 
-	{ 
-		this->x -= v.x; 
-		this->y -= v.y; 
+	inline Vector4< Real >& Vector4<Real>::operator-=(  const Vector4<Real>& v )
+	{
+		this->x -= v.x;
+		this->y -= v.y;
 		this->z -= v.z;
 		this->w -= v.w;
 
-		return ( *this ); 
-	} 
+		return ( *this );
+	}
 
 	template<class Real>
-	inline Vector4< Real >& Vector4<Real>::operator/=( const Vector4<Real>& v ) 
-	{ 
+	inline Vector4< Real >& Vector4<Real>::operator/=( const Vector4<Real>& v )
+	{
 
 		this->x /= v.x;
-		this->y /= v.y; 
+		this->y /= v.y;
 		this->z /= v.z;
 		this->w /= v.w;
 
-		return ( *this ); 
-	} 
+		return ( *this );
+	}
 
 	template<class Real>
 	inline bool Vector4<Real>::operator==( const Vector4<Real>& v) const
 	{
 		return ( ( this->x == v.x ) and ( this->y == v.y ) and ( this->z == v.z ) and (this->w == v.w) );
-	};	
+	};
 
 	template<class Real>
 	inline bool Vector4<Real>::operator!=( const Vector4<Real>& v) const
 	{
 		return  !(*this == v) ;
-	};	
+	};
 
 	template<class Real>
 	inline Vector4<Real>  Vector4<Real>::operator-( const Vector4<Real>& v) const
@@ -391,9 +435,9 @@ namespace LAL {
 	template<class Real>
 	inline std::ostream& operator<<( std::ostream & s, const Vector4<Real>& v )
 	{
-		s << "Vector4" << "  x = " << v.x 
-					   << " ,y = " << v.y 
-					   << " ,z = " << v.z 
+		s << "Vector4" << "  x = " << v.x
+					   << " ,y = " << v.y
+					   << " ,z = " << v.z
 					   << " ,w = " << v.w << std::endl;
 
 		return s;
@@ -444,7 +488,7 @@ namespace LAL {
 	};
 
 	template<class Real>
-	const Real* Vector4<Real>::ToRealPtr( void ) const 
+	const Real* Vector4<Real>::ToRealPtr( void ) const
 	{
 		return &x;
 	}
@@ -543,7 +587,7 @@ namespace LAL {
 //std::cout << "#v4*v64# = 10 "<< r << std::endl;
 //r = v4[1] * v6[3];
 //std::cout << "#v4[1]*v6[3]# = 4 "<< r << std::endl;
-//			
+//
 //v6 /= v4;
 //std::cout << "#v6/=v4# = 2,2,2,4 "<<v6 << std::endl;
 //v6 = LAL::Vector4<double>(2.0,2.0,2.0,4.0);
@@ -552,7 +596,7 @@ namespace LAL {
 //v6 = LAL::Vector4<double>(2.0,2.0,2.0,4.0);
 //v6 /= -v5+v4;
 //std::cout << "#v6/=-v5+v4# = 1,1,1,2 "<<v6 << std::endl;
-//	
+//
 //std::vector<double> vec(static_cast< double * >(v4),static_cast< double * >(v4)+4);
 //std::ostream_iterator<double> output( std::cout, " ");
 //std::cout << "vec" << std::endl;
@@ -563,13 +607,13 @@ namespace LAL {
 //inline Vector3<T>&  operator- ( const Vector3<T>& u) const
 //{
 //	Vector3<T> w;
-//	 	
+//
 //	w.x = this->x - u.x;
 //	w.y = this->y - u.y;
 //	w.z = this->z - u.z;
-//		
+//
 //	Vector3<T>& h = w;
-//	
+//
 //	return ( h );
 //};
 

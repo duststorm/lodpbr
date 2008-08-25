@@ -3,10 +3,10 @@
 
 // [System Include]
 #include <iostream>    // standard IO interface
-				
+
 // [Project Includes]
-#include "Math.hpp"	   // Use sqrt()  
-#include "Vector2.hpp" // Friend Class 
+#include "Math.hpp"	   // Use sqrt()
+#include "Vector2.hpp" // Friend Class
 
 
 namespace LAL
@@ -15,12 +15,12 @@ namespace LAL
 /*!
 *@class Point2.
 *@brief Class that represent a Point in 2D.
-*@details coming soon , but ... coming soon  ... wait ¬¬.
+*@details ...
 *@author Felipe Moura.
+*@email fmc@cos.ufrj.br
 *@version 1.0.
-*@date 25-Feb-2008.
 *@todo OpenGL interface and a C style array.
-*/      
+*/
       template <class Real> class Point2
       {
 
@@ -43,13 +43,13 @@ namespace LAL
     	  template < class T >
     	  Point2 (const T* p);
     	  virtual ~Point2(){};
-    	  
+
     	  void 					Set( const Real& x, const Real& y );
     	  //@}
 
   		  /*! @name Accessing the value */
   		  //@{
-  			
+
     	  /*! Conversion operator returning the memory address of the Point.
 
     	  Useful to pass as a parameter to OpenGL functions:
@@ -62,7 +62,7 @@ namespace LAL
 
     	  Real 					operator[]( unsigned int i)  const;
 
-    	  Real& 				operator[]( unsigned int i);  
+    	  Real& 				operator[]( unsigned int i);
     	  //@}
 
     	  /*! @name Algebraic computations */
@@ -95,16 +95,16 @@ namespace LAL
     	  friend Point2<T> 		operator-( const T& factor, const Point2<T>& p ) ;
     	  /*!@see operator- */
     	  template <class T>
-    	  friend Point2<T>		operator-( const Point2<T>& p, const T& factor ) ;  
+    	  friend Point2<T>		operator-( const Point2<T>& p, const T& factor ) ;
     	  /*!@see operator* */
     	  template <class T>
     	  friend Point2<T> 		operator*( const T& factor, const Point2<T>& p ) ;
     	  /*!@see operator* */
     	  template <class T>
-    	  friend Point2<T> 		operator*( const Point2<T>& p, const T& factor ) ;  
+    	  friend Point2<T> 		operator*( const Point2<T>& p, const T& factor ) ;
     	  /*!@see operator/ */
     	  Point2<Real> 			operator/( const Real& factor ) const;
-    	  
+
     	  /*! Assigment operator. */
     	  Point2<Real>& 		operator= ( const Point2<Real>& p );
     	  /*! Adds \p a to the point. */
@@ -125,16 +125,16 @@ namespace LAL
 
     	  bool 					operator== ( const Point2<Real>& p) const;
     	  bool 					operator!= ( const Point2<Real>& p) const;
-    	  
+
     	  template <class T>
-    	  friend Point2<T> 		operator+ (const Point2<T>& p, const Vector2<T>& v) ;  
+    	  friend Point2<T> 		operator+ (const Point2<T>& p, const Vector2<T>& v) ;
     	  template <class T>
     	  friend Point2<T> 		operator+ (const Vector2<T>& v, const Point2<T>& p ) ;
 
     	  template <class T>
-    	  friend Point2<T> 		operator-( const Point2<T>& p, const Vector2<T>& v ) ;  
+    	  friend Point2<T> 		operator-( const Point2<T>& p, const Vector2<T>& v ) ;
     	  template <class T>
-    	  friend Point2<T> 		operator-( const Vector2<T>& v, const Point2<T>& p ) ;  
+    	  friend Point2<T> 		operator-( const Vector2<T>& v, const Point2<T>& p ) ;
     	  //@}
     	  /*! @name Output stream */
     	  //@{
@@ -146,7 +146,7 @@ namespace LAL
     	  template <class T>
     	  friend std::ostream& 	operator<< (std::ostream & s, const Point2<T>& p);
     	  //@}
-    	  
+
     	  /*! @name Functions */
     	  //@{
     	  /*!  */
@@ -154,7 +154,7 @@ namespace LAL
   		  const Real* 					ToRealPtr( void ) const;
   		  Real* 						ToRealPtr( void );
 		  //@}
-    	  
+
       public:
     	  /*! @name Members  */
     	  //@{
@@ -163,11 +163,11 @@ namespace LAL
     	   * Shareed memory with abscissas atributes and the XY Array.
     	   * The Struct has the same size of the \code xy[] \endcode.
     	   */
-    	  Real x; /*!< X abscissa of space. */  
+    	  Real x; /*!< X abscissa of space. */
     	  Real y; /*!< Y abscissa of space. */
-    	
+
     	  //@}
-    	  
+
       };// End Interface
 
       //============================= LIFECYCLE ====================================
@@ -193,8 +193,8 @@ namespace LAL
       Point2<Real>::Point2( const Point2<Real>& p )
       : x(p.x), y(p.y) {};
 
-                                                    
-      template< class Real>    
+
+      template< class Real>
       template <class T >
       Point2<Real>::Point2 (const T* point)
       {
@@ -206,7 +206,7 @@ namespace LAL
       };
 
       template<class Real>
-      inline void Point2<Real>::Set( const Real& x, const Real& y ) 
+      inline void Point2<Real>::Set( const Real& x, const Real& y )
       {
       	this->x = x;
       	this->y = y;
@@ -225,11 +225,11 @@ namespace LAL
       };
 
       template<class Real>
-      inline  Real& Point2<Real>::operator[]( unsigned int index )  
+      inline  Real& Point2<Real>::operator[]( unsigned int index )
 
       {
       	assert( ( index >= 0 ) && ( index < 2 ) );
-      	
+
       	return ( ( &x )[ index ] );
       };
 
@@ -237,7 +237,7 @@ namespace LAL
 
 
       template<class Real>
-      inline Point2<Real> Point2<Real>::operator+()  const  
+      inline Point2<Real> Point2<Real>::operator+()  const
       {
       	return ( Point2<Real> (this->x, this->y)  );
       };
@@ -260,7 +260,7 @@ namespace LAL
 
       	return ( *this );
       }
-               
+
       template<class Real>
       inline Point2< Real >& Point2<Real>::operator-=( const Real&  factor )
       {
@@ -293,14 +293,14 @@ namespace LAL
 
 
       template<class Real>
-      inline Point2<Real> operator+( const Real& factor,const Point2<Real>& point )   
+      inline Point2<Real> operator+( const Real& factor,const Point2<Real>& point )
       {
       	return ( Point2<Real> ( point.x + factor, point.y + factor ) );
 
       };
 
       template<class Real>
-      inline Point2<Real> operator+( const Point2<Real>& point, const Real& factor )   
+      inline Point2<Real> operator+( const Point2<Real>& point, const Real& factor )
       {
       	return ( Point2<Real> ( point.x + factor, point.y + factor ) );
 
@@ -308,7 +308,7 @@ namespace LAL
 
 
       template<class Real>
-      inline  Point2<Real> operator-( const Real& factor,const Point2<Real>& p )  
+      inline  Point2<Real> operator-( const Real& factor,const Point2<Real>& p )
       {
       	return ( Point2<Real> ( factor - p.x , factor - p.y )
       	);
@@ -317,7 +317,7 @@ namespace LAL
 
 
       template<class Real>
-      inline Point2<Real> operator-( const Point2<Real>& p, const Real& factor )  
+      inline Point2<Real> operator-( const Point2<Real>& p, const Real& factor )
       {
       	return ( Point2<Real> ( p.x - factor, p.y - factor ) );
 
@@ -325,14 +325,14 @@ namespace LAL
 
 
       template<class Real>
-      inline Point2<Real> operator*( const Real& factor,const Point2<Real>& p )   
+      inline Point2<Real> operator*( const Real& factor,const Point2<Real>& p )
       {
       	return ( Point2<Real> ( p.x * factor, p.y * factor ) );
 
       };
 
       template<class Real>
-      inline Point2<Real> operator*( const Point2<Real>& p, const Real& factor )   
+      inline Point2<Real> operator*( const Point2<Real>& p, const Real& factor )
       {
       	return ( Point2<Real> ( p.x * factor, p.y * factor ) );
 
@@ -340,7 +340,7 @@ namespace LAL
 
 
       template<class Real>
-      inline Point2<Real> Point2<Real>::operator/( const Real& factor )  const  
+      inline Point2<Real> Point2<Real>::operator/( const Real& factor )  const
       {
       	return ( Point2<Real> ( x / factor, y/ factor ) );
 
@@ -391,18 +391,18 @@ namespace LAL
       inline bool Point2<Real>::operator==( const Point2<Real>& p ) const
       {
       	return ( ( this->x == p.x ) and ( this->y == p.y ) );
-      };      
+      };
 
       template<class Real>
       inline bool Point2<Real>::operator!=( const Point2<Real>& p ) const
       {
       	return  !(*this == p) ;
-      };      
+      };
 
-           
+
 
       template<class Real>
-      inline Vector2<Real> operator-( const Point2<Real>& source, const Point2<Real>& target )   
+      inline Vector2<Real> operator-( const Point2<Real>& source, const Point2<Real>& target )
       {
       	return ( Vector2<Real>( source.x - target.x,  source.y - target.y ) );
 
@@ -410,14 +410,14 @@ namespace LAL
 
 
       template<class Real>
-      inline Point2<Real> operator-( const Point2<Real>& p, const Vector2<Real>& v )   
+      inline Point2<Real> operator-( const Point2<Real>& p, const Vector2<Real>& v )
       {
       	return ( Point2<Real>( p.x - v.x, p.y - v.y)  );
       };
 
 
       template<class Real>
-      inline Point2<Real> operator-( const Vector2<Real>& v,const Point2<Real>& p )   
+      inline Point2<Real> operator-( const Vector2<Real>& v,const Point2<Real>& p )
       {
 
       	return ( Point2<Real>( v.x - p.x, v.y - p.y ) );
@@ -425,7 +425,7 @@ namespace LAL
       };
 
       template<class Real>
-      inline Point2<Real> Point2<Real>::operator+( const Point2<Real>& p )  const 
+      inline Point2<Real> Point2<Real>::operator+( const Point2<Real>& p )  const
       {
       	return ( Point2<Real>( x + p.x, y + p.y ) );
 
@@ -433,14 +433,14 @@ namespace LAL
 
 
       template<class Real>
-      inline Point2<Real> operator+( const Point2<Real>& p, const Vector2<Real>& v )   
+      inline Point2<Real> operator+( const Point2<Real>& p, const Vector2<Real>& v )
       {
       	return ( Point2<Real> ( p.x + v.x, p.y + v.y ) );
 
       };
 
       template<class Real>
-      inline Point2<Real> operator+( const Vector2<Real>& v,const Point2<Real>& p )   
+      inline Point2<Real> operator+( const Vector2<Real>& v,const Point2<Real>& p )
       {
       	return ( Point2<Real> ( p.x + v.x, p.y + v.y ) );
 
@@ -457,15 +457,15 @@ namespace LAL
 
       	return ( s );
       };
-                 
+
       template<class Real>
-      Real Point2<Real>::SquaredDistance( const Point2<Real>& p ) 
+      Real Point2<Real>::SquaredDistance( const Point2<Real>& p )
       {
       	return (  (p.x - this->x ) * ( p.x - this->x ) +  ( p.y - this->y) * ( p.y - this->y) );
       }
 
       template<class Real>
-      inline const Real* Point2<Real>::ToRealPtr( void ) const 
+      inline const Real* Point2<Real>::ToRealPtr( void ) const
       {
       	return &x;
       }
@@ -475,7 +475,7 @@ namespace LAL
       {
       	return &x;
       }
-     
+
 } /* LAL :: NAMESPACE */
 
 #endif /*POINT2_HPP_*/
