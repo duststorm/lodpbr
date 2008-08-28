@@ -7,6 +7,6 @@
  *
  **/
 
-#include "kd-tree.h"
+#include "Kd-Tree.hpp"
 
 using namespace std;

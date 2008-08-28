@@ -298,6 +298,69 @@ void GLFrame::initializeGL()
 }
 
 
+/// Draw a node's bounding box and it's contained points
+/// @param n kd-tree node
+/// @return 1 if empty or leaf node, 0 if internal node
+bool GLFrame::drawKdNode(const KdTree3DNode* n) {
+
+  if (n == NULL)
+    return 1;
+
+  GLfloat cur_color[4];
+  glGetFloatv(GL_CURRENT_COLOR, cur_color);
+
+  glPointSize(5.0);
+  glBegin(GL_POINTS);
+  glColor4f(0.3, 0.3, 0.3, 1.0);
+  for (int i = 0; i < n->itemPtrCount(); ++i) {
+    LAL::Point3<float>* p = n->element(i);
+    glVertex3f(p->x, p->y, p->z);
+  }
+  glEnd();
+  glColor4fv(cur_color);
+
+  // Only draw leaf node's boxes
+   if (!n->isLeaf()) 
+    return 0;
+  
+  drawBox(n->getBox());
+
+  return 1;
+}
+
+/// Recursively draw all kd-tree nodes
+/// @param n kd-tree node
+void GLFrame::drawKdNodeRecursively(const KdTree3DNode* n) {
+  const KdTree3DNode* leftNode = n->left();
+  const KdTree3DNode* rightNode = n->right();
+
+  if (!drawKdNode(leftNode))
+    drawKdNodeRecursively(leftNode);
+
+  if (!drawKdNode(rightNode))
+    drawKdNodeRecursively(rightNode);
+}
+
+/// Draw the kd-tree leaf nodes' boxes and all elements stored in all nodes
+void GLFrame::drawKdTree(void)
+{
+  KdTree3DNode* root = kdTree.begin();
+
+  glColor4f(0.3, 0.3, 1.0, 1.0);
+  glLineWidth(1.0);
+
+  drawKdNode(root); //draw root node first
+
+  drawKdNodeRecursively(root); //draw entire tree
+
+  if (searchIt != 0) {
+    glLineWidth(1.0);
+    glColor4f(0.3, 0.7, 0.3, 1.0);
+    drawKdNode((const KdTree3DNode*) searchIt); //draw only searched leaf node
+  }
+}
+
+
 
 void GLFrame::drawPoints(int& cont) {
 
@@ -306,9 +369,9 @@ void GLFrame::drawPoints(int& cont) {
    glPointSize(3.0);
    glBegin(GL_POINTS);
 
+   drawKdTree();
 
-
-   LODSelection(octree.root,cont);
+   //LODSelection(octree.root,cont);
 
    //me.NewSurfel().draw();
 
@@ -351,11 +414,13 @@ void GLFrame::calLimits()
 				   						 LAL::Point3<float>(surfels.box().xmax(),surfels.box().ymax(),surfels.box().zmax()));
 
 	octree = Octree<float,Surfel<float>* >(world,mode) ;
+	kdTree = KdTree<float,LAL::Point3<float>* >(world);
 
 	for (std::vector<Surfel<float> >::iterator surf =  surfels.surfels.begin();surf != surfels.surfels.end(); ++ surf )
 	{
 
 		octree.insert (new Surfel<float>(*surf));
+		kdTree.insert (new LAL::Point3<float>( (*surf).Center() ) );
 	    midlePoint += surf->Center();
 
 	}

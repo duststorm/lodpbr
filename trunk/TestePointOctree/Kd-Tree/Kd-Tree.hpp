@@ -13,15 +13,17 @@
  *
  **/
 
-#ifndef __KDTREE__
-#define __KDTREE__
+#ifndef KDTREE_HPP_
+#define KDTREE_HPP_
 
 #include <vector>
 #include <map>
-#include "surfels.h"
 
-using namespace std;
+#include "math/BoundingBox3.hpp"
+#include "math/Point3.hpp"
 
+#include "Kd-TreeNode.hpp"
+#include "Kd-TreeRefine.hpp" 
 
 /**
  * Base class for a kd-tree data structure -- only 3D!
@@ -31,31 +33,40 @@ using namespace std;
  * @param Refine give criterion
  *
  **/
-template <class ItemPtr, class Refine = OverflowRefine<ItemPtr> >
+template <class Real,class ItemPtr, class Refine = OverflowRefineKD<Real,ItemPtr> >
 class KdTree {
 
 public:
+	
+  typedef typename LAL::Point3<Real> 		Point3;     ///< A Point in 3D
+  typedef typename LAL::BoundingBox3<Real> 	Box3; 
+	
   /// List of what is actually stored in a leaf node (non-leaf nodes stores only one reference)
-  typedef vector<ItemPtr> ItemPtrList;
+  typedef std::vector<ItemPtr> ItemPtrList;
 
   /// kd-tree node
-  typedef KdTreeNode<ItemPtr, Refine> Node;
+  typedef KdTreeNode<Real,ItemPtr, Refine> Node;
   
   /// Map definitions for k-nearest neighbors algorithm
-  typedef multimap < double, ItemPtr, std::greater<double> > K_Map;
-  typedef multimap <double, Point*, std::greater<double> >::iterator K_MapIterator;
-  typedef pair<double, ItemPtr> K_NearestPair;
+  typedef std::multimap <Real, ItemPtr, std::greater<Real> > K_Map;
+  typedef typename std::multimap <Real, Point3*, std::greater<Real> >::iterator K_MapIterator;
+  typedef std::pair<double, ItemPtr> K_NearestPair;
 
 protected:
 
   /// kd-tree root node
-  KdTreeNode <ItemPtr, Refine> * root;
+  KdTreeNode <Real,ItemPtr, Refine> * root;
 
 public:
 
+  KdTree() : root (0)
+  {
+	  
+  };
+	
   /// Main Constructor
-  KdTree (const Box& theWorld) : root (0) {
-    root = new KdTreeNode <ItemPtr, Refine> (theWorld);
+  KdTree (const Box3& theWorld) : root (0) {
+    root = new KdTreeNode <Real,ItemPtr, Refine> (theWorld);
   }
 
   /// destructor
@@ -65,9 +76,9 @@ public:
   /// @param p pointer to object
   virtual void insert (const ItemPtr p) {
     // Check if point is inside kd-tree world before inserting
-    if ( (p->x() >= root->getBox().xmin()) && (p->x() <= root->getBox().xmax()) &&
-	 (p->y() >= root->getBox().ymin()) && (p->y() <= root->getBox().ymax()) &&
-	 (p->z() >= root->getBox().zmin()) && (p->z() <= root->getBox().zmax()))
+    if ( (p->x >= root->getBox().xmin()) && (p->x <= root->getBox().xmax()) &&
+	 (p->y >= root->getBox().ymin()) && (p->y <= root->getBox().ymax()) &&
+	 (p->z >= root->getBox().zmin()) && (p->z <= root->getBox().zmax()))
       root->insert (0, p);
   }
 
@@ -79,14 +90,14 @@ public:
   /// Returns an iterator to the leaf node containing a given point
   /// @param p Given point
   /// @return Pointer to leaf node containing p
-  const Node* search (const Point& p) const {
+  const Node* search (const Point3& p) const {
     return root->search (p);
   }
 
   /// Returns the nearesNeighbor to a given point
   /// @param p Given point.
   /// @return Pointer to the nearest neighbor object.
-  ItemPtrList kNearestNeighbors (const Point& p, unsigned int k, int &comps) const {
+  ItemPtrList kNearestNeighbors (const Point3& p, unsigned int k, int &comps) const {
 
     K_Map k_nearest;
     comps = root->kNearestNeighbors (p, k_nearest, k);
@@ -109,4 +120,4 @@ public:
 
 };
 
-#endif
+#endif /*KDTREE_HPP_*/
