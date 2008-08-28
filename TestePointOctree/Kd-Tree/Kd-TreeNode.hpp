@@ -1,6 +1,13 @@
 #ifndef KDTREENODE_HPP_
 #define KDTREENODE_HPP_
 
+#include <map>
+#include <vector>
+
+#include "math/BoundingBox3.hpp"
+#include "math/Point3.hpp"
+
+#include "Kd-TreeRefine.hpp" 
 ///
 /// A KdTree of Pointers to Objects
 ///
@@ -8,15 +15,17 @@
 /// @param ItemPtr item pointer type to be stored
 /// @param Refine refinement criteria
 ///
-template < class ItemPtr, class Refine = OverflowRefine<ItemPtr> >
+template < class Real,class ItemPtr, class Refine = OverflowRefineKD<Real,ItemPtr> >
 class KdTreeNode {
 
+  typedef typename LAL::Point3<Real> 		Point3;     ///< A Point in 3D
+  typedef typename LAL::BoundingBox3<Real> 	Box3; 
   /// List of what is actually stored in a leaf node (non-leaf nodes stores only one reference)
-  typedef vector<ItemPtr> ItemPtrList;
+  typedef std::vector<ItemPtr> ItemPtrList;
   typedef const KdTreeNode * NodePtr;
 
-  typedef multimap < double, ItemPtr, std::greater<double> > K_NearestMap;
-  typedef pair<double, ItemPtr> K_NearestPair;
+  typedef std::multimap < double, ItemPtr, std::greater<double> > K_NearestMap;
+  typedef std::pair<double, ItemPtr> K_NearestPair;
 
 private:
 
@@ -37,12 +46,12 @@ private:
   ItemPtrList PtrList;
 
   /// Node's coordinates
-  Box world;
+  Box3 world;
 
 public:
   
   /// constructor
-  KdTreeNode (const Box& w) : world(w) {
+  KdTreeNode (const Box3& w) : world(w) {
     son [0] = son [1] = 0;
     split_dim = 0;
     split_coord = 0;
@@ -50,7 +59,7 @@ public:
   }
 
   /// constructor
-  KdTreeNode (KdTreeNode* f, const Box& w) : father(f), world(w) {
+  KdTreeNode (KdTreeNode* f, const Box3& w) : father(f), world(w) {
     son [0] = son [1] = 0;
     split_dim = 0;
     split_coord = 0;
@@ -65,7 +74,7 @@ public:
 
   /// Returns a pointer to the kd-tree node which contains point p
   /// @param p point which should be inside a descendant
-  const KdTreeNode* searchLeaf (const Point& p) const {
+  const KdTreeNode* searchLeaf (const Point3& p) const {
     if (PtrList.size() == 1) { // internal node, contains only one object
       if (p == PtrList[0]) // found match
 	return this;
@@ -106,7 +115,7 @@ public:
   /// Searches for the leaf node containing p
   /// @param p Given point
   /// @return Pointer to node containing p
-  const KdTreeNode* search (Point p) {
+  const KdTreeNode* search (Point3 p) {
     if (isLeaf())
       return this;
 
@@ -119,24 +128,24 @@ public:
   /// Computes the squared distance from a given point to the nodes box
   /// @param p Given point
   /// @return Squared distance
-  double sqrtDistanceToBox (const Point& p) const {
+  double sqrtDistanceToBox (const Point3& p) const {
 
-    Point cls = p; //closest point on box to p
+    Point3 cls = p; //closest point on box to p
 
     if (p.x() <= world.xmin())
-      cls = Point(world.xmin(), cls.y(), cls.z());
+      cls = Point3(world.xmin(), cls.y(), cls.z());
     else if (p.x() >= world.xmax())
-      cls = Point(world.xmax(), cls.y(), cls.z());
+      cls = Point3(world.xmax(), cls.y(), cls.z());
 
     if (p.y() <= world.ymin())
-      cls = Point(cls.x(), world.ymin(), cls.z());
+      cls = Point3(cls.x(), world.ymin(), cls.z());
     else if (p.y() >= world.ymax())
-      cls = Point(cls.x(), world.ymax(), cls.z());
+      cls = Point3(cls.x(), world.ymax(), cls.z());
 
     if (p.z() <= world.zmin())
-      cls = Point(cls.x(), cls.y(), world.zmin());
+      cls = Point3(cls.x(), cls.y(), world.zmin());
     else if (p.z() >= world.zmax())
-      cls = Point(cls.x(), cls.y(), world.zmax());
+      cls = Point3(cls.x(), cls.y(), world.zmax());
 
     return p.squared_distance(cls);
   }
@@ -161,7 +170,7 @@ public:
   /// @param k_nearest Ordered set of nearest neighbors
   /// @param k Number of nearest neighbors to find
   /// @return Number of distance comparisons made
-  int kNearestLocalNeighbors (const Point& p, K_NearestMap& k_nearest, unsigned int k) const { 
+  int kNearestLocalNeighbors (const Point3& p, K_NearestMap& k_nearest, unsigned int k) const { 
     int comps = 0;
     double minDist;
     if (k_nearest.empty())
@@ -171,7 +180,7 @@ public:
 
     // compute distance to all points inside the node (in case of internal nodes there is only one)
     for (unsigned int i = 0; i < PtrList.size(); ++i) {
-      Point q = *PtrList[i];
+      Point3 q = *PtrList[i];
       if (*PtrList[i] != p) { // Check if not trying to insert itself
 	double dist = p.squared_distance (q);
 	++comps;
@@ -186,7 +195,7 @@ public:
   /// @param p Given point
   /// @param k_nearest Ordered set of nearest neighbors
   /// @param k Number of nearest neighbors to find
-  int kNearestNeighbors (const Point& p, K_NearestMap& k_nearest, unsigned int k) const {
+  int kNearestNeighbors (const Point3& p, K_NearestMap& k_nearest, unsigned int k) const {
     int comps = 0;
     // Computes the distance to this node's itens
     comps = kNearestLocalNeighbors (p, k_nearest, k);
@@ -232,11 +241,11 @@ public:
       if (Refine::split (world, PtrList)) {
 
 	/// Check largest box dimension for subdivision
-	split_dim = (world.max().x() - world.min().x() > world.max().y() - world.min().y()) ? 0 : 1;
-	split_dim = (world.max().pos(split_dim) - world.min().pos(split_dim) > world.max().z() - world.min().z()) ? split_dim : 2;
+	split_dim = (world.max().x - world.min().x > world.max().y - world.min().y) ? 0 : 1;
+	split_dim = (world.max()[split_dim] - world.min()[split_dim] > world.max().z - world.min().z) ? split_dim : 2;
 
 	/// Search for point closest to the center of split_dim
-	double center = 0.5 * (world.max().pos(split_dim) + world.min().pos(split_dim));
+	double center = 0.5 * (world.max()[split_dim] + world.min()[split_dim]);
 	double minDist = HUGE;
 
 	ItemPtr middleItem = NULL;
@@ -319,39 +328,39 @@ public:
   
   /// Returns the world coordinates
   /// @return World coodinates of this node
-  const Box getBox(void) const { return world; }
+  const Box3 getBox(void) const { return world; }
 
 
 private :
 
   /// Computes the left son world coordinates
   /// @return Left son world coordinates
-  Box leftBox (void) const {
-    Box leftWorld;
-    Point p_max;
+  Box3 leftBox (void) const {
+    Box3 leftWorld;
+    Point3 p_max;
     if (split_dim == 0) // recompute x coordinate range	
-      p_max = Point (split_coord, world.ymax(), world.zmax());
+      p_max = Point3 (split_coord, world.ymax(), world.zmax());
     else if (split_dim == 1)
-      p_max = Point (world.xmax(), split_coord, world.zmax());
+      p_max = Point3 (world.xmax(), split_coord, world.zmax());
     else
-      p_max = Point (world.xmax(), world.ymax(), split_coord);
+      p_max = Point3 (world.xmax(), world.ymax(), split_coord);
 
-    leftWorld = Box (world.min(), p_max);
+    leftWorld = Box3 (world.min(), p_max);
     return leftWorld;
   }
 
   /// Computes the right son world coordinates
   /// @return Right son world coordinates
-  Box rightBox (void) const {
-    Box rightWorld;
-    Point p_min;
+  Box3 rightBox (void) const {
+    Box3 rightWorld;
+    Point3 p_min;
     if (split_dim == 0) // recompute x coordinate range	
-      p_min = Point (split_coord, world.ymin(), world.zmin());
+      p_min = Point3 (split_coord, world.ymin(), world.zmin());
     else if (split_dim == 1)
-      p_min = Point (world.xmin(), split_coord, world.zmin());
+      p_min = Point3 (world.xmin(), split_coord, world.zmin());
     else
-      p_min = Point (world.xmin(), world.ymin(), split_coord);
-    rightWorld = Box (p_min, world.max());
+      p_min = Point3 (world.xmin(), world.ymin(), split_coord);
+    rightWorld = Box3 (p_min, world.max());
     return rightWorld;
   }
 };
