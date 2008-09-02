@@ -6,6 +6,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include <vector>
+
 #include "GLFrame.hpp"
 
 
@@ -430,6 +432,16 @@ void GLFrame::calLimits()
 
     std::cout << octree.root->itemPtrCount() <<  " AAA" << std::endl;
     std::cout << kdTree.root->itemPtrCount() <<  " BBB" << std::endl;
+
+    int k_nearest_search_comps = 0;
+
+    std::vector<LAL::Point3<float>* > ItemPtrList;
+
+    ItemPtrList = kdTree.kNearestNeighbors( LAL::Point3<float>( 0.0f,0.0f,0.0f ), 5, k_nearest_search_comps);
+
+    std::cout << ItemPtrList.size() <<  " Marreta" << std::endl;
+
+
 
     octree.split();
 

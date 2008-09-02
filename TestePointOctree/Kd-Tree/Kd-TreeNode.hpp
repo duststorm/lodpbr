@@ -24,8 +24,8 @@ class KdTreeNode {
   typedef std::vector<ItemPtr> ItemPtrList;
   typedef const KdTreeNode * NodePtr;
 
-  typedef std::multimap < double, ItemPtr, std::greater<double> > K_NearestMap;
-  typedef std::pair<double, ItemPtr> K_NearestPair;
+  typedef std::multimap < Real, ItemPtr, std::greater<Real> > K_NearestMap;
+  typedef std::pair< Real, ItemPtr> K_NearestPair;
 
 private:
 
