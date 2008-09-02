@@ -19,20 +19,20 @@ INCLUDEPATH += . \
 HEADERS += interface/myMainWindow.hpp \
     openGLFrame/GLFrame.hpp \
     math/Vector3.hpp \
-    lcgOctree/ocTree.hpp \
-    lcgOctree/ocTreeIntersection.hpp \
+    Octree/ocTree.hpp \
+    Octree/ocTreeIntersection.hpp \
     math/Point3.hpp \
     math/Matrix3x3.hpp \
     math/BoundingBox3.hpp \
-    lcgOctree/ocTreeBox.hpp \
+    Octree/ocTreeBox.hpp \
     surfels/surfel.hpp \
     surfels/ply.h \
     surfels/surfels.hpp \
-    lcgOctree/ocTreeInternalNode.hpp \
-    lcgOctree/ocTreeLeafNode.hpp \
-    lcgOctree/ocTreeNode.hpp \
-    lcgOctree/ocTreeIterator.hpp \
-    lcgOctree/ocTreeRefine.hpp \
+    Octree/ocTreeInternalNode.hpp \
+    Octree/ocTreeLeafNode.hpp \
+    Octree/ocTreeNode.hpp \
+    Octree/ocTreeIterator.hpp \
+    Octree/ocTreeRefine.hpp \
     surfels/MergeEllipses.hpp \
     Scene/Camera.hpp \
     Scene/Trackball.hpp \
@@ -63,8 +63,7 @@ SOURCES += main.cpp \
     math/Matrix3x3.cpp \
     math/Matrix4x4.cpp \
     math/Point3.cpp \
-    math/Vector2.cpp \
-    Kd-Tree/Kd-Tree.cpp
+    math/Vector2.cpp
 QT += opengl
 FORMS += ui/interface.ui
 

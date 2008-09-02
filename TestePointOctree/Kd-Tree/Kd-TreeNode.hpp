@@ -7,7 +7,7 @@
 #include "math/BoundingBox3.hpp"
 #include "math/Point3.hpp"
 
-#include "Kd-TreeRefine.hpp" 
+#include "Kd-TreeRefine.hpp"
 ///
 /// A KdTree of Pointers to Objects
 ///
@@ -19,7 +19,7 @@ template < class Real,class ItemPtr, class Refine = OverflowRefineKD<Real,ItemPt
 class KdTreeNode {
 
   typedef typename LAL::Point3<Real> 		Point3;     ///< A Point in 3D
-  typedef typename LAL::BoundingBox3<Real> 	Box3; 
+  typedef typename LAL::BoundingBox3<Real> 	Box3;
   /// List of what is actually stored in a leaf node (non-leaf nodes stores only one reference)
   typedef std::vector<ItemPtr> ItemPtrList;
   typedef const KdTreeNode * NodePtr;
@@ -37,7 +37,7 @@ private:
 
   /// Pointers to left and right subtrees (if both are null it is a leaf node)
   KdTreeNode * son[2];
-  
+
   /// Pointer to parent node
   KdTreeNode * father;
 
@@ -49,7 +49,7 @@ private:
   Box3 world;
 
 public:
-  
+
   /// constructor
   KdTreeNode (const Box3& w) : world(w) {
     son [0] = son [1] = 0;
@@ -122,7 +122,7 @@ public:
     if (p[split_dim] < split_coord)
       return son[0]->search (p);
     else
-      return son[1]->search (p); 
+      return son[1]->search (p);
   }
 
   /// Computes the squared distance from a given point to the nodes box
@@ -132,22 +132,22 @@ public:
 
     Point3 cls = p; //closest point on box to p
 
-    if (p.x() <= world.xmin())
-      cls = Point3(world.xmin(), cls.y(), cls.z());
-    else if (p.x() >= world.xmax())
-      cls = Point3(world.xmax(), cls.y(), cls.z());
+    if (p.x <= world.xmin())
+      cls = Point3(world.xmin(), cls.y, cls.z);
+    else if (p.x >= world.xmax())
+      cls = Point3(world.xmax(), cls.y, cls.z);
 
-    if (p.y() <= world.ymin())
-      cls = Point3(cls.x(), world.ymin(), cls.z());
-    else if (p.y() >= world.ymax())
-      cls = Point3(cls.x(), world.ymax(), cls.z());
+    if (p.y <= world.ymin())
+      cls = Point3(cls.x, world.ymin(), cls.z);
+    else if (p.y >= world.ymax())
+      cls = Point3(cls.x, world.ymax(), cls.z);
 
-    if (p.z() <= world.zmin())
-      cls = Point3(cls.x(), cls.y(), world.zmin());
-    else if (p.z() >= world.zmax())
-      cls = Point3(cls.x(), cls.y(), world.zmax());
+    if (p.z <= world.zmin())
+      cls = Point3(cls.x, cls.y, world.zmin());
+    else if (p.z >= world.zmax())
+      cls = Point3(cls.x, cls.y, world.zmax());
 
-    return p.squared_distance(cls);
+    return p.SquaredDistance(cls);
   }
 
   /// Inserts a point in the set of k-nearest points
@@ -170,7 +170,7 @@ public:
   /// @param k_nearest Ordered set of nearest neighbors
   /// @param k Number of nearest neighbors to find
   /// @return Number of distance comparisons made
-  int kNearestLocalNeighbors (const Point3& p, K_NearestMap& k_nearest, unsigned int k) const { 
+  int kNearestLocalNeighbors (const Point3& p, K_NearestMap& k_nearest, unsigned int k) const {
     int comps = 0;
     double minDist;
     if (k_nearest.empty())
@@ -182,7 +182,7 @@ public:
     for (unsigned int i = 0; i < PtrList.size(); ++i) {
       Point3 q = *PtrList[i];
       if (*PtrList[i] != p) { // Check if not trying to insert itself
-	double dist = p.squared_distance (q);
+	double dist = p.SquaredDistance (q);
 	++comps;
 	if (dist < minDist || k_nearest.size() < k)
 	  minDist = insertNeighbor (PtrList[i], dist, k_nearest, k);
@@ -208,11 +208,11 @@ public:
 	int order[2] = {0, 1};
 
 	// Arrange in order of distances (closest first)
-	if (dists[1] < dists[0]) { 
+	if (dists[1] < dists[0]) {
 	  order[0] = 1;
 	  order[1] = 0;
 	}
-     
+
 	// Check distances to sons in ordered way, closest son first
 	// Only checks if distance to son's box is less than distance to
 	// farthes k-neighbor so far, or if hasn't found k-neighbots yet
@@ -234,64 +234,76 @@ public:
   /// @param fatherPtr reference to the pointer inside the father which point to this node
   void insert (int level, const ItemPtr p) {
 
-    if (son[0] == 0 && son[1] == 0) { // leaf node
-      PtrList.push_back(p);
+	  if (son[0] == 0 && son[1] == 0) { // leaf node
+		  PtrList.push_back(p);
 
-      // Check if overflow criteria is met
-      if (Refine::split (world, PtrList)) {
 
-	/// Check largest box dimension for subdivision
-	split_dim = (world.max().x - world.min().x > world.max().y - world.min().y) ? 0 : 1;
-	split_dim = (world.max()[split_dim] - world.min()[split_dim] > world.max().z - world.min().z) ? split_dim : 2;
+		  // Check if overflow criteria is met
+		  if (Refine::split (world, PtrList)) {
 
-	/// Search for point closest to the center of split_dim
-	double center = 0.5 * (world.max()[split_dim] + world.min()[split_dim]);
-	double minDist = HUGE;
+			  /// Check largest box dimension for subdivision
+			  split_dim = (world.max().x - world.min().x > world.max().y - world.min().y) ? 0 : 1;
+			  split_dim = (world.max()[split_dim] - world.min()[split_dim] > world.max().z - world.min().z) ? split_dim : 2;
 
-	ItemPtr middleItem = NULL;
-	for (unsigned int i = 0; i < PtrList.size(); ++i) {
-	  double dist = fabs (center - (*PtrList[i])[split_dim]);
-	  
-	  if (dist < minDist) {
-	    minDist = dist;
-	    middleItem = PtrList[i];
+			  /// Search for point closest to the center of split_dim
+			  double center = 0.5 * (world.max()[split_dim] + world.min()[split_dim]);
+			  double minDist = HUGE;
+
+			  ItemPtr middleItem = NULL;
+			  for (unsigned int i = 0; i < PtrList.size(); ++i) {
+				  double dist = fabs (center - (*PtrList[i])[split_dim]);
+
+				  if (dist < minDist) {
+					  minDist = dist;
+					  middleItem = PtrList[i];
+				  }
+			  }
+
+			  // Defines the position of the space partition
+			  split_coord = (*middleItem)[split_dim];
+
+			  // Create two son nodes
+			  KdTreeNode * newLeftNode = new KdTreeNode(this, leftBox());
+			  KdTreeNode * newRightNode = new KdTreeNode(this, rightBox());
+			  son[0] = newLeftNode;
+			  son[1] = newRightNode;
+
+			  // Insert items from list into child nodes (except middle item)
+			  for (unsigned int i = 0; i < PtrList.size(); ++i) {
+				  if ((*PtrList[i])[split_dim] < split_coord)
+					  son[0]->insert(level + 1, PtrList[i]);
+				  else if ((*PtrList[i])[split_dim] > split_coord)
+					  son[1]->insert(level + 1, PtrList[i]);
+			  }
+
+			  // Insert split object into this node's empty list
+			  PtrList.clear();
+			  PtrList.push_back(middleItem);
+		  }
 	  }
-	}
-
-	// Defines the position of the space partition
-	split_coord = (*middleItem)[split_dim];
-
-	// Create two son nodes
-	KdTreeNode * newLeftNode = new KdTreeNode(this, leftBox());
-	KdTreeNode * newRightNode = new KdTreeNode(this, rightBox());
-	son[0] = newLeftNode;
-	son[1] = newRightNode;
-
-	// Insert items from list into child nodes (except middle item)
-	for (unsigned int i = 0; i < PtrList.size(); ++i) {
-	  if ((*PtrList[i])[split_dim] < split_coord)
-	    son[0]->insert(level + 1, PtrList[i]);
-	  else if ((*PtrList[i])[split_dim] > split_coord)
-	    son[1]->insert(level + 1, PtrList[i]);
-	}
-
-	// Insert split object into this node's empty list
-	PtrList.clear();
-	PtrList.push_back(middleItem);
-      }
-    }
-    else { // internal node, continue descending
-      if ((*p)[split_dim] < split_coord)
-	son[0]->insert(level + 1, p);
-      else
-	son[1]->insert(level + 1, p);   
-    }
+	  else { // internal node, continue descending
+		  if ((*p)[split_dim] < split_coord)
+			  son[0]->insert(level + 1, p);
+		  else
+			  son[1]->insert(level + 1, p);
+	  }
   }
-  
+
   /// Returns the number of pointers to items inserted into this node
   /// @return Size of item list
   int itemPtrCount () const {
-    return PtrList.size();
+//	  int sum = 0;
+//
+//	  if (son[0] == 0 && son[1] == 0)
+//		  return PtrList.size();
+//	  else
+//	  {
+//		  sum += son[0]->itemPtrCount();
+//		  sum += son[1]->itemPtrCount();
+//	  }
+//
+//	  return  sum + PtrList.size();
+	return PtrList.size();
   }
 
   /// Returns the ith element of the item list
@@ -325,7 +337,7 @@ public:
   /// Returns if this is leaf node or not
   /// @return 1 if leaf node, 0 otherwise
   bool isLeaf () const { return son[0] == 0 && son[1] == 0; }
-  
+
   /// Returns the world coordinates
   /// @return World coodinates of this node
   const Box3 getBox(void) const { return world; }
@@ -338,7 +350,7 @@ private :
   Box3 leftBox (void) const {
     Box3 leftWorld;
     Point3 p_max;
-    if (split_dim == 0) // recompute x coordinate range	
+    if (split_dim == 0) // recompute x coordinate range
       p_max = Point3 (split_coord, world.ymax(), world.zmax());
     else if (split_dim == 1)
       p_max = Point3 (world.xmax(), split_coord, world.zmax());
@@ -354,7 +366,7 @@ private :
   Box3 rightBox (void) const {
     Box3 rightWorld;
     Point3 p_min;
-    if (split_dim == 0) // recompute x coordinate range	
+    if (split_dim == 0) // recompute x coordinate range
       p_min = Point3 (split_coord, world.ymin(), world.zmin());
     else if (split_dim == 1)
       p_min = Point3 (world.xmin(), split_coord, world.zmin());

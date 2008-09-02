@@ -23,7 +23,7 @@
 #include "math/Point3.hpp"
 
 #include "Kd-TreeNode.hpp"
-#include "Kd-TreeRefine.hpp" 
+#include "Kd-TreeRefine.hpp"
 
 /**
  * Base class for a kd-tree data structure -- only 3D!
@@ -37,16 +37,16 @@ template <class Real,class ItemPtr, class Refine = OverflowRefineKD<Real,ItemPtr
 class KdTree {
 
 public:
-	
+
   typedef typename LAL::Point3<Real> 		Point3;     ///< A Point in 3D
-  typedef typename LAL::BoundingBox3<Real> 	Box3; 
-	
+  typedef typename LAL::BoundingBox3<Real> 	Box3;
+
   /// List of what is actually stored in a leaf node (non-leaf nodes stores only one reference)
   typedef std::vector<ItemPtr> ItemPtrList;
 
   /// kd-tree node
   typedef KdTreeNode<Real,ItemPtr, Refine> Node;
-  
+
   /// Map definitions for k-nearest neighbors algorithm
   typedef std::multimap <Real, ItemPtr, std::greater<Real> > K_Map;
   typedef typename std::multimap <Real, Point3*, std::greater<Real> >::iterator K_MapIterator;
@@ -54,16 +54,17 @@ public:
 
 protected:
 
-  /// kd-tree root node
-  KdTreeNode <Real,ItemPtr, Refine> * root;
+
 
 public:
 
+	/// kd-tree root node
+	  KdTreeNode <Real,ItemPtr, Refine> * root;
   KdTree() : root (0)
   {
-	  
+
   };
-	
+
   /// Main Constructor
   KdTree (const Box3& theWorld) : root (0) {
     root = new KdTreeNode <Real,ItemPtr, Refine> (theWorld);
@@ -83,7 +84,7 @@ public:
   }
 
   /// Returns the number of pointer to items inserted into this kd-tree
-  virtual int itemPtrCount (void) const { 
+  virtual int itemPtrCount (void) const {
     return root->itemPtrCount();
   }
 
@@ -110,7 +111,7 @@ public:
 
     return k_cls;
   }
-  
+
   /// Returns pointer to root node
   /// @return Pointer to root node
   Node* begin(void) {
