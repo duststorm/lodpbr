@@ -77,8 +77,8 @@ public:
         int mult = 1;
         int index = 0;
         Real min[3], max[3];
-        Point3 p1 (world.xmin(),world.ymin(),world.zmin());
-        Point3 p2 (world.xmax(),world.ymax(),world.zmax());
+        Point3 p1 (world.xMin(),world.yMin(),world.zMin());
+        Point3 p2 (world.xMax(),world.yMax(),world.zMax());
         for (int d = 0; d < 3; ++d) {
             Real middle = mean_[d];
             if ((p[d]) > middle) {

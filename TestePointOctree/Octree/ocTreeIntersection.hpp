@@ -43,9 +43,9 @@ Real distance2Item (const LAL::Point3<Real>* pt, const LAL::Point3<Real>& p, LAL
 ///
 template <class Real>
 bool checkIntersection (const LAL::BoundingBox3<Real>& box, Surfel<Real>* s) {
-	return s->Center().x >= box.xmin() && s->Center().x < box.xmax() &&
-	s->Center().y >= box.ymin() && s->Center().y < box.ymax() &&
-	s->Center().z >= box.zmin() && s->Center().z < box.zmax();
+	return s->Center().x >= box.xMin() && s->Center().x < box.xMax() &&
+	s->Center().y >= box.yMin() && s->Center().y < box.yMax() &&
+	s->Center().z >= box.zMin() && s->Center().z < box.zMax();
 }
 
 /// Returns the euclidean distance between a point and a point in 3D space

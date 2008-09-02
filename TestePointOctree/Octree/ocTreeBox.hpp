@@ -77,8 +77,8 @@ Box_3 (const Point3& p1, const Point3& p2) : Bbox3 (p1, p2) {};
 /// @return box corresponding to the suboctant
 
 Box_3 coords (int sonIndex, const Point3& mean) const {
-     Point3 p1 = this->min();
-     Point3 p2 = this->max();
+     Point3 p1 = this->Min();
+     Point3 p2 = this->Max();
      Real son_min[3], son_max[3];
      // Center  of Region Octree
      Real middle[3] = {	mean[0],
@@ -148,11 +148,11 @@ bool intersect (const Point3& p) const {
 ///
 bool intersect (const Box_3& box2) const {
 
-  Point3 Amin = this->min();
-  Point3 Amax = this->max();
+  Point3 Amin = this->Min();
+  Point3 Amax = this->Max();
 
-  Point3 Bmin = box2.min();
-  Point3 Bmax = box2.max();
+  Point3 Bmin = box2.Min();
+  Point3 Bmax = box2.Max();
 
   return lcgOctree::OctMAX (Amin.x, Bmin.x) < lcgOctree::OctMIN(Amax.x, Bmax.x) &&
          lcgOctree::OctMAX (Amin.y, Bmin.y) < lcgOctree::OctMIN(Amax.y, Bmax.y) &&
@@ -222,10 +222,10 @@ Real distance(const Point3& p) const
     Real clsPt[3]; //closest point on the box's surface to the point p
     for (int i = 0; i < 3; ++i)
     {
-        if (p[i] < this->min()[i])
-            clsPt[i] = (this->min()[i]);
-        else if (p[i] > this->max()[i])
-            clsPt[i] = (this->max()[i]);
+        if (p[i] < this->Min()[i])
+            clsPt[i] = (this->Min()[i]);
+        else if (p[i] > this->Max()[i])
+            clsPt[i] = (this->Max()[i]);
         else
             clsPt[i] = (p[i]);
     }

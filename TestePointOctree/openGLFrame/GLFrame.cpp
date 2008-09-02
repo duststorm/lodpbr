@@ -6,7 +6,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include <vector>
 
 #include "GLFrame.hpp"
 
@@ -314,14 +313,21 @@ bool GLFrame::drawKdNode(const KdTree3DNode* n) {
   glPointSize(5.0);
   glBegin(GL_POINTS);
   glColor4f(0.3, 0.3, 0.3, 1.0);
+  
 
   for (int i = 0; i < n->itemPtrCount(); ++i) {
 
 	LAL::Vector3<float> p( n->element(i)->x,n->element(i)->y,n->element(i)->z );
-    glVertex3fv( p.ToRealPtr() );
+    //glVertex3fv( p.ToRealPtr() );
+	for( std::vector<LAL::Point3<float>* >::iterator i = ItemPtrList.begin() ; i != ItemPtrList.end(); ++i) 
+	  {
+		  	LAL::Vector3<float> p( (*(*i)).x,(*(*i)).y,(*(*i)).z );
+	    	
+	    	glVertex3fv( p.ToRealPtr() );
+	  }
 
   }
-
+  
   glEnd();
 
   glColor4fv(cur_color);
@@ -413,8 +419,8 @@ void GLFrame::drawPoints(int& cont) {
 void GLFrame::calLimits()
 {
 
-	Box_3<float> world = Box_3<float>( LAL::Point3<float>(surfels.box().xmin(),surfels.box().ymin(),surfels.box().zmin()),
-				   						 LAL::Point3<float>(surfels.box().xmax(),surfels.box().ymax(),surfels.box().zmax()));
+	Box_3<float> world = Box_3<float>( LAL::Point3<float>(surfels.box().xMin(),surfels.box().yMin(),surfels.box().zMin()),
+				   						 LAL::Point3<float>(surfels.box().xMax(),surfels.box().yMax(),surfels.box().zMax()));
 
 	octree = Octree<float,Surfel<float>* >(world,mode) ;
 	kdTree = KdTree<float,LAL::Point3<float>* >(world);
@@ -435,14 +441,11 @@ void GLFrame::calLimits()
 
     int k_nearest_search_comps = 0;
 
-    std::vector<LAL::Point3<float>* > ItemPtrList;
+    ItemPtrList = kdTree.kNearestNeighbors( LAL::Point3<float>( 0.0f , 0.0f , 0.0f ),20, k_nearest_search_comps);
 
-    ItemPtrList = kdTree.kNearestNeighbors( LAL::Point3<float>( 0.0f,0.0f,0.0f ), 5, k_nearest_search_comps);
-
-    std::cout << ItemPtrList.size() <<  " Marreta" << std::endl;
-
-
-
+    std::cout << ItemPtrList.size() <<  " BdBB" << std::endl;
+    
+   
     octree.split();
 
     GLuint fbo;
@@ -487,30 +490,30 @@ void GLFrame::drawBox(LAL::BoundingBox3<T> BBox){
   glColor3f (1.0, 1.0, 1.0);//white
 
   glBegin(GL_LINE_LOOP);
-    glVertex3f(BBox.xmin(), BBox.ymin(), BBox.zmin());
-    glVertex3f(BBox.xmax(), BBox.ymin(), BBox.zmin());
-    glVertex3f(BBox.xmax(), BBox.ymax(), BBox.zmin());
-    glVertex3f(BBox.xmin(), BBox.ymax(), BBox.zmin());
+    glVertex3f(BBox.xMin(), BBox.yMin(), BBox.zMin());
+    glVertex3f(BBox.xMax(), BBox.yMin(), BBox.zMin());
+    glVertex3f(BBox.xMax(), BBox.yMax(), BBox.zMin());
+    glVertex3f(BBox.xMin(), BBox.yMax(), BBox.zMin());
   glEnd();
 
   glBegin(GL_LINE_LOOP);
-    glVertex3f(BBox.xmin(), BBox.ymin(), BBox.zmax());
-    glVertex3f(BBox.xmax(), BBox.ymin(), BBox.zmax());
-    glVertex3f(BBox.xmax(), BBox.ymax(), BBox.zmax());
-    glVertex3f(BBox.xmin(), BBox.ymax(), BBox.zmax());
+    glVertex3f(BBox.xMin(), BBox.yMin(), BBox.zMax());
+    glVertex3f(BBox.xMax(), BBox.yMin(), BBox.zMax());
+    glVertex3f(BBox.xMax(), BBox.yMax(), BBox.zMax());
+    glVertex3f(BBox.xMin(), BBox.yMax(), BBox.zMax());
   glEnd();
 
   glBegin(GL_LINES);
-    glVertex3f(BBox.xmin(), BBox.ymin(), BBox.zmax());
-    glVertex3f(BBox.xmin(), BBox.ymin(), BBox.zmin());
-    glVertex3f(BBox.xmax(), BBox.ymin(), BBox.zmax());
-    glVertex3f(BBox.xmax(), BBox.ymin(), BBox.zmin());
+    glVertex3f(BBox.xMin(), BBox.yMin(), BBox.zMax());
+    glVertex3f(BBox.xMin(), BBox.yMin(), BBox.zMin());
+    glVertex3f(BBox.xMax(), BBox.yMin(), BBox.zMax());
+    glVertex3f(BBox.xMax(), BBox.yMin(), BBox.zMin());
 
-    glVertex3f(BBox.xmax(), BBox.ymax(), BBox.zmax());
-    glVertex3f(BBox.xmax(), BBox.ymax(), BBox.zmin());
+    glVertex3f(BBox.xMax(), BBox.yMax(), BBox.zMax());
+    glVertex3f(BBox.xMax(), BBox.yMax(), BBox.zMin());
 
-    glVertex3f(BBox.xmin(), BBox.ymax(), BBox.zmax());
-    glVertex3f(BBox.xmin(), BBox.ymax(), BBox.zmin());
+    glVertex3f(BBox.xMin(), BBox.yMax(), BBox.zMax());
+    glVertex3f(BBox.xMin(), BBox.yMax(), BBox.zMin());
   glEnd();
 }
 
