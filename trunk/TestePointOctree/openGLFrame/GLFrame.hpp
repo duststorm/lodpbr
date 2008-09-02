@@ -58,6 +58,8 @@ public:
 
 	float pxmax,pymax, paux;
 	float pxmin,pymin;
+	
+    std::vector<LAL::Point3<float>* > ItemPtrList;
 
 	LAL::Point3<float> p1,p2,p11,p12,p21,p22;
 

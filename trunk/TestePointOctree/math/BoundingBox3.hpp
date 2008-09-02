@@ -21,88 +21,88 @@ class BoundingBox3
 {
 private:
 
-	Point3<Real> min_;
-	Point3<Real> max_;
+	Point3<Real> mMin;
+	Point3<Real> mMax;
 
 public:
 
 
 	BoundingBox3 ( )
 	{
-		this->min_ = Point3<Real> ();
-		this->max_ = Point3<Real> ();
+		this->mMin = Point3<Real> ();
+		this->mMax = Point3<Real> ();
 	};
 
 	BoundingBox3 ( const BoundingBox3<Real>& box )
 	{
-		this->min_ = Point3<Real> ( box.min() );
-		this->max_ = Point3<Real> ( box.max() );
+		this->mMin = Point3<Real> ( box.Min() );
+		this->mMax = Point3<Real> ( box.Max() );
 	};
 
 	BoundingBox3 ( const Point3<Real>& pointMin, const Point3<Real>& pointMax )
 	{
-		this->min_ = Point3<Real> ( pointMin );
-		this->max_ = Point3<Real> ( pointMax );
+		this->mMin = Point3<Real> ( pointMin );
+		this->mMax = Point3<Real> ( pointMax );
 	};
 
 	BoundingBox3 ( const Real& xMin, const Real& yMin, const Real& zMin,
 				   const Real& xMax, const Real& yMax, const Real& zMax )
 	{
-		this->min_ = Point3<Real> ( xMin,yMin,zMin );
-		this->max_ = Point3<Real> ( xMax,yMax,zMax );
+		this->mMin = Point3<Real> ( xMin,yMin,zMin );
+		this->mMax = Point3<Real> ( xMax,yMax,zMax );
 	};
 
 	Real Center() const
 	{
-		Vector3<Real>( 0.5*(max_.x - min_.x) , 0.5*(max_.y - min_.y), 0.5*(max_.z - min_.z)  );
+		Vector3<Real>( 0.5*(mMax.x - mMin.x) , 0.5*(mMax.y - mMin.y), 0.5*(mMax.z - mMin.z)  );
 	}
 
-	inline const Real& xmin() const
+	inline const Real& xMin() const
 	{
-		return ( this->min_.x );
+		return ( this->mMin.x );
 	};
 
-	inline const Real& ymin() const
+	inline const Real& yMin() const
 	{
-		return ( this->min_.y );
+		return ( this->mMin.y );
 	};
 
-	inline const Real& zmin() const
+	inline const Real& zMin() const
 	{
-		return ( this->min_.z );
+		return ( this->mMin.z );
 	};
 
-	inline const Real& xmax() const
+	inline const Real& xMax() const
 	{
-		return ( this->max_.x );
+		return ( this->mMax.x );
 	};
 
-	inline const Real& ymax() const
+	inline const Real& yMax() const
 	{
-		return ( this->max_.y );
+		return ( this->mMax.y );
 	};
 
-	inline const Real& zmax() const
+	inline const Real& zMax() const
 	{
-		return ( this->max_.z );
+		return ( this->mMax.z );
 	};
 
-	inline const Point3<Real>& min() const
+	inline const Point3<Real>& Min() const
 	{
-		return ( this->min_);
+		return ( this->mMin);
 	};
 
-	inline const Point3<Real>& max() const
+	inline const Point3<Real>& Max() const
 	{
-		return ( this->max_ );
+		return ( this->mMax );
 	};
 
 
 	inline bool operator==(const BoundingBox3<Real>& box) const
 	{
-	  return ( xmin() == box.xmin() and xmax() == box.xmax() and
-	      	   ymin() == box.ymin() and ymax() == box.ymax() and
-	           zmin() == box.zmin() and zmax() == box.zmax() );
+	  return ( xMin() == box.xMin() and xMax() == box.xMax() and
+	      	   yMin() == box.yMin() and yMax() == box.yMax() and
+	           zMin() == box.zMin() and zMax() == box.zMax() );
 	};
 
 	inline bool operator!=(const BoundingBox3<Real>& box) const
@@ -112,28 +112,28 @@ public:
 
 	inline BoundingBox3<Real>& operator= (const BoundingBox3<Real>& box)
 	{
-		this->min_ = box.min();
-		this->max_ = box.max();
+		this->mMin = box.Min();
+		this->mMax = box.Max();
 
 		return ( *this );
 	};
 
 	inline BoundingBox3<Real> operator+(const BoundingBox3<Real>& box) const
 	{
-	  return BoundingBox3<Real>((std::min)(xmin(), box.xmin()),
-	                	  		(std::min)(ymin(), box.ymin()),
-	                	  		(std::min)(zmin(), box.zmin()),
-	                	  		(std::max)(xmax(), box.xmax()),
-	                	  		(std::max)(ymax(), box.ymax()),
-	                	  		(std::max)(zmax(), box.zmax()));
+	  return BoundingBox3<Real>((std::min)(xMin(), box.xMin()),
+	                	  		(std::min)(yMin(), box.yMin()),
+	                	  		(std::min)(zMin(), box.zMin()),
+	                	  		(std::max)(xMax(), box.xMax()),
+	                	  		(std::max)(yMax(), box.yMax()),
+	                	  		(std::max)(zMax(), box.zMax()));
 	};
 
 
-	bool intersect (const Point3<Real>& p) const
+	bool Intersect (const Point3<Real>& p) const
 	{
-	    return ( ( p.x() >= this->xmin() ) and ( p.x() < this->xmax() ) and
-	             ( p.y() >= this->ymin() ) and ( p.y() < this->ymax() ) and
-	             ( p.z() >= this->zmin() ) and ( p.z() < this->zmax() )   );
+	    return ( ( p.x() >= this->xMin() ) and ( p.x() < this->xMax() ) and
+	             ( p.y() >= this->yMin() ) and ( p.y() < this->yMax() ) and
+	             ( p.z() >= this->zMin() ) and ( p.z() < this->zMax() )   );
 	}
 
 

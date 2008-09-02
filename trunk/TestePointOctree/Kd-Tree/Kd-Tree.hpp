@@ -58,8 +58,9 @@ protected:
 
 public:
 
-	/// kd-tree root node
-	  KdTreeNode <Real,ItemPtr, Refine> * root;
+  /// kd-tree root node
+  KdTreeNode <Real,ItemPtr, Refine> * root;
+  
   KdTree() : root (0)
   {
 
@@ -77,9 +78,9 @@ public:
   /// @param p pointer to object
   virtual void insert (const ItemPtr p) {
     // Check if point is inside kd-tree world before inserting
-    if ( (p->x >= root->getBox().xmin()) && (p->x <= root->getBox().xmax()) &&
-	 (p->y >= root->getBox().ymin()) && (p->y <= root->getBox().ymax()) &&
-	 (p->z >= root->getBox().zmin()) && (p->z <= root->getBox().zmax()))
+    if ( (p->x >= root->getBox().xMin()) && (p->x <= root->getBox().xMax()) &&
+	 (p->y >= root->getBox().yMin()) && (p->y <= root->getBox().yMax()) &&
+	 (p->z >= root->getBox().zMin()) && (p->z <= root->getBox().zMax()))
       root->insert (0, p);
   }
 

@@ -132,20 +132,20 @@ public:
 
     Point3 cls = p; //closest point on box to p
 
-    if (p.x <= world.xmin())
-      cls = Point3(world.xmin(), cls.y, cls.z);
-    else if (p.x >= world.xmax())
-      cls = Point3(world.xmax(), cls.y, cls.z);
+    if (p.x <= world.xMin())
+      cls = Point3(world.xMin(), cls.y, cls.z);
+    else if (p.x >= world.xMax())
+      cls = Point3(world.xMax(), cls.y, cls.z);
 
-    if (p.y <= world.ymin())
-      cls = Point3(cls.x, world.ymin(), cls.z);
-    else if (p.y >= world.ymax())
-      cls = Point3(cls.x, world.ymax(), cls.z);
+    if (p.y <= world.yMin())
+      cls = Point3(cls.x, world.yMin(), cls.z);
+    else if (p.y >= world.yMax())
+      cls = Point3(cls.x, world.yMax(), cls.z);
 
-    if (p.z <= world.zmin())
-      cls = Point3(cls.x, cls.y, world.zmin());
-    else if (p.z >= world.zmax())
-      cls = Point3(cls.x, cls.y, world.zmax());
+    if (p.z <= world.zMin())
+      cls = Point3(cls.x, cls.y, world.zMin());
+    else if (p.z >= world.zMax())
+      cls = Point3(cls.x, cls.y, world.zMax());
 
     return p.SquaredDistance(cls);
   }
@@ -203,7 +203,7 @@ public:
     if (!isLeaf()) // Descend to child nodes
       {
 	// Compute distance from p to son's box
-	double dists[2] = {son[0]->sqrtDistanceToBox (p), son[1]->sqrtDistanceToBox (p)};
+	Real dists[2] = {son[0]->sqrtDistanceToBox (p), son[1]->sqrtDistanceToBox (p)};
 	comps += 2;
 	int order[2] = {0, 1};
 
@@ -216,7 +216,7 @@ public:
 	// Check distances to sons in ordered way, closest son first
 	// Only checks if distance to son's box is less than distance to
 	// farthes k-neighbor so far, or if hasn't found k-neighbots yet
-	double best = k_nearest.begin()->first;
+	Real best = k_nearest.begin()->first;
 	if (dists[order[0]] < best || k_nearest.size() < k)
 	  comps += son[order[0]]->kNearestNeighbors (p, k_nearest, k);
 	best = k_nearest.begin()->first;
@@ -242,12 +242,12 @@ public:
 		  if (Refine::split (world, PtrList)) {
 
 			  /// Check largest box dimension for subdivision
-			  split_dim = (world.max().x - world.min().x > world.max().y - world.min().y) ? 0 : 1;
-			  split_dim = (world.max()[split_dim] - world.min()[split_dim] > world.max().z - world.min().z) ? split_dim : 2;
+			  split_dim = (world.Max().x - world.Min().x > world.Max().y - world.Min().y) ? 0 : 1;
+			  split_dim = (world.Max()[split_dim] - world.Min()[split_dim] > world.Max().z - world.Min().z) ? split_dim : 2;
 
 			  /// Search for point closest to the center of split_dim
-			  double center = 0.5 * (world.max()[split_dim] + world.min()[split_dim]);
-			  double minDist = HUGE;
+			  Real center = 0.5 * (world.Max()[split_dim] + world.Min()[split_dim]);
+			  Real minDist = HUGE;
 
 			  ItemPtr middleItem = NULL;
 			  for (unsigned int i = 0; i < PtrList.size(); ++i) {
@@ -351,13 +351,13 @@ private :
     Box3 leftWorld;
     Point3 p_max;
     if (split_dim == 0) // recompute x coordinate range
-      p_max = Point3 (split_coord, world.ymax(), world.zmax());
+      p_max = Point3 (split_coord, world.yMax(), world.zMax());
     else if (split_dim == 1)
-      p_max = Point3 (world.xmax(), split_coord, world.zmax());
+      p_max = Point3 (world.xMax(), split_coord, world.zMax());
     else
-      p_max = Point3 (world.xmax(), world.ymax(), split_coord);
+      p_max = Point3 (world.xMax(), world.yMax(), split_coord);
 
-    leftWorld = Box3 (world.min(), p_max);
+    leftWorld = Box3 (world.Min(), p_max);
     return leftWorld;
   }
 
@@ -367,12 +367,12 @@ private :
     Box3 rightWorld;
     Point3 p_min;
     if (split_dim == 0) // recompute x coordinate range
-      p_min = Point3 (split_coord, world.ymin(), world.zmin());
+      p_min = Point3 (split_coord, world.yMin(), world.zMin());
     else if (split_dim == 1)
-      p_min = Point3 (world.xmin(), split_coord, world.zmin());
+      p_min = Point3 (world.xMin(), split_coord, world.zMin());
     else
-      p_min = Point3 (world.xmin(), world.ymin(), split_coord);
-    rightWorld = Box3 (p_min, world.max());
+      p_min = Point3 (world.xMin(), world.yMin(), split_coord);
+    rightWorld = Box3 (p_min, world.Max());
     return rightWorld;
   }
 };
