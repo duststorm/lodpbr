@@ -49,8 +49,8 @@ public:
 
   /// Map definitions for k-nearest neighbors algorithm
   typedef std::multimap <Real, ItemPtr, std::greater<Real> > K_Map;
-  typedef typename std::multimap <Real, Point3*, std::greater<Real> >::iterator K_MapIterator;
-  typedef std::pair<double, ItemPtr> K_NearestPair;
+  typedef typename std::multimap <Real, ItemPtr, std::greater<Real> >::iterator K_MapIterator;
+  typedef std::pair<Real, ItemPtr> K_NearestPair;
 
 protected:
 
@@ -99,6 +99,7 @@ public:
   /// @param p Given point.
   /// @return Pointer to the nearest neighbor object.
   ItemPtrList kNearestNeighbors (const Point3& p, unsigned int k, int &comps) const {
+
 
     K_Map k_nearest;
     comps = root->kNearestNeighbors (p, k_nearest, k);

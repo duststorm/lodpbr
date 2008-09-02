@@ -471,7 +471,7 @@ namespace LAL
       template<class Real>
       inline bool Point3<Real>::operator==( const Point3<Real>& p ) const
       {
-      	return ( ( this->x == p.x() ) and ( this->y == p.y() ) and ( this->z == p.z() ) );
+      	return ( ( this->x == p.x ) and ( this->y == p.y ) and ( this->z == p.z ) );
       };
       /*!@brief operator!=
        * @details Opposite to the operator==
