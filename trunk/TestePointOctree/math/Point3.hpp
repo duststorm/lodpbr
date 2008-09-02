@@ -137,7 +137,7 @@ namespace LAL
     	  /*!@name Functions */
     	  //@{
     	  /*!  */
-    	  Real 					SquaredDistance ( const Point3<Real>& p ) ;
+    	  Real 					SquaredDistance ( const Point3<Real>& p )  const;
   		  const Real* 			ToRealPtr( void ) const;
   		  Real* 				ToRealPtr( void );
 		  //@}
@@ -145,11 +145,7 @@ namespace LAL
 
       };
 
-
-
-
       //============================= LIFECYCLE ====================================
-
       template<class Real>
       Point3<Real>::Point3()
       {
@@ -579,7 +575,7 @@ namespace LAL
        * @details return the distance of two points
        */
       template<class Real>
-      inline Real Point3<Real>::SquaredDistance( const Point3<Real>& p )
+      inline Real Point3<Real>::SquaredDistance( const Point3<Real>& p ) const
       {
       	return (  (p.x - this->x) * (p.x - this->x)	+
       			  (p.y - this->y) * (p.y - this->y) +

@@ -4,7 +4,7 @@
 #include <QGLWidget>
 #include <vector>
 
-#include "lcgOctree/ocTree.hpp"
+#include "Octree/ocTree.hpp"
 #include "Kd-Tree/Kd-Tree.hpp"
 
 #include "math/Point3.hpp"
@@ -42,11 +42,11 @@ public:
 
     Octree<float,Surfel<float>* > octree;
     KdTree<float,LAL::Point3<float>* > kdTree;
-    
-   
+
+
     typedef  KdTree<float,LAL::Point3<float>* >::Node KdTree3DNode;
     KdTree3DNode* searchIt;
-    
+
     LAL::Point3<float> midlePoint;
 
     Surfel<float>*  su;
@@ -77,11 +77,11 @@ protected:
 private:
     void draw();
     void drawPoints(int& cont);
-    
+
     void drawKdTree(void);
     void drawKdNodeRecursively(const KdTree3DNode* n);
     bool drawKdNode(const KdTree3DNode* n);
-    
+
     void model();
     void LODSelection( OctreeNode<float,Surfel<float>* > * pNode, int& cont);
     void SIZE( OctreeNode<float,Surfel<float>* > * pNode, long int& cont,std::map < int , std::vector<float> >& oi);

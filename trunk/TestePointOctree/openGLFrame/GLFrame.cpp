@@ -312,17 +312,23 @@ bool GLFrame::drawKdNode(const KdTree3DNode* n) {
   glPointSize(5.0);
   glBegin(GL_POINTS);
   glColor4f(0.3, 0.3, 0.3, 1.0);
+
   for (int i = 0; i < n->itemPtrCount(); ++i) {
-    LAL::Point3<float>* p = n->element(i);
-    glVertex3f(p->x, p->y, p->z);
+
+	LAL::Vector3<float> p( n->element(i)->x,n->element(i)->y,n->element(i)->z );
+    glVertex3fv( p.ToRealPtr() );
+
   }
+
   glEnd();
+
   glColor4fv(cur_color);
 
   // Only draw leaf node's boxes
-   if (!n->isLeaf()) 
+
+   if (!n->isLeaf())
     return 0;
-  
+
   drawBox(n->getBox());
 
   return 1;
@@ -353,11 +359,6 @@ void GLFrame::drawKdTree(void)
 
   drawKdNodeRecursively(root); //draw entire tree
 
-  if (searchIt != 0) {
-    glLineWidth(1.0);
-    glColor4f(0.3, 0.7, 0.3, 1.0);
-    drawKdNode((const KdTree3DNode*) searchIt); //draw only searched leaf node
-  }
 }
 
 
@@ -419,8 +420,8 @@ void GLFrame::calLimits()
 	for (std::vector<Surfel<float> >::iterator surf =  surfels.surfels.begin();surf != surfels.surfels.end(); ++ surf )
 	{
 
-		octree.insert (new Surfel<float>(*surf));
-		kdTree.insert (new LAL::Point3<float>( (*surf).Center() ) );
+		//octree.insert (new Surfel<float>(*surf));
+	    kdTree.insert (new LAL::Point3<float>( (*surf).Center() ) );
 	    midlePoint += surf->Center();
 
 	}
@@ -428,6 +429,7 @@ void GLFrame::calLimits()
 	midlePoint /= surfels.surfels.size();
 
     std::cout << octree.root->itemPtrCount() <<  " AAA" << std::endl;
+    std::cout << kdTree.root->itemPtrCount() <<  " BBB" << std::endl;
 
     octree.split();
 
@@ -565,7 +567,7 @@ void GLFrame::keyPressEvent(QKeyEvent * event)
 	{
 		camera.MoveUpward(-CameraStep);
 
-	}	
+	}
 	else if (event->key() == Qt::Key_W)
 	{
 		camera.MoveForward(CameraStep);
@@ -639,14 +641,14 @@ void GLFrame::mouseMoveEvent(QMouseEvent *event)
     float heading = 0.0f;
     float pitch = 0.0f;
     float roll = 0.0f;
-   
+
     pitch = -(static_cast<float>(event->x()) - mCenterX) * 0.2;
     heading = -(static_cast<float>(event->y()) - mCenterY) * 0.2;
 
     camera.rotate(pitch,heading, 0.0f);
 
 //    mouse.moveToWindowCenter();
-    
+
     QCursor::setPos(mapToGlobal(QPoint(static_cast<int>(mCenterX),static_cast<int>(mCenterY))));
  	updateGL();
     lastPos = event->pos();
