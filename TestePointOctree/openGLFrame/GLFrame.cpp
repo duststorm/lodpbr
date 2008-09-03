@@ -441,7 +441,7 @@ void GLFrame::calLimits()
 
     int k_nearest_search_comps = 0;
 
-    ItemPtrList = kdTree.kNearestNeighbors( LAL::Point3<float>( 0.0f , 0.0f , 0.0f ),20, k_nearest_search_comps);
+    ItemPtrList = kdTree.kNearestNeighbors( LAL::Point3<float>( 0.002285f,0.002285f,-0.58039f ),20, k_nearest_search_comps);
 
     std::cout << ItemPtrList.size() <<  " BdBB" << std::endl;
     
