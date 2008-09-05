@@ -33,7 +33,7 @@
  * @param Refine give criterion
  *
  **/
-template <class Real,class ItemPtr, class Refine = OverflowRefineKD<Real,ItemPtr> >
+template <class Real,class ItemPtr, class Refine = OverflowKdTreeRefine<Real,ItemPtr> >
 class KdTree {
 
 public:
@@ -48,9 +48,9 @@ public:
   typedef KdTreeNode<Real,ItemPtr, Refine> Node;
 
   /// Map definitions for k-nearest neighbors algorithm
-  typedef std::multimap <Real, ItemPtr, std::greater<Real> > K_Map;
-  typedef typename std::multimap <Real, ItemPtr, std::greater<Real> >::iterator K_MapIterator;
-  typedef std::pair<Real, ItemPtr> K_NearestPair;
+  typedef std::multimap <Real, ItemPtr, std::greater<Real> > KNearestMap;
+  typedef typename std::multimap <Real, ItemPtr, std::greater<Real> >::iterator KNearestMapIterator;
+  typedef std::pair<Real, ItemPtr> KNearestPair;
 
 protected:
 
@@ -76,48 +76,57 @@ public:
 
   /// Inserts a pointer to an object in this kd-tree
   /// @param p pointer to object
-  virtual void insert (const ItemPtr p) {
-    // Check if point is inside kd-tree world before inserting
-    if ( (p->x >= root->getBox().xMin()) && (p->x <= root->getBox().xMax()) &&
-	 (p->y >= root->getBox().yMin()) && (p->y <= root->getBox().yMax()) &&
-	 (p->z >= root->getBox().zMin()) && (p->z <= root->getBox().zMax()))
-      root->insert (0, p);
+  virtual void Insert (const ItemPtr p) 
+  {
+	  // Check if point is inside kd-tree world before inserting
+	  if ( (p->x >= root->Box().xMin()) && (p->x <= root->Box().xMax()) &&
+		   (p->y >= root->Box().yMin()) && (p->y <= root->Box().yMax()) &&
+		   (p->z >= root->Box().zMin()) && (p->z <= root->Box().zMax()) )
+
+	  {
+		  root->Insert (0, p);
+	  }
   }
 
   /// Returns the number of pointer to items inserted into this kd-tree
-  virtual int itemPtrCount (void) const {
-    return root->itemPtrCount();
+  virtual int ItemPtrCount (void) const 
+  {
+    return root->ItemPtrCount();
   }
 
   /// Returns an iterator to the leaf node containing a given point
   /// @param p Given point
   /// @return Pointer to leaf node containing p
-  const Node* search (const Point3& p) const {
-    return root->search (p);
+  const Node* search (const Point3& p) const 
+  {
+    return root->Search (p);
   }
 
   /// Returns the nearesNeighbor to a given point
   /// @param p Given point.
   /// @return Pointer to the nearest neighbor object.
-  ItemPtrList kNearestNeighbors (const Point3& p, unsigned int k, int &comps) const {
+  ItemPtrList KNearestNeighbors (const Point3& p, unsigned int k, int &comps) const 
+  {
 
+	  KNearestMap kNearest;
+	  comps = root->KNearestNeighbors (p, kNearest, k);
 
-    K_Map k_nearest;
-    comps = root->kNearestNeighbors (p, k_nearest, k);
+	  ItemPtrList kCloose;
+	  KNearestMapIterator i;
 
-    ItemPtrList k_cls;
-    K_MapIterator i;
+	  for (i = kNearest.begin (); i != kNearest.end(); ++i)
+	  {
+		  kCloose.push_back (i->second);
+	  }
 
-    for (i = k_nearest.begin (); i != k_nearest.end(); ++i)
-      k_cls.push_back (i->second);
-
-    return k_cls;
+	  return kCloose;
   }
 
   /// Returns pointer to root node
   /// @return Pointer to root node
-  Node* begin(void) {
-    return root;
+  Node* Begin(void) 
+  {
+	  return root;
   }
 
 

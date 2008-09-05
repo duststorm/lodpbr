@@ -315,7 +315,7 @@ bool GLFrame::drawKdNode(const KdTree3DNode* n) {
   glColor4f(0.3, 0.3, 0.3, 1.0);
   
 
-  for (int i = 0; i < n->itemPtrCount(); ++i) {
+  for (int i = 0; i < n->ItemPtrCount(); ++i) {
 
 	LAL::Vector3<float> p( n->element(i)->x,n->element(i)->y,n->element(i)->z );
     //glVertex3fv( p.ToRealPtr() );
@@ -334,10 +334,10 @@ bool GLFrame::drawKdNode(const KdTree3DNode* n) {
 
   // Only draw leaf node's boxes
 
-   if (!n->isLeaf())
+   if (!n->IsLeaf())
     return 0;
 
-  drawBox(n->getBox());
+  drawBox(n->Box());
 
   return 1;
 }
@@ -345,8 +345,8 @@ bool GLFrame::drawKdNode(const KdTree3DNode* n) {
 /// Recursively draw all kd-tree nodes
 /// @param n kd-tree node
 void GLFrame::drawKdNodeRecursively(const KdTree3DNode* n) {
-  const KdTree3DNode* leftNode = n->left();
-  const KdTree3DNode* rightNode = n->right();
+  const KdTree3DNode* leftNode = n->Left();
+  const KdTree3DNode* rightNode = n->Right();
 
   if (!drawKdNode(leftNode))
     drawKdNodeRecursively(leftNode);
@@ -358,7 +358,7 @@ void GLFrame::drawKdNodeRecursively(const KdTree3DNode* n) {
 /// Draw the kd-tree leaf nodes' boxes and all elements stored in all nodes
 void GLFrame::drawKdTree(void)
 {
-  KdTree3DNode* root = kdTree.begin();
+  KdTree3DNode* root = kdTree.Begin();
 
   glColor4f(0.3, 0.3, 1.0, 1.0);
   glLineWidth(1.0);
@@ -429,7 +429,7 @@ void GLFrame::calLimits()
 	{
 
 		//octree.insert (new Surfel<float>(*surf));
-	    kdTree.insert (new LAL::Point3<float>( (*surf).Center() ) );
+	    kdTree.Insert (new LAL::Point3<float>( (*surf).Center() ) );
 	    midlePoint += surf->Center();
 
 	}
@@ -437,11 +437,11 @@ void GLFrame::calLimits()
 	midlePoint /= surfels.surfels.size();
 
     std::cout << octree.root->itemPtrCount() <<  " AAA" << std::endl;
-    std::cout << kdTree.root->itemPtrCount() <<  " BBB" << std::endl;
+    std::cout << kdTree.root->ItemPtrCount() <<  " BBB" << std::endl;
 
     int k_nearest_search_comps = 0;
 
-    ItemPtrList = kdTree.kNearestNeighbors( LAL::Point3<float>( 0.002285f,0.002285f,-0.58039f ),20, k_nearest_search_comps);
+    ItemPtrList = kdTree.KNearestNeighbors( LAL::Point3<float>( 0.002285f,0.002285f,-0.58039f ),20, k_nearest_search_comps);
 
     std::cout << ItemPtrList.size() <<  " BdBB" << std::endl;
     
