@@ -14,10 +14,14 @@
 *@version 1.0.
 *\nosubgrouping */
 
-template <class Real,class ItemPtr,class Refine = ClusterBySize<Real,ItemPtr> >
+template <	class Real,
+			class ItemPtr,
+			class Refine = ClusterBySize<Real,ItemPtr> >
 class ClusterNode 
 {
-
+	
+// Box
+//ItemPtrCount	
 	
 	
 };
