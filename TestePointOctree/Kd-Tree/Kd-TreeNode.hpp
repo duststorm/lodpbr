@@ -2,7 +2,7 @@
 #define KDTREENODE_HPP_
 
 #include <map>
-#include <vector>
+#include <deque>
 
 #include "math/BoundingBox3.hpp"
 #include "math/Point3.hpp"
@@ -21,7 +21,7 @@ class KdTreeNode {
   typedef typename LAL::Point3<Real> 		Point3;     ///< A Point in 3D
   typedef typename LAL::BoundingBox3<Real> 	Box3;
   /// List of what is actually stored in a leaf node (non-leaf nodes stores only one reference)
-  typedef std::vector<ItemPtr> ItemPtrList;
+  typedef std::deque<ItemPtr> ItemPtrList;
   typedef const KdTreeNode * NodePtr;
 
   typedef std::multimap < Real, ItemPtr, std::greater<Real> > KNearestMap;
