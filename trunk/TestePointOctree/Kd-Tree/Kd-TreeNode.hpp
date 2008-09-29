@@ -18,14 +18,14 @@
 template < class Real,class ItemPtr, class Refine = OverflowKdTreeRefine<Real,ItemPtr> >
 class KdTreeNode {
 
-  typedef typename LAL::Point3<Real> 		Point3;     ///< A Point in 3D
-  typedef typename LAL::BoundingBox3<Real> 	Box3;
+  typedef typename 	LAL::Point3<Real> 									Point3;     ///< A Point in 3D
+  typedef typename 	LAL::BoundingBox3<Real> 							Box3;
   /// List of what is actually stored in a leaf node (non-leaf nodes stores only one reference)
-  typedef std::deque<ItemPtr> ItemPtrList;
-  typedef const KdTreeNode * NodePtr;
+  typedef 			std::deque<ItemPtr> 								ItemPtrList;
+  typedef const 	KdTreeNode* 										NodePtr;
 
-  typedef std::multimap < Real, ItemPtr, std::greater<Real> > KNearestMap;
-  typedef std::pair< Real, ItemPtr> KNearestPair;
+  typedef 			std::multimap < Real, ItemPtr, std::greater<Real> >	KNearestMap;
+  typedef 		  	std::pair< Real, ItemPtr> 							KNearestPair;
 
 private:
 
@@ -152,7 +152,6 @@ public:
 	  {
 		  return this;
 	  }
-
 	  if (p[mSplitDimension] < mSplitCoordnate)
 	  {
 		  return son[0]->search (p);
@@ -166,7 +165,7 @@ public:
   /// Computes the squared distance from a given point to the nodes box
   /// @param p Given point
   /// @return Squared distance
-  Real SqrtDistanceToBox (const Point3& p) const 
+  Real EuclideanDistanceToBox (const Point3& p) const 
   {
 
 	  Point3 closestPoint = p; //closest point on box to p
@@ -198,7 +197,7 @@ public:
 		  closestPoint = Point3(closestPoint.x, closestPoint.y, mWorld.zMax());
 	  }
 
-    return p.SquaredDistance(closestPoint);
+    return p.EuclideanDistance(closestPoint);
   }
 
   /// Inserts a point in the set of k-nearest points
@@ -208,7 +207,7 @@ public:
   /// @param k_nearest Ordered set of nearest neighbors
   /// @param k Number of nearest neighbors to find
   /// @return The distance to the farthest point in the map
-  Real InsertNeighbor (ItemPtr item, double dist, KNearestMap& pKNearest, unsigned int k) const 
+  Real InsertNeighbor (ItemPtr item, Real dist, KNearestMap& pKNearest, unsigned int k) const 
   {
 	  pKNearest.insert ( KNearestPair (dist, item) );
 	  // if list has more than k nearest neighbors, remove first element (greater distance)
@@ -245,7 +244,7 @@ public:
 		  
 		  if (*PtrList[i] != p) 
 		  { // Check if not trying to insert itself
-			  Real dist = p.SquaredDistance (q);
+			  Real dist = p.EuclideanDistance (q);
 			  ++comps;
 			  if (dist < minDist || pKNearest.size() < k)
 			  {
@@ -269,7 +268,7 @@ public:
 	  if (!IsLeaf()) // Descend to child nodes
 	  {
 		  // Compute distance from p to son's box
-		  Real dists[2] = {son[0]->SqrtDistanceToBox (p), son[1]->SqrtDistanceToBox (p)};
+		  Real dists[2] = {son[0]->EuclideanDistanceToBox (p), son[1]->EuclideanDistanceToBox (p)};
 		  comps += 2;
 		  int order[2] = {0, 1};
 
@@ -397,7 +396,7 @@ public:
   /// Returns the ith element of the item list
   /// @param id The element position
   /// @return ith element of item list
-  const ItemPtr element (int id) const 
+  const ItemPtr Element (int id) const 
   {
     return PtrList[id];
   }

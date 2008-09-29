@@ -1,9 +1,9 @@
 /**
- * Header file for 3d-Tree
- *
- * Author : Ricardo Marroquim
- * Date created : 08-01-2007
- *
+ * Base class for 3d-Tree
+ * @author <A HREF="mailto:ricardo@lcg.ufrj.br">Ricardo Marroquim</a> and
+ * <A HREF="mailto:fmc@lcg.ufrj.br">Felipe Carvalho</a>
+ * @version $Revision: 1.20 $ $Date: 2008/09/24 16:01:00 $
+ * 
  * To make this kd-tree more generic must create a template function
  * to support insertion and search function.
  * As it is ItemPtr must implement a "cartesian" method that returns
@@ -38,19 +38,19 @@ class KdTree {
 
 public:
 
-  typedef typename LAL::Point3<Real> 		Point3;     ///< A Point in 3D
-  typedef typename LAL::BoundingBox3<Real> 	Box3;
+  typedef typename 	LAL::Point3<Real> 												Point3;     ///< A Point in 3D
+  typedef typename 	LAL::BoundingBox3<Real> 										Box3;
 
   /// List of what is actually stored in a leaf node (non-leaf nodes stores only one reference)
-  typedef std::vector<ItemPtr> ItemPtrList;
+  typedef 			std::vector<ItemPtr> 											ItemPtrList;
 
   /// kd-tree node
-  typedef KdTreeNode<Real,ItemPtr, Refine> Node;
+  typedef 			KdTreeNode<Real,ItemPtr, Refine> 								Node;
 
   /// Map definitions for k-nearest neighbors algorithm
-  typedef std::multimap <Real, ItemPtr, std::greater<Real> > KNearestMap;
-  typedef typename std::multimap <Real, ItemPtr, std::greater<Real> >::iterator KNearestMapIterator;
-  typedef std::pair<Real, ItemPtr> KNearestPair;
+  typedef 			std::multimap <Real, ItemPtr, std::greater<Real> > 				KNearestMap;
+  typedef typename 	std::multimap <Real, ItemPtr, std::greater<Real> >::iterator 	KNearestMapIterator;
+  typedef 			std::pair<Real, ItemPtr> 										KNearestPair;
 
 protected:
 
@@ -67,7 +67,8 @@ public:
   };
 
   /// Main Constructor
-  KdTree (const Box3& theWorld) : root (0) {
+  KdTree (const Box3& theWorld) : root (0) 
+  {
     root = new KdTreeNode <Real,ItemPtr, Refine> (theWorld);
   }
 
@@ -97,7 +98,7 @@ public:
   /// Returns an iterator to the leaf node containing a given point
   /// @param p Given point
   /// @return Pointer to leaf node containing p
-  const Node* search (const Point3& p) const 
+  const Node* Search (const Point3& p) const 
   {
     return root->Search (p);
   }

@@ -317,14 +317,14 @@ bool GLFrame::drawKdNode(const KdTree3DNode* n) {
 
   for (int i = 0; i < n->ItemPtrCount(); ++i) {
 
-	LAL::Vector3<float> p( n->element(i)->x,n->element(i)->y,n->element(i)->z );
+	LAL::Vector3<float> p( n->Element(i)->x,n->Element(i)->y,n->Element(i)->z );
     //glVertex3fv( p.ToRealPtr() );
 	for( std::vector<LAL::Point3<float>* >::iterator i = ItemPtrList.begin() ; i != ItemPtrList.end(); ++i) 
-	  {
-		  	LAL::Vector3<float> p( (*(*i)).x,(*(*i)).y,(*(*i)).z );
-	    	
-	    	glVertex3fv( p.ToRealPtr() );
-	  }
+	{
+		LAL::Vector3<float> p( (*(*i)).x,(*(*i)).y,(*(*i)).z );
+
+		glVertex3fv( p.ToRealPtr() );
+	}
 
   }
   
@@ -337,7 +337,7 @@ bool GLFrame::drawKdNode(const KdTree3DNode* n) {
    if (!n->IsLeaf())
     return 0;
 
-  drawBox(n->Box());
+  //drawBox(n->Box());
 
   return 1;
 }
@@ -441,7 +441,7 @@ void GLFrame::calLimits()
 
     int k_nearest_search_comps = 0;
 
-    ItemPtrList = kdTree.KNearestNeighbors( LAL::Point3<float>( 0.002285f,0.002285f,-0.58039f ),20, k_nearest_search_comps);
+    ItemPtrList = kdTree.KNearestNeighbors( LAL::Point3<float>( 0.0515251f , -0.084186f, 0.238488f ),40, k_nearest_search_comps);
 
     std::cout << ItemPtrList.size() <<  " BdBB" << std::endl;
     
