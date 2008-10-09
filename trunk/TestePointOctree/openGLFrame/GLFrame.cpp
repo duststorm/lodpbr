@@ -150,7 +150,7 @@ void GLFrame::LODSelection( OctreeNode<float,Surfel<float>* > * pNode, int& cont
 			if ( cosNDir < 0.0)
 			{
 				//						LAL::Point3<float> point = (*surfe)->Center();
-				glPointSize(3.0);
+				glPointSize(5.0);
 				//(*surfe)->draw();
 				if ( pNode->level() == 2 )
 					glColor3f(1.0,0.0,0.0);
@@ -165,7 +165,7 @@ void GLFrame::LODSelection( OctreeNode<float,Surfel<float>* > * pNode, int& cont
 				else if ( pNode->level() == 7 )
 					glColor3f(0.0,0.0,1.0);
 				else
-					glColor3f(1.0,1.0,1.0);
+					glColor3f(0.5,0.5,0.5);
 				glVertex3fv((*surfe)->Center().ToRealPtr());
 				//(*surfe)->draw(20);
 				cont++;
@@ -275,7 +275,7 @@ void GLFrame::initializeGL()
 
 	GLfloat light_position[] = {0.0, 0.5, 10.0, 0.0};
 
-	glClearColor(0.5f, 0.5f, 0.5f, 1.0f);           //cor fundo
+	glClearColor(1.0f, 1.0f, 1.0f, 1.0f);           //cor fundo
 	//glClearColor(1.0f, 1.0f, 1.0f, 0.0f);           //cor fundo
 	glShadeModel(GL_SMOOTH);                      	//gouraud
 	glMaterialfv(GL_FRONT_AND_BACK,GL_DIFFUSE, luzDifusa);//refletancia do material
@@ -378,9 +378,9 @@ void GLFrame::drawPoints(int& cont) {
    glPointSize(3.0);
    glBegin(GL_POINTS);
 
-   drawKdTree();
+   //drawKdTree();
 
-   //LODSelection(octree.root,cont);
+   LODSelection(octree.root,cont);
 
    //me.NewSurfel().draw();
 
@@ -428,8 +428,8 @@ void GLFrame::calLimits()
 	for (std::vector<Surfel<float> >::iterator surf =  surfels.surfels.begin();surf != surfels.surfels.end(); ++ surf )
 	{
 
-		//octree.insert (new Surfel<float>(*surf));
-	    kdTree.Insert (new LAL::Point3<float>( (*surf).Center() ) );
+		octree.insert (new Surfel<float>(*surf));
+	    //kdTree.Insert (new LAL::Point3<float>( (*surf).Center() ) );
 	    midlePoint += surf->Center();
 
 	}
@@ -555,7 +555,7 @@ void GLFrame::paintGL()
     	if (renderMode_A == Points)
     	{
     		drawPoints(cont);
-    		glColor3f(1.0,1.0,1.0);
+    		glColor3f(0.5,0.5,0.5);
     		renderText(10,5,QString("___________________________"));
     		renderText(10,25,QString("Number of Points :"));renderText(145,25,QString::number(cont));
     		renderText(10,30,QString("___________________________"));
@@ -566,7 +566,7 @@ void GLFrame::paintGL()
 
 
     	}
-    	DrawGroud();
+    	//DrawGroud();
     }
 
 }
