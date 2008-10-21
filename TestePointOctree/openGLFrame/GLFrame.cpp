@@ -32,65 +32,6 @@ GLFrame::GLFrame(QWidget *parent):QGLWidget(parent)
 	CameraStep = 0.01;
 	mode = true;
 
-
-	su1 =  new Surfel<float>(LAL::Point3<float>(7.938756, 8.396816, 5.958447),
-			LAL::Vector3<float>(0.000000, 0.000000, 1.000000),1.0f,1.0f,0.0f);
-
-	su1->SetMinorAxis(std::make_pair(0.1,LAL::Vector3<float>(1.000000, 0.000000, 0.000000)));
-	su1->SetMajorAxis(std::make_pair(0.5,LAL::Vector3<float>(0.000000, 1.000000, 0.00000)));
-
-	su2 =  new Surfel<float>(LAL::Point3<float>(6.632136, 7.704408, 5.995052),
-				LAL::Vector3<float>(0.000000, 0.000000, 1.000000),1.0f,1.0f,0.0f);
-
-	su2->SetMinorAxis(std::make_pair(0.4,LAL::Vector3<float>(1.000000, 0.000000, 0.000000)));
-	su2->SetMajorAxis(std::make_pair(0.2,LAL::Vector3<float>(0.000000, 1.000000, 0.000000)));
-
-
-	su3 = new Surfel<float>(LAL::Point3<float>(7.285446, 8.050611, 5.976750),
-				LAL::Vector3<float>(0.000000, 0.000000, 1.000000),1.0f,1.0f,0.0f);
-
-	su3->SetMinorAxis(std::make_pair(2.48653545051,LAL::Vector3<float>(0.460895, -0.887455, 0.000000)));
-	su3->SetMajorAxis(std::make_pair(1.91656134622,LAL::Vector3<float>(-0.887455, -0.460895, 0.000000)));
-
-	Surfel<float> * s = new Surfel<float>(LAL::Point3<float>(2.127096,-0.876474,1.482297),
-			LAL::Vector3<float>(-0.291764,-0.174345,0.940467),1.0f,1.0f,0.0f);
-
-
-
-
-
-
-	s->SetMinorAxis(std::make_pair(1.0,LAL::Vector3<float>(0.807313f, 0.482415f, 0.339886f)));
-	s->SetMajorAxis(std::make_pair(2.0,LAL::Vector3<float>(-0.512952f, 0.858417f, 0.000000f)));
-
-	std::list<Surfel<float>* > sl;
-
-	//sl.push_back(s);
-
-
-
-	s = new Surfel<float>(LAL::Point3<float>(0.459231f, 0.489174f, 1.334823f),
-			LAL::Vector3<float>(0.444927f, -0.059414f, 0.893594f),1.0f,1.0f,0.0f);
-
-	s->SetMinorAxis(std::make_pair(1.0,LAL::Vector3<float>(0.879801, -0.157404, -0.448525)));
-	s->SetMajorAxis(std::make_pair(2.0,LAL::Vector3<float>(0.167304, 0.985745, -0.017761)));
-
-	sl.push_back(su1);
-	sl.push_back(su2);
-
-	me = MergeEllipses<float>(sl);
-
-
-	std::cout << me.mProjectedPoint.size() << "AAAAA" << std::endl;
-
-	su = me.NewPtrSurfel();
-
-
-//	camera.SetUp(su1->MinorAxis().second);
-//	camera.SetPosition(LAL::Vector3<float>(su1->Center().x,su1->Center().y,su1->Center().z));
-//	camera.SetEyes(LAL::Vector3<float>(su1->Center().x,su1->Center().y,su1->Center().z)+(-su1->Normal()*1.0f));
-
-
 }
 
 void GLFrame::SetThreshold(const float& t)
@@ -107,26 +48,6 @@ void GLFrame::SetMode(bool t)
 	mode = t;
 }
 
-void GLFrame::SIZE(OctreeNode<float,Surfel<float>* > * pNode, long int& cont,std::map < int , std::vector<float> >& oi)
-{
-
-	if ( pNode->isLeaf() == true )
-	{
-		cont += sizeof(*pNode);
-	}
-	else
-	{
-		OctreeInternalNode<float,Surfel<float>* > * lInternalNode = dynamic_cast<OctreeInternalNode< float,Surfel<float>* >* >(pNode);
-
-		for(int i = 0; i < 8; ++i)
-			SIZE(lInternalNode->son[i],cont,oi);
-
-		//oi[lInternalNode->level()].push_back(lInternalNode->perpendicularError(camera.Eyes()));
-
-		cont += sizeof(*lInternalNode);
-	}
-
-}
 
 void GLFrame::LODSelection( OctreeNode<float,Surfel<float>* > * pNode, int& cont)
 {
@@ -382,31 +303,10 @@ void GLFrame::drawPoints(int& cont) {
 
    LODSelection(octree.root,cont);
 
-   //me.NewSurfel().draw();
 
-   //glVertex3fv( su.Center().ToRealPtr() );
-
-
-//   su3.draw();
-//   su1->draw();
-//   su2.draw();
 
    glEnd();
 
-//
-//   glColor3f(1.0,0.0,0.0);
-//   glBegin(GL_TRIANGLE_FAN);
-//   me.NewSurfel().draw();
-//   glEnd();
-//
-//   glColor3f(0.0,1.0,0.0);
-//   glBegin(GL_TRIANGLE_FAN);
-//   su1->draw();
-//   glEnd();
-//
-//   glBegin(GL_TRIANGLE_FAN);
-//   su2->draw();
-//   glEnd();
 
    glEnable(GL_LIGHTING);
    glPointSize(1.0);
@@ -471,18 +371,6 @@ void GLFrame::calLimits()
     // frame end
 
 
-    long int cont = 0;
-
-    std::map < int , std::vector<float> > oi;
-
-    SIZE(octree.root,cont,oi);
-
-	for(std::map<int , std::vector<float> >::iterator it = oi.begin(); it != oi.end(); ++it)
-	{
-    	std::cout << "level min " << it->first << ":>" << *(std::min_element(it->second.begin(),it->second.end()) ) << std::endl;
-    	std::cout << "level max " << it->first << ":>" << *(std::max_element(it->second.begin(),it->second.end()) ) << std::endl;
-    	std::cout << "----" << std::endl;
-	}
 }
 
 template <class T>
@@ -669,75 +557,4 @@ void GLFrame::mouseMoveEvent(QMouseEvent *event)
     lastPos = event->pos();
 }
 
-//glLoadIdentity();
-//
-//	camera.SetUp(me.MinorAxis().second);
-//	camera.SetPosition(LAL::Vector3<float>(me.Center().x,me.Center().y,me.Center().z));
-//	camera.SetEyes(LAL::Vector3<float>(me.Center().x,me.Center().y,me.Center().z)+(-me.Normal()*1.0f));
-//
-//   camera.SetProjectionMatrix(-me.MajorAxis().first,me.MajorAxis().first,-me.MinorAxis().first,me.MinorAxis().first,-100.0f,100.0f);
-//
-//   glLoadMatrixf((~camera.OrthographicProjectionMatrix()).ToRealPtr());
-//   glMatrixMode(GL_MODELVIEW);
-//   glLoadIdentity();
-//
-//   glMultMatrixf((~camera.ViewMatrixNormal()).ToRealPtr());
-//
-//   glClearColor(0.0f,0.0f,0.0f,0.0f);
-//   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-//   glDrawBuffer(GL_BACK);
-//   glColor3f(1.0,0.0,0.0);
-//
-//   glDisable(GL_DEPTH_TEST);
-//   glBegin(GL_TRIANGLE_FAN);
-//   	me.NewSurfel().draw(8);
-//   glEnd();
-//   glColor3f(0.0,1.0,0.0);
-//	int cont = 0;
-//	std::list<LAL::Point3<float>* >::iterator it;
-//
-//   for( it = me.mProjectedPoint.begin(); it != me.mProjectedPoint.end(); ++it  )
-//   {
-//   	if ( (cont % 8) == 0)
-//   		glBegin(GL_TRIANGLE_FAN);
-//
-//   			glVertex3fv(  (*it)->ToRealPtr()  );
-//
-//   		cont++;
-//   	if ( (cont % 8) == 0)
-//   		glEnd();
-//
-//   }
-//
-////	   glBegin(GL_TRIANGLE_FAN);
-////	   su1->draw();
-////	   glEnd();
-////
-////	   glBegin(GL_TRIANGLE_FAN);
-////	   su2->draw();
-////	   glEnd();
-//
-//   glFlush();
-//
-//   glEnable(GL_DEPTH_TEST);
-//   GLfloat *outputBuffer = new GLfloat[width * height * 4];
-//   glReadBuffer(GL_BACK);
-//   glReadPixels(0, 0, width , height, GL_RGBA, GL_FLOAT, &outputBuffer[0]);
-//   glPopMatrix();
-//
-//
-//   float red   = 0 ;
-//   float green = 0;
-//
-//   for (int i = 0; i < width * height * 4; i+=4)
-//   {
-//       red   += outputBuffer[i + 0];
-//       green += outputBuffer[i + 1];
-//   }
-//
-//   std::cout << "cont " << me.mProjectedPoint.size() << std::endl;
-//   std::cout << "red " << red << std::endl;
-//
-//   std::cout << "green " << green << std::endl;
-//
-//   std::cout << "% " << green/(red+green) << std::endl;
+
