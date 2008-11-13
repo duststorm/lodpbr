@@ -71,24 +71,24 @@ void GLFrame::LODSelection( OctreeNode<float,Surfel<float>* > * pNode, int& cont
 			if ( cosNDir < 0.0)
 			{
 				//						LAL::Point3<float> point = (*surfe)->Center();
-				glPointSize(5.0);
-				//(*surfe)->draw();
-				if ( pNode->level() == 2 )
-					glColor3f(1.0,0.0,0.0);
-				else if ( pNode->level() == 3 )
-					glColor3f(1.0,0.0,1.0);
-				else if ( pNode->level() == 4 )
-					glColor3f(1.0,1.0,0.0);
-				else if ( pNode->level() == 5 )
-					glColor3f(0.0,1.0,0.0);
-				else if ( pNode->level() == 6 )
-					glColor3f(0.0,1.0,1.0);
-				else if ( pNode->level() == 7 )
-					glColor3f(0.0,0.0,1.0);
-				else
-					glColor3f(0.5,0.5,0.5);
-				glVertex3fv((*surfe)->Center().ToRealPtr());
-				//(*surfe)->draw(20);
+//				glPointSize(5.0);
+//				//(*surfe)->draw();
+//				if ( pNode->level() == 2 )
+//					glColor4f(1.0,0.0,0.0,0.75);
+//				else if ( pNode->level() == 3 )
+//					glColor4f(1.0,0.0,1.0,075);
+//				else if ( pNode->level() == 4 )
+//					glColor4f(1.0,1.0,0.0,0.75);
+//				else if ( pNode->level() == 5 )
+//					glColor4f(0.0,1.0,0.0,0.75);
+//				else if ( pNode->level() == 6 )
+//					glColor4f(0.0,1.0,1.0,0.75);
+//				else if ( pNode->level() == 7 )
+//					glColor4f(0.0,0.0,1.0,0.75);
+//				else
+					//glColor4f(0.5,0.5,0.5,0.75);
+				//glVertex3fv((*surfe)->Center().ToRealPtr());
+				(*surfe)->drawTriangleFan(8);
 				cont++;
 			}
 
@@ -122,26 +122,27 @@ void GLFrame::LODSelection( OctreeNode<float,Surfel<float>* > * pNode, int& cont
 
 				if ( (lInternalNode->geometricError(eye) < Threshold) )
 					{
-						glPointSize(3.0);
-
-						if ( lInternalNode->level() == 2 )
-							glColor3f(1.0,0.0,0.0);
-						else if ( lInternalNode->level() == 3 )
-							glColor3f(1.0,0.0,1.0);
-						else if ( lInternalNode->level() == 4 )
-							glColor3f(1.0,1.0,0.0);
-						else if ( lInternalNode->level() == 5 )
-							glColor3f(0.0,1.0,0.0);
-						else if ( lInternalNode->level() == 6 )
-							glColor3f(0.0,1.0,1.0);
-						else if ( lInternalNode->level() == 7 )
-							glColor3f(0.0,0.0,1.0);
-						else
-							glColor3f(1.0,1.0,1.0);
+//						glPointSize(3.0);
+//
+//						if ( lInternalNode->level() == 2 )
+//							glColor4f(1.0,0.0,0.0,0.75);
+//						else if ( lInternalNode->level() == 3 )
+//							glColor4f(1.0,0.0,1.0,0.75);
+//						else if ( lInternalNode->level() == 4 )
+//							glColor4f(1.0,1.0,0.0,0.75);
+//						else if ( lInternalNode->level() == 5 )
+//							glColor4f(0.0,1.0,0.0,0.75);
+//						else if ( lInternalNode->level() == 6 )
+//							glColor4f(0.0,1.0,1.0,0.75);
+//						else if ( lInternalNode->level() == 7 )
+//							glColor4f(0.0,0.0,1.0,0.75);
+//						else
+							//glColor4f(0.5f,0.5f,0.5f,0.75);
 
 						//lInternalNode->surfel()->draw(20);
 						//LAL::Point3<float> p = lInternalNode->surfel()->Center();
-						glVertex3fv( p.ToRealPtr() );
+						//glVertex3fv( p.ToRealPtr() );
+						lInternalNode->surfel()->drawTriangleFan(8);
 						cont++;
 
 					}
@@ -292,27 +293,10 @@ void GLFrame::drawKdTree(void)
 
 
 
-void GLFrame::drawPoints(int& cont) {
-
-   glDisable(GL_DEPTH_TEST);
-   glDisable(GL_LIGHTING);
-   glPointSize(3.0);
-   glBegin(GL_POINTS);
-
-   //drawKdTree();
-
+void GLFrame::drawPoints(int& cont) 
+{
+	
    LODSelection(octree.root,cont);
-
-
-
-   glEnd();
-
-
-   glEnable(GL_LIGHTING);
-   glPointSize(1.0);
-
-   glEnable(GL_DEPTH_TEST);
-
 
 }
 
@@ -348,7 +332,7 @@ void GLFrame::calLimits()
    
     octree.split();
 
-    GLuint fbo;
+    //GLuint fbo;
     //frame begin
 
     //save viewport and set up new one
