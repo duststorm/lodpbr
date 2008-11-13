@@ -27,6 +27,7 @@ namespace LAL {
 	private:
 
 		Vector3<Real> m[ 3 ];
+		
 
 	public:
 

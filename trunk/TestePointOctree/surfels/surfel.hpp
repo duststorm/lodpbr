@@ -430,6 +430,49 @@ template <class Real > class Surfel
 			}
 
 	 }
+	 
+	 void drawTriangleFan(int p = 8)
+	 {
+
+		 	ListPoint3 lBoundaries = this->BoundariesSamples(p);
+		 	
+//		 	glEnable (GL_BLEND); 
+//		 	glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	        
+			
+		    glEnable(GL_POLYGON_OFFSET_FILL);
+		    glPolygonOffset(1,1);
+		    glColor3f(0.0,0.5,0.5);
+		 	glBegin (GL_POLYGON);
+		 		for(ListPoint3Iterator it = lBoundaries.begin();it != lBoundaries.end();++it)
+		 		{
+		 			glNormal3fv (this->mNormal.ToRealPtr());
+		 			glVertex3fv( it->ToRealPtr() );
+		 		}
+			glEnd();
+			glDisable(GL_POLYGON_OFFSET_FILL);
+//			glDisable (GL_BLEND);
+
+			
+//		    glDisable (GL_LIGHTING);
+//			glColor3f(0.0,0.0,0.0);
+//			glBegin(GL_LINES);
+//	 			for(ListPoint3Iterator it = lBoundaries.begin();it != lBoundaries.end();++it)
+//	 			{
+//	 				glVertex3fv( it->ToRealPtr() );
+//	 				glVertex3fv( this->mCenter.ToRealPtr());
+//	 			}
+//			glEnd();
+//			
+//			glBegin(GL_POINTS);
+//	 			glVertex3fv( this->mCenter.ToRealPtr());
+//	 		glEnd();
+//	 		
+//	 		glEnable (GL_LIGHTING);
+			
+			
+			
+	 }
 
  private:
 
