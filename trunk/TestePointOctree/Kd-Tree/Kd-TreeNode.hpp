@@ -73,9 +73,9 @@ public:
   }
 
   /// destructor
-  ~KdTreeNode () 
+  virtual ~KdTreeNode () 
   {
-    
+  
     if (son[0] != 0)
     {
     	delete son[0];

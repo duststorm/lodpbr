@@ -48,20 +48,8 @@ public:
     KdTree3DNode* searchIt;
 
     LAL::Point3<float> midlePoint;
-
-    Surfel<float>*  su;
-    Surfel<float>* su1;
-    Surfel<float>* su2;
-    Surfel<float>* su3;
-
-    MergeEllipses<float> me;
-
-	float pxmax,pymax, paux;
-	float pxmin,pymin;
 	
     std::deque<LAL::Point3<float> > ItemList;
-
-	LAL::Point3<float> p1,p2,p11,p12,p21,p22;
 
 public slots:
 

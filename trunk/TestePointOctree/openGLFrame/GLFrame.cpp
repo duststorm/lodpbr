@@ -24,10 +24,6 @@ GLFrame::GLFrame(QWidget *parent):QGLWidget(parent)
 	renderMode_A = Points;
 	show_A 	= true;
 
-	midlePoint = LAL::Point3<float>();
-
-	surfels = Surfels<float>();
-
 	Threshold = 1.0;
 	CameraStep = 0.01;
 	mode = true;
@@ -49,118 +45,7 @@ void GLFrame::SetMode(bool t)
 }
 
 
-void GLFrame::LODSelection( OctreeNode<float,Surfel<float>* > * pNode, int& cont)
-{
 
-
-	if ( pNode->isLeaf() == true )
-	{
-
-		std::list< Surfel<float>* > lp = pNode->itemList();
-
-		for(std::list< Surfel<float>* >::iterator surfe = lp.begin(); surfe != lp.end(); ++surfe )
-		{
-			LAL::Vector3<float> eye =  camera.Eyes();
-			LAL::Vector3<float> p ((*surfe)->Center().x,(*surfe)->Center().y,(*surfe)->Center().z);
-			LAL::Vector3<float> dir = p - eye;
-
-			dir.Normalize();
-
-			float cosNDir = (dir*(*surfe)->Normal());
-
-			if ( cosNDir < 0.0)
-			{
-				//						LAL::Point3<float> point = (*surfe)->Center();
-//				glPointSize(5.0);
-//				//(*surfe)->draw();
-//				if ( pNode->level() == 2 )
-//					glColor4f(1.0,0.0,0.0,0.75);
-//				else if ( pNode->level() == 3 )
-//					glColor4f(1.0,0.0,1.0,075);
-//				else if ( pNode->level() == 4 )
-//					glColor4f(1.0,1.0,0.0,0.75);
-//				else if ( pNode->level() == 5 )
-//					glColor4f(0.0,1.0,0.0,0.75);
-//				else if ( pNode->level() == 6 )
-//					glColor4f(0.0,1.0,1.0,0.75);
-//				else if ( pNode->level() == 7 )
-//					glColor4f(0.0,0.0,1.0,0.75);
-//				else
-					//glColor4f(0.5,0.5,0.5,0.75);
-				glVertex3fv((*surfe)->Center().ToRealPtr());
-				//(*surfe)->drawTriangleFan(8);
-				cont++;
-			}
-
-		}
-
-	}else
-	{
-
-		OctreeInternalNode<float,Surfel<float>* > * lInternalNode = dynamic_cast<OctreeInternalNode< float,Surfel<float>* >* >(pNode);
-
-//		for(int i = 0; i < 8; ++i)
-//			LODSelection(lInternalNode->son[i],cont);
-		if ( lInternalNode->level() < 1)
-		{
-			for(int i = 0; i < 8; ++i)
-				LODSelection(lInternalNode->son[i],cont);
-		}
-		else
-		{
-			LAL::Vector3<float> eye = camera.Eyes();
-
-			LAL::Vector3<float> p (lInternalNode->surfel()->Center().x,lInternalNode->surfel()->Center().y,lInternalNode->surfel()->Center().z);
-			LAL::Vector3<float> dir =  p - eye ;
-
-
-			float cosNDir = (dir.Norm() * lInternalNode->surfel()->Normal());
-
-			if ( cosNDir < 0.0 )
-			{
-
-
-				if ( (lInternalNode->geometricError(eye) < Threshold) )
-					{
-//						glPointSize(3.0);
-//
-//						if ( lInternalNode->level() == 2 )
-//							glColor4f(1.0,0.0,0.0,0.75);
-//						else if ( lInternalNode->level() == 3 )
-//							glColor4f(1.0,0.0,1.0,0.75);
-//						else if ( lInternalNode->level() == 4 )
-//							glColor4f(1.0,1.0,0.0,0.75);
-//						else if ( lInternalNode->level() == 5 )
-//							glColor4f(0.0,1.0,0.0,0.75);
-//						else if ( lInternalNode->level() == 6 )
-//							glColor4f(0.0,1.0,1.0,0.75);
-//						else if ( lInternalNode->level() == 7 )
-//							glColor4f(0.0,0.0,1.0,0.75);
-//						else
-							//glColor4f(0.5f,0.5f,0.5f,0.75);
-
-						//lInternalNode->surfel()->draw(20);
-						LAL::Point3<float> p = lInternalNode->surfel()->Center();
-						glVertex3fv( p.ToRealPtr() );
-						//lInternalNode->surfel()->drawTriangleFan(8);
-						cont++;
-
-					}
-
-				else
-				{
-					for(int i = 0; i < 8; ++i)
-						LODSelection(lInternalNode->son[i],cont);
-				}
-
-			}else
-			{
-				for(int i = 0; i < 8; ++i)
-					LODSelection(lInternalNode->son[i],cont);
-			}
-		}
-	}
-}
 
 void GLFrame::DrawGroud()
 {
@@ -296,7 +181,7 @@ void GLFrame::drawKdTree(void)
 void GLFrame::drawPoints(int& cont) 
 {
 	
-   LODSelection(octree.root,cont);
+
 
 }
 
@@ -306,22 +191,24 @@ void GLFrame::calLimits()
 	Box_3<float> world = Box_3<float>( LAL::Point3<float>(surfels.box().xMin(),surfels.box().yMin(),surfels.box().zMin()),
 				   						 LAL::Point3<float>(surfels.box().xMax(),surfels.box().yMax(),surfels.box().zMax()));
 
-	octree = Octree<float,Surfel<float>* >(world,mode) ;
-	kdTree = KdTree<float,LAL::Point3<float> >(world);
+	if (kdTree.root ==  0)
+	{
+		kdTree = KdTree<float,LAL::Point3<float> >(world);		
+	}
+	else
+	{
+		delete kdTree.root;
+		kdTree = KdTree<float,LAL::Point3<float> >(world);
+	}
+		
+		
+
 
 	for (std::vector<Surfel<float> >::iterator surf =  surfels.surfels.begin();surf != surfels.surfels.end(); ++ surf )
 	{
-
-		octree.insert (new Surfel<float>(*surf));
 	    kdTree.Insert ( surf->Center() );
-	    midlePoint += surf->Center();
-
 	}
 
-	midlePoint /= surfels.surfels.size();
-
-    std::cout << octree.root->itemPtrCount() <<  " AAA" << std::endl;
-    std::cout << kdTree.root->ItemCount() <<  " BBB" << std::endl;
 
     int k_nearest_search_comps = 0;
 
@@ -330,7 +217,6 @@ void GLFrame::calLimits()
     std::cout << ItemList.size() <<  " BdBB" << std::endl;
     
    
-    octree.split();
 
     GLuint fbo;
     //frame begin
@@ -340,7 +226,7 @@ void GLFrame::calLimits()
     glGetIntegerv(GL_VIEWPORT,(int*)viewport);
     glPushAttrib(GL_ALL_ATTRIB_BITS);
     glPushMatrix();
-    	octree.Merge();
+    	// merge
     glPopMatrix();
     glPopAttrib();
 
@@ -426,17 +312,10 @@ void GLFrame::paintGL()
     	drawKdTree();
     	if (renderMode_A == Points)
     	{
-    		//drawPoints(cont);
     		glColor3f(0.5,0.5,0.5);
     		renderText(10,5,QString("___________________________"));
     		renderText(10,25,QString("Number of Points :"));renderText(145,25,QString::number(cont));
     		renderText(10,30,QString("___________________________"));
-
-
-//    		for (OctreeIterator<float, Surfel<float>* > oi = octree.begin();oi != octree.end();++oi )
-//    			drawBox(octree.box(oi));
-
-
     	}
     	DrawGroud();
     }
