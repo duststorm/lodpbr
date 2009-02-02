@@ -2,7 +2,7 @@
 #define MYGLFRAME_H
 
 #include <QGLWidget>
-#include <vector>
+#include <deque>
 
 #include "Octree/ocTree.hpp"
 #include "Kd-Tree/Kd-Tree.hpp"
@@ -41,25 +41,25 @@ public:
     Surfels<float> surfels;
 
     Octree<float,Surfel<float>* > octree;
-    KdTree<float,LAL::Point3<float>* > kdTree;
+    KdTree<float,LAL::Point3<float> > kdTree;
 
 
-    typedef  KdTree<float,LAL::Point3<float>* >::Node KdTree3DNode;
+    typedef  KdTree<float,LAL::Point3<float> >::Node KdTree3DNode;
     KdTree3DNode* searchIt;
 
     LAL::Point3<float> midlePoint;
 
     Surfel<float>*  su;
     Surfel<float>* su1;
-    Surfel<float>*su2;
-    Surfel<float>*su3;
+    Surfel<float>* su2;
+    Surfel<float>* su3;
 
     MergeEllipses<float> me;
 
 	float pxmax,pymax, paux;
 	float pxmin,pymin;
 	
-    std::vector<LAL::Point3<float>* > ItemPtrList;
+    std::deque<LAL::Point3<float> > ItemList;
 
 	LAL::Point3<float> p1,p2,p11,p12,p21,p22;
 

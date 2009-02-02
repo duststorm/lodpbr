@@ -87,8 +87,8 @@ void GLFrame::LODSelection( OctreeNode<float,Surfel<float>* > * pNode, int& cont
 //					glColor4f(0.0,0.0,1.0,0.75);
 //				else
 					//glColor4f(0.5,0.5,0.5,0.75);
-				//glVertex3fv((*surfe)->Center().ToRealPtr());
-				(*surfe)->drawTriangleFan(8);
+				glVertex3fv((*surfe)->Center().ToRealPtr());
+				//(*surfe)->drawTriangleFan(8);
 				cont++;
 			}
 
@@ -140,9 +140,9 @@ void GLFrame::LODSelection( OctreeNode<float,Surfel<float>* > * pNode, int& cont
 							//glColor4f(0.5f,0.5f,0.5f,0.75);
 
 						//lInternalNode->surfel()->draw(20);
-						//LAL::Point3<float> p = lInternalNode->surfel()->Center();
-						//glVertex3fv( p.ToRealPtr() );
-						lInternalNode->surfel()->drawTriangleFan(8);
+						LAL::Point3<float> p = lInternalNode->surfel()->Center();
+						glVertex3fv( p.ToRealPtr() );
+						//lInternalNode->surfel()->drawTriangleFan(8);
 						cont++;
 
 					}
@@ -232,21 +232,21 @@ bool GLFrame::drawKdNode(const KdTree3DNode* n) {
   GLfloat cur_color[4];
   glGetFloatv(GL_CURRENT_COLOR, cur_color);
 
-  glPointSize(5.0);
+  glPointSize(1.0);
   glBegin(GL_POINTS);
   glColor4f(0.3, 0.3, 0.3, 1.0);
   
 
-  for (int i = 0; i < n->ItemPtrCount(); ++i) {
+  for (int i = 0; i < n->ItemCount(); ++i) {
 
-	LAL::Vector3<float> p( n->Element(i)->x,n->Element(i)->y,n->Element(i)->z );
-    //glVertex3fv( p.ToRealPtr() );
-	for( std::vector<LAL::Point3<float>* >::iterator i = ItemPtrList.begin() ; i != ItemPtrList.end(); ++i) 
-	{
-		LAL::Vector3<float> p( (*(*i)).x,(*(*i)).y,(*(*i)).z );
-
-		glVertex3fv( p.ToRealPtr() );
-	}
+	LAL::Vector3<float> p( n->Element(i).x,n->Element(i).y,n->Element(i).z );
+    glVertex3fv( p.ToRealPtr() );
+//	for( std::deque<LAL::Point3<float> >::iterator i = ItemList.begin() ; i != ItemList.end(); ++i) 
+//	{
+//		LAL::Vector3<float> p( ((*i)).x,((*i)).y,((*i)).z );
+//
+//		glVertex3fv( p.ToRealPtr() );
+//	}
 
   }
   
@@ -259,7 +259,7 @@ bool GLFrame::drawKdNode(const KdTree3DNode* n) {
    if (!n->IsLeaf())
     return 0;
 
-  //drawBox(n->Box());
+  drawBox(n->Box());
 
   return 1;
 }
@@ -307,13 +307,13 @@ void GLFrame::calLimits()
 				   						 LAL::Point3<float>(surfels.box().xMax(),surfels.box().yMax(),surfels.box().zMax()));
 
 	octree = Octree<float,Surfel<float>* >(world,mode) ;
-	kdTree = KdTree<float,LAL::Point3<float>* >(world);
+	kdTree = KdTree<float,LAL::Point3<float> >(world);
 
 	for (std::vector<Surfel<float> >::iterator surf =  surfels.surfels.begin();surf != surfels.surfels.end(); ++ surf )
 	{
 
 		octree.insert (new Surfel<float>(*surf));
-	    //kdTree.Insert (new LAL::Point3<float>( (*surf).Center() ) );
+	    kdTree.Insert ( surf->Center() );
 	    midlePoint += surf->Center();
 
 	}
@@ -321,23 +321,23 @@ void GLFrame::calLimits()
 	midlePoint /= surfels.surfels.size();
 
     std::cout << octree.root->itemPtrCount() <<  " AAA" << std::endl;
-    std::cout << kdTree.root->ItemPtrCount() <<  " BBB" << std::endl;
+    std::cout << kdTree.root->ItemCount() <<  " BBB" << std::endl;
 
     int k_nearest_search_comps = 0;
 
-    ItemPtrList = kdTree.KNearestNeighbors( LAL::Point3<float>( 0.0515251f , -0.084186f, 0.238488f ),40, k_nearest_search_comps);
+    ItemList = kdTree.KNearestNeighbors( LAL::Point3<float>( 0.0515251f , -0.084186f, 0.238488f ),40, k_nearest_search_comps);
 
-    std::cout << ItemPtrList.size() <<  " BdBB" << std::endl;
+    std::cout << ItemList.size() <<  " BdBB" << std::endl;
     
    
     octree.split();
 
-    //GLuint fbo;
+    GLuint fbo;
     //frame begin
 
     //save viewport and set up new one
-//    int viewport[4];
-//    glGetIntegerv(GL_VIEWPORT,(int*)viewport);
+    int viewport[4];
+    glGetIntegerv(GL_VIEWPORT,(int*)viewport);
     glPushAttrib(GL_ALL_ATTRIB_BITS);
     glPushMatrix();
     	octree.Merge();
@@ -349,8 +349,7 @@ void GLFrame::calLimits()
     GLfloat x = GLfloat(width()) / height();
     camera.SetProjectionMatrix(90.0,x,0.1,1000);
     glLoadMatrixf((~camera.PespectiveProjectionMatrix()).ToRealPtr());
-
-//    glViewport(viewport[0],viewport[1],viewport[2],viewport[3]);
+    glViewport(viewport[0],viewport[1],viewport[2],viewport[3]);
 
     // frame end
 
@@ -403,7 +402,7 @@ void GLFrame::resizeGL(int width, int height)
 //    camera.SetProjectionMatrix(-su1->MajorAxis().first,su1->MajorAxis().first,-su1->MinorAxis().first,su1->MinorAxis().first/*(GLfloat(height)/width)*/,-100.0f,100.0f);
 
     glLoadMatrixf((~camera.PespectiveProjectionMatrix()).ToRealPtr());
-//    glLoadMatrixf((~camera.OrthographicProjectionMatrix()).ToRealPtr());
+   // glLoadMatrixf((~camera.OrthographicProjectionMatrix()).ToRealPtr());
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
     mCenterX =  static_cast<float> (width*0.5);
@@ -424,9 +423,10 @@ void GLFrame::paintGL()
 
     if ( surfels.surfels.size() != 0 )
     {
+    	drawKdTree();
     	if (renderMode_A == Points)
     	{
-    		drawPoints(cont);
+    		//drawPoints(cont);
     		glColor3f(0.5,0.5,0.5);
     		renderText(10,5,QString("___________________________"));
     		renderText(10,25,QString("Number of Points :"));renderText(145,25,QString::number(cont));
@@ -438,7 +438,7 @@ void GLFrame::paintGL()
 
 
     	}
-    	//DrawGroud();
+    	DrawGroud();
     }
 
 }
