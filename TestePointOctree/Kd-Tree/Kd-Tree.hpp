@@ -67,13 +67,16 @@ public:
   };
 
   /// Main Constructor
-  KdTree (const Box3& theWorld) : root (0) 
+  KdTree (const Box3& theWorld)
   {
     root = new KdTreeNode <Real,Item, Refine> (theWorld);
   }
 
   /// destructor
-  virtual ~KdTree() {}
+  virtual ~KdTree() 
+  {
+	  
+  }
 
   /// Inserts a pointer to an object in this kd-tree
   /// @param p pointer to object
