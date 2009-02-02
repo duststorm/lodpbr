@@ -12,20 +12,20 @@
 /// A KdTree of Pointers to Objects
 ///
 /// @param K Kernel
-/// @param ItemPtr item pointer type to be stored
+/// @param Item item type to be stored
 /// @param Refine refinement criteria
 ///
-template < class Real,class ItemPtr, class Refine = OverflowKdTreeRefine<Real,ItemPtr> >
+template < class Real,class Item, class Refine = OverflowKdTreeRefine<Real,Item> >
 class KdTreeNode {
 
   typedef typename 	LAL::Point3<Real> 									Point3;     ///< A Point in 3D
   typedef typename 	LAL::BoundingBox3<Real> 							Box3;
   /// List of what is actually stored in a leaf node (non-leaf nodes stores only one reference)
-  typedef 			std::deque<ItemPtr> 								ItemPtrList;
+  typedef 			std::deque<Item> 									ItemList;
   typedef const 	KdTreeNode* 										NodePtr;
 
-  typedef 			std::multimap < Real, ItemPtr, std::greater<Real> >	KNearestMap;
-  typedef 		  	std::pair< Real, ItemPtr> 							KNearestPair;
+  typedef 			std::multimap < Real, Item, std::greater<Real> >	KNearestMap;
+  typedef 		  	std::pair< Real, Item> 								KNearestPair;
 
 private:
 
@@ -43,7 +43,7 @@ private:
 
   /// List of pointers to points contained in node (if it is leaf) or point that
   /// splits this node in two
-  ItemPtrList PtrList;
+  ItemList 	   mList;
 
   /// Node's coordinates
   Box3 mWorld;
@@ -91,9 +91,9 @@ public:
   /// @param p point which should be inside a descendant
   const KdTreeNode* SearchLeaf (const Point3& p) const 
   {
-	  if (PtrList.size() == 1) 
+	  if (mList.size() == 1) 
 	  { // internal node, contains only one object
-		  if (p == PtrList[0]) // found match
+		  if (p == mList[0]) // found match
 		  {
 			  return this;
 		  }
@@ -108,11 +108,11 @@ public:
 			  }
 		  }
 
-	  }else if (PtrList.size() > 1) 
+	  }else if (mList.size() > 1) 
 	  { // leaf node, search entire list for a match
-		  for (int i = 0; i < PtrList.size(); ++i) 
+		  for (int i = 0; i < mList.size(); ++i) 
 		  {
-			  if (PtrList[i] == p)
+			  if (mList[i] == p)
 			  {
 				  return this;
 			  }
@@ -207,7 +207,7 @@ public:
   /// @param k_nearest Ordered set of nearest neighbors
   /// @param k Number of nearest neighbors to find
   /// @return The distance to the farthest point in the map
-  Real InsertNeighbor (ItemPtr item, Real dist, KNearestMap& pKNearest, unsigned int k) const 
+  Real InsertNeighbor (const Item& item, Real dist, KNearestMap& pKNearest, unsigned int k) const 
   {
 	  pKNearest.insert ( KNearestPair (dist, item) );
 	  // if list has more than k nearest neighbors, remove first element (greater distance)
@@ -238,17 +238,17 @@ public:
 	  }
 
 	  // compute distance to all points inside the node (in case of internal nodes there is only one)
-	  for (unsigned int i = 0; i < PtrList.size(); ++i) 
+	  for (unsigned int i = 0; i < mList.size(); ++i) 
 	  {
-		  Point3 q = *PtrList[i];
+		  Point3 q = mList[i];
 		  
-		  if (*PtrList[i] != p) 
+		  if (mList[i] != p) 
 		  { // Check if not trying to insert itself
 			  Real dist = p.EuclideanDistance (q);
 			  ++comps;
 			  if (dist < minDist || pKNearest.size() < k)
 			  {
-				  minDist = InsertNeighbor (PtrList[i], dist, pKNearest, k);
+				  minDist = InsertNeighbor (mList[i], dist, pKNearest, k);
 			  }
 		  }
 	  }
@@ -304,15 +304,15 @@ public:
   /// @param level kd-tree level of this node
   /// @param p pointer to object
   /// @param fatherPtr reference to the pointer inside the father which point to this node
-  void Insert (int level, const ItemPtr p) 
+  void Insert (int level, const Item& p) 
   {
 
 	  if (son[0] == 0 && son[1] == 0) 
 	  { // leaf node
-		  PtrList.push_back(p);
+		  mList.push_back(p);
 
 		  // Check if overflow criteria is met
-		  if (Refine::Split (mWorld, PtrList)) 
+		  if (Refine::Split (mWorld, mList)) 
 		  {
 
 			  /// Check largest box dimension for subdivision
@@ -323,20 +323,20 @@ public:
 			  Real center = 0.5 * (mWorld.Max()[mSplitDimension] + mWorld.Min()[mSplitDimension]);
 			  Real minDist = HUGE;
 
-			  ItemPtr middleItem = NULL;
-			  for (unsigned int i = 0; i < PtrList.size(); ++i) 
+			  Item middleItem;
+			  for (unsigned int i = 0; i < mList.size(); ++i) 
 			  {
-				  Real dist = fabs (center - (*PtrList[i])[mSplitDimension]);
+				  Real dist = fabs (center - (mList[i])[mSplitDimension]);
 
 				  if (dist < minDist) 
 				  {
 					  minDist = dist;
-					  middleItem = PtrList[i];
+					  middleItem = mList[i];
 				  }
 			  }
 
 			  // Defines the position of the space partition
-			  mSplitCoordnate = (*middleItem)[mSplitDimension];
+			  mSplitCoordnate = (middleItem)[mSplitDimension];
 
 			  // Create two son nodes
 			  KdTreeNode * newLeftNode  = new KdTreeNode(this, LeftBox());
@@ -346,26 +346,26 @@ public:
 			  son[1] = newRightNode;
 
 			  // Insert items from list into child nodes (except middle item)
-			  for (unsigned int i = 0; i < PtrList.size(); ++i) 
+			  for (unsigned int i = 0; i < mList.size(); ++i) 
 			  {
-				  if ((*PtrList[i])[mSplitDimension] < mSplitCoordnate)
+				  if ((mList[i])[mSplitDimension] < mSplitCoordnate)
 				  {
-					  son[0]->Insert(level + 1, PtrList[i]);
+					  son[0]->Insert(level + 1, mList[i]);
 				  }
-				  else if ((*PtrList[i])[mSplitDimension] > mSplitCoordnate)
+				  else if ((mList[i])[mSplitDimension] > mSplitCoordnate)
 				  {
-					  son[1]->Insert(level + 1, PtrList[i]);
+					  son[1]->Insert(level + 1, mList[i]);
 				  }
 			  }
 
 			  // Insert split object into this node's empty list
-			  PtrList.clear();
-			  PtrList.push_back(middleItem);
+			  mList.clear();
+			  mList.push_back(middleItem);
 		  }
 	  }
 	  else 
 	  { // internal node, continue descending
-		  if ((*p)[mSplitDimension] < mSplitCoordnate)
+		  if ((p)[mSplitDimension] < mSplitCoordnate)
 		  {
 			  son[0]->Insert(level + 1, p);
 		  }
@@ -378,7 +378,7 @@ public:
 
   /// Returns the number of pointers to items inserted into this node
   /// @return Size of item list
-  int ItemPtrCount () const {
+  int ItemCount () const {
 //	  int sum = 0;
 //
 //	  if (son[0] == 0 && son[1] == 0)
@@ -390,15 +390,15 @@ public:
 //	  }
 //
 //	  return  sum + PtrList.size();
-	return PtrList.size();
+	return mList.size();
   }
 
   /// Returns the ith element of the item list
   /// @param id The element position
   /// @return ith element of item list
-  const ItemPtr Element (int id) const 
+  const Item Element (int id) const 
   {
-    return PtrList[id];
+    return mList[id];
   }
 
   /// Returns one of two sons of this node
