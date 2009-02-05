@@ -21,7 +21,7 @@ struct KdTreeRefine
 /// A simple refinement criteria for leaf nodes based on occupancy.
 /// A node is refined whenever it hold more than "Max" items
 ///
-template <class Real,class Item, int Max=3>
+template <class Real,class Item, int Max=400>
 struct OverflowKdTreeRefine : public KdTreeRefine <Real,Item> 
 {
 	

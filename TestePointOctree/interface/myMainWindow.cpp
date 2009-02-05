@@ -40,7 +40,6 @@ void MyMainWindow::on_action_Todos_Abaixo_triggered()
 
 void MyMainWindow::on_action_Model_triggered()
 {
-	glFrame->renderMode_A = GLFrame::Model;
 	glFrame->updateGL();
 }
 

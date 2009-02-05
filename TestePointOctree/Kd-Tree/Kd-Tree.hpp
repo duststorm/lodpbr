@@ -93,7 +93,7 @@ public:
   }
 
   /// Returns the number of pointer to items inserted into this kd-tree
-  virtual int ItemPtrCount (void) const 
+  virtual int ItemCount (void) const 
   {
     return root->ItemCount();
   }

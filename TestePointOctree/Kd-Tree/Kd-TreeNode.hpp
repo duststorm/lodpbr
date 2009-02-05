@@ -41,15 +41,15 @@ private:
   /// Pointer to parent node
   KdTreeNode * mFather;
 
-  /// List of pointers to points contained in node (if it is leaf) or point that
-  /// splits this node in two
-  ItemList 	   mList;
-
   /// Node's coordinates
   Box3 mWorld;
 
 public:
 
+  /// List of pointers to points contained in node (if it is leaf) or point that
+  /// splits this node in two
+  ItemList 	   mList;
+	
   /// constructor
   KdTreeNode (const Box3& w) : mWorld(w) 
   {
