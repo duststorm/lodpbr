@@ -21,9 +21,6 @@ GLFrame::GLFrame(QWidget *parent):QGLWidget(parent)
 
     setFocusPolicy(Qt::StrongFocus);
 
-	renderMode_A = Points;
-	show_A 	= true;
-
 	Threshold = 1.0;
 	CameraStep = 0.01;
 	mode = true;
@@ -109,7 +106,7 @@ void GLFrame::initializeGL()
 /// Draw a node's bounding box and it's contained points
 /// @param n kd-tree node
 /// @return 1 if empty or leaf node, 0 if internal node
-bool GLFrame::drawKdNode(const KdTree3DNode* n) {
+bool GLFrame::drawKdNode(const KdTree3DNode* n,int& cont) {
 
   if (n == NULL)
     return 1;
@@ -121,19 +118,13 @@ bool GLFrame::drawKdNode(const KdTree3DNode* n) {
   glBegin(GL_POINTS);
   glColor4f(0.3, 0.3, 0.3, 1.0);
   
+  cont += n->mList.size();
+  std::cout << "Tamanho da Lista =" << n->mList.size() << std::endl;
 
-  for (int i = 0; i < n->ItemCount(); ++i) {
-
-	LAL::Vector3<float> p( n->Element(i).x,n->Element(i).y,n->Element(i).z );
-    glVertex3fv( p.ToRealPtr() );
-//	for( std::deque<LAL::Point3<float> >::iterator i = ItemList.begin() ; i != ItemList.end(); ++i) 
-//	{
-//		LAL::Vector3<float> p( ((*i)).x,((*i)).y,((*i)).z );
-//
-//		glVertex3fv( p.ToRealPtr() );
-//	}
-
-  }
+  for (unsigned int i = 0; i < n->mList.size(); ++i) 
+  {
+	  glVertex3fv( n->mList[i].ToRealPtr() );
+  }	  
   
   glEnd();
 
@@ -141,54 +132,47 @@ bool GLFrame::drawKdNode(const KdTree3DNode* n) {
 
   // Only draw leaf node's boxes
 
-   if (!n->IsLeaf())
+  if (!n->IsLeaf())
     return 0;
 
-  drawBox(n->Box());
+  //drawBox(n->Box());
 
   return 1;
 }
 
 /// Recursively draw all kd-tree nodes
 /// @param n kd-tree node
-void GLFrame::drawKdNodeRecursively(const KdTree3DNode* n) {
+void GLFrame::drawKdNodeRecursively(const KdTree3DNode* n,int& cont) {
   const KdTree3DNode* leftNode = n->Left();
   const KdTree3DNode* rightNode = n->Right();
 
-  if (!drawKdNode(leftNode))
-    drawKdNodeRecursively(leftNode);
+  
+  if (!drawKdNode(leftNode,cont))
+    drawKdNodeRecursively(leftNode,cont);
 
-  if (!drawKdNode(rightNode))
-    drawKdNodeRecursively(rightNode);
+  if (!drawKdNode(rightNode,cont))
+    drawKdNodeRecursively(rightNode,cont);
 }
 
 /// Draw the kd-tree leaf nodes' boxes and all elements stored in all nodes
-void GLFrame::drawKdTree(void)
+void GLFrame::drawKdTree(int& cont)
 {
   KdTree3DNode* root = kdTree.Begin();
 
   glColor4f(0.3, 0.3, 1.0, 1.0);
   glLineWidth(1.0);
 
-  drawKdNode(root); //draw root node first
+  drawKdNode(root,cont); //draw root node first
 
-  drawKdNodeRecursively(root); //draw entire tree
-
-}
-
-
-
-void GLFrame::drawPoints(int& cont) 
-{
-	
-
+  drawKdNodeRecursively(root,cont); //draw entire tree
 
 }
+
 
 void GLFrame::calLimits()
 {
 
-	Box_3<float> world = Box_3<float>( LAL::Point3<float>(surfels.box().xMin(),surfels.box().yMin(),surfels.box().zMin()),
+    LAL::BoundingBox3<float> world =     LAL::BoundingBox3<float>( LAL::Point3<float>(surfels.box().xMin(),surfels.box().yMin(),surfels.box().zMin()),
 				   						 LAL::Point3<float>(surfels.box().xMax(),surfels.box().yMax(),surfels.box().zMax()));
 
 	if (kdTree.root ==  0)
@@ -209,6 +193,7 @@ void GLFrame::calLimits()
 	    kdTree.Insert ( surf->Center() );
 	}
 
+	std::cout << "Total = " << surfels.surfels.size() << std::endl;
 
     int k_nearest_search_comps = 0;
 
@@ -216,28 +201,6 @@ void GLFrame::calLimits()
 
     std::cout << ItemList.size() <<  " BdBB" << std::endl;
     
-   
-
-    GLuint fbo;
-    //frame begin
-
-    //save viewport and set up new one
-    int viewport[4];
-    glGetIntegerv(GL_VIEWPORT,(int*)viewport);
-    glPushAttrib(GL_ALL_ATTRIB_BITS);
-    glPushMatrix();
-    	// merge
-    glPopMatrix();
-    glPopAttrib();
-
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-    GLfloat x = GLfloat(width()) / height();
-    camera.SetProjectionMatrix(90.0,x,0.1,1000);
-    glLoadMatrixf((~camera.PespectiveProjectionMatrix()).ToRealPtr());
-    glViewport(viewport[0],viewport[1],viewport[2],viewport[3]);
-
-    // frame end
 
 
 }
@@ -283,12 +246,9 @@ void GLFrame::resizeGL(int width, int height)
     glLoadIdentity();
     GLfloat x = GLfloat(width) / height;
     camera.SetProjectionMatrix(90.0,x,0.1,1000);
-
-//    camera.SetProjectionMatrix(-p,p,-p,p/*(GLfloat(height)/width)*/,-100.0f,100.0f);
-//    camera.SetProjectionMatrix(-su1->MajorAxis().first,su1->MajorAxis().first,-su1->MinorAxis().first,su1->MinorAxis().first/*(GLfloat(height)/width)*/,-100.0f,100.0f);
-
+    
     glLoadMatrixf((~camera.PespectiveProjectionMatrix()).ToRealPtr());
-   // glLoadMatrixf((~camera.OrthographicProjectionMatrix()).ToRealPtr());
+    
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
     mCenterX =  static_cast<float> (width*0.5);
@@ -309,14 +269,12 @@ void GLFrame::paintGL()
 
     if ( surfels.surfels.size() != 0 )
     {
-    	drawKdTree();
-    	if (renderMode_A == Points)
-    	{
-    		glColor3f(0.5,0.5,0.5);
-    		renderText(10,5,QString("___________________________"));
-    		renderText(10,25,QString("Number of Points :"));renderText(145,25,QString::number(cont));
-    		renderText(10,30,QString("___________________________"));
-    	}
+    	drawKdTree(cont);
+    	
+    	glColor3f(0.5,0.5,0.5);
+    	renderText(10,5,QString("___________________________"));
+    	renderText(10,25,QString("Number of Points :"));renderText(145,25,QString::number(cont));
+    	renderText(10,30,QString("___________________________"));
     	DrawGroud();
     }
 

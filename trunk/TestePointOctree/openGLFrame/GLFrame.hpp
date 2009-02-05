@@ -4,7 +4,6 @@
 #include <QGLWidget>
 #include <deque>
 
-#include "Octree/ocTree.hpp"
 #include "Kd-Tree/Kd-Tree.hpp"
 
 #include "math/Point3.hpp"
@@ -23,16 +22,11 @@ class GLFrame : public QGLWidget
 public:
     GLFrame(QWidget *parent = 0);
 
-    inline bool isVisible_A() const {  return this->show_A;  };
-    inline void setVisible_A (const bool visible)  { this->show_A = visible; };
 
     void calLimits();
 
-    typedef enum RenderMode {WireFrame=0, PolygonWireFrame, Smooth, Points,Model};
 
     void DrawGroud();
-
-    RenderMode renderMode_A;
 
     void SetThreshold(const float&);
     void SetCameraStep(const float&);
@@ -40,14 +34,9 @@ public:
 
     Surfels<float> surfels;
 
-    Octree<float,Surfel<float>* > octree;
     KdTree<float,LAL::Point3<float> > kdTree;
 
-
     typedef  KdTree<float,LAL::Point3<float> >::Node KdTree3DNode;
-    KdTree3DNode* searchIt;
-
-    LAL::Point3<float> midlePoint;
 	
     std::deque<LAL::Point3<float> > ItemList;
 
@@ -66,18 +55,16 @@ protected:
 
 private:
     void draw();
-    void drawPoints(int& cont);
 
-    void drawKdTree(void);
-    void drawKdNodeRecursively(const KdTree3DNode* n);
-    bool drawKdNode(const KdTree3DNode* n);
+    void drawKdTree(int& cont);
+    void drawKdNodeRecursively(const KdTree3DNode* n,int& cont);
+    bool drawKdNode(const KdTree3DNode* n,int& cont);
 
     void model();
-    void LODSelection( OctreeNode<float,Surfel<float>* > * pNode, int& cont);
-    void SIZE( OctreeNode<float,Surfel<float>* > * pNode, long int& cont,std::map < int , std::vector<float> >& oi);
-
+    
     template < class T>
     LAL::BoundingBox3<T> limits();
+    
     template < class T>
     void drawBox(LAL::BoundingBox3<T> BBox);
 
@@ -92,7 +79,6 @@ private:
     float CameraStep;
     bool mode;
 
-	bool show_A;
 
 };
 
