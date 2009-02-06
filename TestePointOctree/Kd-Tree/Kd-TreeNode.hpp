@@ -2,7 +2,7 @@
 #define KDTREENODE_HPP_
 
 #include <map>
-#include <deque>
+#include <vector>
 
 #include "math/BoundingBox3.hpp"
 #include "math/Point3.hpp"
@@ -21,7 +21,7 @@ class KdTreeNode {
   typedef typename 	LAL::Point3<Real> 									Point3;     ///< A Point in 3D
   typedef typename 	LAL::BoundingBox3<Real> 							Box3;
   /// List of what is actually stored in a leaf node (non-leaf nodes stores only one reference)
-  typedef 			std::deque<Item> 									ItemList;
+  typedef 			std::vector<Item> 									ItemList;
   typedef const 	KdTreeNode* 										NodePtr;
 
   typedef 			std::multimap < Real, Item, std::greater<Real> >	KNearestMap;
@@ -309,6 +309,7 @@ public:
 
 	  if (son[0] == 0 && son[1] == 0) 
 	  { // leaf node
+		  std::cout << level << " level Total"<< std::endl;
 		  mList.push_back(p);
 
 		  // Check if overflow criteria is met
@@ -326,7 +327,7 @@ public:
 			  Item middleItem;
 			  for (unsigned int i = 0; i < mList.size(); ++i) 
 			  {
-				  Real dist = fabs (center - (mList[i])[mSplitDimension]);
+				  Real dist = fabs (center - mList[i][mSplitDimension]);
 
 				  if (dist < minDist) 
 				  {
@@ -335,6 +336,7 @@ public:
 				  }
 			  }
 
+			  	
 			  // Defines the position of the space partition
 			  mSplitCoordnate = (middleItem)[mSplitDimension];
 
@@ -348,12 +350,18 @@ public:
 			  // Insert items from list into child nodes (except middle item)
 			  for (unsigned int i = 0; i < mList.size(); ++i) 
 			  {
-				  if ((mList[i])[mSplitDimension] < mSplitCoordnate)
+				  				  
+				  if (mList[i][mSplitDimension] <= mSplitCoordnate)
 				  {
-					  son[0]->Insert(level + 1, mList[i]);
+					  if (!(mList[i] == middleItem))
+					  {
+						  son[0]->Insert(level + 1, mList[i]);  
+					  }
+					  
 				  }
-				  else if ((mList[i])[mSplitDimension] > mSplitCoordnate)
+				  else //if (mList[i][mSplitDimension] > mSplitCoordnate)
 				  {
+ 
 					  son[1]->Insert(level + 1, mList[i]);
 				  }
 			  }
@@ -365,7 +373,7 @@ public:
 	  }
 	  else 
 	  { // internal node, continue descending
-		  if ((p)[mSplitDimension] < mSplitCoordnate)
+		  if ( p[mSplitDimension] < mSplitCoordnate )
 		  {
 			  son[0]->Insert(level + 1, p);
 		  }
@@ -415,7 +423,7 @@ public:
 
   /// Returns the position where the split occurred
   /// @return Split coordinate
-  double SplitCoordinate(void) 
+  Real SplitCoordinate(void) 
   {
     return mSplitCoordnate;
   }
@@ -488,7 +496,9 @@ private :
 		{
 			pointMin = Point3 (mWorld.xMin(), mWorld.yMin(), mSplitCoordnate);
 		}
+		
 		rightWorld = Box3 (pointMin, mWorld.Max());
+		
 		return rightWorld;
 	}
 };

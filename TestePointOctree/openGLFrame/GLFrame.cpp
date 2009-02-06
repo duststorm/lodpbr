@@ -135,7 +135,7 @@ bool GLFrame::drawKdNode(const KdTree3DNode* n,int& cont) {
   if (!n->IsLeaf())
     return 0;
 
-  //drawBox(n->Box());
+  drawBox(n->Box());
 
   return 1;
 }
@@ -187,11 +187,12 @@ void GLFrame::calLimits()
 		
 		
 
-
+	std::cout << "Entrando" << std::endl;
 	for (std::vector<Surfel<float> >::iterator surf =  surfels.surfels.begin();surf != surfels.surfels.end(); ++ surf )
 	{
 	    kdTree.Insert ( surf->Center() );
 	}
+	std::cout << "Saindo" << std::endl;
 
 	std::cout << "Total = " << surfels.surfels.size() << std::endl;
 

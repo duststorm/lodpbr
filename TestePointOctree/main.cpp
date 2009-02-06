@@ -1,17 +1,14 @@
 #include <QApplication>
 #include <iostream>
-#include <list>
-#include <algorithm>
-#include <ctime>
+
+
 
 #include "interface/myMainWindow.hpp"
 
-#include "math/Vector3.hpp"
-#include "math/Math.hpp"
-
-
 int main(int argc, char *argv[])
 {
+
+	
 
 			
     QApplication app(argc, argv);
