@@ -46,8 +46,8 @@ HEADERS += interface/myMainWindow.hpp \
     math/Point2.hpp \
     math/Vector2.hpp \
     Kd-Tree/Kd-Tree.hpp \
-    Kd-Tree/Kd-TreeRefine.hpp \
-    Kd-Tree/Kd-TreeNode.hpp
+    Kd-Tree/Kd-TreeNode.hpp \
+    Kd-Tree/Kd-TreeRefine.hpp
 SOURCES += main.cpp \
     interface/myMainWindow.cpp \
     openGLFrame/GLFrame.cpp \
