@@ -119,7 +119,6 @@ bool GLFrame::drawKdNode(const KdTree3DNode* n,int& cont) {
   glColor4f(0.3, 0.3, 0.3, 1.0);
   
   cont += n->mList.size();
-  std::cout << "Tamanho da Lista =" << n->mList.size() << std::endl;
 
   for (unsigned int i = 0; i < n->mList.size(); ++i) 
   {
@@ -135,7 +134,7 @@ bool GLFrame::drawKdNode(const KdTree3DNode* n,int& cont) {
   if (!n->IsLeaf())
     return 0;
 
-  drawBox(n->Box());
+  //drawBox(n->Box());
 
   return 1;
 }
@@ -198,9 +197,9 @@ void GLFrame::calLimits()
 
     int k_nearest_search_comps = 0;
 
-    ItemList = kdTree.KNearestNeighbors( LAL::Point3<float>( 0.0515251f , -0.084186f, 0.238488f ),40, k_nearest_search_comps);
+    KNeibor = kdTree.KNearestNeighbors( LAL::Point3<float>( 0.0515251f , -0.084186f, 0.238488f ),40, k_nearest_search_comps);
 
-    std::cout << ItemList.size() <<  " BdBB" << std::endl;
+    std::cout << KNeibor.size() <<  " BdBB" << std::endl;
     
 
 
@@ -271,6 +270,16 @@ void GLFrame::paintGL()
     if ( surfels.surfels.size() != 0 )
     {
     	drawKdTree(cont);
+    	
+    	glColor3f(1.0,0.0,0.0);
+    	glPointSize(5.0);
+    	glBegin(GL_POINTS);
+    	for (std::vector<LAL::Point3<float> >::iterator i = KNeibor.begin(); i != KNeibor.end();++i)
+    	{
+    		glVertex3fv(i->ToRealPtr());
+    		std::cout << *i << std::endl;
+    	}
+    	glEnd();
     	
     	glColor3f(0.5,0.5,0.5);
     	renderText(10,5,QString("___________________________"));

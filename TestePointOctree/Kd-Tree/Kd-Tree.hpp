@@ -16,7 +16,7 @@
 #ifndef KDTREE_HPP_
 #define KDTREE_HPP_
 
-#include <deque>
+#include <vector>
 #include <map>
 
 #include "math/BoundingBox3.hpp"
@@ -42,7 +42,7 @@ public:
   typedef typename 	LAL::BoundingBox3<Real> 										Box3;
 
   /// List of what is actually stored in a leaf node (non-leaf nodes stores only one reference)
-  typedef 			std::deque<Item> 											    ItemList;
+  typedef 			std::vector<Item> 											    ItemList;
 
   /// kd-tree node
   typedef 			KdTreeNode<Real,Item, Refine> 								    Node;

@@ -309,7 +309,7 @@ public:
 
 	  if (son[0] == 0 && son[1] == 0) 
 	  { // leaf node
-		  std::cout << level << " level Total"<< std::endl;
+		  
 		  mList.push_back(p);
 
 		  // Check if overflow criteria is met
