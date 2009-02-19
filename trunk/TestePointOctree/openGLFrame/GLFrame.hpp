@@ -2,7 +2,7 @@
 #define MYGLFRAME_H
 
 #include <QGLWidget>
-#include <deque>
+#include <vector>
 
 #include "Kd-Tree/Kd-Tree.hpp"
 
@@ -38,7 +38,7 @@ public:
 
     typedef  KdTree<float,LAL::Point3<float> >::Node KdTree3DNode;
 	
-    std::deque<LAL::Point3<float> > ItemList;
+    std::vector<LAL::Point3<float> > KNeibor;
 
 public slots:
 
