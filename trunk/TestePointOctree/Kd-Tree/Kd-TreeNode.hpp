@@ -200,6 +200,93 @@ public:
     return p.EuclideanDistance(closestPoint);
   }
 
+  // -------------------------------------------------------------------------------------//
+ 
+  /// Computes the k-nearest neighbors inside this node to the given point p
+  /// @param p Given point
+  /// @param k_nearest Ordered set of nearest neighbors
+  /// @param k Number of nearest neighbors to find
+  /// @return Number of distance comparisons made
+  int KNearestLocalNeighbors (const Point3& p, KNearestMap& pKNearest, unsigned int k) const 
+  {
+	  int comps = 0;
+	  Real minDist;
+	  
+	  if (pKNearest.empty())
+	  {
+		  minDist = HUGE; // empty set of nearest points
+	  }
+	  else
+	  {
+		  minDist = pKNearest.begin()->first; // greatest distance of all points in map
+	  }
+
+	  // compute distance to all points inside the node (in case of internal nodes there is only one)
+	  for (unsigned int i = 0; i < mList.size(); ++i) 
+	  {
+		  Point3 q = mList[i];
+		  
+		  if (mList[i] != p) 
+		  { // Check if not trying to insert itself
+			  Real dist = p.EuclideanDistance (q);
+			  ++comps;
+			  if (dist < minDist || pKNearest.size() < k)
+			  {
+				  minDist = InsertNeighbor (mList[i], dist, pKNearest, k);
+			  }
+		  }
+	  }
+	  return comps;
+  }
+
+  /// Computes the k-nearest neighbors inside the kd-tree to a given point
+  /// @param p Given point
+  /// @param k_nearest Ordered set of nearest neighbors
+  /// @param k Number of nearest neighbors to find
+  int KNearestNeighbors (const Point3& p, KNearestMap& pKNearest, unsigned int k) const 
+  {
+	  int comps = 0;
+	  // Computes the distance to this node's itens
+	  comps = KNearestLocalNeighbors (p, pKNearest, k);
+
+	  if (!IsLeaf()) // Descend to child nodes
+	  {
+		  // Compute distance from p to son's box
+		  Real dists[2] = {son[0]->EuclideanDistanceToBox (p), son[1]->EuclideanDistanceToBox (p)};
+		  comps += 2;
+		  int order[2] = {0, 1};
+
+		  // Arrange in order of distances (closest first)
+		  if (dists[1] < dists[0]) {
+			  order[0] = 1;
+			  order[1] = 0;
+		  }
+
+		  // Check distances to sons in ordered way, closest son first
+		  // Only checks if distance to son's box is less than distance to
+		  // farthes k-neighbor so far, or if hasn't found k-neighbots yet
+		  Real best = pKNearest.begin()->first;
+		  
+		  if (dists[order[0]] < best || pKNearest.size() < k)
+		  {
+			  comps += son[order[0]]->KNearestNeighbors (p, pKNearest, k);
+		  }
+		  
+		  best = pKNearest.begin()->first;
+		  
+		  if (dists[order[1]] < best || pKNearest.size() < k)
+		  {
+			  comps += son[order[1]]->KNearestNeighbors (p, pKNearest, k);
+		  }
+
+	  }
+
+	  return comps;
+  }
+  
+  // -------------------------------------------------------------------------------------//
+  
+  
   /// Inserts a point in the set of k-nearest points
   /// If the set exceeds the k-limit, removes the point farthest away (first of set)
   /// @param item Neighbor to be inserted
