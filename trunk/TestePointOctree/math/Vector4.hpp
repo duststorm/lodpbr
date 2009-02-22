@@ -137,6 +137,10 @@ namespace LAL {
 
 		const Real* 			ToRealPtr( void ) const ;
 		Real*	 				ToRealPtr( void ) ;
+
+		inline operator const Real *( void ) const;
+
+	    inline operator Real * ( void );
 		//@}
 		~Vector4 ();
 
@@ -499,8 +503,15 @@ namespace LAL {
 		return &x;
 	}
 
+	template<class Real>
+	inline Vector4<Real>::operator const Real *( void ) const { return &x; }
+
+	template<class Real>
+    inline Vector4<Real>::operator Real * ( void ) { return &x; }
+
 	template <class Real>
 	Vector4<Real>::~Vector4 (){};
+
 
 
 } /* LAL :: NAMESPACE */

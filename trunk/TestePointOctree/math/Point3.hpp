@@ -140,6 +140,11 @@ namespace LAL
     	  Real 					EuclideanDistance ( const Point3<Real>& p )  const;
   		  const Real* 			ToRealPtr( void ) const;
   		  Real* 				ToRealPtr( void );
+
+  		  inline operator const Real *( void ) const;
+
+  		  inline operator Real * ( void );
+
 		  //@}
 
 
@@ -592,6 +597,18 @@ namespace LAL
       inline Real* Point3<Real>::ToRealPtr( void )
       {
       	return &x;
+      }
+
+      template<class Real>
+      inline Point3<Real>::operator const Real *( void ) const
+      {
+    	  return &x;
+      }
+
+      template<class Real>
+      inline Point3<Real>::operator Real * ( void )
+      {
+    	  return &x;
       }
 
 
