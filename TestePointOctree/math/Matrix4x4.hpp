@@ -136,13 +136,21 @@ namespace LAL {
 		const Real* 			ToRealPtr( void ) const;
 		Real* 					ToRealPtr( void );
 
+
+	    inline operator const Real*() const;
+
+	    inline operator Real*();
+
+
 		template <class T>
 		friend std::ostream&	operator<< (std::ostream & s, const Matrix4x4<T>& A);
 		//@}
 
 	private:
 
-	Vector4<Real> m[4];
+
+		Vector4<Real> m[4];
+
 
 	}; // End Interface
 
@@ -866,6 +874,18 @@ namespace LAL {
 	Real* Matrix4x4<Real>::ToRealPtr( void )
 	{
 		return m[ 0 ].ToRealPtr();
+	}
+
+	template <class Real>
+    inline Matrix4x4<Real>::operator const Real*() const
+    {
+		return m[ 0 ];
+	}
+
+	template <class Real>
+    inline Matrix4x4<Real>::operator Real*()
+	{
+		return m[ 0 ];
 	}
 
 	template <class Real>

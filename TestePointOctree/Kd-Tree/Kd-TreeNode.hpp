@@ -49,22 +49,22 @@ public:
   /// List of pointers to points contained in node (if it is leaf) or point that
   /// splits this node in two
   ItemList 	   mList;
-	
+
   /// constructor
-  KdTreeNode (const Box3& w) : mWorld(w) 
+  KdTreeNode (const Box3& w) : mWorld(w)
   {
-	 
+
 	son[1] 	= 0;
 	son[0] 	= 0;
 	mFather 	= 0;
-	
+
     mSplitDimension = 0;
     mSplitCoordnate = 0;
-        
+
   }
 
   /// constructor
-  KdTreeNode (KdTreeNode* f, const Box3& w) : mFather(f), mWorld(w) 
+  KdTreeNode (KdTreeNode* f, const Box3& w) : mFather(f), mWorld(w)
   {
 	son[1] 		= 0;
 	son[0] 		= 0;
@@ -73,31 +73,31 @@ public:
   }
 
   /// destructor
-  virtual ~KdTreeNode () 
+  virtual ~KdTreeNode ()
   {
-  
+
     if (son[0] != 0)
     {
     	delete son[0];
     }
-    if (son[1] != 0) 
+    if (son[1] != 0)
     {
     	delete son[1];
     }
-    
+
   }
 
   /// Returns a pointer to the kd-tree node which contains point p
   /// @param p point which should be inside a descendant
-  const KdTreeNode* SearchLeaf (const Point3& p) const 
+  const KdTreeNode* SearchLeaf (const Point3& p) const
   {
-	  if (mList.size() == 1) 
+	  if (mList.size() == 1)
 	  { // internal node, contains only one object
 		  if (p == mList[0]) // found match
 		  {
 			  return this;
 		  }
-		  else 
+		  else
 		  {
 			  if (p[mSplitDimension] > mSplitCoordnate)
 			  {
@@ -108,9 +108,9 @@ public:
 			  }
 		  }
 
-	  }else if (mList.size() > 1) 
+	  }else if (mList.size() > 1)
 	  { // leaf node, search entire list for a match
-		  for (int i = 0; i < mList.size(); ++i) 
+		  for (int i = 0; i < mList.size(); ++i)
 		  {
 			  if (mList[i] == p)
 			  {
@@ -124,21 +124,21 @@ public:
 
   /// Returns the left son of this node
   /// @return left son
-  const KdTreeNode* Left(void) const 
+  const KdTreeNode* Left(void) const
   {
     return son[0];
   }
 
   /// Returns the right son of this node
   /// @return right son
-  const KdTreeNode* Right(void) const 
+  const KdTreeNode* Right(void) const
   {
     return son[1];
   }
 
   /// Returns the parent of this node
   /// @return parent node
-  const KdTreeNode* Parent(void) const 
+  const KdTreeNode* Parent(void) const
   {
     return mFather;
   }
@@ -146,7 +146,7 @@ public:
   /// Searches for the leaf node containing p
   /// @param p Given point
   /// @return Pointer to node containing p
-  const KdTreeNode* Search (Point3 p) 
+  const KdTreeNode* Search (Point3 p)
   {
 	  if (IsLeaf())
 	  {
@@ -165,7 +165,7 @@ public:
   /// Computes the squared distance from a given point to the nodes box
   /// @param p Given point
   /// @return Squared distance
-  Real EuclideanDistanceToBox (const Point3& p) const 
+  Real EuclideanDistanceToBox (const Point3& p) const
   {
 
 	  Point3 closestPoint = p; //closest point on box to p
@@ -201,17 +201,17 @@ public:
   }
 
   // -------------------------------------------------------------------------------------//
- 
+
   /// Computes the k-nearest neighbors inside this node to the given point p
   /// @param p Given point
   /// @param k_nearest Ordered set of nearest neighbors
   /// @param k Number of nearest neighbors to find
   /// @return Number of distance comparisons made
-  int KNearestLocalNeighbors (const Point3& p, KNearestMap& pKNearest, unsigned int k) const 
+  int KNearestLocalNeighbors (const Point3& p, KNearestMap& pKNearest, unsigned int k) const
   {
 	  int comps = 0;
 	  Real minDist;
-	  
+
 	  if (pKNearest.empty())
 	  {
 		  minDist = HUGE; // empty set of nearest points
@@ -222,11 +222,11 @@ public:
 	  }
 
 	  // compute distance to all points inside the node (in case of internal nodes there is only one)
-	  for (unsigned int i = 0; i < mList.size(); ++i) 
+	  for (unsigned int i = 0; i < mList.size(); ++i)
 	  {
 		  Point3 q = mList[i];
-		  
-		  if (mList[i] != p) 
+
+		  if (mList[i] != p)
 		  { // Check if not trying to insert itself
 			  Real dist = p.EuclideanDistance (q);
 			  ++comps;
@@ -243,7 +243,7 @@ public:
   /// @param p Given point
   /// @param k_nearest Ordered set of nearest neighbors
   /// @param k Number of nearest neighbors to find
-  int KNearestNeighbors (const Point3& p, KNearestMap& pKNearest, unsigned int k) const 
+  int KNearestNeighbors (const Point3& p, KNearestMap& pKNearest, unsigned int k) const
   {
 	  int comps = 0;
 	  // Computes the distance to this node's itens
@@ -266,14 +266,14 @@ public:
 		  // Only checks if distance to son's box is less than distance to
 		  // farthes k-neighbor so far, or if hasn't found k-neighbots yet
 		  Real best = pKNearest.begin()->first;
-		  
+
 		  if (dists[order[0]] < best || pKNearest.size() < k)
 		  {
 			  comps += son[order[0]]->KNearestNeighbors (p, pKNearest, k);
 		  }
-		  
+
 		  best = pKNearest.begin()->first;
-		  
+
 		  if (dists[order[1]] < best || pKNearest.size() < k)
 		  {
 			  comps += son[order[1]]->KNearestNeighbors (p, pKNearest, k);
@@ -283,10 +283,10 @@ public:
 
 	  return comps;
   }
-  
+
   // -------------------------------------------------------------------------------------//
-  
-  
+
+
   /// Inserts a point in the set of k-nearest points
   /// If the set exceeds the k-limit, removes the point farthest away (first of set)
   /// @param item Neighbor to be inserted
@@ -294,7 +294,7 @@ public:
   /// @param k_nearest Ordered set of nearest neighbors
   /// @param k Number of nearest neighbors to find
   /// @return The distance to the farthest point in the map
-  Real InsertNeighbor (const Item& item, Real dist, KNearestMap& pKNearest, unsigned int k) const 
+  Real InsertNeighbor (const Item& item, Real dist, KNearestMap& pKNearest, unsigned int k) const
   {
 	  pKNearest.insert ( KNearestPair (dist, item) );
 	  // if list has more than k nearest neighbors, remove first element (greater distance)
@@ -305,102 +305,22 @@ public:
 	  return pKNearest.begin()->first;
   }
 
-  /// Computes the k-nearest neighbors inside this node to the given point p
-  /// @param p Given point
-  /// @param k_nearest Ordered set of nearest neighbors
-  /// @param k Number of nearest neighbors to find
-  /// @return Number of distance comparisons made
-  int KNearestLocalNeighbors (const Point3& p, KNearestMap& pKNearest, unsigned int k) const 
-  {
-	  int comps = 0;
-	  Real minDist;
-	  
-	  if (pKNearest.empty())
-	  {
-		  minDist = HUGE; // empty set of nearest points
-	  }
-	  else
-	  {
-		  minDist = pKNearest.begin()->first; // greatest distance of all points in map
-	  }
 
-	  // compute distance to all points inside the node (in case of internal nodes there is only one)
-	  for (unsigned int i = 0; i < mList.size(); ++i) 
-	  {
-		  Point3 q = mList[i];
-		  
-		  if (mList[i] != p) 
-		  { // Check if not trying to insert itself
-			  Real dist = p.EuclideanDistance (q);
-			  ++comps;
-			  if (dist < minDist || pKNearest.size() < k)
-			  {
-				  minDist = InsertNeighbor (mList[i], dist, pKNearest, k);
-			  }
-		  }
-	  }
-	  return comps;
-  }
-
-  /// Computes the k-nearest neighbors inside the kd-tree to a given point
-  /// @param p Given point
-  /// @param k_nearest Ordered set of nearest neighbors
-  /// @param k Number of nearest neighbors to find
-  int KNearestNeighbors (const Point3& p, KNearestMap& pKNearest, unsigned int k) const 
-  {
-	  int comps = 0;
-	  // Computes the distance to this node's itens
-	  comps = KNearestLocalNeighbors (p, pKNearest, k);
-
-	  if (!IsLeaf()) // Descend to child nodes
-	  {
-		  // Compute distance from p to son's box
-		  Real dists[2] = {son[0]->EuclideanDistanceToBox (p), son[1]->EuclideanDistanceToBox (p)};
-		  comps += 2;
-		  int order[2] = {0, 1};
-
-		  // Arrange in order of distances (closest first)
-		  if (dists[1] < dists[0]) {
-			  order[0] = 1;
-			  order[1] = 0;
-		  }
-
-		  // Check distances to sons in ordered way, closest son first
-		  // Only checks if distance to son's box is less than distance to
-		  // farthes k-neighbor so far, or if hasn't found k-neighbots yet
-		  Real best = pKNearest.begin()->first;
-		  
-		  if (dists[order[0]] < best || pKNearest.size() < k)
-		  {
-			  comps += son[order[0]]->KNearestNeighbors (p, pKNearest, k);
-		  }
-		  
-		  best = pKNearest.begin()->first;
-		  
-		  if (dists[order[1]] < best || pKNearest.size() < k)
-		  {
-			  comps += son[order[1]]->KNearestNeighbors (p, pKNearest, k);
-		  }
-
-	  }
-
-	  return comps;
-  }
 
   /// Inserts a pointer to an object in this kd-tree node
   /// @param level kd-tree level of this node
   /// @param p pointer to object
   /// @param fatherPtr reference to the pointer inside the father which point to this node
-  void Insert (int level, const Item& p) 
+  void Insert (int level, const Item& p)
   {
 
-	  if (son[0] == 0 && son[1] == 0) 
+	  if (son[0] == 0 && son[1] == 0)
 	  { // leaf node
-		  
+
 		  mList.push_back(p);
 
 		  // Check if overflow criteria is met
-		  if (Refine::Split (mWorld, mList)) 
+		  if (Refine::Split (mWorld, mList))
 		  {
 
 			  /// Check largest box dimension for subdivision
@@ -412,18 +332,18 @@ public:
 			  Real minDist = HUGE;
 
 			  Item middleItem;
-			  for (unsigned int i = 0; i < mList.size(); ++i) 
+			  for (unsigned int i = 0; i < mList.size(); ++i)
 			  {
 				  Real dist = fabs (center - mList[i][mSplitDimension]);
 
-				  if (dist < minDist) 
+				  if (dist < minDist)
 				  {
 					  minDist = dist;
 					  middleItem = mList[i];
 				  }
 			  }
 
-			  	
+
 			  // Defines the position of the space partition
 			  mSplitCoordnate = (middleItem)[mSplitDimension];
 
@@ -435,20 +355,20 @@ public:
 			  son[1] = newRightNode;
 
 			  // Insert items from list into child nodes (except middle item)
-			  for (unsigned int i = 0; i < mList.size(); ++i) 
+			  for (unsigned int i = 0; i < mList.size(); ++i)
 			  {
-				  				  
+
 				  if (mList[i][mSplitDimension] <= mSplitCoordnate)
 				  {
 					  if (!(mList[i] == middleItem))
 					  {
-						  son[0]->Insert(level + 1, mList[i]);  
+						  son[0]->Insert(level + 1, mList[i]);
 					  }
-					  
+
 				  }
 				  else //if (mList[i][mSplitDimension] > mSplitCoordnate)
 				  {
- 
+
 					  son[1]->Insert(level + 1, mList[i]);
 				  }
 			  }
@@ -458,7 +378,7 @@ public:
 			  mList.push_back(middleItem);
 		  }
 	  }
-	  else 
+	  else
 	  { // internal node, continue descending
 		  if ( p[mSplitDimension] < mSplitCoordnate )
 		  {
@@ -491,7 +411,7 @@ public:
   /// Returns the ith element of the item list
   /// @param id The element position
   /// @return ith element of item list
-  const Item Element (int id) const 
+  const Item Element (int id) const
   {
     return mList[id];
   }
@@ -499,7 +419,7 @@ public:
   /// Returns one of two sons of this node
   /// @param id Son identification (0 = left/bottom; 1 = right/top)
   /// @return Child node
-  KdTreeNode * Son(int id) 
+  KdTreeNode * Son(int id)
   {
 	  if (id == 0 || id == 1)
 	  {
@@ -510,30 +430,30 @@ public:
 
   /// Returns the position where the split occurred
   /// @return Split coordinate
-  Real SplitCoordinate(void) 
+  Real SplitCoordinate(void)
   {
     return mSplitCoordnate;
   }
 
   /// Returns the axis where the split occurred
   /// @return Split dimension (axis)
-  int SplitDimension(void) 
+  int SplitDimension(void)
   {
     return mSplitDimension;
   }
 
   /// Returns if this is leaf node or not
   /// @return 1 if leaf node, 0 otherwise
-  bool IsLeaf () const 
-  { 
-	  return son[0] == 0 && son[1] == 0; 
+  bool IsLeaf () const
+  {
+	  return son[0] == 0 && son[1] == 0;
   }
 
   /// Returns the mWorld coordinates
   /// @return World coodinates of this node
-  const Box3 Box(void) const 
-  { 
-	  return mWorld; 
+  const Box3 Box(void) const
+  {
+	  return mWorld;
   }
 
 
@@ -541,7 +461,7 @@ private :
 
   /// Computes the left son world coordinates
   /// @return Left son world coordinates
-	Box3 LeftBox (void) const 
+	Box3 LeftBox (void) const
 	{
 		Box3 leftWorld;
 		Point3 pointMax;
@@ -566,7 +486,7 @@ private :
 
   /// Computes the right son world coordinates
   /// @return Right son world coordinates
-	Box3 RightBox (void) const 
+	Box3 RightBox (void) const
 	{
 		Box3 rightWorld;
 		Point3 pointMin;
@@ -583,9 +503,9 @@ private :
 		{
 			pointMin = Point3 (mWorld.xMin(), mWorld.yMin(), mSplitCoordnate);
 		}
-		
+
 		rightWorld = Box3 (pointMin, mWorld.Max());
-		
+
 		return rightWorld;
 	}
 };

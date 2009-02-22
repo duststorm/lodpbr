@@ -118,7 +118,7 @@ namespace LAL {
 		Real 					operator*( const Vector3<Real>& v ) const;
 
 		// Cross Product
-		inline Vector3<Real>  	operator^( const Vector3<Real>& v ) const;
+		Vector3<Real>  	operator^( const Vector3<Real>& v ) const;
 		//@}
 		//@{
 		/*! Output stream operator. Enables debugging code like:
@@ -139,6 +139,10 @@ namespace LAL {
 
 		const Real* 			ToRealPtr( void ) const;
 		Real* 					ToRealPtr( void );
+
+	    operator const Real *( void ) const;
+
+	    operator Real * ( void ) ;
 		//@}
 
 		~Vector3 ();
@@ -497,6 +501,12 @@ namespace LAL {
 	{
 		return &x;
 	}
+
+	template<class Real>
+	inline Vector3<Real>::operator const Real *( void ) const { return &x; }
+
+	template<class Real>
+    inline Vector3<Real>::operator Real * ( void ) { return &x; }
 
 	template <class Real>
 	Vector3<Real>::~Vector3 (){};
