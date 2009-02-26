@@ -153,6 +153,11 @@ namespace LAL
     	  Real 							SquaredDistance( const Point2<Real>& p ) ;
   		  const Real* 					ToRealPtr( void ) const;
   		  Real* 						ToRealPtr( void );
+
+  		  operator const Real *( void ) const;
+
+  		  operator Real * ( void );
+
 		  //@}
 
       public:
@@ -475,6 +480,12 @@ namespace LAL
       {
       	return &x;
       }
+
+      template<class Real>
+      inline Point2<Real>::operator const Real *( void ) const { return &x; }
+
+      template<class Real>
+      inline Point2<Real>::operator Real * ( void ) { return &x; }
 
 } /* LAL :: NAMESPACE */
 
