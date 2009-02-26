@@ -53,6 +53,7 @@ namespace LAL {
 
 		Vector2 ( const Real& x, const Real& y );
 		virtual ~Vector2 ();
+		void 					Set( const Real& x, const Real& y);
 		//@}
 		//Operator
 
@@ -137,6 +138,9 @@ namespace LAL {
 		const Real* 	    ToRealPtr( void ) const;
 		Real* 				ToRealPtr( void );
 
+		operator const Real *( void ) const;
+
+	    operator Real * ( void );
 		//@}
 
 
@@ -176,7 +180,12 @@ namespace LAL {
 		this->y = y;
 	};
 
-
+	template<class Real>
+	inline void Vector2<Real>::Set( const Real& x, const Real& y)
+	{
+		this->x = x;
+		this->y = y;
+	};
 	//Operator
 
 	template<class Real>
@@ -433,6 +442,12 @@ namespace LAL {
 	{
 		return &x;
 	}
+
+	template<class Real>
+	inline Vector2<Real>::operator const Real *( void ) const { return &x; }
+
+	template<class Real>
+    inline Vector2<Real>::operator Real * ( void ) { return &x; }
 
 	template <class Real>
 	Vector2<Real>::~Vector2 (){};

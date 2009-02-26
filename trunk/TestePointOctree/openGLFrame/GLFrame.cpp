@@ -263,7 +263,8 @@ void GLFrame::paintGL()
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
 
-    glMultMatrixf((~camera.ViewMatrix()));
+    camera.SetViewByMouse();
+    glLoadMatrixf((~camera.ViewMatrix()));
 
     int cont = 0;
 
@@ -277,7 +278,7 @@ void GLFrame::paintGL()
     	for (std::vector<LAL::Point3<float> >::iterator i = KNeibor.begin(); i != KNeibor.end();++i)
     	{
     		glVertex3fv(i->ToRealPtr());
-    		std::cout << *i << std::endl;
+
     	}
     	glEnd();
 
@@ -331,15 +332,22 @@ void GLFrame::keyPressEvent(QKeyEvent * event)
 void GLFrame::mousePressEvent(QMouseEvent *event)
 {
 
-    if (event->button() == Qt::MidButton)
+    if (event->button() == Qt::LeftButton)
     {
-    	//camera.OnRotationBegin(event->x(),event->y());
-    	updateGL();
+    	camera.lockMouse(true);
     }
-    else if (event->button() == Qt::RightButton)
-    {
 
+    lastPos = event->pos();
+}
+
+void GLFrame::mouseReleaseEvent(QMouseEvent *event)
+{
+
+    if (event->button() == Qt::LeftButton)
+    {
+    	camera.lockMouse(false);
     }
+
 
     lastPos = event->pos();
 }
@@ -351,11 +359,16 @@ void GLFrame::wheelEvent(QWheelEvent *e)
 }
 
 
+
 void GLFrame::mouseMoveEvent(QMouseEvent *event)
 {
 
+	camera.SetMouseInfo(event->x(),event->y());
+
+
     if (event->buttons() & Qt::LeftButton)
     {
+
 
     }else if (event->buttons() & Qt::RightButton) {
 
@@ -365,6 +378,8 @@ void GLFrame::mouseMoveEvent(QMouseEvent *event)
     	//camera.OnRotationMove(event->x(), event->y());
     }
 
+
+
     /*!
      *  event->pos() retorna coordenadas x e y relativa a widget que recebeu o evento.
      *  mapToGlobla mapei as coordenadas da widget para coordenada global da tela.
@@ -372,18 +387,18 @@ void GLFrame::mouseMoveEvent(QMouseEvent *event)
      *  tudo o que eu queria para implementar a First Person Camera !
     */
 
-    float heading = 0.0f;
-    float pitch = 0.0f;
-    float roll = 0.0f;
-
-    pitch = -(static_cast<float>(event->x()) - mCenterX) * 0.2;
-    heading = -(static_cast<float>(event->y()) - mCenterY) * 0.2;
-
-    camera.rotate(pitch,heading, 0.0f);
-
-//    mouse.moveToWindowCenter();
-
-    QCursor::setPos(mapToGlobal(QPoint(static_cast<int>(mCenterX),static_cast<int>(mCenterY))));
+//    float heading = 0.0f;
+//    float pitch = 0.0f;
+//    float roll = 0.0f;
+//
+//    pitch = -(static_cast<float>(event->x()) - mCenterX) * 0.2;
+//    heading = -(static_cast<float>(event->y()) - mCenterY) * 0.2;
+//
+//    camera.rotate(pitch,heading, 0.0f);
+//
+////    mouse.moveToWindowCenter();
+//
+//    QCursor::setPos(mapToGlobal(QPoint(static_cast<int>(mCenterX),static_cast<int>(mCenterY))));
  	updateGL();
     lastPos = event->pos();
 }

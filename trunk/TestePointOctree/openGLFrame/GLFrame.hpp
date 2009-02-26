@@ -37,7 +37,7 @@ public:
     KdTree<float,LAL::Point3<float> > kdTree;
 
     typedef  KdTree<float,LAL::Point3<float> >::Node KdTree3DNode;
-	
+
     std::vector<LAL::Point3<float> > KNeibor;
 
 public slots:
@@ -50,6 +50,7 @@ protected:
     void paintGL();
     void mousePressEvent(QMouseEvent *event);
     void mouseMoveEvent(QMouseEvent *event);
+    void mouseReleaseEvent(QMouseEvent *event);
     void wheelEvent(QWheelEvent *e);
     void keyPressEvent ( QKeyEvent * e);
 
@@ -61,10 +62,10 @@ private:
     bool drawKdNode(const KdTree3DNode* n,int& cont);
 
     void model();
-    
+
     template < class T>
     LAL::BoundingBox3<T> limits();
-    
+
     template < class T>
     void drawBox(LAL::BoundingBox3<T> BBox);
 

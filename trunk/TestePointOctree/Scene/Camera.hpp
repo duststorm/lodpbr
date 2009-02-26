@@ -5,6 +5,7 @@
 #include "math/Matrix4x4.hpp"
 #include "math/Vector3.hpp"
 #include "math/Vector4.hpp"
+#include "math/Vector2.hpp"
 #include "Scene/Trackball.hpp"
 #include "math/Quaternion.hpp"
 
@@ -30,6 +31,7 @@ namespace LAL{
     	typedef LAL::Matrix4x4<float> Matrix4x4;
     	typedef LAL::Vector4<float> Vector4;
     	typedef LAL::Vector3<float> Vector3;
+    	typedef LAL::Vector2<int> Vector2;
     	typedef Trackball<float> Trackball;
 
     	enum CameraBehavior
@@ -53,6 +55,10 @@ namespace LAL{
             headingDegrees = 0.0f;
             rollDegrees = 0.0f;
 
+            mouseLockedPosition.Set(0,0);
+            mousePosition.Set(0,0);
+            mouseLocked = 0;
+
         	mBehavior = FIRST_PERSON;
 
         	mFocus = Vector3(0.0,0.0,1.0);
@@ -67,79 +73,8 @@ namespace LAL{
         	mNearPlane  = 0.001f;
         	mFarPlane   = 1000.0f;
 
-        };
-
-        void MoveForward( float Distance )
-        {
-        	mEyes +=  ( mFocus * Distance);
         }
 
-        void MoveUpward( float Distance )
-        {
-        	mEyes += (mUp*Distance);
-        }
-
-        void StrafeRight ( float Distance )
-        {
-
-        	mEyes +=  ( ((mEyes - (mFocus.Norm() ))^mUp) *Distance);
-        }
-
-        Matrix4x4 ViewMatrix()
-        {
-
-            mViewMatrix = mOrientation.To4x4Matrix();
-
-            xAxis.Set(mViewMatrix[0][0], mViewMatrix[0][1], mViewMatrix[0][2]);
-            yAxis.Set(mViewMatrix[1][0], mViewMatrix[1][1], mViewMatrix[1][2]);
-            zAxis.Set(mViewMatrix[2][0], mViewMatrix[2][1], mViewMatrix[2][2]);
-
-            mFocus = -zAxis;
-
-            mViewMatrix[0][3] = -(xAxis * mEyes);
-            mViewMatrix[1][3] = -(yAxis * mEyes);
-            mViewMatrix[2][3] = -(zAxis * mEyes);
-
-            return mViewMatrix;
-
-                // Get the inverse of the arcball's rotation matrix
-        		//LAL::Quaternion<float> cameraRotation = ~mTrackball.orientation();
-
-                // Transform vectors based on camera's rotation matrix
-//        		mUp = mOrientation.Rotate(Vector3::UNIT_Y);
-//
-//        		mEyes = mOrientation.Rotate(Vector3::UNIT_Z);
-//
-//              	mEyes =  (mEyes * mZoomRadius) - mPosition;
-
-                // Update the eye point based on a radius away from the lookAt position
-               // mEyes = cameraRotation.Rotate(mEyes);
-
-
-        }
-
-        Matrix4x4 ViewMatrixNormal()
-        {
-
-        	return Matrix4x4::MakeViewMatrix(mEyes, mFocus, mUp);
-
-        }
-
-        Matrix4x4 ViewMatrix( Vector3& pEyes, Vector3& pFocus, Vector3& pUp )
-        {
-        	return Matrix4x4::MakeViewMatrix(pEyes, pFocus, pUp);
-        }
-
-
-        Matrix4x4 PespectiveProjectionMatrix()
-        {
-                return mPespectiveProjectionMatrix;
-        }
-
-        Matrix4x4 OrthographicProjectionMatrix()
-        {
-                return mOrthographicProjectionMatrix;
-        }
 
         Vector3 Focus()
         {
@@ -238,6 +173,160 @@ namespace LAL{
             mOrthographicProjectionMatrix = Matrix4x4::MakeOrthographicProjectionMatrix(mLeft,mRight,mBottom,mTop,mNearPlane,mFarPlane);
         }
 
+        void MoveForward( float Distance )
+        {
+        	mEyes +=  ( mFocus * Distance);
+        }
+
+        void MoveUpward( float Distance )
+        {
+        	mEyes += (mUp*Distance);
+        }
+
+        void StrafeRight ( float Distance )
+        {
+
+        	mEyes +=  ( ((mEyes - (mFocus.Norm() ))^mUp) *Distance);
+        }
+
+
+        void SetMouseInfo (int x, int y)
+        {
+        	mousePosition.Set(x,y);
+        }
+
+        void lockMouse(bool value)
+        {
+          if(value)
+          {
+            mouseLockedPosition = mousePosition;
+          }
+
+          mouseLocked = value;
+        }
+
+        Matrix4x4 ViewMatrix()
+        {
+
+//            mViewMatrix = mOrientation.To4x4Matrix();
+//
+//            xAxis.Set(mViewMatrix[0][0], mViewMatrix[0][1], mViewMatrix[0][2]);
+//            yAxis.Set(mViewMatrix[1][0], mViewMatrix[1][1], mViewMatrix[1][2]);
+//            zAxis.Set(mViewMatrix[2][0], mViewMatrix[2][1], mViewMatrix[2][2]);
+//
+//            mFocus = -zAxis;
+//
+//            mViewMatrix[0][3] = -(xAxis * mEyes);
+//            mViewMatrix[1][3] = -(yAxis * mEyes);
+//            mViewMatrix[2][3] = -(zAxis * mEyes);
+        	//LookAt();
+            return ViewMatrixNormal();//mViewMatrix;
+
+                // Get the inverse of the arcball's rotation matrix
+        		//LAL::Quaternion<float> cameraRotation = ~mTrackball.orientation();
+
+                // Transform vectors based on camera's rotation matrix
+//        		mUp = mOrientation.Rotate(Vector3::UNIT_Y);
+//
+//        		mEyes = mOrientation.Rotate(Vector3::UNIT_Z);
+//
+//              	mEyes =  (mEyes * mZoomRadius) - mPosition;
+
+                // Update the eye point based on a radius away from the lookAt position
+               // mEyes = cameraRotation.Rotate(mEyes);
+
+
+        }
+
+        void RotateView(float angle, float x, float y, float z)
+        {
+          Vector3 newView,
+                  vView = mFocus;
+
+          float cosTheta = std::cos(angle),
+                sinTheta = std::sin(angle);
+
+          vView -= mEyes;
+
+          // Find the new x position for the new rotated point
+          newView.x  = (cosTheta + (1 - cosTheta) * x * x)		* vView.x;
+          newView.x += ((1 - cosTheta) * x * y - z * sinTheta)	* vView.y;
+          newView.x += ((1 - cosTheta) * x * z + y * sinTheta)	* vView.z;
+
+          // Find the new y position for the new rotated point
+          newView.y  = ((1 - cosTheta) * x * y + z * sinTheta)	* vView.x;
+          newView.y += (cosTheta + (1 - cosTheta) * y * y)		* vView.y;
+          newView.y += ((1 - cosTheta) * y * z - x * sinTheta)	* vView.z;
+
+          // Find the new z position for the new rotated point
+          newView.z  = ((1 - cosTheta) * x * z - y * sinTheta)	* vView.x;
+          newView.z += ((1 - cosTheta) * y * z + x * sinTheta)	* vView.y;
+          newView.z += (cosTheta + (1 - cosTheta) * z * z)		* vView.z;
+
+          // Now we just add the newly rotated vector to our position to set
+          // our new rotated view of our camera.
+          mFocus  = mEyes;
+          mFocus += newView;
+        }
+
+
+        void SetViewByMouse()
+        {
+          float          pitch        = 0.0f,
+						 heading        = 0.0f;
+
+          if((mousePosition == mouseLockedPosition) || !mouseLocked)
+          {
+        	  return;
+          }
+
+
+          pitch    = float(mouseLockedPosition.x - mousePosition.x)*Math::DEG2RAD*0.1;
+          heading  = float(mouseLockedPosition.y - mousePosition.y)*Math::DEG2RAD*0.1;
+
+
+          Vector3 vAxis     = mFocus;
+                  vAxis     = mEyes - mFocus;
+                  vAxis     = vAxis ^ mUp;
+         vAxis.Normalize();
+
+
+          RotateView(-heading, vAxis.x, vAxis.y, vAxis.z);
+          RotateView(-pitch, 0, 1, 0);
+
+
+
+          if(!mouseLocked)
+          {
+            mouseLockedPosition = mousePosition;
+          }
+
+        }
+
+        Matrix4x4 ViewMatrixNormal()
+        {
+
+        	return Matrix4x4::MakeViewMatrix(mEyes, mFocus, mUp);
+
+        }
+
+        Matrix4x4 ViewMatrix( Vector3& pEyes, Vector3& pFocus, Vector3& pUp )
+        {
+        	return Matrix4x4::MakeViewMatrix(pEyes, pFocus, pUp);
+        }
+
+
+        Matrix4x4 PespectiveProjectionMatrix()
+        {
+                return mPespectiveProjectionMatrix;
+        }
+
+        Matrix4x4 OrthographicProjectionMatrix()
+        {
+                return mOrthographicProjectionMatrix;
+        }
+
+
         void OnRotationBegin( int x, int y)
         {
             mTrackball.BeginTracking(x,y);
@@ -313,16 +402,13 @@ namespace LAL{
         }
 
 
-        void lookAt(const Vector3 &eye, const Vector3 &focus, const Vector3 &up)
+        void LookAt()
         {
-            mEyes = eye;
 
-            zAxis = eye - focus;
+            zAxis = mEyes - mFocus;
             zAxis.Normalize();
 
-            mFocus = -zAxis;
-
-            xAxis = (up ^ zAxis);
+            xAxis = (mUp ^ zAxis);
             xAxis.Normalize();
 
             yAxis = (zAxis ^ xAxis);
@@ -331,17 +417,17 @@ namespace LAL{
             mViewMatrix[0][0] = xAxis.x;
             mViewMatrix[0][1] = xAxis.y;
             mViewMatrix[0][2] = xAxis.z;
-            mViewMatrix[0][3] = -(xAxis * eye);
+            mViewMatrix[0][3] = -(xAxis * mEyes);
 
             mViewMatrix[1][0] = yAxis.x;
             mViewMatrix[1][1] = yAxis.y;
             mViewMatrix[1][2] = yAxis.z;
-            mViewMatrix[1][3] = -(yAxis * eye);
+            mViewMatrix[1][3] = -(yAxis * mEyes);
 
             mViewMatrix[2][0] = zAxis.x;
             mViewMatrix[2][1] = zAxis.y;
             mViewMatrix[2][2] = zAxis.z;
-            mViewMatrix[2][3] = -(zAxis * eye);
+            mViewMatrix[2][3] = -(zAxis * mEyes);
 
             // Extract the pitch angle from the view matrix.
             mAccumPitchDegrees = Math::RAD2DEG * (std::asin(mViewMatrix[2][1]));
@@ -383,10 +469,15 @@ namespace LAL{
         float headingDegrees;
         float rollDegrees;
 
+
+        Vector2  mouseLockedPosition;
+        Vector2  mousePosition;
+        bool     mouseLocked;
+
     	CameraBehavior mBehavior;
 
     	Vector3 mFocus;    //Where the camera looked at
-    	Vector3 mEyes;	   //Where the camera is
+    	Vector3 mEyes;	   //Where the camera is. Camera position
     	Vector3 mUp;	   //Self Documentation
 
     	Vector3 xAxis;
