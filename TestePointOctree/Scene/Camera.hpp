@@ -186,7 +186,8 @@ namespace LAL{
         void StrafeRight ( float Distance )
         {
 
-        	mEyes +=  ( ((mEyes - (mFocus.Norm() ))^mUp) *Distance);
+        	mEyes  +=    ( (mEyes - mFocus)^mUp ) *Distance;
+        	mFocus +=    ( (mEyes - mFocus)^mUp ) *Distance;
         }
 
 
@@ -208,19 +209,19 @@ namespace LAL{
         Matrix4x4 ViewMatrix()
         {
 
-//            mViewMatrix = mOrientation.To4x4Matrix();
-//
-//            xAxis.Set(mViewMatrix[0][0], mViewMatrix[0][1], mViewMatrix[0][2]);
-//            yAxis.Set(mViewMatrix[1][0], mViewMatrix[1][1], mViewMatrix[1][2]);
-//            zAxis.Set(mViewMatrix[2][0], mViewMatrix[2][1], mViewMatrix[2][2]);
-//
-//            mFocus = -zAxis;
-//
-//            mViewMatrix[0][3] = -(xAxis * mEyes);
-//            mViewMatrix[1][3] = -(yAxis * mEyes);
-//            mViewMatrix[2][3] = -(zAxis * mEyes);
+            mViewMatrix = mOrientation.To4x4Matrix();
+
+            xAxis.Set(mViewMatrix[0][0], mViewMatrix[0][1], mViewMatrix[0][2]);
+            yAxis.Set(mViewMatrix[1][0], mViewMatrix[1][1], mViewMatrix[1][2]);
+            zAxis.Set(mViewMatrix[2][0], mViewMatrix[2][1], mViewMatrix[2][2]);
+
+            mFocus = -zAxis;
+
+            mViewMatrix[0][3] = -(xAxis * mEyes);
+            mViewMatrix[1][3] = -(yAxis * mEyes);
+            mViewMatrix[2][3] = -(zAxis * mEyes);
         	//LookAt();
-            return ViewMatrixNormal();//mViewMatrix;
+            return mViewMatrix;//ViewMatrixNormal();
 
                 // Get the inverse of the arcball's rotation matrix
         		//LAL::Quaternion<float> cameraRotation = ~mTrackball.orientation();
@@ -281,18 +282,19 @@ namespace LAL{
           }
 
 
-          pitch    = float(mouseLockedPosition.x - mousePosition.x)*Math::DEG2RAD*0.1;
-          heading  = float(mouseLockedPosition.y - mousePosition.y)*Math::DEG2RAD*0.1;
+          pitch    = float(mouseLockedPosition.x - mousePosition.x)*Math::DEG2RAD*0.2;
+          heading  = float(mouseLockedPosition.y - mousePosition.y)*Math::DEG2RAD*0.2;
 
 
-          Vector3 vAxis     = mFocus;
-                  vAxis     = mEyes - mFocus;
-                  vAxis     = vAxis ^ mUp;
-         vAxis.Normalize();
+//          Vector3 vAxis     = mFocus;
+//                  vAxis     = mFocus - mEyes;
+//                  vAxis     = vAxis ^ mUp;
+//         vAxis.Normalize();
 
 
-          RotateView(-heading, vAxis.x, vAxis.y, vAxis.z);
-          RotateView(-pitch, 0, 1, 0);
+          rotate(-heading,-pitch,0.0f);
+//          RotateView(heading, vAxis.x, vAxis.y, vAxis.z);
+//          RotateView(pitch, 0, 1, 0);
 
 
 
