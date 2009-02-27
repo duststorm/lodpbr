@@ -185,9 +185,7 @@ namespace LAL{
 
         void StrafeRight ( float Distance )
         {
-
         	mEyes  +=    ( (mEyes - mFocus)^mUp ) *Distance;
-        	mFocus +=    ( (mEyes - mFocus)^mUp ) *Distance;
         }
 
 
@@ -292,7 +290,7 @@ namespace LAL{
 //         vAxis.Normalize();
 
 
-          rotate(-heading,-pitch,0.0f);
+          Rotate(-heading,-pitch,0.0f);
 //          RotateView(heading, vAxis.x, vAxis.y, vAxis.z);
 //          RotateView(pitch, 0, 1, 0);
 
@@ -340,7 +338,7 @@ namespace LAL{
             mOrientation = ~mTrackball.Orientation();
         }
 
-        void rotate(float headingDegrees, float pitchDegrees, float rollDegrees)
+        void Rotate(float headingDegrees, float pitchDegrees, float rollDegrees)
         {
             // Rotates the camera based on its current behavior.
             // Note that not all behaviors support rolling.
