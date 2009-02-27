@@ -89,17 +89,17 @@ public:
 
   /// Returns a pointer to the kd-tree node which contains point p
   /// @param p point which should be inside a descendant
-  const KdTreeNode* SearchLeaf (const Point3& p) const
+  const KdTreeNode* SearchLeaf (const Item& p) const
   {
 	  if (mList.size() == 1)
 	  { // internal node, contains only one object
-		  if (p == mList[0]) // found match
+		  if (p.Center() == mList[0]) // found match
 		  {
 			  return this;
 		  }
 		  else
 		  {
-			  if (p[mSplitDimension] > mSplitCoordnate)
+			  if (p.Center()[mSplitDimension] > mSplitCoordnate)
 			  {
 				  return son[1]->SearchLeaf (p);
 			  }else
@@ -112,7 +112,7 @@ public:
 	  { // leaf node, search entire list for a match
 		  for (int i = 0; i < mList.size(); ++i)
 		  {
-			  if (mList[i] == p)
+			  if (mList[i] == p.Center())
 			  {
 				  return this;
 			  }
@@ -146,13 +146,13 @@ public:
   /// Searches for the leaf node containing p
   /// @param p Given point
   /// @return Pointer to node containing p
-  const KdTreeNode* Search (Point3 p)
+  const KdTreeNode* Search (Item p)
   {
 	  if (IsLeaf())
 	  {
 		  return this;
 	  }
-	  if (p[mSplitDimension] < mSplitCoordnate)
+	  if (p.Center()[mSplitDimension] < mSplitCoordnate)
 	  {
 		  return son[0]->search (p);
 	  }
@@ -202,12 +202,31 @@ public:
 
   // -------------------------------------------------------------------------------------//
 
+
+  /// Inserts a point in the set of k-nearest points
+  /// If the set exceeds the k-limit, removes the point farthest away (first of set)
+  /// @param item Neighbor to be inserted
+  /// @param dist distance from p to search point
+  /// @param k_nearest Ordered set of nearest neighbors
+  /// @param k Number of nearest neighbors to find
+  /// @return The distance to the farthest point in the map
+  Real InsertNeighbor (const Item& item, Real dist, KNearestMap& pKNearest, unsigned int k) const
+  {
+	  pKNearest.insert ( KNearestPair (dist, item) );
+	  // if list has more than k nearest neighbors, remove first element (greater distance)
+	  if (pKNearest.size() > k)
+	  {
+		  pKNearest.erase( pKNearest.begin() );
+	  }
+	  return pKNearest.begin()->first;
+  }
+
   /// Computes the k-nearest neighbors inside this node to the given point p
   /// @param p Given point
   /// @param k_nearest Ordered set of nearest neighbors
   /// @param k Number of nearest neighbors to find
   /// @return Number of distance comparisons made
-  int KNearestLocalNeighbors (const Point3& p, KNearestMap& pKNearest, unsigned int k) const
+  int KNearestLocalNeighbors (const Item& p, KNearestMap& pKNearest, unsigned int k) const
   {
 	  int comps = 0;
 	  Real minDist;
@@ -224,11 +243,11 @@ public:
 	  // compute distance to all points inside the node (in case of internal nodes there is only one)
 	  for (unsigned int i = 0; i < mList.size(); ++i)
 	  {
-		  Point3 q = mList[i];
+		  Item q = mList[i];
 
-		  if (mList[i] != p)
+		  if (mList[i].Center() != p.Center())
 		  { // Check if not trying to insert itself
-			  Real dist = p.EuclideanDistance (q);
+			  Real dist = p.Center().EuclideanDistance (q.Center());
 			  ++comps;
 			  if (dist < minDist || pKNearest.size() < k)
 			  {
@@ -243,7 +262,7 @@ public:
   /// @param p Given point
   /// @param k_nearest Ordered set of nearest neighbors
   /// @param k Number of nearest neighbors to find
-  int KNearestNeighbors (const Point3& p, KNearestMap& pKNearest, unsigned int k) const
+  int KNearestNeighbors (const Item& p, KNearestMap& pKNearest, unsigned int k) const
   {
 	  int comps = 0;
 	  // Computes the distance to this node's itens
@@ -252,7 +271,7 @@ public:
 	  if (!IsLeaf()) // Descend to child nodes
 	  {
 		  // Compute distance from p to son's box
-		  Real dists[2] = {son[0]->EuclideanDistanceToBox (p), son[1]->EuclideanDistanceToBox (p)};
+		  Real dists[2] = {son[0]->EuclideanDistanceToBox (p.Center()), son[1]->EuclideanDistanceToBox (p.Center())};
 		  comps += 2;
 		  int order[2] = {0, 1};
 
@@ -287,26 +306,6 @@ public:
   // -------------------------------------------------------------------------------------//
 
 
-  /// Inserts a point in the set of k-nearest points
-  /// If the set exceeds the k-limit, removes the point farthest away (first of set)
-  /// @param item Neighbor to be inserted
-  /// @param dist distance from p to search point
-  /// @param k_nearest Ordered set of nearest neighbors
-  /// @param k Number of nearest neighbors to find
-  /// @return The distance to the farthest point in the map
-  Real InsertNeighbor (const Item& item, Real dist, KNearestMap& pKNearest, unsigned int k) const
-  {
-	  pKNearest.insert ( KNearestPair (dist, item) );
-	  // if list has more than k nearest neighbors, remove first element (greater distance)
-	  if (pKNearest.size() > k)
-	  {
-		  pKNearest.erase( pKNearest.begin() );
-	  }
-	  return pKNearest.begin()->first;
-  }
-
-
-
   /// Inserts a pointer to an object in this kd-tree node
   /// @param level kd-tree level of this node
   /// @param p pointer to object
@@ -334,7 +333,7 @@ public:
 			  Item middleItem;
 			  for (unsigned int i = 0; i < mList.size(); ++i)
 			  {
-				  Real dist = fabs (center - mList[i][mSplitDimension]);
+				  Real dist = fabs (center - mList[i].Center()[mSplitDimension]);
 
 				  if (dist < minDist)
 				  {
@@ -345,7 +344,7 @@ public:
 
 
 			  // Defines the position of the space partition
-			  mSplitCoordnate = (middleItem)[mSplitDimension];
+			  mSplitCoordnate = middleItem.Center()[mSplitDimension];
 
 			  // Create two son nodes
 			  KdTreeNode * newLeftNode  = new KdTreeNode(this, LeftBox());
@@ -358,9 +357,9 @@ public:
 			  for (unsigned int i = 0; i < mList.size(); ++i)
 			  {
 
-				  if (mList[i][mSplitDimension] <= mSplitCoordnate)
+				  if (mList[i].Center()[mSplitDimension] <= mSplitCoordnate)
 				  {
-					  if (!(mList[i] == middleItem))
+					  if (!(mList[i].Center() == middleItem.Center()))
 					  {
 						  son[0]->Insert(level + 1, mList[i]);
 					  }
@@ -380,7 +379,7 @@ public:
 	  }
 	  else
 	  { // internal node, continue descending
-		  if ( p[mSplitDimension] < mSplitCoordnate )
+		  if ( p.Center()[mSplitDimension] < mSplitCoordnate )
 		  {
 			  son[0]->Insert(level + 1, p);
 		  }

@@ -122,7 +122,7 @@ bool GLFrame::drawKdNode(const KdTree3DNode* n,int& cont) {
 
   for (unsigned int i = 0; i < n->mList.size(); ++i)
   {
-	  glVertex3fv( n->mList[i] );
+	  glVertex3fv( n->mList[i].Center() );
   }
 
   glEnd();
@@ -134,7 +134,7 @@ bool GLFrame::drawKdNode(const KdTree3DNode* n,int& cont) {
   if (!n->IsLeaf())
     return 0;
 
-  //drawBox(n->Box());
+  drawBox(n->Box());
 
   return 1;
 }
@@ -176,12 +176,12 @@ void GLFrame::calLimits()
 
 	if (kdTree.root ==  0)
 	{
-		kdTree = KdTree<float,LAL::Point3<float> >(world);
+		kdTree = KdTree<float,Surfel<float> >(world);
 	}
 	else
 	{
 		delete kdTree.root;
-		kdTree = KdTree<float,LAL::Point3<float> >(world);
+		kdTree = KdTree<float,Surfel<float> >(world);
 	}
 
 
@@ -189,7 +189,7 @@ void GLFrame::calLimits()
 	std::cout << "Entrando" << std::endl;
 	for (std::vector<Surfel<float> >::iterator surf =  surfels.surfels.begin();surf != surfels.surfels.end(); ++ surf )
 	{
-	    kdTree.Insert ( surf->Center() );
+	    kdTree.Insert ( *surf );
 	}
 	std::cout << "Saindo" << std::endl;
 
@@ -197,7 +197,11 @@ void GLFrame::calLimits()
 
     int k_nearest_search_comps = 0;
 
-    KNeibor = kdTree.KNearestNeighbors( LAL::Point3<float>( 0.0515251f , -0.084186f, 0.238488f ),40, k_nearest_search_comps);
+    Surfel<float> s;
+
+    s.SetCenter(LAL::Point3<float>( 0.0515251f , -0.084186f, 0.238488f ));
+
+    KNeibor = kdTree.KNearestNeighbors(s ,10, k_nearest_search_comps);
 
     std::cout << KNeibor.size() <<  " BdBB" << std::endl;
 
@@ -275,9 +279,9 @@ void GLFrame::paintGL()
     	glColor3f(1.0,0.0,0.0);
     	glPointSize(5.0);
     	glBegin(GL_POINTS);
-    	for (std::vector<LAL::Point3<float> >::iterator i = KNeibor.begin(); i != KNeibor.end();++i)
+    	for (std::vector<Surfel<float> >::iterator i = KNeibor.begin(); i != KNeibor.end();++i)
     	{
-    		glVertex3fv(i->ToRealPtr());
+    		glVertex3fv(i->Center());
 
     	}
     	glEnd();
@@ -375,7 +379,7 @@ void GLFrame::mouseMoveEvent(QMouseEvent *event)
         pitch = -(static_cast<float>(event->x()) - mCenterX) * 0.2;
         heading = -(static_cast<float>(event->y()) - mCenterY) * 0.2;
 
-        camera.rotate(pitch,heading, 0.0f);
+        camera.Rotate(pitch,heading, 0.0f);
 
     //    mouse.moveToWindowCenter();
 
