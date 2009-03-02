@@ -61,6 +61,7 @@ template <class Real > class Surfel
 
 		 mMinorAxis = std::make_pair(0.0,Vector3());
 		 mMajorAxis = std::make_pair(0.0,Vector3());
+		 mMarked = 0;
 
 	 }
 
@@ -71,7 +72,8 @@ template <class Real > class Surfel
 	   										 mMinorAxis(pSurfel.mMinorAxis),
 	   										 mMajorAxis(pSurfel.mMajorAxis),
 	   										 mPerpendicularError(0),
-	   										 mID(pSurfel.mID)
+	   										 mID(pSurfel.mID),
+	   										 mMarked(0)
 	 {
 
 	 };
@@ -84,7 +86,8 @@ template <class Real > class Surfel
 	 							   mNormal(normal),
 	 							   mMinorAxis(pMinorAxis),
 	 							   mMajorAxis(pMajorAxis),
-	 							   mID(id)
+	 							   mID(id),
+	 							   mMarked(0)
 	 	  {
 		 	mColor = Color(1.0,0.0,0.0);
 
@@ -98,7 +101,8 @@ template <class Real > class Surfel
 	 								   mNormal(normal),
 	 								   mSplatRadius(radius),
 	 								   mPerpendicularError(pError),
-	 								   mID(id)
+	 								   mID(id),
+	 								   mMarked(0)
 	 	  {
 		 	mColor = Color(0.0,0.0,0.0);
 		 	mNormal.Normalize();
@@ -119,7 +123,8 @@ template <class Real > class Surfel
 			 						mColor(color),
 			 						mSplatRadius(radius),
 			 						mPerpendicularError(0),
-			 						mID(id)
+			 						mID(id),
+			 						mMarked(0)
 
 
 		  {
@@ -139,7 +144,8 @@ template <class Real > class Surfel
 			 						mNormal(normal),
 			 						mSplatRadius(radius),
 			 						mPerpendicularError(0),
-			 						mID(id)
+			 						mID(id),
+			 						mMarked(0)
 		  {
 		 	mColor = Color(0.0,0.0,0.0);
 		 	mNormal.normalize();
@@ -157,6 +163,7 @@ template <class Real > class Surfel
 		 this->mMinorAxis = pSurfel.MinorAxis();
 		 this->mMajorAxis = pSurfel.MajorAxis();
 		 this->mColor     = pSurfel.color();
+		 this->mMarked    = pSurfel.Marked();
 
    	  	return ( *this );
 	 }
@@ -225,7 +232,17 @@ template <class Real > class Surfel
 	 {
 		 return this->mColor;
 	 };
+	 
+	 bool Marked (void) const
+	 {
+		 return this->mMarked;
+	 };
 
+	 void SetMarked ( bool pMarked) 
+	 {
+		 this->mMarked = pMarked;
+	 };
+	 
 	 void SetColor ( const Color& pColor )
 	 {
 		 this->mColor = pColor;
@@ -499,6 +516,7 @@ template <class Real > class Surfel
 	  /// An identification number for the surfel
 	  unsigned int mID;
 
+	  bool mMarked;	
 
 };
 

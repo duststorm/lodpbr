@@ -24,6 +24,18 @@ GLFrame::GLFrame(QWidget *parent):QGLWidget(parent)
 	Threshold = 1.0;
 	CameraStep = 0.01;
 	mode = 0;
+	
+	colors.push_back(LAL::Point3<float>(1.0,0.0,0.0));
+	colors.push_back(LAL::Point3<float>(1.0,1.0,0.0));
+	colors.push_back(LAL::Point3<float>(0.0,1.0,0.0));
+	colors.push_back(LAL::Point3<float>(0.0,1.0,1.0));
+	colors.push_back(LAL::Point3<float>(0.5,0.5,5.0));
+	colors.push_back(LAL::Point3<float>(0.5,0.0,0.5));
+	colors.push_back(LAL::Point3<float>(0.25,0.5,0.25));
+	colors.push_back(LAL::Point3<float>(0.25,0.0,0.75));
+	colors.push_back(LAL::Point3<float>(0.0,0.0,1.0));
+	colors.push_back(LAL::Point3<float>(0.1,0.1,0.5));
+	
 
 }
 
@@ -134,7 +146,7 @@ bool GLFrame::drawKdNode(const KdTree3DNode* n,int& cont) {
   if (!n->IsLeaf())
     return 0;
 
-  drawBox(n->Box());
+  //drawBox(n->Box());
 
   return 1;
 }
@@ -201,9 +213,22 @@ void GLFrame::calLimits()
 
     s.SetCenter(LAL::Point3<float>( 0.0515251f , -0.084186f, 0.238488f ));
 
-    KNeibor = kdTree.KNearestNeighbors(s ,10, k_nearest_search_comps);
-
-    std::cout << KNeibor.size() <<  " BdBB" << std::endl;
+    KNeibor = kdTree.KNearestNeighborsClustering(s ,50, k_nearest_search_comps);
+    
+    std::cout << KNeibor.size() <<  " AAA " << std::endl;
+    
+    cluster.push_back(KNeibor);
+    
+    while (KNeibor.size() > 0)
+    {
+    	s = KNeibor[0];
+    	KNeibor = kdTree.KNearestNeighborsClustering(s ,50, k_nearest_search_comps);
+    	cluster.push_back(KNeibor);
+    	
+        
+    }
+    
+    std::cout << cluster.size() <<  " BdBB" << std::endl;
 
 
 
@@ -276,14 +301,25 @@ void GLFrame::paintGL()
     {
     	drawKdTree(cont);
 
-    	glColor3f(1.0,0.0,0.0);
+    	
     	glPointSize(5.0);
     	glBegin(GL_POINTS);
-    	for (std::vector<Surfel<float> >::iterator i = KNeibor.begin(); i != KNeibor.end();++i)
+    	
+    	
+    	std::vector<LAL::Point3<float> >::iterator c = colors.begin();
+    	
+    	for (std::vector< std::vector<Surfel<float> > >::iterator i = cluster.begin(); i != cluster.end();++i)
     	{
-    		glVertex3fv(i->Center());
-
+			glColor3fv(*c);
+			++c;
+			if(c == colors.end())
+				c = colors.begin();
+    		for (std::vector<Surfel<float> >::iterator j = i->begin(); j != i->end();++j)
+    		{
+    			glVertex3fv(j->Center());
+    		}
     	}
+
     	glEnd();
 
     	glColor3f(0.5,0.5,0.5);

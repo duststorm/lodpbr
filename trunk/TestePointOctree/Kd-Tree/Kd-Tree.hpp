@@ -125,6 +125,7 @@ public:
 
 	  return kCloose;
   }
+  
 
   /// Returns pointer to root node
   /// @return Pointer to root node
@@ -133,6 +134,33 @@ public:
 	  return root;
   }
 
+  
+// =======================================================================================//
+
+  ItemList KNearestNeighborsClustering ( Item& p, unsigned int k, int &comps) 
+  {
+
+	  KNearestMap kNearest;
+	  comps = root->KNearestNeighborsClustering (p, kNearest, k);
+
+	  ItemList kCloose;
+	  KNearestMapIterator i;
+
+	  for (i = kNearest.begin (); i != kNearest.end(); ++i)
+	  {
+		  kCloose.push_back (i->second);
+	  }
+
+	  return kCloose;
+  }
+  
+  void ResetMarkedClustering()
+  {
+	  if (root != 0)
+	  {
+		  root->ResetMarkedClustering();
+	  }
+  }
 
 };
 
