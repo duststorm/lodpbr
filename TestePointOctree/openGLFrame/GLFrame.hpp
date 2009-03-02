@@ -39,6 +39,8 @@ public:
     typedef  KdTree<float,Surfel<float> >::Node KdTree3DNode;
 
     std::vector<Surfel<float> > KNeibor;
+    std::vector< std::vector<Surfel<float> > > cluster;
+    std::vector<LAL::Point3<float> > colors;
 
 public slots:
 

@@ -49,7 +49,6 @@ public:
   /// List of pointers to points contained in node (if it is leaf) or point that
   /// splits this node in two
   ItemList 	   mList;
-
   /// constructor
   KdTreeNode (const Box3& w) : mWorld(w)
   {
@@ -217,6 +216,7 @@ public:
 	  if (pKNearest.size() > k)
 	  {
 		  pKNearest.erase( pKNearest.begin() );
+		  
 	  }
 	  return pKNearest.begin()->first;
   }
@@ -315,7 +315,7 @@ public:
 
 	  if (son[0] == 0 && son[1] == 0)
 	  { // leaf node
-
+		  
 		  mList.push_back(p);
 
 		  // Check if overflow criteria is met
@@ -375,6 +375,7 @@ public:
 			  // Insert split object into this node's empty list
 			  mList.clear();
 			  mList.push_back(middleItem);
+
 		  }
 	  }
 	  else
@@ -455,6 +456,120 @@ public:
 	  return mWorld;
   }
 
+ // ====================================== Only for Clustering ============================================//
+
+
+  /// Computes the k-nearest neighbors inside this node to the given point p
+  /// @param p Given point
+  /// @param k_nearest Ordered set of nearest neighbors
+  /// @param k Number of nearest neighbors to find
+  /// @return Number of distance comparisons made
+  int KNearestLocalNeighborsClustering ( Item& p, KNearestMap& pKNearest, unsigned int k) 
+  {
+	  int comps = 0;
+	  Real minDist;
+
+	  if (pKNearest.empty())
+	  {
+		  minDist = HUGE; // empty set of nearest points
+	  }
+	  else
+	  {
+		  minDist = pKNearest.begin()->first; // greatest distance of all points in map
+	  }
+
+	  // compute distance to all points inside the node (in case of internal nodes there is only one)
+	  for (unsigned int i = 0; i < mList.size(); ++i)
+	  {
+		  Item q = mList[i];
+		 
+		  if (mList[i].Marked() == 0) // Test if the item has been add 
+		  {
+			  if (mList[i].Center() != p.Center())
+			  { // Check if not trying to insert itself
+				  Real dist = p.Center().EuclideanDistance (q.Center());
+				  ++comps;
+				  if (dist < minDist)
+				  {		
+					  if (pKNearest.size() < k)
+					  {	  
+						  pKNearest.insert ( KNearestPair (dist, mList[i]) );
+						  mList[i].SetMarked(1);
+						  minDist = pKNearest.begin()->first;
+					  }  
+				  }
+			  }
+		  }
+	  }
+	  return comps;
+  }
+
+  /// Computes the k-nearest neighbors inside the kd-tree to a given point
+  /// @param p Given point
+  /// @param k_nearest Ordered set of nearest neighbors
+  /// @param k Number of nearest neighbors to find
+  int KNearestNeighborsClustering ( Item& p, KNearestMap& pKNearest, unsigned int k) 
+  {
+	  int comps = 0;
+	  // Computes the distance to this node's itens
+	  comps = KNearestLocalNeighborsClustering (p, pKNearest, k);
+
+	  if (!IsLeaf()) // Descend to child nodes
+	  {
+		  // Compute distance from p to son's box
+		  Real dists[2] = {son[0]->EuclideanDistanceToBox (p.Center()), son[1]->EuclideanDistanceToBox (p.Center())};
+		  comps += 2;
+		  int order[2] = {0, 1};
+
+		  // Arrange in order of distances (closest first)
+		  if (dists[1] < dists[0]) {
+			  order[0] = 1;
+			  order[1] = 0;
+		  }
+
+		  // Check distances to sons in ordered way, closest son first
+		  // Only checks if distance to son's box is less than distance to
+		  // farthes k-neighbor so far, or if hasn't found k-neighbots yet
+		  Real best = pKNearest.begin()->first;
+
+		  if (dists[order[0]] < best || pKNearest.size() < k)
+		  {
+			  comps += son[order[0]]->KNearestNeighborsClustering (p, pKNearest, k);
+		  }
+
+		  best = pKNearest.begin()->first;
+
+		  if (dists[order[1]] < best || pKNearest.size() < k)
+		  {
+			  comps += son[order[1]]->KNearestNeighborsClustering (p, pKNearest, k);
+		  }
+
+	  }
+
+	  return comps;
+  }
+  
+  /// Reset the element to not marked
+  /// This is useful for clustering algorithm
+  /// to avoid build the whole clustering again 
+  void ResetMarkedClustering()
+  {
+	  
+	  	  for (unsigned int i = 0; i < mList.size(); ++i)
+	  	  {
+	  		  mList[i].SetMarked(0);
+	  	  }
+		  
+		  if (son[0] != 0)
+		  {
+			  son[0]->ResetMarkedClustering();
+		  }
+		  if (son[1] != 0)
+		  {
+			  son[1]->ResetMarkedClustering();
+		  }
+	 
+  }	
 
 private :
 
@@ -507,6 +622,8 @@ private :
 
 		return rightWorld;
 	}
+	
+
 };
 
 #endif /*KDTREENODE_HPP_*/
