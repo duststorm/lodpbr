@@ -89,7 +89,7 @@ void GLFrame::initializeGL()
 
 	GLint especMaterial = 64;
 
-	GLfloat light_position[] = {0.0, 0.5, 10.0, 0.0};
+	GLfloat light_position0[] = {0.0, 0.5, 10.0, 0.0};
 
 	glClearColor(1.0f, 1.0f, 1.0f, 1.0f);           //cor fundo
 	//glClearColor(1.0f, 1.0f, 1.0f, 0.0f);           //cor fundo
@@ -100,9 +100,11 @@ void GLFrame::initializeGL()
 
 	glLightModelfv(GL_LIGHT_MODEL_AMBIENT, luzAmbiente);        //luz ambiente
 	glLightModelfv(GL_LIGHT_MODEL_TWO_SIDE, luzAmbiente);        //luz ambiente
+	
 	glLightfv(GL_LIGHT0, GL_AMBIENT, luzAmbiente);  //parametros da luz 0
 	glLightfv(GL_LIGHT0, GL_DIFFUSE, luzDifusa );
-	glLightfv(GL_LIGHT0, GL_SPECULAR, light_position );
+	glLightfv(GL_LIGHT0, GL_SPECULAR, light_position0 );
+
 
 	glEnable(GL_POINT_SMOOTH);
 	glEnable(GL_COLOR_MATERIAL);  //cor do material a partir da cor corrente
@@ -110,7 +112,7 @@ void GLFrame::initializeGL()
 	glEnable(GL_LIGHT0);          //luz  0
 	glEnable(GL_DEPTH_TEST);      //depth-buffering
 
-	glEnable(GL_NORMALIZE);
+	//glEnable(GL_NORMALIZE);
 
 }
 
@@ -211,22 +213,54 @@ void GLFrame::calLimits()
 
     Surfel<float> s;
 
-    s.SetCenter(LAL::Point3<float>( 0.0515251f , -0.084186f, 0.238488f ));
+    s = surfels.surfels[0];
 
     KNeibor = kdTree.KNearestNeighborsClustering(s ,50, k_nearest_search_comps);
+    KNeibor.push_back(s);
+    s = KNeibor[0];
+    KNeibor.erase(KNeibor.begin());
+    
     
     std::cout << KNeibor.size() <<  " AAA " << std::endl;
     
     cluster.push_back(KNeibor);
     
-    while (KNeibor.size() > 0)
-    {
-    	s = KNeibor[0];
-    	KNeibor = kdTree.KNearestNeighborsClustering(s ,50, k_nearest_search_comps);
-    	cluster.push_back(KNeibor);
-    	
-        
-    }
+    //não ta adicionando o própio pontona busca =\ ai fica dificil !!
+    
+    KNeibor = kdTree.KNearestNeighborsClustering( s,50, k_nearest_search_comps);
+    KNeibor.push_back(s);
+    s = KNeibor[0];
+    KNeibor.erase(KNeibor.begin());
+    cluster.push_back(KNeibor);
+    
+    KNeibor = kdTree.KNearestNeighborsClustering( s,50, k_nearest_search_comps);
+    KNeibor.push_back(s);
+    s = KNeibor[0];
+    KNeibor.erase(KNeibor.begin());
+    cluster.push_back(KNeibor);
+    
+    KNeibor = kdTree.KNearestNeighborsClustering( s,50, k_nearest_search_comps);
+    KNeibor.push_back(s);
+    s = KNeibor[0];
+    KNeibor.erase(KNeibor.begin());
+    cluster.push_back(KNeibor);
+    
+    KNeibor = kdTree.KNearestNeighborsClustering( s,50, k_nearest_search_comps);
+    KNeibor.push_back(s);
+    s = KNeibor[0];
+    KNeibor.erase(KNeibor.begin());
+    cluster.push_back(KNeibor);
+    
+//    while (KNeibor.size() > 0)
+//    {
+//    	KNeibor = kdTree.KNearestNeighborsClustering(s ,50, k_nearest_search_comps);
+//        KNeibor.push_back(s);
+//        s = KNeibor[0];
+//        KNeibor.erase(KNeibor.begin());
+//    	cluster.push_back(KNeibor);
+//    	
+//        
+//    }
     
     std::cout << cluster.size() <<  " BdBB" << std::endl;
 
@@ -297,6 +331,7 @@ void GLFrame::paintGL()
 
     int cont = 0;
 
+    glDisable(GL_LIGHTING);
     if ( surfels.surfels.size() != 0 )
     {
     	drawKdTree(cont);
@@ -308,16 +343,42 @@ void GLFrame::paintGL()
     	
     	std::vector<LAL::Point3<float> >::iterator c = colors.begin();
     	
-    	for (std::vector< std::vector<Surfel<float> > >::iterator i = cluster.begin(); i != cluster.end();++i)
+    	//for (std::vector< std::vector<Surfel<float> > >::iterator i = cluster.begin(); i != cluster.end();++i)
     	{
 			glColor3fv(*c);
 			++c;
 			if(c == colors.end())
 				c = colors.begin();
-    		for (std::vector<Surfel<float> >::iterator j = i->begin(); j != i->end();++j)
+    		for (std::vector<Surfel<float> >::iterator j = cluster[0].begin(); j != cluster[0].end();++j)
     		{
     			glVertex3fv(j->Center());
     		}
+    		glColor3fv(*c);
+			++c;
+			if(c == colors.end())
+				c = colors.begin();
+    		for (std::vector<Surfel<float> >::iterator j = cluster[1].begin(); j != cluster[1].end();++j)
+    		{
+    			glVertex3fv(j->Center());
+    		}
+    		glColor3fv(*c);
+			++c;
+			if(c == colors.end())
+				c = colors.begin();
+    		for (std::vector<Surfel<float> >::iterator j = cluster[2].begin(); j != cluster[2].end();++j)
+    		{
+    			glVertex3fv(j->Center());
+    		}
+    		glColor3fv(*c);
+			++c;
+			if(c == colors.end())
+				c = colors.begin();
+    		for (std::vector<Surfel<float> >::iterator j = cluster[3].begin(); j != cluster[3].end();++j)
+    		{
+    			glVertex3fv(j->Center());
+    		}
+   
+    		
     	}
 
     	glEnd();
@@ -328,7 +389,7 @@ void GLFrame::paintGL()
     	renderText(10,30,QString("___________________________"));
     	DrawGroud();
     }
-
+    glEnable(GL_LIGHTING);
 }
 
 void GLFrame::keyPressEvent(QKeyEvent * event)
@@ -375,6 +436,8 @@ void GLFrame::mousePressEvent(QMouseEvent *event)
     if (event->button() == Qt::LeftButton)
     {
     	camera.lockMouse(true);
+        mCenterX = static_cast<float>(event->x());
+        mCenterY = static_cast<float>(event->y());
     }
 
     lastPos = event->pos();
@@ -415,6 +478,7 @@ void GLFrame::mouseMoveEvent(QMouseEvent *event)
         pitch = -(static_cast<float>(event->x()) - mCenterX) * 0.2;
         heading = -(static_cast<float>(event->y()) - mCenterY) * 0.2;
 
+        
         camera.Rotate(pitch,heading, 0.0f);
 
     //    mouse.moveToWindowCenter();
