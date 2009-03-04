@@ -489,14 +489,23 @@ public:
 			  { // Check if not trying to insert itself
 				  Real dist = p.Center().EuclideanDistance (q.Center());
 				  ++comps;
-				  if (dist < minDist)
+				  if (dist < minDist || pKNearest.size() < k)
 				  {		
-					  if (pKNearest.size() < k)
-					  {	  
+					  
+//					   std::cout << (p.Normal() * q.Normal()) << " - "<< p.Normal() << "- " << q.Normal() << std::endl;
+					  if ( (p.Normal() * q.Normal()) > 0.85 )
+					  {
 						  pKNearest.insert ( KNearestPair (dist, mList[i]) );
 						  mList[i].SetMarked(1);
+
+						  if ( pKNearest.size() > k)
+						  {
+							  pKNearest.begin()->second.SetMarked(0);
+							  pKNearest.erase( pKNearest.begin() );
+						  }
 						  minDist = pKNearest.begin()->first;
-					  }  
+					  }
+  
 				  }
 			  }
 		  }
