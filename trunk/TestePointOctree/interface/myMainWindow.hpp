@@ -17,9 +17,9 @@ public slots:
 	
 	void on_action_Open_File_triggered();
 	
-	void on_action_Apenas_Filhos_triggered();
+	void on_action_NewSurfel_triggered();
 	
-	void on_action_Todos_Abaixo_triggered();
+	void on_action_OldSurfels_triggered();
 	
 	void on_doubleSpinBoxThreshold_valueChanged(double);
 	void on_doubleSpinBoxCameraStep_valueChanged(double);

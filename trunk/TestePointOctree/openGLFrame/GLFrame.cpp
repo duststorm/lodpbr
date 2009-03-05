@@ -8,7 +8,8 @@
 
 
 #include "GLFrame.hpp"
-
+#include "surfels/MergeEllipses.hpp"
+#include "math/Vector3.hpp"
 
 #define DA_APLICACAO_PASSADA 0
 
@@ -35,6 +36,10 @@ GLFrame::GLFrame(QWidget *parent):QGLWidget(parent)
 	colors.push_back(LAL::Point3<float>(0.25,0.0,0.75));
 	colors.push_back(LAL::Point3<float>(0.0,0.0,1.0));
 	colors.push_back(LAL::Point3<float>(0.1,0.1,0.5));
+	colors.push_back(LAL::Point3<float>(1.0,0.1,0.5));
+	colors.push_back(LAL::Point3<float>(0.1,0.1,0.5));
+	colors.push_back(LAL::Point3<float>(1.0,1.0,0.5));
+	
 	
 
 }
@@ -51,6 +56,7 @@ void GLFrame::SetCameraStep(const float& t)
 void GLFrame::SetMode(bool t)
 {
 	mode = t;
+
 }
 
 
@@ -132,11 +138,11 @@ bool GLFrame::drawKdNode(const KdTree3DNode* n,int& cont) {
   glBegin(GL_POINTS);
   glColor4f(0.3, 0.3, 0.3, 1.0);
 
-  cont += n->mList.size();
+  cont += n->mListPtr.size();
 
-  for (unsigned int i = 0; i < n->mList.size(); ++i)
+  for (unsigned int i = 0; i < n->mListPtr.size(); ++i)
   {
-	  glVertex3fv( n->mList[i].Center() );
+	  glVertex3fv( n->mListPtr[i]->Center() );
   }
 
   glEnd();
@@ -190,12 +196,12 @@ void GLFrame::calLimits()
 
 	if (kdTree.root ==  0)
 	{
-		kdTree = KdTree<float,Surfel<float> >(world);
+		kdTree = KdTree<float,Surfel<float>* >(world);
 	}
 	else
 	{
 		delete kdTree.root;
-		kdTree = KdTree<float,Surfel<float> >(world);
+		kdTree = KdTree<float,Surfel<float>* >(world);
 	}
 
 
@@ -203,7 +209,7 @@ void GLFrame::calLimits()
 	std::cout << "Entrando" << std::endl;
 	for (std::vector<Surfel<float> >::iterator surf =  surfels.surfels.begin();surf != surfels.surfels.end(); ++ surf )
 	{
-	    kdTree.Insert ( *surf );
+	    kdTree.Insert ( new Surfel<float>(*surf) );
 	}
 	std::cout << "Saindo" << std::endl;
 
@@ -211,60 +217,93 @@ void GLFrame::calLimits()
 
     int k_nearest_search_comps = 0;
 
-    Surfel<float> s;
+    Surfel<float>* s = new Surfel<float>();
 
-    s = surfels.surfels[0];
+    *s = surfels.surfels[0];
 
-    KNeibor = kdTree.KNearestNeighborsClustering(s ,50, k_nearest_search_comps);
-    KNeibor.push_back(s);
-    s = KNeibor[0];
+    std::cout << "s0" << s->Center() << std::endl;
+    
+    KNeibor = kdTree.KNearestNeighbors(s ,2, k_nearest_search_comps);
+    KNeibor.push_back(new Surfel<float>(*s));
+    *s = *KNeibor[0];
     KNeibor.erase(KNeibor.begin());
     
     
-    std::cout << KNeibor.size() <<  " AAA " << std::endl;
+    std::cout << KNeibor.size() <<  " KNN " << std::endl;
     
     cluster.push_back(KNeibor);
+    
+    
+    
     
     //não ta adicionando o própio pontona busca =\ ai fica dificil !!
     
-    KNeibor = kdTree.KNearestNeighborsClustering( s,50, k_nearest_search_comps);
-    KNeibor.push_back(s);
-    s = KNeibor[0];
-    KNeibor.erase(KNeibor.begin());
-    cluster.push_back(KNeibor);
     
-    KNeibor = kdTree.KNearestNeighborsClustering( s,50, k_nearest_search_comps);
-    KNeibor.push_back(s);
-    s = KNeibor[0];
-    KNeibor.erase(KNeibor.begin());
-    cluster.push_back(KNeibor);
+    while (KNeibor.size() > 0)
+    {
+    	KNeibor = kdTree.KNearestNeighborsClustering(s ,2, k_nearest_search_comps);
+        KNeibor.push_back(new Surfel<float>(*s));
+        *s = *KNeibor[0];
+        KNeibor.erase(KNeibor.begin());
+    	cluster.push_back(KNeibor);
+        
+    }
     
-    KNeibor = kdTree.KNearestNeighborsClustering( s,50, k_nearest_search_comps);
-    KNeibor.push_back(s);
-    s = KNeibor[0];
-    KNeibor.erase(KNeibor.begin());
-    cluster.push_back(KNeibor);
     
-    KNeibor = kdTree.KNearestNeighborsClustering( s,50, k_nearest_search_comps);
-    KNeibor.push_back(s);
-    s = KNeibor[0];
-    KNeibor.erase(KNeibor.begin());
-    cluster.push_back(KNeibor);
+    MergeEllipses<float> me;
     
-//    while (KNeibor.size() > 0)
-//    {
-//    	KNeibor = kdTree.KNearestNeighborsClustering(s ,50, k_nearest_search_comps);
-//        KNeibor.push_back(s);
-//        s = KNeibor[0];
-//        KNeibor.erase(KNeibor.begin());
-//    	cluster.push_back(KNeibor);
-//    	
-//        
-//    }
+    for (std::vector< std::vector<Surfel<float>* > >::iterator i = cluster.begin(); i != cluster.end();++i)
+    {
+    	std::list<Surfel<float>* > l;
+    	for(std::vector<Surfel<float>* >::iterator j = i->begin(); j != i->end(); ++j)
+    	{
+    		l.push_back((*j));
+    	}
+//    	std::cout << "--------------------- ="<< l.size() <<  std::endl;
+//    	for (std::list<Surfel<float>* >::iterator y = l.begin(); y != l.end(); ++y)
+//    	{
+//    		std::cout << " =  "<<  (*y)->Normal()<< "-" <<  (*y)->Center() << std::endl;
+//    	}
+//    	std::cout << "---------------------"<< std::endl;
+    	if(l.size() > 0)
+    		me = MergeEllipses<float>(l);
+    	
+    	Surfel<float>* su1 = new Surfel<float>();
+    	
+    	su1 = me.NewPtrSurfel();
+    	
+//    	std::cout << su1->Normal()<< "-" <<  su1->Center()<<  " New Surfel " << std::endl;
+    	
+    	newSurfel.push_back(me.NewPtrSurfel());
+    	
+    }
     
-    std::cout << cluster.size() <<  " BdBB" << std::endl;
-
-
+//    Surfel<float>* su1 =  new Surfel<float>(LAL::Point3<float>(7.938756, 8.396816, 5.958447),
+//                    LAL::Vector3<float>(0.000000, 0.000000, 1.000000),1.0f,1.0f,0.0f);
+//
+//
+//    su1->SetMinorAxis(std::make_pair(0.1,LAL::Vector3<float>(1.000000, 0.000000, 0.000000)));
+//    su1->SetMajorAxis(std::make_pair(0.5,LAL::Vector3<float>(0.000000, 1.000000, 0.00000)));
+//
+//
+//    Surfel<float>* su2 =  new Surfel<float>(LAL::Point3<float>(6.632136, 7.704408, 5.995052),
+//                            LAL::Vector3<float>(0.000000, 0.000000, 1.000000),1.0f,1.0f,0.0f);
+//
+//
+//    su2->SetMinorAxis(std::make_pair(0.4,LAL::Vector3<float>(1.000000, 0.000000, 0.000000)));
+//    su2->SetMajorAxis(std::make_pair(0.2,LAL::Vector3<float>(0.000000, 1.000000, 0.000000)));
+//    
+//    std::list<Surfel<float>* > sl;
+//    
+//    sl.push_back(su1);
+//    sl.push_back(su2);
+//
+//
+//    MergeEllipses<float> me = MergeEllipses<float>(sl);
+    
+    
+    std::cout << cluster.size() <<  "cluster size" << std::endl;
+    std::cout << newSurfel.size() <<  "new " << std::endl;
 
 }
 
@@ -343,43 +382,65 @@ void GLFrame::paintGL()
     	
     	std::vector<LAL::Point3<float> >::iterator c = colors.begin();
     	
-    	//for (std::vector< std::vector<Surfel<float> > >::iterator i = cluster.begin(); i != cluster.end();++i)
+    	int cont = 0;
+    	
+    	if(mode)
     	{
-			glColor3fv(*c);
-			++c;
-			if(c == colors.end())
-				c = colors.begin();
-    		for (std::vector<Surfel<float> >::iterator j = cluster[0].begin(); j != cluster[0].end();++j)
-    		{
-    			glVertex3fv(j->Center());
-    		}
-    		glColor3fv(*c);
-			++c;
-			if(c == colors.end())
-				c = colors.begin();
-    		for (std::vector<Surfel<float> >::iterator j = cluster[1].begin(); j != cluster[1].end();++j)
-    		{
-    			glVertex3fv(j->Center());
-    		}
-    		glColor3fv(*c);
-			++c;
-			if(c == colors.end())
-				c = colors.begin();
-    		for (std::vector<Surfel<float> >::iterator j = cluster[2].begin(); j != cluster[2].end();++j)
-    		{
-    			glVertex3fv(j->Center());
-    		}
-    		glColor3fv(*c);
-			++c;
-			if(c == colors.end())
-				c = colors.begin();
-    		for (std::vector<Surfel<float> >::iterator j = cluster[3].begin(); j != cluster[3].end();++j)
-    		{
-    			glVertex3fv(j->Center());
-    		}
-   
     		
+//    		for (std::vector< std::vector<Surfel<float>* > >::iterator i = cluster.begin(); i != cluster.end();++i)
+    		for (int i = 0;i < 1600; ++i)
+    		{
+
+
+    			glColor3fv(*c);
+    			++c;
+    			if(c == colors.end())
+    				c = colors.begin();
+    			for (std::vector<Surfel<float>* >::iterator j = cluster[i].begin(); j != cluster[i].end();++j)
+    			{
+    				glVertex3fv((*j)->Center());
+    			}
+    			//    		glColor3fv(*c);
+    			//			++c;
+    			//			if(c == colors.end())
+    			//				c = colors.begin();
+    			//    		for (std::vector<Surfel<float> >::iterator j = cluster[1].begin(); j != cluster[1].end();++j)
+    			//    		{
+    			//    			glVertex3fv(j->Center());
+    			//    		}
+    			//    		glColor3fv(*c);
+    			//			++c;
+    			//			if(c == colors.end())
+    			//				c = colors.begin();
+    			//    		for (std::vector<Surfel<float> >::iterator j = cluster[2].begin(); j != cluster[2].end();++j)
+    			//    		{
+    			//    			glVertex3fv(j->Center());
+    			//    		}
+    			//    		glColor3fv(*c);
+    			//			++c;
+    			//			if(c == colors.end())
+    			//				c = colors.begin();
+    			//    		for (std::vector<Surfel<float> >::iterator j = cluster[3].begin(); j != cluster[3].end();++j)
+    			//    		{
+    			//    			glVertex3fv(j->Center());
+    			//    		}
+
+    		}
+    	}else
+    	{
+    		
+//    		for (std::vector<Surfel<float>*  >::iterator i = newSurfel.begin(); i != newSurfel.end();++i)
+    	    for (int i = 0;i < 1600 ; ++i)
+    		{
+    			glColor3fv(*c);
+    			++c;
+    			if(c == colors.end())
+    				c = colors.begin();
+    				(newSurfel[i])->drawTriangleFan();//    				glVertex3fv((*i)->Center());
+	
+    		}
     	}
+    	
 
     	glEnd();
 

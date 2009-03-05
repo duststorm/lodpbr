@@ -33,7 +33,7 @@
  * @param Refine give criterion
  *
  **/
-template <class Real,class Item, class Refine = OverflowKdTreeRefine<Real,Item> >
+template <class Real,class ItemPtr, class Refine = OverflowKdTreeRefine<Real,ItemPtr> >
 class KdTree {
 
 public:
@@ -42,15 +42,15 @@ public:
   typedef typename 	LAL::BoundingBox3<Real> 										Box3;
 
   /// List of what is actually stored in a leaf node (non-leaf nodes stores only one reference)
-  typedef 			std::vector<Item> 											    ItemList;
+  typedef 			std::vector<ItemPtr> 											    ItemPtrList;
 
   /// kd-tree node
-  typedef 			KdTreeNode<Real,Item, Refine> 								    Node;
+  typedef 			KdTreeNode<Real,ItemPtr, Refine> 								    Node;
 
   /// Map definitions for k-nearest neighbors algorithm
-  typedef 			std::multimap <Real, Item, std::greater<Real> > 				KNearestMap;
-  typedef typename 	std::multimap <Real, Item, std::greater<Real> >::iterator 	    KNearestMapIterator;
-  typedef 			std::pair<Real, Item> 										    KNearestPair;
+  typedef 			std::multimap <Real, ItemPtr, std::greater<Real> > 				KNearestMap;
+  typedef typename 	std::multimap <Real, ItemPtr, std::greater<Real> >::iterator 	    KNearestMapIterator;
+  typedef 			std::pair<Real, ItemPtr> 										    KNearestPair;
 
 protected:
 
@@ -59,7 +59,7 @@ protected:
 public:
 
   /// kd-tree root node
-  KdTreeNode <Real,Item, Refine> * root;
+  KdTreeNode <Real,ItemPtr, Refine> * root;
 
   KdTree() : root (0)
   {
@@ -69,7 +69,7 @@ public:
   /// Main Constructor
   KdTree (const Box3& theWorld)
   {
-    root = new KdTreeNode <Real,Item, Refine> (theWorld);
+    root = new KdTreeNode <Real,ItemPtr, Refine> (theWorld);
   }
 
   /// destructor
@@ -80,12 +80,12 @@ public:
 
   /// Inserts a pointer to an object in this kd-tree
   /// @param p pointer to object
-  virtual void Insert (const Item& p)
+  virtual void Insert (const ItemPtr& p)
   {
 	  // Check if point is inside kd-tree world before inserting
-	  if ( (p.Center().x >= root->Box().xMin()) && (p.Center().x <= root->Box().xMax()) &&
-		   (p.Center().y >= root->Box().yMin()) && (p.Center().y <= root->Box().yMax()) &&
-		   (p.Center().z >= root->Box().zMin()) && (p.Center().z <= root->Box().zMax()) )
+	  if ( (p->Center().x >= root->Box().xMin()) && (p->Center().x <= root->Box().xMax()) &&
+		   (p->Center().y >= root->Box().yMin()) && (p->Center().y <= root->Box().yMax()) &&
+		   (p->Center().z >= root->Box().zMin()) && (p->Center().z <= root->Box().zMax()) )
 
 	  {
 		  root->Insert (0, p);
@@ -93,9 +93,9 @@ public:
   }
 
   /// Returns the number of pointer to items inserted into this kd-tree
-  virtual int ItemCount (void) const
+  virtual int ItemPtrCount (void) const
   {
-    return root->ItemCount();
+    return root->ItemPtrCount();
   }
 
   /// Returns an iterator to the leaf node containing a given point
@@ -109,15 +109,17 @@ public:
   /// Returns the nearesNeighbor to a given point
   /// @param p Given point.
   /// @return Pointer to the nearest neighbor object.
-  ItemList KNearestNeighbors (const Item& p, unsigned int k, int &comps) const
+  ItemPtrList KNearestNeighbors (const ItemPtr& p, unsigned int k, int &comps) const
   {
 
 	  KNearestMap kNearest;
+	  
 	  comps = root->KNearestNeighbors (p, kNearest, k);
 
-	  ItemList kCloose;
+	  ItemPtrList kCloose;
 	  KNearestMapIterator i;
 
+	  
 	  for (i = kNearest.begin (); i != kNearest.end(); ++i)
 	  {
 		  kCloose.push_back (i->second);
@@ -137,13 +139,13 @@ public:
   
 // =======================================================================================//
 
-  ItemList KNearestNeighborsClustering ( Item& p, unsigned int k, int &comps) 
+  ItemPtrList KNearestNeighborsClustering ( ItemPtr& p, unsigned int k, int &comps) 
   {
 
 	  KNearestMap kNearest;
 	  comps = root->KNearestNeighborsClustering (p, kNearest, k);
 
-	  ItemList kCloose;
+	  ItemPtrList kCloose;
 	  KNearestMapIterator i;
 
 	  for (i = kNearest.begin (); i != kNearest.end(); ++i)

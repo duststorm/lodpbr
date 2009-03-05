@@ -15,17 +15,17 @@
 /// @param Item item type to be stored
 /// @param Refine refinement criteria
 ///
-template < class Real,class Item, class Refine = OverflowKdTreeRefine<Real,Item> >
+template < class Real,class ItemPtr, class Refine = OverflowKdTreeRefine<Real,ItemPtr> >
 class KdTreeNode {
 
   typedef typename 	LAL::Point3<Real> 									Point3;     ///< A Point in 3D
   typedef typename 	LAL::BoundingBox3<Real> 							Box3;
   /// List of what is actually stored in a leaf node (non-leaf nodes stores only one reference)
-  typedef 			std::vector<Item> 									ItemList;
-  typedef const 	KdTreeNode* 										NodePtr;
+  typedef 			std::vector<ItemPtr> 									ItemPtrList;
+  typedef const 	KdTreeNode* 											NodePtr;
 
-  typedef 			std::multimap < Real, Item, std::greater<Real> >	KNearestMap;
-  typedef 		  	std::pair< Real, Item> 								KNearestPair;
+  typedef 			std::multimap < Real, ItemPtr, std::greater<Real> >		KNearestMap;
+  typedef 		  	std::pair< Real, ItemPtr > 								KNearestPair;
 
 private:
 
@@ -48,7 +48,7 @@ public:
 
   /// List of pointers to points contained in node (if it is leaf) or point that
   /// splits this node in two
-  ItemList 	   mList;
+  ItemPtrList 	   mListPtr;
   /// constructor
   KdTreeNode (const Box3& w) : mWorld(w)
   {
@@ -88,17 +88,17 @@ public:
 
   /// Returns a pointer to the kd-tree node which contains point p
   /// @param p point which should be inside a descendant
-  const KdTreeNode* SearchLeaf (const Item& p) const
+  const KdTreeNode* SearchLeaf (const ItemPtr& p) const
   {
-	  if (mList.size() == 1)
+	  if (mListPtr.size() == 1)
 	  { // internal node, contains only one object
-		  if (p.Center() == mList[0]) // found match
+		  if (p->Center() == mListPtr[0]->Center()) // found match
 		  {
 			  return this;
 		  }
 		  else
 		  {
-			  if (p.Center()[mSplitDimension] > mSplitCoordnate)
+			  if (p->Center()[mSplitDimension] > mSplitCoordnate)
 			  {
 				  return son[1]->SearchLeaf (p);
 			  }else
@@ -107,11 +107,11 @@ public:
 			  }
 		  }
 
-	  }else if (mList.size() > 1)
+	  }else if (mListPtr.size() > 1)
 	  { // leaf node, search entire list for a match
-		  for (int i = 0; i < mList.size(); ++i)
+		  for (int i = 0; i < mListPtr.size(); ++i)
 		  {
-			  if (mList[i] == p.Center())
+			  if (mListPtr[i]->Center() == p.Center())
 			  {
 				  return this;
 			  }
@@ -145,13 +145,13 @@ public:
   /// Searches for the leaf node containing p
   /// @param p Given point
   /// @return Pointer to node containing p
-  const KdTreeNode* Search (Item p)
+  const KdTreeNode* Search (ItemPtr p)
   {
 	  if (IsLeaf())
 	  {
 		  return this;
 	  }
-	  if (p.Center()[mSplitDimension] < mSplitCoordnate)
+	  if (p->Center()[mSplitDimension] < mSplitCoordnate)
 	  {
 		  return son[0]->search (p);
 	  }
@@ -209,9 +209,9 @@ public:
   /// @param k_nearest Ordered set of nearest neighbors
   /// @param k Number of nearest neighbors to find
   /// @return The distance to the farthest point in the map
-  Real InsertNeighbor (const Item& item, Real dist, KNearestMap& pKNearest, unsigned int k) const
+  Real InsertNeighbor (const ItemPtr& itemPtr, Real dist, KNearestMap& pKNearest, unsigned int k) const
   {
-	  pKNearest.insert ( KNearestPair (dist, item) );
+	  pKNearest.insert ( KNearestPair (dist, itemPtr) );
 	  // if list has more than k nearest neighbors, remove first element (greater distance)
 	  if (pKNearest.size() > k)
 	  {
@@ -226,7 +226,7 @@ public:
   /// @param k_nearest Ordered set of nearest neighbors
   /// @param k Number of nearest neighbors to find
   /// @return Number of distance comparisons made
-  int KNearestLocalNeighbors (const Item& p, KNearestMap& pKNearest, unsigned int k) const
+  int KNearestLocalNeighbors (const ItemPtr& p, KNearestMap& pKNearest, unsigned int k) const
   {
 	  int comps = 0;
 	  Real minDist;
@@ -241,17 +241,17 @@ public:
 	  }
 
 	  // compute distance to all points inside the node (in case of internal nodes there is only one)
-	  for (unsigned int i = 0; i < mList.size(); ++i)
+	  for (unsigned int i = 0; i < mListPtr.size(); ++i)
 	  {
-		  Item q = mList[i];
+		  ItemPtr q = mListPtr[i];
 
-		  if (mList[i].Center() != p.Center())
+		  if (mListPtr[i]->Center() != p->Center())
 		  { // Check if not trying to insert itself
-			  Real dist = p.Center().EuclideanDistance (q.Center());
+			  Real dist = p->Center().EuclideanDistance (q->Center());
 			  ++comps;
 			  if (dist < minDist || pKNearest.size() < k)
 			  {
-				  minDist = InsertNeighbor (mList[i], dist, pKNearest, k);
+				  minDist = InsertNeighbor (mListPtr[i], dist, pKNearest, k);
 			  }
 		  }
 	  }
@@ -262,7 +262,7 @@ public:
   /// @param p Given point
   /// @param k_nearest Ordered set of nearest neighbors
   /// @param k Number of nearest neighbors to find
-  int KNearestNeighbors (const Item& p, KNearestMap& pKNearest, unsigned int k) const
+  int KNearestNeighbors (const ItemPtr& p, KNearestMap& pKNearest, unsigned int k) const
   {
 	  int comps = 0;
 	  // Computes the distance to this node's itens
@@ -271,7 +271,7 @@ public:
 	  if (!IsLeaf()) // Descend to child nodes
 	  {
 		  // Compute distance from p to son's box
-		  Real dists[2] = {son[0]->EuclideanDistanceToBox (p.Center()), son[1]->EuclideanDistanceToBox (p.Center())};
+		  Real dists[2] = {son[0]->EuclideanDistanceToBox (p->Center()), son[1]->EuclideanDistanceToBox (p->Center())};
 		  comps += 2;
 		  int order[2] = {0, 1};
 
@@ -310,16 +310,16 @@ public:
   /// @param level kd-tree level of this node
   /// @param p pointer to object
   /// @param fatherPtr reference to the pointer inside the father which point to this node
-  void Insert (int level, const Item& p)
+  void Insert (int level, const ItemPtr& p)
   {
 
 	  if (son[0] == 0 && son[1] == 0)
 	  { // leaf node
 		  
-		  mList.push_back(p);
+		  mListPtr.push_back(p);
 
 		  // Check if overflow criteria is met
-		  if (Refine::Split (mWorld, mList))
+		  if (Refine::Split (mWorld, mListPtr))
 		  {
 
 			  /// Check largest box dimension for subdivision
@@ -330,21 +330,21 @@ public:
 			  Real center = 0.5 * (mWorld.Max()[mSplitDimension] + mWorld.Min()[mSplitDimension]);
 			  Real minDist = HUGE;
 
-			  Item middleItem;
-			  for (unsigned int i = 0; i < mList.size(); ++i)
+			  ItemPtr middleItem;
+			  for (unsigned int i = 0; i < mListPtr.size(); ++i)
 			  {
-				  Real dist = fabs (center - mList[i].Center()[mSplitDimension]);
+				  Real dist = fabs (center - mListPtr[i]->Center()[mSplitDimension]);
 
 				  if (dist < minDist)
 				  {
 					  minDist = dist;
-					  middleItem = mList[i];
+					  middleItem = mListPtr[i];
 				  }
 			  }
 
 
 			  // Defines the position of the space partition
-			  mSplitCoordnate = middleItem.Center()[mSplitDimension];
+			  mSplitCoordnate = middleItem->Center()[mSplitDimension];
 
 			  // Create two son nodes
 			  KdTreeNode * newLeftNode  = new KdTreeNode(this, LeftBox());
@@ -354,33 +354,34 @@ public:
 			  son[1] = newRightNode;
 
 			  // Insert items from list into child nodes (except middle item)
-			  for (unsigned int i = 0; i < mList.size(); ++i)
+			  for (unsigned int i = 0; i < mListPtr.size(); ++i)
 			  {
 
-				  if (mList[i].Center()[mSplitDimension] <= mSplitCoordnate)
+				  if (mListPtr[i]->Center()[mSplitDimension] <= mSplitCoordnate)
 				  {
-					  if (!(mList[i].Center() == middleItem.Center()))
+					  if (!(mListPtr[i]->Center() == middleItem->Center()))
 					  {
-						  son[0]->Insert(level + 1, mList[i]);
+						  son[0]->Insert(level + 1, mListPtr[i]);
 					  }
 
 				  }
-				  else //if (mList[i][mSplitDimension] > mSplitCoordnate)
+				  // Here was a error =\ , with small number of itens in the node like 2 or 3
+				  else //if (mListPtr[i][mSplitDimension] > mSplitCoordnate)
 				  {
 
-					  son[1]->Insert(level + 1, mList[i]);
+					  son[1]->Insert(level + 1, mListPtr[i]);
 				  }
 			  }
 
 			  // Insert split object into this node's empty list
-			  mList.clear();
-			  mList.push_back(middleItem);
+			  mListPtr.clear();
+			  mListPtr.push_back(middleItem);
 
 		  }
 	  }
 	  else
 	  { // internal node, continue descending
-		  if ( p.Center()[mSplitDimension] < mSplitCoordnate )
+		  if ( p->Center()[mSplitDimension] < mSplitCoordnate )
 		  {
 			  son[0]->Insert(level + 1, p);
 		  }
@@ -393,7 +394,7 @@ public:
 
   /// Returns the number of pointers to items inserted into this node
   /// @return Size of item list
-  int ItemCount () const {
+  int ItemPtrCount () const {
 //	  int sum = 0;
 //
 //	  if (son[0] == 0 && son[1] == 0)
@@ -405,15 +406,15 @@ public:
 //	  }
 //
 //	  return  sum + PtrList.size();
-	return mList.size();
+	return mListPtr.size();
   }
 
   /// Returns the ith element of the item list
   /// @param id The element position
   /// @return ith element of item list
-  const Item Element (int id) const
+  const ItemPtr Element (int id) const
   {
-    return mList[id];
+    return mListPtr[id];
   }
 
   /// Returns one of two sons of this node
@@ -464,7 +465,7 @@ public:
   /// @param k_nearest Ordered set of nearest neighbors
   /// @param k Number of nearest neighbors to find
   /// @return Number of distance comparisons made
-  int KNearestLocalNeighborsClustering ( Item& p, KNearestMap& pKNearest, unsigned int k) 
+  int KNearestLocalNeighborsClustering ( ItemPtr& p, KNearestMap& pKNearest, unsigned int k) 
   {
 	  int comps = 0;
 	  Real minDist;
@@ -479,28 +480,28 @@ public:
 	  }
 
 	  // compute distance to all points inside the node (in case of internal nodes there is only one)
-	  for (unsigned int i = 0; i < mList.size(); ++i)
+	  for (unsigned int i = 0; i < mListPtr.size(); ++i)
 	  {
-		  Item q = mList[i];
+		  ItemPtr q = mListPtr[i];
 		 
-		  if (mList[i].Marked() == 0) // Test if the item has been add 
+		  if (mListPtr[i]->Marked() == 0) // Test if the item has been add 
 		  {
-			  if (mList[i].Center() != p.Center())
+			  if (mListPtr[i]->Center() != p->Center())
 			  { // Check if not trying to insert itself
-				  Real dist = p.Center().EuclideanDistance (q.Center());
+				  Real dist = p->Center().EuclideanDistance (q->Center());
 				  ++comps;
 				  if (dist < minDist || pKNearest.size() < k)
 				  {		
 					  
 //					   std::cout << (p.Normal() * q.Normal()) << " - "<< p.Normal() << "- " << q.Normal() << std::endl;
-					  if ( (p.Normal() * q.Normal()) > 0.85 )
+					  //if ( (p.Normal() * q.Normal()) > 0.85 )
 					  {
-						  pKNearest.insert ( KNearestPair (dist, mList[i]) );
-						  mList[i].SetMarked(1);
+						  pKNearest.insert ( KNearestPair (dist, mListPtr[i]) );
+						  mListPtr[i]->SetMarked(1);
 
 						  if ( pKNearest.size() > k)
 						  {
-							  pKNearest.begin()->second.SetMarked(0);
+							  pKNearest.begin()->second->SetMarked(0);
 							  pKNearest.erase( pKNearest.begin() );
 						  }
 						  minDist = pKNearest.begin()->first;
@@ -517,7 +518,7 @@ public:
   /// @param p Given point
   /// @param k_nearest Ordered set of nearest neighbors
   /// @param k Number of nearest neighbors to find
-  int KNearestNeighborsClustering ( Item& p, KNearestMap& pKNearest, unsigned int k) 
+  int KNearestNeighborsClustering ( ItemPtr& p, KNearestMap& pKNearest, unsigned int k) 
   {
 	  int comps = 0;
 	  // Computes the distance to this node's itens
@@ -526,7 +527,7 @@ public:
 	  if (!IsLeaf()) // Descend to child nodes
 	  {
 		  // Compute distance from p to son's box
-		  Real dists[2] = {son[0]->EuclideanDistanceToBox (p.Center()), son[1]->EuclideanDistanceToBox (p.Center())};
+		  Real dists[2] = {son[0]->EuclideanDistanceToBox (p->Center()), son[1]->EuclideanDistanceToBox (p->Center())};
 		  comps += 2;
 		  int order[2] = {0, 1};
 
@@ -564,9 +565,9 @@ public:
   void ResetMarkedClustering()
   {
 	  
-	  	  for (unsigned int i = 0; i < mList.size(); ++i)
+	  	  for (unsigned int i = 0; i < mListPtr.size(); ++i)
 	  	  {
-	  		  mList[i].SetMarked(0);
+	  		  mListPtr[i]->SetMarked(0);
 	  	  }
 		  
 		  if (son[0] != 0)

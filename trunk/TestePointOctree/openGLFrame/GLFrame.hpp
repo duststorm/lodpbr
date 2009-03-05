@@ -34,12 +34,13 @@ public:
 
     Surfels<float> surfels;
 
-    KdTree<float,Surfel<float> > kdTree;
+    KdTree<float,Surfel<float>* > kdTree;
 
-    typedef  KdTree<float,Surfel<float> >::Node KdTree3DNode;
+    typedef  KdTree<float,Surfel<float>* >::Node KdTree3DNode;
 
-    std::vector<Surfel<float> > KNeibor;
-    std::vector< std::vector<Surfel<float> > > cluster;
+    std::vector<Surfel<float>* > KNeibor;
+    std::vector< std::vector<Surfel<float>* > > cluster;
+    std::vector<Surfel<float>* >  newSurfel;
     std::vector<LAL::Point3<float> > colors;
 
 public slots:

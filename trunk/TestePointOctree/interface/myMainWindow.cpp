@@ -26,15 +26,17 @@ void MyMainWindow::on_doubleSpinBoxCameraStep_valueChanged(double d)
 	glFrame->updateGL();
 }
 
-void MyMainWindow::on_action_Apenas_Filhos_triggered()
+void MyMainWindow::on_action_NewSurfel_triggered()
 {
-	action_Todos_Abaixo->setChecked(false);
+	action_NewSurfel->setChecked(1);
+	action_OldSurfels->setChecked(0);
 	glFrame->SetMode(true);
 }
 
-void MyMainWindow::on_action_Todos_Abaixo_triggered()
+void MyMainWindow::on_action_OldSurfels_triggered()
 {
-	action_Apenas_Filhos->setChecked(false);
+	action_OldSurfels->setChecked(1);
+	action_NewSurfel->setChecked(0);
 	glFrame->SetMode(false);
 }
 
