@@ -111,7 +111,7 @@
      <x>0</x>
      <y>0</y>
      <width>526</width>
-     <height>27</height>
+     <height>25</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuSair" >
@@ -140,8 +140,8 @@
    <attribute name="toolBarBreak" >
     <bool>false</bool>
    </attribute>
-   <addaction name="action_Todos_Abaixo" />
-   <addaction name="action_Apenas_Filhos" />
+   <addaction name="action_NewSurfel" />
+   <addaction name="action_OldSurfels" />
   </widget>
   <widget class="QToolBar" name="toolBar" >
    <property name="windowTitle" >
@@ -178,7 +178,7 @@
     <string>Wireframe</string>
    </property>
   </action>
-  <action name="action_Todos_Abaixo" >
+  <action name="action_NewSurfel" >
    <property name="checkable" >
     <bool>true</bool>
    </property>
@@ -186,13 +186,13 @@
     <bool>false</bool>
    </property>
    <property name="text" >
-    <string>Todos Abaixo-False</string>
+    <string>New Surfel</string>
    </property>
    <property name="toolTip" >
     <string>Usa todos abaixo para o cálculo do erro perpendicular</string>
    </property>
   </action>
-  <action name="action_Apenas_Filhos" >
+  <action name="action_OldSurfels" >
    <property name="checkable" >
     <bool>true</bool>
    </property>
@@ -203,7 +203,7 @@
     <bool>true</bool>
    </property>
    <property name="text" >
-    <string>Apenas Filhos-True</string>
+    <string>Old Surfels</string>
    </property>
    <property name="toolTip" >
     <string>Usa apenas os filhos para o cálculo do erro perpendicular</string>

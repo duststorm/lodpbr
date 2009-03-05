@@ -459,7 +459,7 @@ template <class Real > class Surfel
 			
 		    glEnable(GL_POLYGON_OFFSET_FILL);
 		    glPolygonOffset(1,1);
-		    glColor3f(0.0,0.5,0.5);
+		    //glColor3f(0.0,0.5,0.5);
 		 	glBegin (GL_POLYGON);
 		 		for(ListPoint3Iterator it = lBoundaries.begin();it != lBoundaries.end();++it)
 		 		{
@@ -471,25 +471,27 @@ template <class Real > class Surfel
 //			glDisable (GL_BLEND);
 
 			
-//		    glDisable (GL_LIGHTING);
-//			glColor3f(0.0,0.0,0.0);
-//			glBegin(GL_LINES);
-//	 			for(ListPoint3Iterator it = lBoundaries.begin();it != lBoundaries.end();++it)
-//	 			{
-//	 				glVertex3fv( it->ToRealPtr() );
-//	 				glVertex3fv( this->mCenter.ToRealPtr());
-//	 			}
-//			glEnd();
-//			
-//			glBegin(GL_POINTS);
-//	 			glVertex3fv( this->mCenter.ToRealPtr());
-//	 		glEnd();
-//	 		
-//	 		glEnable (GL_LIGHTING);
+		    glDisable (GL_LIGHTING);
+			glColor3f(0.0,0.0,0.0);
+			glBegin(GL_LINES);
+	 			for(ListPoint3Iterator it = lBoundaries.begin();it != lBoundaries.end();++it)
+	 			{
+	 				glVertex3fv( it->ToRealPtr() );
+	 				glVertex3fv( this->mCenter.ToRealPtr());
+	 			}
+			glEnd();
+			
+			glBegin(GL_POINTS);
+	 			glVertex3fv( this->mCenter.ToRealPtr());
+	 		glEnd();
+	 		
+	 		glEnable (GL_LIGHTING);
 			
 			
 			
 	 }
+
+	 
 
  private:
 
