@@ -10,6 +10,7 @@
 #include "GLFrame.hpp"
 #include "surfels/MergeEllipses.hpp"
 #include "math/Vector3.hpp"
+#include "math/Vector4.hpp"
 
 #define DA_APLICACAO_PASSADA 0
 
@@ -26,19 +27,19 @@ GLFrame::GLFrame(QWidget *parent):QGLWidget(parent)
 	CameraStep = 0.01;
 	mode = 0;
 	
-	colors.push_back(LAL::Point3<float>(1.0,0.0,0.0));
-	colors.push_back(LAL::Point3<float>(1.0,1.0,0.0));
-	colors.push_back(LAL::Point3<float>(0.0,1.0,0.0));
-	colors.push_back(LAL::Point3<float>(0.0,1.0,1.0));
-	colors.push_back(LAL::Point3<float>(0.5,0.5,5.0));
-	colors.push_back(LAL::Point3<float>(0.5,0.0,0.5));
-	colors.push_back(LAL::Point3<float>(0.25,0.5,0.25));
-	colors.push_back(LAL::Point3<float>(0.25,0.0,0.75));
-	colors.push_back(LAL::Point3<float>(0.0,0.0,1.0));
-	colors.push_back(LAL::Point3<float>(0.1,0.1,0.5));
-	colors.push_back(LAL::Point3<float>(1.0,0.1,0.5));
-	colors.push_back(LAL::Point3<float>(0.1,0.1,0.5));
-	colors.push_back(LAL::Point3<float>(1.0,1.0,0.5));
+	colors.push_back(LAL::Vector4<float>(1.0,0.0,0.0,0.5));
+	colors.push_back(LAL::Vector4<float>(1.0,1.0,0.0,0.5));
+	colors.push_back(LAL::Vector4<float>(0.0,1.0,0.0,0.5));
+	colors.push_back(LAL::Vector4<float>(0.0,1.0,1.0,0.5));
+	colors.push_back(LAL::Vector4<float>(0.5,0.5,5.0,0.5));
+	colors.push_back(LAL::Vector4<float>(0.5,0.0,0.5,0.5));
+	colors.push_back(LAL::Vector4<float>(0.25,0.5,0.25,0.5));
+	colors.push_back(LAL::Vector4<float>(0.25,0.0,0.75,0.5));
+	colors.push_back(LAL::Vector4<float>(0.0,0.0,1.0,0.5));
+	colors.push_back(LAL::Vector4<float>(0.1,0.1,0.5,0.5));
+	colors.push_back(LAL::Vector4<float>(1.0,0.1,0.5,0.5));
+	colors.push_back(LAL::Vector4<float>(0.1,0.1,0.5,0.5));
+	colors.push_back(LAL::Vector4<float>(1.0,1.0,0.5,0.5));
 	
 	
 
@@ -380,7 +381,7 @@ void GLFrame::paintGL()
     	glBegin(GL_POINTS);
     	
     	
-    	std::vector<LAL::Point3<float> >::iterator c = colors.begin();
+    	std::vector<LAL::Vector4<float> >::iterator c = colors.begin();
     	
     	int cont = 0;
     	
@@ -388,7 +389,7 @@ void GLFrame::paintGL()
     	{
     		
 //    		for (std::vector< std::vector<Surfel<float>* > >::iterator i = cluster.begin(); i != cluster.end();++i)
-    		for (int i = 0;i < 1600; ++i)
+    		for (int i = 0;i < 16000; ++i)
     		{
 
 
@@ -430,9 +431,9 @@ void GLFrame::paintGL()
     	{
     		
 //    		for (std::vector<Surfel<float>*  >::iterator i = newSurfel.begin(); i != newSurfel.end();++i)
-    	    for (int i = 0;i < 1600 ; ++i)
+    	    for (int i = 0;i < 16000 ; ++i)
     		{
-    			glColor3fv(*c);
+    			glColor4fv(*c);
     			++c;
     			if(c == colors.end())
     				c = colors.begin();
