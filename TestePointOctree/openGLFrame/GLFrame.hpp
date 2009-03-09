@@ -41,7 +41,7 @@ public:
     std::vector<Surfel<float>* > KNeibor;
     std::vector< std::vector<Surfel<float>* > > cluster;
     std::vector<Surfel<float>* >  newSurfel;
-    std::vector<LAL::Point3<float> > colors;
+    std::vector<LAL::Vector4<float> > colors;
 
 public slots:
 

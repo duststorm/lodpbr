@@ -16,7 +16,7 @@ from math import *
 import goo
 
 import Merge
-from Merge import Merge
+from Merge import Merge, Error
 
 import Ellipse
 from Ellipse import Ellipse    
@@ -252,6 +252,18 @@ def buttonevents(evt):
         me= Blender.Mesh.New('FElipe')
        
         merge = Merge(listEllipse)
+        
+        ellipse =  Ellipse(merge.Center(),merge.A()*merge.EigenValues()[0],merge.B()*merge.EigenValues()[1],45.0,"Ellipse"+str(index))
+        
+        ellipse.SetNormal(merge.EigenVectors()[2])
+        ellipse.SetEixoA(merge.EigenVectors()[0])
+        ellipse.SetEixoB(merge.EigenVectors()[1])
+
+        
+        error = Error(ellipse,listEllipse)
+        
+        print "PERPENDICULAR ERROR = ", error.perpendicularError()
+        print "NEW PERPENDICULAR ERROR = ", error.newPerpendicularError()
        
         #print merge.EigenVector()[0]
         #print merge.EigenVector()[1]
@@ -292,14 +304,17 @@ def buttonevents(evt):
         
         me.verts.extend(listEllipse[-1].Center())
         
-        w = merge.EigenVectors()[0]
-        #w.normalize()
-
-        me.verts.extend(listEllipse[-1].Center() + (w*merge.A()*merge.EigenValues()[0]))
         
-        m = merge.EigenVectors()[1]
-        #m.normalize()
-        me.verts.extend(listEllipse[-1].Center() + (m*merge.B()*merge.EigenValues()[1]))
+        me.verts.extend(listEllipse[-1].Center() + (listEllipse[-1].A()*listEllipse[-1].EixoA()))
+        me.verts.extend(listEllipse[-1].Center() + (listEllipse[-1].A()*listEllipse[-1].EixoB()))        
+#        w = merge.EigenVectors()[0]
+#        #w.normalize()
+#
+#        me.verts.extend(listEllipse[-1].Center() + (w*merge.A()*merge.EigenValues()[0]))
+#        
+#        m = merge.EigenVectors()[1]
+#        #m.normalize()
+#        me.verts.extend(listEllipse[-1].Center() + (m*merge.B()*merge.EigenValues()[1]))
         
         v = merge.EigenVectors()[2]
         #v.normalize()
@@ -409,15 +424,28 @@ def buttonevents(evt):
        
         merge = Merge(listEllipse)
                       
+        
+        ellipse =  Ellipse(merge.Center(),merge.A()*merge.EigenValues()[0],merge.B()*merge.EigenValues()[1],45.0,"Ellipse"+str(index))
+        
+        ellipse.SetNormal(merge.EigenVectors()[2])
+        ellipse.SetEixoA(merge.EigenVectors()[0])
+        ellipse.SetEixoB(merge.EigenVectors()[1])
+
+        
+        error = Error(ellipse,listEllipse)
+        
+        print "PERPENDICULAR ERROR = ", error.perpendicularError()
                   
         listEllipse.append(Ellipse(merge.Center(),merge.A()*merge.EigenValues()[0],merge.B()*merge.EigenValues()[1],45.0,"Ellipse"+str(index)))
 
         listEllipse[-1].SetNormal(merge.EigenVectors()[2])
+        listEllipse[-1].SetEixoA(merge.EigenVectors()[0])
+        listEllipse[-1].SetEixoB(merge.EigenVectors()[1])
         
         index += 1
         #Vertex do Centro
       
-        polyline1 =  listEllipse[-1].CalculateBoundaries(8,[merge.EigenVectors()[0],merge.EigenVectors()[1]])
+        polyline1 =  listEllipse[-1].CalculateBoundaries(8,[listEllipse[-1].EixoA(),listEllipse[-1].EixoB()])
        
        
         print 'Pontinhos', merge.PontosProjetados()
@@ -435,11 +463,11 @@ def buttonevents(evt):
         w = merge.EigenVectors()[0]
         #w.normalize()
 
-        me.verts.extend(listEllipse[-1].Center() + (w*merge.A()*merge.EigenValues()[0]))
+        me.verts.extend(listEllipse[-1].Center() + (listEllipse[-1].A()*listEllipse[-1].EixoA()))
         
         m = merge.EigenVectors()[1]
         #m.normalize()
-        me.verts.extend(listEllipse[-1].Center() + (m*merge.B()*merge.EigenValues()[1]))
+        me.verts.extend(listEllipse[-1].Center() + (listEllipse[-1].A()*listEllipse[-1].EixoB()))
         
         v = merge.EigenVectors()[2]
         #v.normalize()

@@ -42,6 +42,52 @@ def perpendicular(v):
  t = Blender.Mathutils.Vector(-v.z * v.x, -v.z * v.y, 1.0 - v.z * v.z)
  return t;
 
+
+class Error:
+    def __init__(self,Ellipse,listEllipse):
+        self.Ellipse = Ellipse
+        self.ListEllipse = listEllipse
+
+    def perpendicularError(self):
+        lEpMin = []
+        lEpMax = []
+        for ellipse in self.ListEllipse:
+            di = self.Ellipse.B() * sqrt(1.0 - (self.Ellipse.Normal()*ellipse.Normal()) * (self.Ellipse.Normal()*ellipse.Normal()) ) ;
+            epMax = ( ( self.Ellipse.Center() - ellipse.Center() ) * self.Ellipse.Normal() )+di;
+            epMin = ( ( self.Ellipse.Center() - ellipse.Center() ) * self.Ellipse.Normal() )-di;
+            lEpMin.append(epMin);
+            lEpMax.append(epMax);    
+        epmax = max(lEpMax)
+        epmin = min(lEpMin)
+        ep = epmax - epmin
+        return ep
+    def newPerpendicularError(self):
+        dist_max = 0.0
+        for ellipse in self.ListEllipse:
+            print "$$$$$$$$$$$$$$$"
+            print self.Ellipse.Normal()
+            print ellipse.EixoA()
+            print ellipse.B()
+            
+            print ellipse.EixoB()
+            print ellipse.A()
+            
+            
+            
+            factor = (self.Ellipse.Normal()*ellipse.EixoA()*ellipse.B()) / (self.Ellipse.Normal()*ellipse.EixoB()*ellipse.A())
+            factor2 = factor*factor
+            alfa = sqrt(1.0/(1.0+factor2))
+            beta = factor*alfa
+            ray = ellipse.EixoB()*alfa + ellipse.EixoA()*beta
+            if (   (ellipse.Center()-self.Ellipse.Center())*self.Ellipse.Normal()  ) * (ray * self.Ellipse.Normal()) < 0:
+                ray = -ray
+            dist = ((ellipse.Center()+ray)-self.Ellipse.Center()) * self.Ellipse.Normal()
+            if (dist > dist_max ):
+                dist_max = dist     
+
+        return dist_max
+        
+
 class Merge:
        
    def __init__(self,listEllipse):
