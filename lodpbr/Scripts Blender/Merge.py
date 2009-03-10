@@ -47,7 +47,27 @@ class Error:
     def __init__(self,Ellipse,listEllipse):
         self.Ellipse = Ellipse
         self.ListEllipse = listEllipse
-
+    def geomrtricError(self):
+        result = 0.0
+        for ellipse in self.ListEllipse:
+            l = ellipse.CalculateBoundaries(100,[ellipse.EixoA(),ellipse.EixoB()])
+            for p in l:
+                q  = p - ( (self.Ellipse.Normal() * (p - self.Ellipse.Center() )) *self.Ellipse.Normal())
+                r = q - self.Ellipse.Center()
+                s = p - q
+                A = (r * self.Ellipse.EixoA())/(self.Ellipse.EixoA()*self.Ellipse.EixoA())
+                B = (r * self.Ellipse.EixoB())/(self.Ellipse.EixoB()*self.Ellipse.EixoB())
+                if (A*A + B*B) > 1:
+                    BA = B/A
+                    Aline = sqrt(1.0/(1.0+(BA*BA)))
+                    Dist = (1-(Aline/A)) * sqrt( r*r ) + sqrt(s*s)
+                else:
+                    Dist = sqrt(s*s)
+                if result < Dist:
+                    result = Dist
+                    
+        return result            
+                    
     def perpendicularError(self):
         lEpMin = []
         lEpMax = []
@@ -64,21 +84,14 @@ class Error:
     def newPerpendicularError(self):
         dist_max = 0.0
         for ellipse in self.ListEllipse:
-            print "$$$$$$$$$$$$$$$"
-            print self.Ellipse.Normal()
-            print ellipse.EixoA()
-            print ellipse.B()
-            
-            print ellipse.EixoB()
-            print ellipse.A()
-            
-            
-            
-            factor = (self.Ellipse.Normal()*ellipse.EixoA()*ellipse.B()) / (self.Ellipse.Normal()*ellipse.EixoB()*ellipse.A())
-            factor2 = factor*factor
-            alfa = sqrt(1.0/(1.0+factor2))
-            beta = factor*alfa
-            ray = ellipse.EixoB()*alfa + ellipse.EixoA()*beta
+            if self.Ellipse.Normal()*ellipse.EixoA() != 0 :
+                factor = (self.Ellipse.Normal()*ellipse.EixoA()*ellipse.B()) / (self.Ellipse.Normal()*ellipse.EixoB()*ellipse.A())
+                factor2 = factor*factor
+                alfa = sqrt(1.0/(1.0+factor2))
+                beta = factor*alfa
+                ray = ellipse.EixoB()*alfa + ellipse.EixoA()*beta
+            else:
+                 ray = ellipse.EixoB()
             if (   (ellipse.Center()-self.Ellipse.Center())*self.Ellipse.Normal()  ) * (ray * self.Ellipse.Normal()) < 0:
                 ray = -ray
             dist = ((ellipse.Center()+ray)-self.Ellipse.Center()) * self.Ellipse.Normal()
