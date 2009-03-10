@@ -264,6 +264,7 @@ def buttonevents(evt):
         
         print "PERPENDICULAR ERROR = ", error.perpendicularError()
         print "NEW PERPENDICULAR ERROR = ", error.newPerpendicularError()
+        print "geometric Error = ", error.geomrtricError()
        
         #print merge.EigenVector()[0]
         #print merge.EigenVector()[1]
@@ -433,8 +434,11 @@ def buttonevents(evt):
 
         
         error = Error(ellipse,listEllipse)
+
         
         print "PERPENDICULAR ERROR = ", error.perpendicularError()
+        print "NEW PERPENDICULAR ERROR = ", error.newPerpendicularError()
+        
                   
         listEllipse.append(Ellipse(merge.Center(),merge.A()*merge.EigenValues()[0],merge.B()*merge.EigenValues()[1],45.0,"Ellipse"+str(index)))
 
