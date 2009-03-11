@@ -6,14 +6,14 @@
 
 #include "Kd-Tree/Kd-Tree.hpp"
 
-#include "math/Point3.hpp"
-#include "math/Vector3.hpp"
+#include "Math/Point3.hpp"
+#include "Math/Vector3.hpp"
 
-#include "surfels/surfel.hpp"
-#include "surfels/surfels.hpp"
+#include "Surfels/surfel.hpp"
+#include "Surfels/surfels.hpp"
 
 #include "Scene/Camera.hpp"
-#include "surfels/MergeEllipses.hpp"
+#include "Surfels/MergeEllipses.hpp"
 
 class GLFrame : public QGLWidget
 {

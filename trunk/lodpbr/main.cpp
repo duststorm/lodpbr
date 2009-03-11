@@ -3,7 +3,7 @@
 
 
 
-#include "interface/myMainWindow.hpp"
+#include "Interface/myMainWindow.hpp"
 
 int main(int argc, char *argv[])
 {

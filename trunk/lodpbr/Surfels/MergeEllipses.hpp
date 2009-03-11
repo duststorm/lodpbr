@@ -8,9 +8,9 @@
 
 #include "surfel.hpp"
 
-#include "math/Point3.hpp"
-#include "math/Vector3.hpp"
-#include "math/EigenSystem.hpp"
+#include "Math/Point3.hpp"
+#include "Math/Vector3.hpp"
+#include "Math/EigenSystem.hpp"
 
 
 template <class Real> class MergeEllipses
