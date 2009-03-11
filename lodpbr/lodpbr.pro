@@ -12,58 +12,58 @@ INCLUDEPATH += . \
     ui \
     .ui \
     GLSLKernel \
-    interface \
-    openGLFrame
+    Interface \
+    OpenGLFrame
 
 # Input
-HEADERS += interface/myMainWindow.hpp \
-    openGLFrame/GLFrame.hpp \
-    math/Vector3.hpp \
+HEADERS += Interface/myMainWindow.hpp \
+    OpenGLFrame/GLFrame.hpp \
+    Math/Vector3.hpp \
     Octree/ocTree.hpp \
     Octree/ocTreeIntersection.hpp \
-    math/Point3.hpp \
-    math/Matrix3x3.hpp \
-    math/BoundingBox3.hpp \
+    Math/Point3.hpp \
+    Math/Matrix3x3.hpp \
+    Math/BoundingBox3.hpp \
     Octree/ocTreeBox.hpp \
-    surfels/surfel.hpp \
-    surfels/ply.h \
-    surfels/surfels.hpp \
+    Surfels/surfel.hpp \
+    Surfels/ply.h \
+    Surfels/surfels.hpp \
     Octree/ocTreeInternalNode.hpp \
     Octree/ocTreeLeafNode.hpp \
     Octree/ocTreeNode.hpp \
     Octree/ocTreeIterator.hpp \
     Octree/ocTreeRefine.hpp \
-    surfels/MergeEllipses.hpp \
+    Surfels/MergeEllipses.hpp \
     Scene/Camera.hpp \
     Scene/Trackball.hpp \
-    math/Color.hpp \
-    math/EigenSystem.hpp \
-    math/Matrix4x4.hpp \
-    math/Vector4.hpp \
-    math/Quaternion.hpp \
-    math/Math.hpp \
-    math/Vector2.hpp \
-    math/Point2.hpp \
-    math/Vector2.hpp \
+    Math/Color.hpp \
+    Math/EigenSystem.hpp \
+    Math/Matrix4x4.hpp \
+    Math/Vector4.hpp \
+    Math/Quaternion.hpp \
+    Math/Math.hpp \
+    Math/Vector2.hpp \
+    Math/Point2.hpp \
+    Math/Vector2.hpp \
     Kd-Tree/Kd-Tree.hpp \
     Kd-Tree/Kd-TreeNode.hpp \
     Kd-Tree/Kd-TreeRefine.hpp
 SOURCES += main.cpp \
-    interface/myMainWindow.cpp \
-    openGLFrame/GLFrame.cpp \
-    openGLFrame/support/arcball.cpp \
-    surfels/ply.c \
+    Interface/myMainWindow.cpp \
+    OpenGLFrame/GLFrame.cpp \
+    OpenGLFrame/support/arcball.cpp \
+    Surfels/ply.c \
     Scene/Camera.cpp \
     Scene/Trackball.cpp \
-    math/Quaternion.cpp \
-    math/Math.cpp \
-    math/Vector3.cpp \
-    math/Point2.cpp \
-    math/Vector4.cpp \
-    math/Matrix3x3.cpp \
-    math/Matrix4x4.cpp \
-    math/Point3.cpp \
-    math/Vector2.cpp
+    Math/Quaternion.cpp \
+    Math/Math.cpp \
+    Math/Vector3.cpp \
+    Math/Point2.cpp \
+    Math/Vector4.cpp \
+    Math/Matrix3x3.cpp \
+    Math/Matrix4x4.cpp \
+    Math/Point3.cpp \
+    Math/Vector2.cpp
 QT += opengl
 FORMS += ui/interface.ui
 

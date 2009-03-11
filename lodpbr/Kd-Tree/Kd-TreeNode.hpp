@@ -4,8 +4,8 @@
 #include <map>
 #include <vector>
 
-#include "math/BoundingBox3.hpp"
-#include "math/Point3.hpp"
+#include "Math/BoundingBox3.hpp"
+#include "Math/Point3.hpp"
 
 #include "Kd-TreeRefine.hpp"
 ///

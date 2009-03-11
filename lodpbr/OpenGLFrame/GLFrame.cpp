@@ -8,9 +8,9 @@
 
 
 #include "GLFrame.hpp"
-#include "surfels/MergeEllipses.hpp"
-#include "math/Vector3.hpp"
-#include "math/Vector4.hpp"
+#include "Surfels/MergeEllipses.hpp"
+#include "Math/Vector3.hpp"
+#include "Math/Vector4.hpp"
 
 #define DA_APLICACAO_PASSADA 0
 

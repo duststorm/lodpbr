@@ -50,7 +50,7 @@ class Error:
     def geomrtricError(self):
         result = 0.0
         for ellipse in self.ListEllipse:
-            l = ellipse.CalculateBoundaries(100,[ellipse.EixoA(),ellipse.EixoB()])
+            l = ellipse.CalculateBoundaries(8,[ellipse.EixoA(),ellipse.EixoB()])
             for p in l:
                 q  = p - ( (self.Ellipse.Normal() * (p - self.Ellipse.Center() )) *self.Ellipse.Normal())
                 r = q - self.Ellipse.Center()

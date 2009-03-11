@@ -4,7 +4,7 @@
 #include <vector>
 #include <algorithm>
 
-#include "math/BoundingBox3.hpp"
+#include "Math/BoundingBox3.hpp"
 #include "surfel.hpp"
 
 

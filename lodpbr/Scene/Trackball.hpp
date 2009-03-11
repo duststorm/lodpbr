@@ -1,8 +1,8 @@
 #ifndef TRACKBALL_HPP_
 #define TRACKBALL_HPP_
 
-#include "math/Quaternion.hpp"
-#include "math/Matrix4x4.hpp"
+#include "Math/Quaternion.hpp"
+#include "Math/Matrix4x4.hpp"
 
 #define  INVSQRT2 1.0f/std::sqrt(2.0)
 

@@ -15,10 +15,10 @@
 #include <GL/gl.h>
 #include <GL/glu.h>
 
-#include "math/Point3.hpp"
-#include "math/Vector3.hpp"
-#include "math/Color.hpp"
-#include "math/Math.hpp"
+#include "Math/Point3.hpp"
+#include "Math/Vector3.hpp"
+#include "Math/Color.hpp"
+#include "Math/Math.hpp"
 
 extern "C"
 {
