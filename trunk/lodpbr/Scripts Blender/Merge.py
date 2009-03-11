@@ -48,25 +48,33 @@ class Error:
         self.Ellipse = Ellipse
         self.ListEllipse = listEllipse
     def geomrtricError(self):
-        result = 0.0
-        for ellipse in self.ListEllipse:
-            l = ellipse.CalculateBoundaries(8,[ellipse.EixoA(),ellipse.EixoB()])
-            for p in l:
-                q  = p - ( (self.Ellipse.Normal() * (p - self.Ellipse.Center() )) *self.Ellipse.Normal())
-                r = q - self.Ellipse.Center()
+        dis_max = 0.0
+        l = self.Ellipse.CalculateBoundaries(8,[self.Ellipse.EixoA(),self.Ellipse.EixoB()])
+        for p in l:
+            result = 9999999
+            for ellipse in self.ListEllipse:
+                q  = p - ( (ellipse.Normal() * (p - ellipse.Center() )) *ellipse.Normal())
+                print "Q --- ",q
+                print "P --- ",p
+                print "ellipse --- ",[ellipse.EixoA(),ellipse.EixoB()]
+                print "Ellipse --- ",[self.Ellipse.EixoA(),self.Ellipse.EixoB()]
+                r = q - ellipse.Center()
                 s = p - q
-                A = (r * self.Ellipse.EixoA())/(self.Ellipse.EixoA()*self.Ellipse.EixoA())
-                B = (r * self.Ellipse.EixoB())/(self.Ellipse.EixoB()*self.Ellipse.EixoB())
+                A = (r * ellipse.EixoA())/(ellipse.A())
+                B = (r * ellipse.EixoB())/(ellipse.B())
                 if (A*A + B*B) > 1:
                     BA = B/A
                     Aline = sqrt(1.0/(1.0+(BA*BA)))
-                    Dist = (1-(Aline/A)) * sqrt( r*r ) + sqrt(s*s)
+                    print "Aline --- ",Aline
+                    print "A --- ",A
+                    Dist = (1-(Aline/abs(A))) * sqrt( r*r ) + sqrt(s*s)
                 else:
                     Dist = sqrt(s*s)
-                if result < Dist:
+                if result > Dist:
                     result = Dist
-                    
-        return result            
+            if result > dis_max:
+                 dis_max = result     
+        return dis_max            
                     
     def perpendicularError(self):
         lEpMin = []

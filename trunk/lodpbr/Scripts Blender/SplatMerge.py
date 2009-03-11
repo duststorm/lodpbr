@@ -255,6 +255,8 @@ def buttonevents(evt):
         
         ellipse =  Ellipse(merge.Center(),merge.A()*merge.EigenValues()[0],merge.B()*merge.EigenValues()[1],45.0,"Ellipse"+str(index))
         
+        
+        print ""
         ellipse.SetNormal(merge.EigenVectors()[2])
         ellipse.SetEixoA(merge.EigenVectors()[0])
         ellipse.SetEixoB(merge.EigenVectors()[1])
@@ -368,8 +370,10 @@ def buttonevents(evt):
        if in_editmode:
            Window.EditMode(0)
             
-       listEllipse.append( Ellipse(Vector(0.0,0.0,0.0),EixoA.val,EixoB.val,45.0,"Ellipse"+str(index)) )
-       
+       if EixoA.val > EixoB.val:     
+           listEllipse.append( Ellipse(Vector(0.0,0.0,0.0),EixoA.val,EixoB.val,45.0,"Ellipse"+str(index)) )
+       else:    
+           listEllipse.append( Ellipse(Vector(0.0,0.0,0.0),EixoB.val,EixoA.val,45.0,"Ellipse"+str(index)) )
        index += 1
        
        polyline1 =  listEllipse[-1].CalculateBoundaries(4,[Vector(1.0,0.0,0.0),Vector(0.0,1.0,0.0)])
