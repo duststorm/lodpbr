@@ -26,6 +26,13 @@ void MyMainWindow::on_doubleSpinBoxCameraStep_valueChanged(double d)
 	glFrame->updateGL();
 }
 
+void MyMainWindow::on_SpinBoxNumber_valueChanged(int d)
+{
+	glFrame->SetNumber(d);
+	glFrame->updateGL();
+}
+
+
 void MyMainWindow::on_action_NewSurfel_triggered()
 {
 	action_NewSurfel->setChecked(1);
@@ -41,6 +48,16 @@ void MyMainWindow::on_action_OldSurfels_triggered()
 }
 
 void MyMainWindow::on_action_Model_triggered()
+{
+	glFrame->updateGL();
+}
+
+void MyMainWindow::on_action_Next_triggered()
+{
+	glFrame->updateGL();
+}
+
+void MyMainWindow::on_action_Previous_triggered()
 {
 	glFrame->updateGL();
 }

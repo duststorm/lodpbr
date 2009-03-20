@@ -21,6 +21,10 @@ public slots:
 	
 	void on_action_OldSurfels_triggered();
 	
+	void on_action_Next_triggered();
+	void on_action_Previous_triggered();
+
+	void on_SpinBoxNumber_valueChanged(int);
 	void on_doubleSpinBoxThreshold_valueChanged(double);
 	void on_doubleSpinBoxCameraStep_valueChanged(double);
 	
