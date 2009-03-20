@@ -30,6 +30,23 @@
     <item>
      <layout class="QHBoxLayout" >
       <item>
+       <widget class="QLabel" name="label_3" >
+        <property name="text" >
+         <string>Number ?</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QSpinBox" name="SpinBoxNumber" >
+        <property name="minimum" >
+         <number>1</number>
+        </property>
+        <property name="value" >
+         <number>1</number>
+        </property>
+       </widget>
+      </item>
+      <item>
        <widget class="QLabel" name="label_2" >
         <property name="text" >
          <string>Camera Step </string>
@@ -71,7 +88,7 @@
          <bool>false</bool>
         </property>
         <property name="buttonSymbols" >
-         <enum>QAbstractSpinBox::PlusMinus</enum>
+         <enum>QAbstractSpinBox::UpDownArrows</enum>
         </property>
         <property name="specialValueText" >
          <string>0.01</string>
@@ -153,6 +170,8 @@
    <attribute name="toolBarBreak" >
     <bool>false</bool>
    </attribute>
+   <addaction name="action_Next" />
+   <addaction name="action_Previous" />
   </widget>
   <action name="action_Open_File" >
    <property name="text" >
@@ -220,6 +239,16 @@
   <action name="action_Model" >
    <property name="text" >
     <string>Draw Model</string>
+   </property>
+  </action>
+  <action name="action_Next" >
+   <property name="text" >
+    <string>Next</string>
+   </property>
+  </action>
+  <action name="action_Previous" >
+   <property name="text" >
+    <string>Previous</string>
    </property>
   </action>
  </widget>

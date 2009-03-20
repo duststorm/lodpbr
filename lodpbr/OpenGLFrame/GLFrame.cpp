@@ -25,6 +25,7 @@ GLFrame::GLFrame(QWidget *parent):QGLWidget(parent)
 
 	Threshold = 1.0;
 	CameraStep = 0.01;
+	mNumber = 1;
 	mode = 0;
 	
 	colors.push_back(LAL::Vector4<float>(1.0,0.0,0.0,0.5));
@@ -45,12 +46,18 @@ GLFrame::GLFrame(QWidget *parent):QGLWidget(parent)
 
 }
 
-void GLFrame::SetThreshold(const float& t)
+void GLFrame::SetNumber(int t)
+{
+	mNumber = t;
+}
+
+
+void GLFrame::SetThreshold(const float t)
 {
 	Threshold = t;
 }
 
-void GLFrame::SetCameraStep(const float& t)
+void GLFrame::SetCameraStep(const float t)
 {
 	CameraStep = t;
 }
@@ -389,7 +396,8 @@ void GLFrame::paintGL()
     	{
     		
 //    		for (std::vector< std::vector<Surfel<float>* > >::iterator i = cluster.begin(); i != cluster.end();++i)
-    		for (int i = 0;i < 16000; ++i)
+    		c = colors.begin();
+    		for (int i = 0;i < mNumber; ++i)
     		{
 
 
@@ -431,7 +439,8 @@ void GLFrame::paintGL()
     	{
     		
 //    		for (std::vector<Surfel<float>*  >::iterator i = newSurfel.begin(); i != newSurfel.end();++i)
-    	    for (int i = 0;i < 16000 ; ++i)
+    		c = colors.begin();
+    	    for (int i = 0;i < mNumber ; ++i)
     		{
     			glColor4fv(*c);
     			++c;

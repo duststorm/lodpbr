@@ -28,8 +28,12 @@ public:
 
     void DrawGroud();
 
-    void SetThreshold(const float&);
-    void SetCameraStep(const float&);
+    void SetThreshold(const float);
+    void SetCameraStep(const float);
+    void SetNumber(int);
+    
+    void SetCluster(const int);
+    
     void SetMode(bool);
 
     Surfels<float> surfels;
@@ -81,6 +85,8 @@ private:
 
     float Threshold;
     float CameraStep;
+    int mCluster;
+    int mNumber;
     bool mode;
 
 

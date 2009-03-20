@@ -519,6 +519,7 @@ template <class Real > class Surfel
 	  unsigned int mID;
 
 	  bool mMarked;	
+	  
 
 };
 
