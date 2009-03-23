@@ -27,7 +27,7 @@ GLFrame::GLFrame(QWidget *parent):QGLWidget(parent)
 	CameraStep = 0.01;
 	mNumber = 1;
 	mode = 0;
-	
+
 	colors.push_back(LAL::Vector4<float>(1.0,0.0,0.0,0.5));
 	colors.push_back(LAL::Vector4<float>(1.0,1.0,0.0,0.5));
 	colors.push_back(LAL::Vector4<float>(0.0,1.0,0.0,0.5));
@@ -41,8 +41,8 @@ GLFrame::GLFrame(QWidget *parent):QGLWidget(parent)
 	colors.push_back(LAL::Vector4<float>(1.0,0.1,0.5,0.5));
 	colors.push_back(LAL::Vector4<float>(0.1,0.1,0.5,0.5));
 	colors.push_back(LAL::Vector4<float>(1.0,1.0,0.5,0.5));
-	
-	
+
+
 
 }
 
@@ -114,7 +114,7 @@ void GLFrame::initializeGL()
 
 	glLightModelfv(GL_LIGHT_MODEL_AMBIENT, luzAmbiente);        //luz ambiente
 	glLightModelfv(GL_LIGHT_MODEL_TWO_SIDE, luzAmbiente);        //luz ambiente
-	
+
 	glLightfv(GL_LIGHT0, GL_AMBIENT, luzAmbiente);  //parametros da luz 0
 	glLightfv(GL_LIGHT0, GL_DIFFUSE, luzDifusa );
 	glLightfv(GL_LIGHT0, GL_SPECULAR, light_position0 );
@@ -230,36 +230,36 @@ void GLFrame::calLimits()
     *s = surfels.surfels[0];
 
     std::cout << "s0" << s->Center() << std::endl;
-    
-    KNeibor = kdTree.KNearestNeighbors(s ,2, k_nearest_search_comps);
+
+    KNeibor = kdTree.KNearestNeighbors(s ,30, k_nearest_search_comps);
     KNeibor.push_back(new Surfel<float>(*s));
     *s = *KNeibor[0];
     KNeibor.erase(KNeibor.begin());
-    
-    
+
+
     std::cout << KNeibor.size() <<  " KNN " << std::endl;
-    
+
     cluster.push_back(KNeibor);
-    
-    
-    
-    
-    //não ta adicionando o própio pontona busca =\ ai fica dificil !!
-    
-    
+
+
+
+
+    //nï¿½o ta adicionando o prï¿½pio pontona busca =\ ai fica dificil !!
+
+
     while (KNeibor.size() > 0)
     {
-    	KNeibor = kdTree.KNearestNeighborsClustering(s ,2, k_nearest_search_comps);
+    	KNeibor = kdTree.KNearestNeighborsClustering(s ,30, k_nearest_search_comps);
         KNeibor.push_back(new Surfel<float>(*s));
         *s = *KNeibor[0];
         KNeibor.erase(KNeibor.begin());
     	cluster.push_back(KNeibor);
-        
+
     }
-    
-    
+
+
     MergeEllipses<float> me;
-    
+
     for (std::vector< std::vector<Surfel<float>* > >::iterator i = cluster.begin(); i != cluster.end();++i)
     {
     	std::list<Surfel<float>* > l;
@@ -275,17 +275,17 @@ void GLFrame::calLimits()
 //    	std::cout << "---------------------"<< std::endl;
     	if(l.size() > 0)
     		me = MergeEllipses<float>(l);
-    	
+
     	Surfel<float>* su1 = new Surfel<float>();
-    	
+
     	su1 = me.NewPtrSurfel();
-    	
+
 //    	std::cout << su1->Normal()<< "-" <<  su1->Center()<<  " New Surfel " << std::endl;
-    	
+
     	newSurfel.push_back(me.NewPtrSurfel());
-    	
+
     }
-    
+
 //    Surfel<float>* su1 =  new Surfel<float>(LAL::Point3<float>(7.938756, 8.396816, 5.958447),
 //                    LAL::Vector3<float>(0.000000, 0.000000, 1.000000),1.0f,1.0f,0.0f);
 //
@@ -300,16 +300,16 @@ void GLFrame::calLimits()
 //
 //    su2->SetMinorAxis(std::make_pair(0.4,LAL::Vector3<float>(1.000000, 0.000000, 0.000000)));
 //    su2->SetMajorAxis(std::make_pair(0.2,LAL::Vector3<float>(0.000000, 1.000000, 0.000000)));
-//    
+//
 //    std::list<Surfel<float>* > sl;
-//    
+//
 //    sl.push_back(su1);
 //    sl.push_back(su2);
 //
 //
 //    MergeEllipses<float> me = MergeEllipses<float>(sl);
-    
-    
+
+
     std::cout << cluster.size() <<  "cluster size" << std::endl;
     std::cout << newSurfel.size() <<  "new " << std::endl;
 
@@ -383,18 +383,18 @@ void GLFrame::paintGL()
     {
     	drawKdTree(cont);
 
-    	
+
     	glPointSize(5.0);
     	glBegin(GL_POINTS);
-    	
-    	
+
+
     	std::vector<LAL::Vector4<float> >::iterator c = colors.begin();
-    	
+
     	int cont = 0;
-    	
+
     	if(mode)
     	{
-    		
+
 //    		for (std::vector< std::vector<Surfel<float>* > >::iterator i = cluster.begin(); i != cluster.end();++i)
     		c = colors.begin();
     		for (int i = 0;i < mNumber; ++i)
@@ -409,6 +409,9 @@ void GLFrame::paintGL()
     			{
     				glVertex3fv((*j)->Center());
     			}
+    			glPointSize(7.0);
+    	    	glColor3f(0.5f,0.5f,0.5f);//glColor4fv(*c);
+				glVertex3fv((newSurfel[i])->Center());//(newSurfel[i])->drawTriangleFan();//
     			//    		glColor3fv(*c);
     			//			++c;
     			//			if(c == colors.end())
@@ -437,20 +440,20 @@ void GLFrame::paintGL()
     		}
     	}else
     	{
-    		
+
 //    		for (std::vector<Surfel<float>*  >::iterator i = newSurfel.begin(); i != newSurfel.end();++i)
     		c = colors.begin();
     	    for (int i = 0;i < mNumber ; ++i)
     		{
-    			glColor4fv(*c);
+    	    	glColor4fv(*c);
     			++c;
     			if(c == colors.end())
     				c = colors.begin();
-    				(newSurfel[i])->drawTriangleFan();//    				glVertex3fv((*i)->Center());
-	
+					glVertex3fv((newSurfel[i])->Center());//(newSurfel[i])->drawTriangleFan();//
+
     		}
     	}
-    	
+
 
     	glEnd();
 
@@ -549,7 +552,7 @@ void GLFrame::mouseMoveEvent(QMouseEvent *event)
         pitch = -(static_cast<float>(event->x()) - mCenterX) * 0.2;
         heading = -(static_cast<float>(event->y()) - mCenterY) * 0.2;
 
-        
+
         camera.Rotate(pitch,heading, 0.0f);
 
     //    mouse.moveToWindowCenter();
