@@ -96,6 +96,10 @@ void GLFrame::DrawGroud()
 
 void GLFrame::initializeGL()
 {
+//	GPUKernel.fragment_source("simple.frag");
+//	GPUKernel.vertex_source("simple.vert");
+//	GPUKernel.install(true);
+	
     GLfloat luzAmbiente[4]={0.2,0.2,0.2,1.0};
  	GLfloat luzDifusa[4]={1.0,1.0,0.0,1.0};         //cor
 	//GLfloat luzEspecular[4]={1.0, 1.0, 1.0, 1.0};   //brilho
@@ -243,7 +247,6 @@ void GLFrame::calLimits()
 
 
 
-
     //n�o ta adicionando o pr�pio pontona busca =\ ai fica dificil !!
 
 
@@ -364,7 +367,6 @@ void GLFrame::resizeGL(int width, int height)
     mCenterX =  static_cast<float> (width*0.5);
     mCenterY =  static_cast<float> (height*0.5);
 
-
 }
 
 void GLFrame::paintGL()
@@ -386,7 +388,7 @@ void GLFrame::paintGL()
 
     	glPointSize(5.0);
     	glBegin(GL_POINTS);
-
+    	glPushMatrix();
 
     	std::vector<LAL::Vector4<float> >::iterator c = colors.begin();
 
@@ -397,6 +399,7 @@ void GLFrame::paintGL()
 
 //    		for (std::vector< std::vector<Surfel<float>* > >::iterator i = cluster.begin(); i != cluster.end();++i)
     		c = colors.begin();
+//    		GPUKernel.use(true);
     		for (int i = 0;i < mNumber; ++i)
     		{
 
@@ -410,7 +413,7 @@ void GLFrame::paintGL()
     				glVertex3fv((*j)->Center());
     			}
     			glPointSize(7.0);
-    	    	glColor3f(0.5f,0.5f,0.5f);//glColor4fv(*c);
+    	    	//glColor3f(0.5f,0.5f,0.5f);//glColor4fv(*c);
 				glVertex3fv((newSurfel[i])->Center());//(newSurfel[i])->drawTriangleFan();//
     			//    		glColor3fv(*c);
     			//			++c;
@@ -438,25 +441,30 @@ void GLFrame::paintGL()
     			//    		}
 
     		}
+//    		GPUKernel.use(false);
     	}else
     	{
 
 //    		for (std::vector<Surfel<float>*  >::iterator i = newSurfel.begin(); i != newSurfel.end();++i)
+    		
     		c = colors.begin();
+//    		GPUKernel.use(true);
     	    for (int i = 0;i < mNumber ; ++i)
     		{
-    	    	glColor4fv(*c);
+    	    	//glColor4fv(*c);
     			++c;
     			if(c == colors.end())
     				c = colors.begin();
 					glVertex3fv((newSurfel[i])->Center());//(newSurfel[i])->drawTriangleFan();//
 
     		}
+//    	    GPUKernel.use(false);
     	}
 
 
     	glEnd();
-
+    	glPopMatrix();
+    	
     	glColor3f(0.5,0.5,0.5);
     	renderText(10,5,QString("___________________________"));
     	renderText(10,25,QString("Number of Points :"));renderText(145,25,QString::number(cont));
