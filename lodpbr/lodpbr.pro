@@ -47,7 +47,9 @@ HEADERS += Interface/myMainWindow.hpp \
     Math/Vector2.hpp \
     Kd-Tree/Kd-Tree.hpp \
     Kd-Tree/Kd-TreeNode.hpp \
-    Kd-Tree/Kd-TreeRefine.hpp
+    Kd-Tree/Kd-TreeRefine.hpp \
+    GLSLKernel/glslKernel.h \
+    GLSLKernel/GLee.h
 SOURCES += main.cpp \
     Interface/myMainWindow.cpp \
     OpenGLFrame/GLFrame.cpp \
@@ -63,7 +65,9 @@ SOURCES += main.cpp \
     Math/Matrix3x3.cpp \
     Math/Matrix4x4.cpp \
     Math/Point3.cpp \
-    Math/Vector2.cpp
+    Math/Vector2.cpp \
+    GLSLKernel/glslKernel.cc \
+    GLSLKernel/GLee.c
 QT += opengl
 FORMS += ui/interface.ui
 

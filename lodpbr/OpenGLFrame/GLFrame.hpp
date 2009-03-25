@@ -15,6 +15,8 @@
 #include "Scene/Camera.hpp"
 #include "Surfels/MergeEllipses.hpp"
 
+
+
 class GLFrame : public QGLWidget
 {
     Q_OBJECT
@@ -31,6 +33,8 @@ public:
     void SetThreshold(const float);
     void SetCameraStep(const float);
     void SetNumber(int);
+    
+//    glslKernel GPUKernel;
     
     void SetCluster(const int);
     
