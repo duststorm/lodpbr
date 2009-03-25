@@ -37,10 +37,11 @@
 </toolChain>
 </folderInfo>
 <sourceEntries>
-<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="GLSLKernel"/>
-<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Clustering"/>
 <entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Scene"/>
 <entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="GLFW"/>
+<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="OpenGLFrameGLFW"/>
+<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="GLSLKernel"/>
+<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Clustering"/>
 </sourceEntries>
 </configuration>
 </storageModule>
