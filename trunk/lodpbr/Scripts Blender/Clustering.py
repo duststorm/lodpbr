@@ -56,15 +56,30 @@ class Cluster:
             if v.sel == 1:
              self.mSeed = v
  
+    def  EuclideanDistance(self,v,u):
+        return sqrt(    (v.x - u.x) * (v.x - u.x) +
+                        (v.y - u.y) * (v.y - u.y) +
+                        (v.z - u.z) * (v.z - u.z) )
+ 
     def Similars(self):
         self.mSimilars = []
         for f in self.mNeighbors:
-            if DotVecs(f.v[0].no,self.mSeed.no) > self.mThreshold:
+         for f in self.mNeighbors:
+            print self.EuclideanDistance(f.v[0].co,self.mSeed.co) , "v1"
+            if self.EuclideanDistance(f.v[0].co,self.mSeed.co) < self.mThreshold:
                 self.mSimilar.append(f.v[0])
-            if DotVecs(f.v[1].no,self.mSeed.no) > self.mThreshold:
+            print self.EuclideanDistance(f.v[1].co,self.mSeed.co) , "v2"    
+            if self.EuclideanDistance(f.v[1].co,self.mSeed.co) < self.mThreshold:
                 self.mSimilar.append(f.v[1])
-            if DotVecs(f.v[2].no,self.mSeed.no) > self.mThreshold:
-                self.mSimilar.append(f.v[2])        
+            print self.EuclideanDistance(f.v[2].co,self.mSeed.co), "v3"
+            if self.EuclideanDistance(f.v[2].co,self.mSeed.co) < self.mThreshold:
+                self.mSimilar.append(f.v[2]) 
+#            if DotVecs(f.v[0].co,self.mSeed.no) > self.mThreshold:
+#                self.mSimilar.append(f.v[0])
+#            if DotVecs(f.v[1].no,self.mSeed.no) > self.mThreshold:
+#                self.mSimilar.append(f.v[1])
+#            if DotVecs(f.v[2].no,self.mSeed.no) > self.mThreshold:
+#                self.mSimilar.append(f.v[2])        
                  
     def PaintMesh(self):
         map (lambda f: self.PaintVerts(f),self.mNeighbors)

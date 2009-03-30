@@ -126,6 +126,7 @@ class Merge:
      self.mPontosPorjetos = []
      self.CalcularCentroProgressiveSplatting()
      self.CalcularPointosPojetados()
+#     self.CalcularEixosAeB_alt()
      self.CalcularEixosAeB()
    
 #    def __init__(self,pCenter,pNormal):
@@ -198,7 +199,41 @@ class Merge:
        self.mCenter = lSomaCenterAreas / lSomaAreas
        self.mNormal = lSomaNormalAreas / lSomaAreas
        
-   #! Usando um amostra de 8 pontos que representa a borda das elipses , calcular os AutoValores e AutoVetores    
+   #! Usando um amostra de 8 pontos que representa a borda das elipses , calcular os AutoValores e AutoVetores
+   def CalcularEixosAeB_alt(self):
+       
+       alfa = 0
+       beta = 0
+       pmax = Blender.Mathutils.Vector(0.0,0.0,0.0)
+       
+       for i in self.mPontosPorjetos:
+           pi = i - self.mCenter
+           if (pi*pi) > alfa:
+               alfa = (pi*pi)
+               pmax = pi  
+               
+           uq = pmax.normalize()
+           
+       for i in self.mPontosPorjetos:
+           pi = i - self.mCenter
+           esc = pi * uq
+           esc2 = esc*esc
+           if (abs(alfa - esc2) > 0.0001 ):
+               factor = ( alfa *  ((pi*pi) - esc2) )/(alfa-esc2)
+               if (factor > beta):
+                   beta = factor
+           
+       self.mEigenVector.append(uq)
+       self.mEigenVector.append(CrossVecs(uq , self.mNormal))
+       self.mEigenVector.append(self.mNormal)
+                  
+       self.mEigenValues.append(sqrt(alfa))
+       self.mEigenValues.append(sqrt(beta))  
+       self.mEigenValues.append(0.0)
+                  
+       self.mA = 1.0
+       self.mB = 1.0   
+            
    def CalcularEixosAeB(self):
        
        cov = self.CovarianceMatrix(self.mPontosPorjetos)

@@ -582,9 +582,9 @@ namespace LAL
       template<class Real>
       inline Real Point3<Real>::EuclideanDistance( const Point3<Real>& p ) const
       {
-      	return (  (p.x - this->x) * (p.x - this->x)	+
-      			  (p.y - this->y) * (p.y - this->y) +
-      			  (p.z - this->z) * (p.z - this->z) );
+      	return (  std::sqrt( 	(p.x - this->x) * (p.x - this->x) +
+      			  				(p.y - this->y) * (p.y - this->y) +
+      			  				(p.z - this->z) * (p.z - this->z) ) );
       }
 
       template<class Real>

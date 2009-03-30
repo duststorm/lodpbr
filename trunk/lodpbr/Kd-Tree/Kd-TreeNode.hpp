@@ -494,7 +494,7 @@ public:
 				  {		
 					  
 //					   std::cout << (p.Normal() * q.Normal()) << " - "<< p.Normal() << "- " << q.Normal() << std::endl;
-					  //if ( (p.Normal() * q.Normal()) > 0.85 )
+					  if ( (p->Normal() * q->Normal()) > 0.8 )
 					  {
 						  pKNearest.insert ( KNearestPair (dist, mListPtr[i]) );
 						  mListPtr[i]->SetMarked(1);
