@@ -234,31 +234,52 @@ void GLFrame::calLimits()
     *s = surfels.surfels[0];
 
     std::cout << "s0" << s->Center() << std::endl;
+    
+    int SIZE = 2000;
 
-    KNeibor = kdTree.KNearestNeighbors(s ,30, k_nearest_search_comps);
-    KNeibor.push_back(new Surfel<float>(*s));
-    *s = *KNeibor[0];
-    KNeibor.erase(KNeibor.begin());
+    KNeibor = kdTree.KNearestNeighbors(s ,SIZE, k_nearest_search_comps);
+      KNeibor.push_back(new Surfel<float>(*s));
+      *s = *KNeibor[0];
+      
+      if (KNeibor.size() > SIZE)
+      {
+      	for( int i=0; i<SIZE*0.5 ;++i)
+      	{
+      		KNeibor[i]->SetMarked(0);	
+      	}
+      	KNeibor.erase(KNeibor.begin(),KNeibor.begin()+SIZE*0.5);
+      }
+      
+      KNeibor.erase(KNeibor.begin());
+
+      std::cout << KNeibor.size() <<  " KNN " << std::endl;
+
+      cluster.push_back(KNeibor);
 
 
-    std::cout << KNeibor.size() <<  " KNN " << std::endl;
 
-    cluster.push_back(KNeibor);
-
+      //n�o ta adicionando o pr�pio pontona busca =\ ai fica dificil !!
 
 
-    //n�o ta adicionando o pr�pio pontona busca =\ ai fica dificil !!
+      while (KNeibor.size() > 0)
+      {
+      	KNeibor = kdTree.KNearestNeighborsClustering(s ,SIZE, k_nearest_search_comps);
+          KNeibor.push_back(new Surfel<float>(*s));
+          *s = *KNeibor[0];
+          if (KNeibor.size() > SIZE)
+          {
+          	for( int i=0; i<SIZE*0.5 ;++i)
+          	{
+          		KNeibor[i]->SetMarked(0);	
+          	}
+          	KNeibor.erase(KNeibor.begin(),KNeibor.begin()+SIZE*0.5);
+          }
 
+          KNeibor.erase(KNeibor.begin());
+      	cluster.push_back(KNeibor);
 
-    while (KNeibor.size() > 0)
-    {
-    	KNeibor = kdTree.KNearestNeighborsClustering(s ,30, k_nearest_search_comps);
-        KNeibor.push_back(new Surfel<float>(*s));
-        *s = *KNeibor[0];
-        KNeibor.erase(KNeibor.begin());
-    	cluster.push_back(KNeibor);
+      }
 
-    }
 
 
     MergeEllipses<float> me;
@@ -387,6 +408,7 @@ void GLFrame::paintGL()
 
 
     	glPointSize(5.0);
+    	glEnable(GL_POINT_SMOOTH);
     	glBegin(GL_POINTS);
     	glPushMatrix();
 
