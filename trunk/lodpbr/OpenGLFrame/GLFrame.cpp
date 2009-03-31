@@ -243,11 +243,11 @@ void GLFrame::calLimits()
       
       if (KNeibor.size() > SIZE)
       {
-      	for( int i=0; i<SIZE*0.5 ;++i)
+      	for( int i=0; i<SIZE*0.75 ;++i)
       	{
       		KNeibor[i]->SetMarked(0);	
       	}
-      	KNeibor.erase(KNeibor.begin(),KNeibor.begin()+SIZE*0.5);
+      	KNeibor.erase(KNeibor.begin(),KNeibor.begin()+SIZE*0.75);
       }
       
       KNeibor.erase(KNeibor.begin());
@@ -258,7 +258,7 @@ void GLFrame::calLimits()
 
 
 
-      //n�o ta adicionando o pr�pio pontona busca =\ ai fica dificil !!
+      //nao ta adicionando o propio ponto na busca =\ ai fica dificil !!
 
 
       while (KNeibor.size() > 0)
@@ -268,11 +268,11 @@ void GLFrame::calLimits()
           *s = *KNeibor[0];
           if (KNeibor.size() > SIZE)
           {
-          	for( int i=0; i<SIZE*0.5 ;++i)
+          	for( int i=0; i<SIZE*0.75 ;++i)
           	{
           		KNeibor[i]->SetMarked(0);	
           	}
-          	KNeibor.erase(KNeibor.begin(),KNeibor.begin()+SIZE*0.5);
+          	KNeibor.erase(KNeibor.begin(),KNeibor.begin()+SIZE*0.75);
           }
 
           KNeibor.erase(KNeibor.begin());

@@ -459,6 +459,17 @@ public:
 
  // ====================================== Only for Clustering ============================================//
 
+  
+  /// An Dissimilarity Fuction to compute the cost to add the point to de Clustering
+  /// @param Seed Point
+  /// @param Point to be compared
+  /// @return the cost value
+  
+  Real Cost (ItemPtr& p,ItemPtr& q)
+  {
+	  Real cost = p->Center().EuclideanDistance (q->Center());
+	  return cost;
+  }
 
   /// Computes the k-nearest neighbors inside this node to the given point p
   /// @param p Given point
@@ -488,14 +499,10 @@ public:
 		  {
 			  if (mListPtr[i]->Center() != p->Center())
 			  { // Check if not trying to insert itself
-				  Real dist = p->Center().EuclideanDistance (q->Center());
+				  Real dist = Cost(p,q);
 				  ++comps;
 				  if (dist < minDist || pKNearest.size() < k)
 				  {		
-					  
-//					   std::cout << (p.Normal() * q.Normal()) << " - "<< p.Normal() << "- " << q.Normal() << std::endl;
-					  if ( (p->Normal() * q->Normal()) > 0.8 )
-					  {
 						  pKNearest.insert ( KNearestPair (dist, mListPtr[i]) );
 						  mListPtr[i]->SetMarked(1);
 
@@ -505,8 +512,6 @@ public:
 							  pKNearest.erase( pKNearest.begin() );
 						  }
 						  minDist = pKNearest.begin()->first;
-					  }
-  
 				  }
 			  }
 		  }
