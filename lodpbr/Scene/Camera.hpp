@@ -32,7 +32,7 @@ namespace LAL{
     	typedef LAL::Vector4<float> Vector4;
     	typedef LAL::Vector3<float> Vector3;
     	typedef LAL::Vector2<int> Vector2;
-    	typedef Trackball<float> Trackball;
+    	typedef LAL::Trackball<float> Trackball;
 
     	enum CameraBehavior
     	{

@@ -21,12 +21,12 @@ typedef struct Vertex
 
 /// A function object for computing bounding boxes
 template <class Real>
-struct Bounding_box : public std::unary_function<Surfel<Real>, void>
+struct Bounding_box : public std::unary_function<LAL::Surfel<Real>, void>
 {
 
 	LAL::BoundingBox3<Real> box;
     Bounding_box() : box(1e10,1e10,1e10,-1e10,-1e10,-1e10) {}
-    void operator()(const Surfel<Real>& s) {
+    void operator()(const LAL::Surfel<Real>& s) {
         box = box + LAL::BoundingBox3<Real>(s.position(0),s.position(1),s.position(2),
         							   		s.position(0),s.position(1),s.position(2));
     }
@@ -42,7 +42,7 @@ public:
 	typedef LAL::Point3<Real> Point3;
 	typedef LAL::Vector3<Real> Vector3;
 	typedef LAL::BoundingBox3<Real> Box3;
-	typedef std::vector<Surfel<Real> > surfelContainer;
+	typedef std::vector<LAL::Surfel<Real> > surfelContainer;
 	typedef typename surfelContainer::iterator surfelIterator;
 
 
@@ -146,7 +146,7 @@ public:
 		      Vector3 	n (v.nx, v.ny, v.nz);
 		      Color 	c (v.r/255.0, v.g/255.0, v.b/255.0);
 
-		      surfels.surfels.push_back ( Surfel<Real> (p,n,c, static_cast<Real> (v.radius), j) );
+		      surfels.surfels.push_back ( LAL::Surfel<Real> (p,n,c, static_cast<Real> (v.radius), j) );
 
 
 		     }

@@ -50,12 +50,12 @@ namespace LAL {
 		/*! Constructor. Four Vector4 representing the rows*/
 		Matrix4x4( const Vector4<Real>& row1, const Vector4<Real>& row2, const Vector4<Real>& row3, const Vector4<Real>& row4 );
 		/*! Constructor. Three Vector3 representing the three  first rows*/
-		Matrix4x4( const Vector3<Real>& row1, const Vector3<Real>& row1, const Vector3<Real>& row3);
+		Matrix4x4( const Vector3<Real>& row1, const Vector3<Real>& row2, const Vector3<Real>& row3);
 
 		 /*! Constructor. Taking 16 arguments. */
 		Matrix4x4( Real a11, Real a12, Real a13, Real a14,
 				   Real a21, Real a22, Real a23, Real a24,
-				   Real a31, Real a32, Real a31, Real a34,
+				   Real a31, Real a32, Real a33, Real a34,
 				   Real a41, Real a42, Real a43, Real a44 );
 
 		virtual ~Matrix4x4();
@@ -267,7 +267,7 @@ namespace LAL {
 			std::cerr << "[ERROR] Matrix operator()" << std::endl
 			<< " out of the matrix size."
 			<< std::endl;
-			exit(1);
+
 		}
 
 		return ( m[ i ][ j ] );
@@ -282,7 +282,7 @@ namespace LAL {
 			std::cerr << "[ERROR] Matrix operator()" << std::endl
 			<< " out of the matrix size."
 			<< std::endl;
-			exit(1);
+
 		}
 
 		return ( m[ i ][ j ] );
@@ -299,7 +299,7 @@ namespace LAL {
 			std::cerr << "[ERROR] Matrix operator()" << std::endl
 			<< " out of the matrix size."
 			<< std::endl;
-			exit(1);
+
 		}
 
 		return ( Vector4<Real>( m[ 0 ][ i ] , m[ 1 ][ i ] , m[ 2 ][ i ] , m[ 3 ][ i ] ) );
@@ -315,7 +315,7 @@ namespace LAL {
 			std::cerr << "[ERROR] Matrix operator()" << std::endl
 			<< " out of the matrix size."
 			<< std::endl;
-			exit(1);
+
 		}
 
 		return ( Vector4<Real>( m[ i ].x , m[ i ].y , m[ i ].z , m[ i ].w ) );
@@ -458,7 +458,7 @@ namespace LAL {
 			std::cerr << "[ERROR]" << std::endl
 			<< " division by zero."
 			<< std::endl;
-			exit(1);
+
 		}
 
 		Real f = 1 / factor;
@@ -491,7 +491,7 @@ namespace LAL {
 			std::cerr << "[ERROR]" << std::endl
 			<< " division by zero."
 			<< std::endl;
-			exit(1);
+
 		}
 
 		Real f = 1 / factor;

@@ -27,7 +27,7 @@ namespace LAL {
 	private:
 
 		Vector3<Real> m[ 3 ];
-		
+
 
 	public:
 
@@ -164,7 +164,7 @@ namespace LAL {
 			std::cerr << "[ERROR] Matrix operator()" << std::endl
 			<< " out of the matrix size."
 			<< std::endl;
-			exit(1);
+
 		}
 
 		return ( m[ i ][ j ] );
@@ -179,7 +179,7 @@ namespace LAL {
 			std::cerr << "[ERROR] Matrix operator()" << std::endl
 			<< " out of the matrix size."
 			<< std::endl;
-			exit(1);
+
 		}
 
 		return ( m[ i ][ j ] );
@@ -196,7 +196,7 @@ namespace LAL {
 			std::cerr << "[ERROR] Matrix operator()" << std::endl
 			<< " out of the matrix size."
 			<< std::endl;
-			exit(1);
+
 		}
 
 		return ( Vector3<Real>( m[ 0 ][ i ] , m[ 1 ][ i ] , m[ 2 ][ i ] ) );
@@ -211,7 +211,7 @@ namespace LAL {
 			std::cerr << "[ERROR] Matrix operator()" << std::endl
 			<< " out of the matrix size."
 			<< std::endl;
-			exit(1);
+
 		}
 
 		return ( Vector3<Real>( m[ i ].x , m[ i ].y , m[ i ].z ) );
@@ -308,7 +308,7 @@ namespace LAL {
 			std::cerr << "[ERROR]" << std::endl
 			<< " division by zero."
 			<< std::endl;
-			exit(1);
+
 		}
 
 		Real d = 1 / factor;
