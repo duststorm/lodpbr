@@ -38,6 +38,7 @@ extern "C"
  * surface normal at it's center.
  **/
 
+namespace LAL{
 
 template <class Real > class Surfel
 {
@@ -541,5 +542,5 @@ template <class Real > class Surfel
 
 
 };
-
+}
 #endif

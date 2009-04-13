@@ -6,10 +6,11 @@
 
 #define  INVSQRT2 1.0f/std::sqrt(2.0)
 
-template < class Real>
-	class Trackball
+namespace LAL
+{
+template < class Real>	class Trackball
 	{
-	  private:
+	private:
 
 	    int width, height;
 
@@ -38,10 +39,10 @@ template < class Real>
 	    const LAL::Quaternion<Real>& Orientation() { return mOrientation; }
 	    LAL::Matrix4x4<Real> To4x4RotationMatrix();
 	    void ToOpenGL();
-	    
+
 	};//End Interface
 
-	
+
 	template < class Real>
 	void Trackball<Real>::MapToSphere(LAL::Vector3<Real> &v)
 	{
@@ -85,8 +86,8 @@ template < class Real>
 	}
 
 
-	template < class Real> 
-	void Trackball<Real>::ToOpenGL() 
+	template < class Real>
+	void Trackball<Real>::ToOpenGL()
 	{
 		Real m[16];
 
@@ -96,6 +97,6 @@ template < class Real>
 
 	}
 
+} /* LAL :: NAMESPACE */
 
-	
 #endif /*TRACKBALL_HPP_*/

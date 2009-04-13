@@ -26,7 +26,7 @@ public:
 	typedef std::list<Point3* >       			ListPtrPoint3;
 	typedef typename ListPtrPoint3::iterator   	ListPtrPoint3Iterator;
 
-	typedef Surfel<Real>						  Surfel;
+	typedef LAL::Surfel<Real>					  Surfel;
 	typedef Surfel*								  PtrSurfel;
 	typedef std::list<Surfel> 					  SurfelContainer;
 	typedef std::list<PtrSurfel>				  PtrSurfelContainer;

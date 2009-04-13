@@ -222,7 +222,7 @@ namespace LAL
       		std::cerr << "[ERROR] Point3 operator[]"        << std::endl
       		<< "        Out of the Point size. " << std::endl
       		<< "        Accepts, 0 , 1 , 2 only." << std::endl;
-      		exit(1);
+
       	}
 
       	return ( ( &x )[ index ] );
@@ -241,7 +241,7 @@ namespace LAL
       		std::cerr << "[ERROR] Point3 operator[]"        << std::endl
       		<< "        Out of the Point size. " << std::endl
       		<< "        Accepts, 0 , 1 , 2 only." << std::endl;
-      		exit(1);
+
       	}
 
 

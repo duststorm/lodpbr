@@ -18,6 +18,9 @@ import goo
 import Ellipse
 from Ellipse import Ellipse    
 
+
+from KDTree import *
+
 index = 0
 
 listEllipse     = []
@@ -32,7 +35,7 @@ class Cluster:
         self.mMesh = Blender.Mesh.New("mesh")
         #Vertice that begins the agglomeration
         # in (index of the vertice on mesh)  
-        self.mSeed = Blender.Mesh.MVert(0,0,0)
+        self.mSeed = None
         # List of the vertices similar to the seed
         self.mSimilar = []
         # Neighbors
@@ -40,8 +43,12 @@ class Cluster:
         # Threshold
         self.mThreshold = 0.25       #
         
+        self.tree = Kdtree(1)
+        
     def Mesh(self,mesh):
-        self.mMesh = mesh   
+        self.mMesh = mesh
+        for f in self.mMesh.faces:
+            self.tree.insert(f)
     def Threshold(self,threshold):
         self.mThreshold = threshold    
     def Neighbors(self):
@@ -51,16 +58,40 @@ class Cluster:
              self.mNeighbors.append(f)
              
     def Seed(self):
-        self.mSeed = Blender.Mesh.MVert(0,0,0)
-        for v in self.mMesh.verts:
-            if v.sel == 1:
-             self.mSeed = v
+        for f in self.mMesh.faces:
+            if f.sel == 1:
+             self.mSeed = f
  
-    def  EuclideanDistance(self,v,u):
+    def EuclideanDistance(self,v,u):
         return sqrt(    (v.x - u.x) * (v.x - u.x) +
                         (v.y - u.y) * (v.y - u.y) +
                         (v.z - u.z) * (v.z - u.z) )
- 
+    def KClose_to_Seed(self):
+        k_close = []
+        self.tree.kClosest(self.mSeed, k_close,10)
+        print "LEN DE KCLOSED" ,len(k_close)
+        for l in k_close:
+            print l
+        for f in k_close:
+                f[1].col[0].r = 255
+                f[1].col[0].g = 0
+                f[1].col[0].b = 0
+                f[1].col[1].r = 255
+                f[1].col[1].g = 0
+                f[1].col[1].b = 0
+                f[1].col[2].r = 255
+                f[1].col[2].g = 0
+                f[1].col[2].b = 0                                
+        self.mSeed.col[0].r = 0
+        self.mSeed.col[0].g = 0
+        self.mSeed.col[0].b = 255
+        self.mSeed.col[1].r = 0
+        self.mSeed.col[1].g = 0
+        self.mSeed.col[1].b = 255
+        self.mSeed.col[2].r = 0
+        self.mSeed.col[2].g = 0
+        self.mSeed.col[2].b = 255
+                                
     def Similars(self):
         self.mSimilars = []
         for f in self.mNeighbors:
@@ -100,9 +131,9 @@ class Cluster:
                 face.col[0].b = 0
                 continue
             elif face.v[1].index == v.index:
-                face.col[0].r = 255
-                face.col[0].g = 0
-                face.col[0].b = 0
+                face.col[1].r = 255
+                face.col[1].g = 0
+                face.col[1].b = 0
                 continue
             elif face.v[2].index == v.index:
                 face.col[2].r = 255
@@ -321,9 +352,9 @@ def buttonevents(evt):
         
        if in_editmode:
            Window.EditMode(0)
-
-       cluster.Similars()  
-       cluster.PaintMesh()
+       cluster.KClose_to_Seed()    
+#       cluster.Similars()  
+#       cluster.PaintMesh()
             
        
        if in_editmode:

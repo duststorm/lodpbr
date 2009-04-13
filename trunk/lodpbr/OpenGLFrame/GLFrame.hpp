@@ -33,22 +33,22 @@ public:
     void SetThreshold(const float);
     void SetCameraStep(const float);
     void SetNumber(int);
-    
+
 //    glslKernel GPUKernel;
-    
+
     void SetCluster(const int);
-    
+
     void SetMode(bool);
 
     Surfels<float> surfels;
 
-    KdTree<float,Surfel<float>* > kdTree;
+    KdTree<float,LAL::Surfel<float>* > kdTree;
 
-    typedef  KdTree<float,Surfel<float>* >::Node KdTree3DNode;
+    typedef  KdTree<float,LAL::Surfel<float>* >::Node KdTree3DNode;
 
-    std::vector<Surfel<float>* > KNeibor;
-    std::vector< std::vector<Surfel<float>* > > cluster;
-    std::vector<Surfel<float>* >  newSurfel;
+    std::vector<LAL::Surfel<float>* > KNeibor;
+    std::vector< std::vector<LAL::Surfel<float>* > > cluster;
+    std::vector<LAL::Surfel<float>* >  newSurfel;
     std::vector<LAL::Vector4<float> > colors;
 
 public slots:
