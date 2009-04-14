@@ -1,4 +1,5 @@
 
+
 #-*- coding: utf-8 -*-
 BIG = 1e100
 
@@ -120,27 +121,27 @@ class Kdtree:
     
     def __init__(self, capacity):
         """Construtor.
-        root � um n� da kd-tree que pode ter um dos seguintes formatos:
-           n� interno: [discriminante filho1 filho2] 
-           n� folha: [ponto ponto ... ponto] (no m�ximo capacity pontos)
-        capacity � a capacidade m�xima do bucket."""
+        root é um ná da kd-tree que pode ter um dos seguintes formatos:
+           nó interno: [discriminante filho1 filho2] 
+           nó folha: [ponto ponto ... ponto] (no máximo capacity pontos)
+        capacity é a capacidade máxima do bucket."""
         
         self.root = []
         self.capacity = capacity
         self.count = 0
         
     def isleaf (self,node): 
-        """Retorna true sse node � um n� folha"""
+        """Retorna true sse node é um nó folha"""
         return len(node)==0 or type(node[0]) not in (float,int)
 
     def insert (self, p):
         """Insere um ponto p na kd-tree"""
         
         def ins (node, level):
-            """Faz inser��o recursiva de p num n� de n�vel leve"""
+            """Faz inserção recursiva de p num nó de nível leve"""
             
             def split():
-                """Parte o n� de acordo com a mediana"""
+                """Parte o nó de acordo com a mediana"""
                 coord = level % 3
                 discriminantes = [q.cent[coord] for q in node]
                 discriminantes.sort()
@@ -165,52 +166,8 @@ class Kdtree:
         ins(self.root, 0)
         self.count += 1
         
-    def kClosest(self,p,k_close,k):
-        """Retorna a a lista (k_close) dos objetos mais proximos do objeto p """         
-        
-        def insert_point(q,k_close,k):
-            """ insere o objeto q na lista dos k mais proximos e
-                retorna sua distancia a p """
-            heappush(k_close,(q))
-            if len(k_close) > k:
-                heappop(k_close)
-            return -(k_close[0][0])
-                    
-        def find_kclose(node,p,smallestDist,k_close,k,level,box):
-            """Busca a partir de node os k pontos mais proximos de p.
-            smallestDist tem uma estimativa do k-esimo ponto mais 
-            proximo encontrado ate agora.
-            k e o numero de pontos mais proximos a serem encontrados
-            Retorna uma lista de tuplas (-d,q) onde q é o ponto 
-            e d é sua distancia a p.
-            d e negativo para rapida consulta na lista, sendo a cabeca
-            o k-esimo ponto mais proximo encontrado """
-            
-            if self.isleaf(node):
-                 for q in node:
-                    dist = sqrDist(q.cent,p.cent)
-                    if (dist < smallestDist) or (len(k_close) < k) : 
-                        smallestDist = insert_point((-dist,q),k_close,k)
-            else:
-                if box.sqrDist(p.cent) > smallestDist:
-                   return k_close
-                coord = level%3
-                son0box,son1box = box.split(coord,node[0])
-                dist0,dist1 = son0box.sqrDist(p.cent),son1box.sqrDist(p.cent)
-                if dist0<dist1:
-                    find_kclose(node[1],p,smallestDist,k_close,k,level+1,son0box)
-                    if len(k_close) > 0 :smallestDist = -k_close[0][0]
-                    find_kclose(node[2],p,smallestDist,k_close,k,level+1,son1box)
-                else:
-                    find_kclose(node[2],p,smallestDist,k_close,k,level+1,son1box)
-                    if len(k_close) > 0 :smallestDist = -k_close[0][0]
-                    find_kclose(node[1],p,smallestDist,k_close,k,level+1,son0box)
-                    
-        assert(self.count>0)
-        return find_kclose(self.root,p,BIG,k_close,k,0,Box())
 
-
-            
+                           
     def closest (self, p):
         """Acha o ponto mais perto de p. Assume-se que a kd-tree tem
         ao menos um ponto."""
@@ -219,11 +176,12 @@ class Kdtree:
             """Busca a partir de node o ponto mais proximo de p.
             smallestDist tem uma estimativa do ponto mais proximo
             encontrado ate agora.
-            Retorna uma tupla (d,q) onde q � o ponto mais proximo
-            e d � sua distancia a p."""
+            Retorna uma tupla (d,q) onde q é o ponto mais proximo
+            e d é sua distancia a p."""
             
             if self.isleaf(node):
-                return min([(sqrDist(q.cent,p.cent),q) for q in node])
+                return min ([(sqrDist(q.cent,p.cent),q) for q in node])
+
             else:
                 if box.sqrDist(p.cent) > smallestDist:
                    return (BIG,())
@@ -245,6 +203,52 @@ class Kdtree:
                     
         assert(self.count>0)
         return find(self.root,BIG,0,Box())
+    
+    def kClosest(self,p,k):
+        """Busca a partir de node os k-ésimo pontos mais proximos de p."""
+        
+        k_close = []
+        
+        def insert_point(t):
+            """ Insere a tupla (-dist,q) lista k_close 
+                Retorna pior distancia encontrada até o momento """     
+            heappush(k_close,(t))
+            if len(k_close) > k:
+                heappop(k_close)
+            return -k_close[0][0]
+                    
+        def find_kclose(node,smallestDist,level,box):
+            """Busca a partir de node os k pontos mais proximo de p.
+            smallestDist tem uma estimativa do k-esimo ponto mais 
+            proximo encontrado ate agora.
+            k e o numero de pontos mais proximo a ser encontrado
+            Retorna uma lista de tupla (-d,q) onde q é o ponto 
+            e d é sua distancia a p.
+            d e negativo para rapida consulta na lista, sendo a cabeca
+            o k-esimo ponto mais proximo encontrado """
+            
+            if self.isleaf(node):
+                 for q in node:
+                    dist = sqrDist(q.cent,p.cent)
+                    if (dist < smallestDist) or (len(k_close) < k) : 
+                        smallestDist = insert_point((-dist,q))
+            else:
+                if box.sqrDist(p.cent) > smallestDist:
+                   return k_close
+                coord = level%3
+                son0box,son1box = box.split(coord,node[0])
+                dist0,dist1 = son0box.sqrDist(p.cent),son1box.sqrDist(p.cent)
+                if dist0<dist1:
+                    find_kclose(node[1],smallestDist,level+1,son0box)
+                    find_kclose(node[2],smallestDist,level+1,son1box)
+                else:
+                    find_kclose(node[2],smallestDist,level+1,son1box)
+                    find_kclose(node[1],smallestDist,level+1,son0box)
+            return k_close
+                    
+        assert(self.count>0)
+        return find_kclose(self.root,BIG,0,Box())
+
 
 #a very simple test
 if __name__ == '__main__':
@@ -270,7 +274,6 @@ if __name__ == '__main__':
     #print clock()-t0
     k_close = []
     print "----"
-    print tree.kClosest(p, k_close, 2)
 
 
 # -*- coding: utf-8 -*-

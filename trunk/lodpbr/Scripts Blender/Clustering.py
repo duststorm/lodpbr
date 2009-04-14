@@ -32,7 +32,7 @@ listNovoSplat   = []
 class Cluster:
     def __init__(self):
         # get mesh
-        self.mMesh = Blender.Mesh.New("mesh")
+        self.mMesh = Mesh.New('Mesh') 
         #Vertice that begins the agglomeration
         # in (index of the vertice on mesh)  
         self.mSeed = None
@@ -48,7 +48,9 @@ class Cluster:
     def Mesh(self,mesh):
         self.mMesh = mesh
         for f in self.mMesh.faces:
-            self.tree.insert(f)
+             if f.sel == 1: self.mSeed = f
+             self.tree.insert(f)
+        self.KClose_to_Seed()    
     def Threshold(self,threshold):
         self.mThreshold = threshold    
     def Neighbors(self):
@@ -68,10 +70,8 @@ class Cluster:
                         (v.z - u.z) * (v.z - u.z) )
     def KClose_to_Seed(self):
         k_close = []
-        self.tree.kClosest(self.mSeed, k_close,10)
+        k_close = self.tree.kClosest(self.mSeed,2000)
         print "LEN DE KCLOSED" ,len(k_close)
-        for l in k_close:
-            print l
         for f in k_close:
                 f[1].col[0].r = 255
                 f[1].col[0].g = 0
@@ -280,18 +280,17 @@ def facecontrols():
     
     ds=goo.ScafFold(mainTabs.left+20, mainTabs.pane.top-270,400,230,7,5)
 
-
-    BuildOneClustering  = Draw.Button("Build one Clustering", EVENT_BUILD_ONE_CLUSTRING ,ds.col3[1],ds.row[0], 120,ds.bheight[0])
+    GetMesh             = Draw.Button("GetMesh",               EVENT_GETMESH , ds.col1[0],ds.row[0], 120,ds.bheight[0])
     
-    BuildAllClustering  = Draw.Button("Build all Clustering", EVENT_BUILD_ALL_CLUSTERING,ds.col3[1],ds.row[1], 120,ds.bheight[0])
+    Seed                = Draw.Button("Seed",                  EVENT_SEED ,    ds.col1[0],ds.row[1], 120,ds.bheight[0])
     
-    GetMesh             = Draw.Button("GetMesh", EVENT_GETMESH ,ds.col1[0],ds.row[0], 120,ds.bheight[0])
+    Neihbors            = Draw.Button("Neighbors",             EVENT_NEIGHBORS,ds.col1[0],ds.row[2], 120,ds.bheight[0])
     
-    Seed                = Draw.Button("Seed", EVENT_SEED ,ds.col1[0],ds.row[1], 120,ds.bheight[0])
+    Threshold           = Draw.Number("Threshold  ",           EVENT_THRESHOLD,ds.col2[0],ds.row[3], 240, ds.bheight[0], Threshold.val, 0.25, 1,"Threshold")
     
-    Neihbors            = Draw.Button("Neighbors", EVENT_NEIGHBORS,ds.col1[0],ds.row[2], 120,ds.bheight[0])
+    BuildOneClustering  = Draw.Button("Build one Clustering",  EVENT_BUILD_ONE_CLUSTRING ,ds.col3[1],ds.row[0], 120,ds.bheight[0])
     
-    Threshold           = Draw.Number("Threshold  ",EVENT_THRESHOLD, ds.col2[0], ds.row[3], 240, ds.bheight[0], Threshold.val, 0.25, 1,"Threshold")
+    BuildAllClustering  = Draw.Button("Build all Clustering",  EVENT_BUILD_ALL_CLUSTERING,ds.col3[1],ds.row[1], 120,ds.bheight[0])
           
     name = "The Title %t|First Entry %x1|Second Entry %x2|Third Entry %x3|Fourty Entry %x4"
     
@@ -342,79 +341,11 @@ def buttonevents(evt):
     
     global index, listEllipse ,listNovoSplat
     
+    
+    
     if ( evt == EVENT_EXIT ):
         Draw.Exit()
         
-        
-    if (evt == EVENT_BUILD_ONE_CLUSTRING):
-        
-       in_editmode = Window.EditMode()
-        
-       if in_editmode:
-           Window.EditMode(0)
-       cluster.KClose_to_Seed()    
-#       cluster.Similars()  
-#       cluster.PaintMesh()
-            
-       
-       if in_editmode:
-           Window.EditMode(1)
-       
-    if ( evt == EVENT_BUILD_ALL_CLUSTERING ):
-        
-        in_editmode = Window.EditMode()
-                
-        if in_editmode:
-           Window.EditMode(0)
-                  
-        if in_editmode:
-           Window.EditMode(1)
-
-    if ( evt == EVENT_DISSIMILARITY ):
-        
-        in_editmode = Window.EditMode()
-                
-        if in_editmode:
-           Window.EditMode(0)
-           
-           
-           object = Blender.Object.GetSelected()
-        
-           me = object[0].getData(False, True)
-           me.vertexColors = 1
-            
-           nums = filter(lambda x: x.sel == 1, me.verts)
-            
-           print len(nums),"Vl"
-           print nums
-             
-                  
-        if in_editmode:
-           Window.EditMode(1)           
-    if (evt == EVENT_SEED):
-        
-        in_editmode = Window.EditMode()
-        
-        if in_editmode:
-            Window.EditMode(0)
-             
-        cluster.Seed()
-        
-        if in_editmode:
-           Window.EditMode(1) 
-        
-    if (evt == EVENT_NEIGHBORS):
-        
-        in_editmode = Window.EditMode()
-        
-        if in_editmode:
-            Window.EditMode(0)
-            
-        cluster.Neighbors()
-        
-        if in_editmode:
-           Window.EditMode(1) 
-           
     if (evt == EVENT_GETMESH):
         
         in_editmode = Window.EditMode()
@@ -425,14 +356,85 @@ def buttonevents(evt):
         object = Blender.Object.GetSelected()
         me = object[0].getData(False, True)
         me.vertexColors = 1
-         
+        print "ENTROU"
         cluster.Mesh(me)
         
         if in_editmode:
            Window.EditMode(1)
-    if (evt == EVENT_THRESHOLD):
-        cluster.Threshold(Threshold.val)
-        print cluster.mThreshold
+                   
+#    if (evt == EVENT_BUILD_ONE_CLUSTRING):
+#        
+#       in_editmode = Window.EditMode()
+#        
+#       if in_editmode:
+#           Window.EditMode(0)
+#       cluster.KClose_to_Seed()    
+##       cluster.Similars()  
+##       cluster.PaintMesh()
+#            
+#       
+#       if in_editmode:
+#           Window.EditMode(1)
+#       
+#    if ( evt == EVENT_BUILD_ALL_CLUSTERING ):
+#        
+#        in_editmode = Window.EditMode()
+#                
+#        if in_editmode:
+#           Window.EditMode(0)
+#                  
+#        if in_editmode:
+#           Window.EditMode(1)
+#
+#    if ( evt == EVENT_DISSIMILARITY ):
+#        
+#        in_editmode = Window.EditMode()
+#                
+#        if in_editmode:
+#           Window.EditMode(0)
+#           
+#           
+#           object = Blender.Object.GetSelected()
+#        
+#           me = object[0].getData(False, True)
+#           me.vertexColors = 1
+#            
+#           nums = filter(lambda x: x.sel == 1, me.verts)
+#            
+#           print len(nums),"Vl"
+#           print nums
+#             
+#                  
+#        if in_editmode:
+#           Window.EditMode(1)           
+#    if (evt == EVENT_SEED):
+#        
+#        in_editmode = Window.EditMode()
+#        
+#        if in_editmode:
+#            Window.EditMode(0)
+#             
+#        print "ENTROU SEED"             
+#        cluster.Seed()
+#        
+#        if in_editmode:
+#           Window.EditMode(1) 
+#        
+#    if (evt == EVENT_NEIGHBORS):
+#        
+#        in_editmode = Window.EditMode()
+#        
+#        if in_editmode:
+#            Window.EditMode(0)
+#            
+#        cluster.Neighbors()
+#        
+#        if in_editmode:
+#           Window.EditMode(1) 
+#           
+#    if (evt == EVENT_THRESHOLD):
+#        cluster.Threshold(Threshold.val)
+#        print cluster.mThreshold
                  
            
 Draw.Register(drawgui, otherevents, buttonevents)
