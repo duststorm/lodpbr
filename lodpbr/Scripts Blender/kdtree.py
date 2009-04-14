@@ -255,7 +255,7 @@ for i in range(1000):
    
 p = (0,0,0)
 t0 = clock()
-l = sorted([(sqrDist(p,q),q) for q in l])
+l = sorted([sqrDist(p,q) for q in l])
 print l[0]
 print l[1]
 print l[2]
@@ -263,10 +263,14 @@ print l[3]
 print tree.closest(p)
 l = tree.kClosest(p, 4)
 print "-----------"
-print l[0]
-print l[1]
-print l[2]
-print l[3] 
+print heappop(l)
+print heappop(l)
+print heappop(l)
+print heappop(l)
+#print heappop(l) 
+#print heappop(l) 
+#print heappop(l)
+#print heappop(l)  
 #print clock()-t0
 #t0 = clock()
 #print tree.closest(p)
