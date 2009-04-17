@@ -47,6 +47,7 @@ class Cluster:
         
     def Mesh(self,mesh):
         self.mMesh = mesh
+        self.tree = Kdtree(1)
         for f in self.mMesh.faces:
              if f.sel == 1: self.mSeed = f
              self.tree.insert(f)
