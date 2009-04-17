@@ -209,6 +209,9 @@ class Kdtree:
         
         k_close = []
         
+        def cost(q,p):
+            pass
+        
         def insert_point(t):
             """ Insere a tupla (-dist,q) lista k_close 
                 Retorna pior distancia encontrada até o momento """     
