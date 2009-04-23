@@ -34,6 +34,13 @@ def perpendicular(v):
   
   return t;
 
+class ID:
+    def __init__(self):
+        self.id = 0
+    def GetNextID(self):
+        sef.id += 1
+        return self.id    
+
 class Ellipse:
     
     def __init__(self,pCenter,pA,pB,pAngle,pName):
@@ -46,6 +53,14 @@ class Ellipse:
                       
         self.mA      = pA
         self.mB      = pB
+        
+        self.mClusterID                      = -1;
+        ## Error em relacao ao cluster
+        self.mLastClusterCost             = 9999;
+        ## Ultimo cluster gerado
+        self.mLastClusterID                = -1;
+        ## Error em relacao a elipse gerada
+        self.mError                           = 9999;
         
         self.mAindex      = 0
         self.mBindex      = 0
