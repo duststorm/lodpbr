@@ -18,6 +18,7 @@ import goo
 import Ellipse
 from Ellipse import Ellipse    
 
+import Cluster
 from Cluster import Cluster
 
 
