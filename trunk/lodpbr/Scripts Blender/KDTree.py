@@ -143,13 +143,13 @@ class Kdtree:
             def split():
                 """Parte o nó de acordo com a mediana"""
                 coord = level % 3
-                discriminantes = [q.cent[coord] for q in node]
+                discriminantes = [q.mCenter[coord] for q in node]
                 discriminantes.sort()
                 discr = discriminantes[(len(discriminantes)+1)/2]
                 son0 = []
                 son1 = []
                 for q in node:
-                    if q.cent[coord]<discr: son0.append(q)
+                    if q.mCenter[coord]<discr: son0.append(q)
                     else: son1.append(q)
                 node[:] = [discr, son0, son1]
                 
@@ -160,7 +160,7 @@ class Kdtree:
                   split()
             else:
                coord = level%3
-               if p.cent[coord]<node[0]: ins(node[1],level+1)
+               if p.mCenter[coord]<node[0]: ins(node[1],level+1)
                else: ins(node[2],level+2)
            
         ins(self.root, 0)
@@ -180,14 +180,14 @@ class Kdtree:
             e d é sua distancia a p."""
             
             if self.isleaf(node):
-                return min ([(sqrDist(q.cent,p.cent),q) for q in node])
+                return min ([(sqrDist(q.mCenter,p.mCenter),q) for q in node])
 
             else:
-                if box.sqrDist(p.cent) > smallestDist:
+                if box.sqrDist(p.mCenter) > smallestDist:
                    return (BIG,())
                 coord = level%3
                 son0box,son1box = box.split(coord,node[0])
-                dist0,dist1 = son0box.sqrDist(p.cent),son1box.sqrDist(p.cent)
+                dist0,dist1 = son0box.sqrDist(p.mCenter),son1box.sqrDist(p.mCenter)
                 if dist0<dist1:
                     dist0,q = find(node[1],smallestDist,level+1,son0box)
                     if dist0<smallestDist: smallestDist = dist0
@@ -232,15 +232,15 @@ class Kdtree:
             
             if self.isleaf(node):
                  for q in node:
-                    dist = sqrDist(q.cent,p.cent)
+                    dist = sqrDist(q.mCenter,p.mCenter)
                     if (dist < smallestDist) or (len(k_close) < k) : 
                         smallestDist = insert_point((-dist,q))
             else:
-                if box.sqrDist(p.cent) > smallestDist:
+                if box.sqrDist(p.mCenter) > smallestDist:
                    return k_close
                 coord = level%3
                 son0box,son1box = box.split(coord,node[0])
-                dist0,dist1 = son0box.sqrDist(p.cent),son1box.sqrDist(p.cent)
+                dist0,dist1 = son0box.sqrDist(p.mCenter),son1box.sqrDist(p.mCenter)
                 if dist0<dist1:
                     find_kclose(node[1],smallestDist,level+1,son0box)
                     find_kclose(node[2],smallestDist,level+1,son1box)
