@@ -69,7 +69,10 @@ class Ellipse:
         
         self.mNormal = Blender.Mathutils.Vector(0.0,0.0,0.0)
         self.mName   = pName
+        self.face = None
     
+    def setFace(self,f):
+        self.face = f
     def Name(self):
         return self.mName
     """ quais pontos formam o eixo A no espaço de Blender """

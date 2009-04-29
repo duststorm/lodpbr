@@ -34,8 +34,8 @@ listNovoSplat   = []
 
 
 BIGELLIPSE = False
-MAX_ERROR = 0.5
-
+MAX_ERROR = 0.01
+MAX_COST = 0.01
 class Cluster:
     def __init__(self):
         # get mesh
@@ -61,32 +61,59 @@ class Cluster:
         self.mMesh = mesh
         self.tree = Kdtree(1)
         for f in self.mMesh.faces:
-             if f.sel == 1: self.mSeed = f
-             self.tree.insert(f)
+             if f.sel == 1:
+                print "ENTROU NA FACE ?" 
+                eixoA = f.cent - f.verts[0].co
+                eixoA.normalize()
+                eixoB = CrossVecs(eixoA,f.no)
+                eixoB.normalize()
+                l = eixoA.length
+                j = Ellipse(f.cent,l,l,45.0,"Ellipse")                     
+                j.SetCenter(f.cent)
+                j.SetNormal(f.no)
+                j.SetEixoA(eixoA)
+                j.SetEixoB(eixoB)
+                j.setFace(f)
+                self.mSeed = j
+                print self.mSeed.mLastClusterID, "Last CLUSTER"
+             
+             eixoA = f.cent - f.verts[0].co
+             eixoA.normalize()
+             eixoB = CrossVecs(eixoA,f.no)
+             eixoB.normalize()
+             l = eixoA.length
+             j = Ellipse(f.cent,l,l,45.0,"Ellipse")                     
+             j.SetCenter(f.cent)
+             j.SetNormal(f.no)
+             j.SetEixoA(eixoA)
+             j.SetEixoB(eixoB)
+             j.setFace(f)
+             self.tree.insert(j)
         k = []
         k = self.SeedExpansion(self.mSeed,0)
         print self.ListSeed,"List SEED"
-        print "LEN DE KCLOSED" ,len(k_close)
-        for f in k_close:
-                f[1].col[0].r = 255
-                f[1].col[0].g = 0
-                f[1].col[0].b = 0
-                f[1].col[1].r = 255
-                f[1].col[1].g = 0
-                f[1].col[1].b = 0
-                f[1].col[2].r = 255
-                f[1].col[2].g = 0
-                f[1].col[2].b = 0                                
-        self.mSeed.col[0].r = 0
-        self.mSeed.col[0].g = 0
-        self.mSeed.col[0].b = 255
-        self.mSeed.col[1].r = 0
-        self.mSeed.col[1].g = 0
-        self.mSeed.col[1].b = 255
-        self.mSeed.col[2].r = 0
-        self.mSeed.col[2].g = 0
-        self.mSeed.col[2].b = 255     
-        self.KClose_to_Seed()    
+        print "LEN DE KCLOSED" ,len(k)
+        for f in k:
+                print f,"ELLIPSE"
+                f.face.col[0].r = 255
+                f.face.col[0].g = 0
+                f.face.col[0].b = 0
+                f.face.col[1].r = 255
+                f.face.col[1].g = 0
+                f.face.col[1].b = 0
+                f.face.col[2].r = 255
+                f.face.col[2].g = 0
+                f.face.col[2].b = 0                                
+        self.mSeed.face.col[0].r = 0
+        self.mSeed.face.col[0].g = 0
+        self.mSeed.face.col[0].b = 255
+        self.mSeed.face.col[1].r = 0
+        self.mSeed.face.col[1].g = 0
+        self.mSeed.face.col[1].b = 255
+        self.mSeed.face.col[2].r = 0
+        self.mSeed.face.col[2].g = 0
+        self.mSeed.face.col[2].b = 255     
+#        self.KClose_to_Seed()    
     def Threshold(self,threshold):
         self.mThreshold = threshold
     def GetNeighbors(self):
@@ -111,7 +138,7 @@ class Cluster:
         listClose = []
         listCluster = []
         mCurrentEllipse = seed
-        heappush((0.0,seed))
+        heappush(listOpen,(0.0,seed))
         
         """ Enquanto tiver pontos a serem explorados na vizinhanca da semente """                
         while len(listOpen) > 0:  
@@ -121,16 +148,16 @@ class Cluster:
             ellipse  = target[1]
 
             """ Se o ponto ja foi expandido , tirar proximo elemento ta lista aberta """
+            
             if   (ellipse.mLastClusterID == idCluster) and (ellipse.mLastClusterCost < cost) :
                 continue
             """ inclui apenas as ellipses para uma futura agregacao """
             listClose.append(ellipse)
             """ dado criterio de agregacao .. saber se para e gera um Ellipse"""
-            if  self.Aggregation(close) == True:
+            if  self.Aggregation(listClose) == True:
                 if  BIGELLIPSE:
                     listClose.append(mCurrentEllipse);
                     #mCurrentEllipse = MakeEllipse(listClose);
-            
                 else:
                     listCluster.extend(listClose)
                     #mCurrentEllipse = MakeEllipse(listCluster)
@@ -141,9 +168,9 @@ class Cluster:
                         if  temp.mClusterID == -1:
                             self.ListSeed.append(temp)
                     while  len(listOpen) > 0:
-                        temp = open.pop();
-                        if  temp.mClusterID == -1:
-                            self.ListSeed.append(temp)
+                        temp = listOpen.pop();
+                        if  temp[1].mClusterID == -1:
+                            self.ListSeed.append(temp[1])
                 ## mCurrentEllipse.mError < MAX_ERROR 
                 else:
                     #UpdateAggregationCoditions()
@@ -153,34 +180,40 @@ class Cluster:
                         if temp.mError > mCurrentEllipse.mError: 
                             temp.mError = mCurrentEllipse.mError
                             temp.mClusterID = idCluster
-                            
 
             kNeighbor = [] 
-            kNeighbor = self.tree.kClosest(self.mSeed,20)
+            kNeighbor = self.tree.kClosest(ellipse,20)
+            print kNeighbor[0][1].mLastClusterID, "TUPLE " 
+            
+            if len(listCluster) > 10:
+                break
                   
             for i in  kNeighbor: 
            
                 """  Se nao estiver em um cluster ou seu costo do novo caminho desde a semente � melhor """
-                if  ( i[1].mLastClusterID != idCluster) or (i[0] < i.mLastClusterCost) :
+                if  ( i[1].mLastClusterID != idCluster) or (-i[0] < i[1].mLastClusterCost) :
                              """ Se custo for melhor que um Threshold , poe na lista aberto para futura expanssao"""
-                             if  i[0] < MAX_COST:
-                                 i[1].mLastClusterCost = i[0]
+                             if  -i[0] < MAX_COST:
+                                 i[1].mLastClusterCost = -i[0]
                                  i[1].mLastClusterID   = idCluster
-                                 heappush((i[0],i))
+                                 heappush(listOpen,(-i[0],i[1]))
                                  """  Senao acrescenta-o a  lista de semente"""
                              else:
                                 if  i[1].mLastClusterID == -1:
                                     self.ListSeed.append(i)
+                print "LISTOPEN",len(listOpen),ellipse.mLastClusterID,ellipse.mLastClusterCost                     
 
         return listCluster   
                 
     def Aggregation(self,cluster):
          """ Testa se a lista cluster forma um cluster de acordo com os criterios abaixo """ 
-         if len(listCluster) >=  50 or self.Error(istCluster) > self.mThreshold:
-                pass           
+         if len(cluster) >=  10 or self.Error(cluster) > self.mThreshold:
+             return True
+         else:
+             False
     def UpdateAggregationCoditions(self,cluster):
         pass            
-    def Error(self):
+    def Error(self,cluster):
         return 0
     
     def KClose_to_Seed(self):
