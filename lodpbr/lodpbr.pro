@@ -48,6 +48,8 @@ HEADERS += Interface/myMainWindow.hpp \
     Kd-Tree/Kd-Tree.hpp \
     Kd-Tree/Kd-TreeNode.hpp \
     Kd-Tree/Kd-TreeRefine.hpp \
+    Clustering/Cluster.hpp \
+    Clustering/ClusterCriteria.hpp \
     GLSLKernel/glslKernel.h \
     GLSLKernel/GLee.h
 SOURCES += main.cpp \
@@ -66,6 +68,7 @@ SOURCES += main.cpp \
     Math/Matrix4x4.cpp \
     Math/Point3.cpp \
     Math/Vector2.cpp \
+    Clustering/Cluster.cpp \
     GLSLKernel/glslKernel.cc \
     GLSLKernel/GLee.c
 QT += opengl
