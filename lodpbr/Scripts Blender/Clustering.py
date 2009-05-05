@@ -10,7 +10,7 @@ from Blender.Mathutils import *
 from Blender.Object import *
 
 from sets import Set as set
-
+from heapq import heappush, heappop
 #import Cluster
 #from Cluster import *
 
@@ -36,6 +36,19 @@ listNovoSplat   = []
 BIGELLIPSE = False
 MAX_ERROR = 0.01
 MAX_COST = 0.01
+
+ListColor = [(255,0,0),
+         (0,255,0),
+         (0,0,255),
+         (255,255,0),
+         (255,0,255),
+         (200,20,20),
+         (100,0,0),
+         (0,100,0),
+         (0,0,100),
+         (100,0,100)]
+
+         
 class Cluster:
     def __init__(self):
         # get mesh
@@ -90,29 +103,30 @@ class Cluster:
              j.setFace(f)
              self.tree.insert(j)
         k = []
-        k = self.SeedExpansion(self.mSeed,0)
-        print self.ListSeed,"List SEED"
-        print "LEN DE KCLOSED" ,len(k)
-        for f in k:
-                print f,"ELLIPSE"
-                f.face.col[0].r = 255
-                f.face.col[0].g = 0
-                f.face.col[0].b = 0
-                f.face.col[1].r = 255
-                f.face.col[1].g = 0
-                f.face.col[1].b = 0
-                f.face.col[2].r = 255
-                f.face.col[2].g = 0
-                f.face.col[2].b = 0                                
-        self.mSeed.face.col[0].r = 0
-        self.mSeed.face.col[0].g = 0
-        self.mSeed.face.col[0].b = 255
-        self.mSeed.face.col[1].r = 0
-        self.mSeed.face.col[1].g = 0
-        self.mSeed.face.col[1].b = 255
-        self.mSeed.face.col[2].r = 0
-        self.mSeed.face.col[2].g = 0
-        self.mSeed.face.col[2].b = 255     
+        self.ClusterBySize()
+#        k = self.SeedExpansion(self.mSeed,0)
+#        print self.ListSeed,"List SEED"
+#        print "LEN DE KCLOSED" ,len(k)
+#        for f in k:
+#                print f,"ELLIPSE"
+#                f.face.col[0].r = 255
+#                f.face.col[0].g = 0
+#                f.face.col[0].b = 0
+#                f.face.col[1].r = 255
+#                f.face.col[1].g = 0
+#                f.face.col[1].b = 0
+#                f.face.col[2].r = 255
+#                f.face.col[2].g = 0
+#                f.face.col[2].b = 0                                
+#        self.mSeed.face.col[0].r = 0
+#        self.mSeed.face.col[0].g = 0
+#        self.mSeed.face.col[0].b = 255
+#        self.mSeed.face.col[1].r = 0
+#        self.mSeed.face.col[1].g = 0
+#        self.mSeed.face.col[1].b = 255
+#        self.mSeed.face.col[2].r = 0
+#        self.mSeed.face.col[2].g = 0
+#        self.mSeed.face.col[2].b = 255     
 #        self.KClose_to_Seed()    
     def Threshold(self,threshold):
         self.mThreshold = threshold
@@ -131,7 +145,47 @@ class Cluster:
                         (v.z - u.z) * (v.z - u.z) )
         
 ### Cluster Looping
-
+    def ClusterBySize(self):
+        cluster_list = []
+        seed = self.mSeed
+        k_close =  self.tree.kClosest(self.mSeed,51)
+        self.mSeed.mClusterID = 2
+        self.mSeed = k_close[0][1]
+        self.mSeed.mClusterID = 2
+        cont = 0
+        while  len(k_close):#cont < 8:
+            cluster_list = []
+            #k_close.reverse()
+            while len(k_close) > 0:
+                e = k_close.pop()
+                if e[1].mNormal * seed.mNormal > 0.8:
+                    #print e[1].mNormal * self.mSeed.mNormal
+                    cluster_list.append(e)
+                else:
+                    for f in k_close:
+                        f[1].mClusterID = -1
+                    break             
+            if cont >= 9:
+                cont = 0
+            #print cont    
+            for f in cluster_list:
+                f[1].face.col[0].r = ListColor[cont][0]
+                f[1].face.col[0].g = ListColor[cont][1]
+                f[1].face.col[0].b = ListColor[cont][2]
+                f[1].face.col[1].r = ListColor[cont][0]
+                f[1].face.col[1].g = ListColor[cont][1]
+                f[1].face.col[1].b = ListColor[cont][2]
+                f[1].face.col[2].r = ListColor[cont][0]
+                f[1].face.col[2].g = ListColor[cont][1]
+                f[1].face.col[2].b = ListColor[cont][2]
+            seed.face.col[0].r = 0
+            seed.face.col[0].g = 0
+            seed.face.col[0].b = 0
+            k_close =  self.tree.kClosest(self.mSeed,51)
+            seed = self.mSeed
+            if len(k_close) > 0:
+                self.mSeed = k_close[0][1]    
+            cont += 1 
     def SeedExpansion(self, seed,idCluster):
         """ Expande um semente , e gera um cluster quando passa no teste de agregacao """
         listOpen = []
@@ -145,6 +199,7 @@ class Cluster:
    
             target = heappop(listOpen)
             cost      = target[0]   
+            
             ellipse  = target[1]
 
             """ Se o ponto ja foi expandido , tirar proximo elemento ta lista aberta """

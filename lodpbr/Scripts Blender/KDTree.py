@@ -214,12 +214,13 @@ class Kdtree:
         
         def insert_point(t):
             """ Insere a tupla (-dist,q) lista k_close 
-                Retorna pior distancia encontrada até o momento """     
+                Retorna pior distancia encontrada até o momento """
             heappush(k_close,(t))
+            t[1].mClusterID = 2
             if len(k_close) > k:
-                heappop(k_close)
+                ellipse = heappop(k_close)
+                ellipse[1].mClusterID = -1
             return -k_close[0][0]
-                    
         def find_kclose(node,smallestDist,level,box):
             """Busca a partir de node os k pontos mais proximo de p.
             smallestDist tem uma estimativa do k-esimo ponto mais 
@@ -232,12 +233,13 @@ class Kdtree:
             
             if self.isleaf(node):
                  for q in node:
-                    dist = sqrDist(q.mCenter,p.mCenter)
-                    if (dist < smallestDist) or (len(k_close) < k) : 
-                        smallestDist = insert_point((-dist,q))
+                    if q.mClusterID == -1:
+                        dist = sqrDist(q.mCenter,p.mCenter)
+                        if (dist < smallestDist) or (len(k_close) < k) : 
+                            smallestDist = insert_point((-dist,q))
             else:
                 if box.sqrDist(p.mCenter) > smallestDist:
-                   return k_close
+                   pass #return k_close
                 coord = level%3
                 son0box,son1box = box.split(coord,node[0])
                 dist0,dist1 = son0box.sqrDist(p.mCenter),son1box.sqrDist(p.mCenter)
