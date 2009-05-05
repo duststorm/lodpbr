@@ -3,9 +3,6 @@
 
 #include <vector>
 
-#include "BoundingBox3.hpp"
-#include "Point3.hpp"
-
 /*! \brief The ClusterRefine class .
  * Agglomerative criteria for  Clustering
 
@@ -18,29 +15,55 @@
 *\nosubgrouping */
 
 template <class Real,class ItemPtr>
-class ClusterCriteria {
-  typedef typename LAL::Point3<Real> 		Point3;     ///< A Point in 3D
-  typedef typename LAL::BoundingBox3<Real> 	Box3; 
-  /// Decides whether or not to split a leaf node
-  static bool join (const Box3& world, const std::vector<ItemPtr>& items) {
-    return false;
+class JoinCriteria
+{
+  /// Decides whether or not add the item to the clustering start by seed
+  static bool Join ( ItemPtr seed, ItemPtr  item)
+  {
+    return 0;
   }
+
 };
 
+template <class Real,class ItemPtr>
+class MergeCriteria
+{
+  /// Decides whether or not add the item to the clustering start by seed
+  static bool Merge ( ItemPtr seed, std::vector<ItemPtr>  item)
+  {
+    return 0;
+  }
+
+};
 
 /*@class ClusterRefine.
 /*@brief Agglomerative criteria for  Clustering.
 /* A node is ...*/
 
-template <class Real,class ItemPtr, int Max=3>
-class ClusterBySize : public ClusterCriteria <Real,ItemPtr> {
-	
-  typedef typename LAL::Point3<Real> 		Point3;     ///< A Point in 3D
-  typedef typename LAL::BoundingBox3<Real> 	Box3; 
-  /// Split a leaf node iff the list contains more than Max items
-  static bool join (const Box3& world, const std::vector<ItemPtr>& items) {
-    return items.size() > Max;
-  }
+template <class Real,class ItemPtr, Real NORMAL = 0.8>
+class JoinByNormal : public JoinCriteria <Real,ItemPtr>
+{
+	/// Add an item to the clustering if the angle between the seed
+	/// and the item is over the NORMAL
+	static bool Join ( ItemPtr seed, ItemPtr  item)
+	{
+		return ( (seed->Normal() * item->Normal()) > NORMAL  );
+	}
+};
+
+/*@class ClusterRefine.
+/*@brief Agglomerative criteria for  Clustering.
+/* A node is ...*/
+
+template <class Real,class ItemPtr, Real NORMAL = 0.8>
+class MergeBySize : public MergeCriteria <Real,ItemPtr>
+{
+	/// Add an item to the clustering if the angle between the seed
+	/// and the item is over the NORMAL
+	static bool Merge ( ItemPtr seed, std::vector<ItemPtr>  item)
+	{
+		return 1;
+	}
 };
 
 #endif /*CLUSTERREFINE_HPP_*/
