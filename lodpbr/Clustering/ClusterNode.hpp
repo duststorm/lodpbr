@@ -16,12 +16,8 @@
 
 template <	class Real,
 			class ItemPtr,
-			class Refine = ClusterBySize<Real,ItemPtr> >
-class ClusterNode 
+			class Refine = ClusterByNormal<Real,ItemPtr> >
+class ClusterNode
 {
-	
-// Box
-//ItemPtrCount	
-	
-	
+
 };
