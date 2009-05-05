@@ -218,12 +218,12 @@ void GLFrame::calLimits()
 
 
 
-	std::cout << "Entrando" << std::endl;
+	std::cout << "Inserindo Pontos na KD-Tree" << std::endl;
 	for (std::vector<LAL::Surfel<float> >::iterator surf =  surfels.surfels.begin();surf != surfels.surfels.end(); ++ surf )
 	{
 	    kdTree.Insert ( new LAL::Surfel<float>(*surf) );
 	}
-	std::cout << "Saindo" << std::endl;
+	std::cout << "KD-Tree Construida" << std::endl;
 
 	std::cout << "Total = " << surfels.surfels.size() << std::endl;
 
@@ -232,53 +232,73 @@ void GLFrame::calLimits()
     LAL::Surfel<float>* s = new LAL::Surfel<float>();
 
     *s = surfels.surfels[0];
-
+    LAL::Surfel<float>* es = new LAL::Surfel<float>();
     std::cout << "s0" << s->Center() << std::endl;
 
-    int SIZE = 2000;
+    int SIZE = 200;
+    std::vector<LAL::Surfel<float>* > KOriginal;
+    std::vector<LAL::Surfel<float>* > tcluster;
 
     KNeibor = kdTree.KNearestNeighbors(s ,SIZE, k_nearest_search_comps);
-      KNeibor.push_back(new LAL::Surfel<float>(*s));
-      *s = *KNeibor[0];
+    KOriginal = KNeibor;
+    *es = *KNeibor[0];
+    std::vector<LAL::Surfel<float>* >::reverse_iterator rellipse = KNeibor.rbegin();
 
-      if (KNeibor.size() > SIZE)
-      {
-      	for( int i=0; i<SIZE*0.75 ;++i)
-      	{
-      		KNeibor[i]->SetMarked(0);
-      	}
-      	KNeibor.erase(KNeibor.begin(),KNeibor.begin()+SIZE*0.75);
-      }
+    while ( (!KNeibor.empty()) && (rellipse != KNeibor.rend()) )
+    {
+    	if (  (  s->Normal() * (*rellipse)->Normal() ) > 0.8  )
+    	{
+    		tcluster.push_back((*rellipse));
 
-      KNeibor.erase(KNeibor.begin());
-
-      std::cout << KNeibor.size() <<  " KNN " << std::endl;
-
-      cluster.push_back(KNeibor);
-
-
-
-      //nao ta adicionando o propio ponto na busca =\ ai fica dificil !!
-
-
-      while (KNeibor.size() > 0)
-      {
-      	KNeibor = kdTree.KNearestNeighborsClustering(s ,SIZE, k_nearest_search_comps);
-          KNeibor.push_back(new LAL::Surfel<float>(*s));
-          *s = *KNeibor[0];
-          if (KNeibor.size() > SIZE)
-          {
-          	for( int i=0; i<SIZE*0.75 ;++i)
-          	{
-          		KNeibor[i]->SetMarked(0);
-          	}
-          	KNeibor.erase(KNeibor.begin(),KNeibor.begin()+SIZE*0.75);
-          }
-
-          KNeibor.erase(KNeibor.begin());
-      	cluster.push_back(KNeibor);
-
-      }
+    	}
+    	else
+    	{
+    		break;
+    	}
+	    ++rellipse;
+    }
+    tcluster.push_back(s);
+    KNeibor.push_back(new LAL::Surfel<float>(*s));
+    //cluster.push_back(KNeibor);
+    cluster.push_back(tcluster);
+//      if (KNeibor.size() > SIZE)
+//      {
+//      	for( int i=0; i<SIZE*0.75 ;++i)
+//      	{
+//      		KNeibor[i]->SetMarked(0);
+//      	}
+//      	KNeibor.erase(KNeibor.begin(),KNeibor.begin()+SIZE*0.75);
+//      }
+//
+//      KNeibor.erase(KNeibor.begin());
+//
+//      std::cout << KNeibor.size() <<  " KNN " << std::endl;
+//
+//      cluster.push_back(KNeibor);
+//
+//
+//
+//      //nao ta adicionando o propio ponto na busca =\ ai fica dificil !!
+//
+//
+//      while (KNeibor.size() > 0)
+//      {
+//      	KNeibor = kdTree.KNearestNeighborsClustering(s ,SIZE, k_nearest_search_comps);
+//          KNeibor.push_back(new LAL::Surfel<float>(*s));
+//          *s = *KNeibor[0];
+//          if (KNeibor.size() > SIZE)
+//          {
+//          	for( int i=0; i<SIZE*0.75 ;++i)
+//          	{
+//          		KNeibor[i]->SetMarked(0);
+//          	}
+//          	KNeibor.erase(KNeibor.begin(),KNeibor.begin()+SIZE*0.75);
+//          }
+//
+//          KNeibor.erase(KNeibor.begin());
+//      	cluster.push_back(KNeibor);
+//
+//      }
 
 
 
