@@ -37,25 +37,25 @@ class MergeCriteria
 };
 
 /*@class ClusterRefine.
-/*@brief Agglomerative criteria for  Clustering.
-/* A node is ...*/
+ *@brief Agglomerative criteria for  Clustering.
+ * A node is ...*/
 
-template <class Real,class ItemPtr, Real NORMAL = 0.8>
+template <class Real,class ItemPtr>
 class JoinByNormal : public JoinCriteria <Real,ItemPtr>
 {
 	/// Add an item to the clustering if the angle between the seed
 	/// and the item is over the NORMAL
 	static bool Join ( ItemPtr seed, ItemPtr  item)
 	{
-		return ( (seed->Normal() * item->Normal()) > NORMAL  );
+		return ( (seed->Normal() * item->Normal()) > 0.8  );
 	}
 };
 
 /*@class ClusterRefine.
-/*@brief Agglomerative criteria for  Clustering.
-/* A node is ...*/
+ *@brief Agglomerative criteria for  Clustering.
+ * A node is ...*/
 
-template <class Real,class ItemPtr, Real NORMAL = 0.8>
+template <class Real,class ItemPtr>
 class MergeBySize : public MergeCriteria <Real,ItemPtr>
 {
 	/// Add an item to the clustering if the angle between the seed

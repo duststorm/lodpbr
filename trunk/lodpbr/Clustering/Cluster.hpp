@@ -3,16 +3,16 @@
 
 /*! \brief The Cluster class .
  * Cluster class ...
-
-*@class Cluster.
-*@brief Class that represent the Cluster hierarchy
-*@details ...
-*@author Felipe Moura.
-*@email fmc@cos.ufrj.br
-*@version 1.0.
-*\nosubgrouping */
+ *@class Cluster.
+ *@brief Class that represent the Cluster hierarchy
+ *@details ...
+ *@author Felipe Moura.
+ *@email fmc@cos.ufrj.br
+ *@version 1.0.
+ * \nosubgrouping */
 
 #include "Kd-Tree/Kd-Tree.hpp"
+#include "ClusterCriteria.hpp"
 
 template <class Real,class ItemPtr, class Similarity  = JoinByNormal<Real,ItemPtr>,
 									class Aggregation = MergeBySize <Real,ItemPtr> >
@@ -32,11 +32,12 @@ public:
 		this->mKDTree = pKDTree;
 	}
 
-	/// Build a set of Clusters by the Similarities and Aggregations
-	/// conditions pass by template parameter
+	/// Build a set of Clusters by the Similarities and Aggregations.
+	/// conditions pass by template parameter.
 	/// @param pCont Debug. How many clusters?
 	/// @param pCont pKNeighborsSize. The size of the Neighbor.
 	/// @param pSeed pKNeighborsSize. Initial Seed.
+
 	void Build(int pCont,int pKNeighborsSize ,ItemPtr pSeed)
 	{
 
@@ -48,7 +49,7 @@ public:
 																	pKNeighborsSize,
 																	KNearestSearchComps);
 
-		std::vector<ItemPtr>::reverse_iterator rellipse = lNeighbors.rbegin();
+		typename std::vector<ItemPtr>::reverse_iterator rellipse = lNeighbors.rbegin();
 
 		while ( (rellipse != lNeighbors.rend()) && (cont <= pCont) )
 		{
@@ -67,7 +68,10 @@ public:
 
 	}
 	/// destructor
-	virtual ~Cluster();
+	virtual ~Cluster()
+	{
+
+	}
 private:
 
 	KdTree<Real,ItemPtr>				mKDTree;

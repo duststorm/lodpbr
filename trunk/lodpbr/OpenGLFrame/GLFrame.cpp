@@ -11,6 +11,7 @@
 #include "Surfels/MergeEllipses.hpp"
 #include "Math/Vector3.hpp"
 #include "Math/Vector4.hpp"
+#include "Clustering/Cluster.hpp"
 
 #define DA_APLICACAO_PASSADA 0
 
@@ -227,83 +228,11 @@ void GLFrame::calLimits()
 
 	std::cout << "Total = " << surfels.surfels.size() << std::endl;
 
-    int k_nearest_search_comps = 0;
-
-    LAL::Surfel<float>* s = new LAL::Surfel<float>();
-
-    *s = surfels.surfels[0];
-    LAL::Surfel<float>* es = new LAL::Surfel<float>();
-    std::cout << "s0" << s->Center() << std::endl;
-
-    int SIZE = 200;
-    std::vector<LAL::Surfel<float>* > KOriginal;
-    std::vector<LAL::Surfel<float>* > tcluster;
-
-    KNeibor = kdTree.KNearestNeighbors(s ,SIZE, k_nearest_search_comps);
-    KOriginal = KNeibor;
-    *es = *KNeibor[0];
-    std::vector<LAL::Surfel<float>* >::reverse_iterator rellipse = KNeibor.rbegin();
-
-    while ( (!KNeibor.empty()) && (rellipse != KNeibor.rend()) )
-    {
-    	if (  (  s->Normal() * (*rellipse)->Normal() ) > 0.8  )
-    	{
-    		tcluster.push_back((*rellipse));
-
-    	}
-    	else
-    	{
-    		break;
-    	}
-	    ++rellipse;
-    }
-    tcluster.push_back(s);
-    KNeibor.push_back(new LAL::Surfel<float>(*s));
-    //cluster.push_back(KNeibor);
-    cluster.push_back(tcluster);
-//      if (KNeibor.size() > SIZE)
-//      {
-//      	for( int i=0; i<SIZE*0.75 ;++i)
-//      	{
-//      		KNeibor[i]->SetMarked(0);
-//      	}
-//      	KNeibor.erase(KNeibor.begin(),KNeibor.begin()+SIZE*0.75);
-//      }
-//
-//      KNeibor.erase(KNeibor.begin());
-//
-//      std::cout << KNeibor.size() <<  " KNN " << std::endl;
-//
-//      cluster.push_back(KNeibor);
-//
-//
-//
-//      //nao ta adicionando o propio ponto na busca =\ ai fica dificil !!
-//
-//
-//      while (KNeibor.size() > 0)
-//      {
-//      	KNeibor = kdTree.KNearestNeighborsClustering(s ,SIZE, k_nearest_search_comps);
-//          KNeibor.push_back(new LAL::Surfel<float>(*s));
-//          *s = *KNeibor[0];
-//          if (KNeibor.size() > SIZE)
-//          {
-//          	for( int i=0; i<SIZE*0.75 ;++i)
-//          	{
-//          		KNeibor[i]->SetMarked(0);
-//          	}
-//          	KNeibor.erase(KNeibor.begin(),KNeibor.begin()+SIZE*0.75);
-//          }
-//
-//          KNeibor.erase(KNeibor.begin());
-//      	cluster.push_back(KNeibor);
-//
-//      }
-
-
+	std::vector< std::vector<LAL::Surfel<float>*> > cluster;
+	Cluster<float,LAL::Surfel<float>* > clusterClass(kdTree);
 
     MergeEllipses<float> me;
-
+    std::vector< LAL::Surfel<float>* > newPtrSurfel;
     for (std::vector< std::vector<LAL::Surfel<float>* > >::iterator i = cluster.begin(); i != cluster.end();++i)
     {
     	std::list<LAL::Surfel<float>* > l;
@@ -355,7 +284,7 @@ void GLFrame::calLimits()
 
 
     std::cout << cluster.size() <<  "cluster size" << std::endl;
-    std::cout << newSurfel.size() <<  "new " << std::endl;
+//    std::cout << newSurfel.size() <<  "new " << std::endl;
 
 }
 
