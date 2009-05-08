@@ -15,7 +15,7 @@
 #include "Scene/Camera.hpp"
 #include "Surfels/MergeEllipses.hpp"
 
-
+#include "Clustering/Cluster.hpp"
 
 class GLFrame : public QGLWidget
 {
@@ -42,12 +42,14 @@ public:
 
     Surfels<float> surfels;
 
+    Cluster<float,LAL::Surfel<float>*> cluster;
+
     KdTree<float,LAL::Surfel<float>* > kdTree;
 
     typedef  KdTree<float,LAL::Surfel<float>* >::Node KdTree3DNode;
 
     std::vector<LAL::Surfel<float>* > KNeibor;
-    std::vector< std::vector<LAL::Surfel<float>* > > cluster;
+    std::vector< std::vector<LAL::Surfel<float>* > > clusters;
     std::vector<LAL::Surfel<float>* >  newSurfel;
     std::vector<LAL::Vector4<float> > colors;
 
