@@ -216,7 +216,7 @@ public:
 	  if (pKNearest.size() > k)
 	  {
 		  pKNearest.erase( pKNearest.begin() );
-		  
+
 	  }
 	  return pKNearest.begin()->first;
   }
@@ -315,7 +315,7 @@ public:
 
 	  if (son[0] == 0 && son[1] == 0)
 	  { // leaf node
-		  
+
 		  mListPtr.push_back(p);
 
 		  // Check if overflow criteria is met
@@ -459,12 +459,12 @@ public:
 
  // ====================================== Only for Clustering ============================================//
 
-  
+
   /// An Dissimilarity Fuction to compute the cost to add the point to de Clustering
   /// @param Seed Point
   /// @param Point to be compared
   /// @return the cost value
-  
+
   Real Cost (ItemPtr& p,ItemPtr& q)
   {
 	  Real cost = p->Center().EuclideanDistance (q->Center());
@@ -476,7 +476,7 @@ public:
   /// @param k_nearest Ordered set of nearest neighbors
   /// @param k Number of nearest neighbors to find
   /// @return Number of distance comparisons made
-  int KNearestLocalNeighborsClustering ( ItemPtr& p, KNearestMap& pKNearest, unsigned int k) 
+  int KNearestLocalNeighborsClustering ( ItemPtr& p, KNearestMap& pKNearest, unsigned int k)
   {
 	  int comps = 0;
 	  Real minDist;
@@ -494,21 +494,21 @@ public:
 	  for (unsigned int i = 0; i < mListPtr.size(); ++i)
 	  {
 		  ItemPtr q = mListPtr[i];
-		 
-		  if (mListPtr[i]->Marked() == 0) // Test if the item has been add 
+
+		  if (mListPtr[i]->Marked() == 0) // Test if the item has been add
 		  {
 			  if (mListPtr[i]->Center() != p->Center())
 			  { // Check if not trying to insert itself
 				  Real dist = Cost(p,q);
 				  ++comps;
 				  if (dist < minDist || pKNearest.size() < k)
-				  {		
+				  {
 						  pKNearest.insert ( KNearestPair (dist, mListPtr[i]) );
-						  mListPtr[i]->SetMarked(1);
+						  //mListPtr[i]->SetMarked(1);
 
 						  if ( pKNearest.size() > k)
 						  {
-							  pKNearest.begin()->second->SetMarked(0);
+							  //pKNearest.begin()->second->SetMarked(0);
 							  pKNearest.erase( pKNearest.begin() );
 						  }
 						  minDist = pKNearest.begin()->first;
@@ -523,7 +523,7 @@ public:
   /// @param p Given point
   /// @param k_nearest Ordered set of nearest neighbors
   /// @param k Number of nearest neighbors to find
-  int KNearestNeighborsClustering ( ItemPtr& p, KNearestMap& pKNearest, unsigned int k) 
+  int KNearestNeighborsClustering ( ItemPtr& p, KNearestMap& pKNearest, unsigned int k)
   {
 	  int comps = 0;
 	  // Computes the distance to this node's itens
@@ -563,18 +563,18 @@ public:
 
 	  return comps;
   }
-  
+
   /// Reset the element to not marked
   /// This is useful for clustering algorithm
-  /// to avoid build the whole clustering again 
+  /// to avoid build the whole clustering again
   void ResetMarkedClustering()
   {
-	  
+
 	  	  for (unsigned int i = 0; i < mListPtr.size(); ++i)
 	  	  {
 	  		  mListPtr[i]->SetMarked(0);
 	  	  }
-		  
+
 		  if (son[0] != 0)
 		  {
 			  son[0]->ResetMarkedClustering();
@@ -583,8 +583,8 @@ public:
 		  {
 			  son[1]->ResetMarkedClustering();
 		  }
-	 
-  }	
+
+  }
 
 private :
 
@@ -637,7 +637,7 @@ private :
 
 		return rightWorld;
 	}
-	
+
 
 };
 

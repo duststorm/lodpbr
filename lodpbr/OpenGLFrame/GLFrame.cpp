@@ -11,7 +11,7 @@
 #include "Surfels/MergeEllipses.hpp"
 #include "Math/Vector3.hpp"
 #include "Math/Vector4.hpp"
-#include "Clustering/Cluster.hpp"
+
 
 #define DA_APLICACAO_PASSADA 0
 
@@ -189,7 +189,7 @@ void GLFrame::drawKdNodeRecursively(const KdTree3DNode* n,int& cont) {
 /// Draw the kd-tree leaf nodes' boxes and all elements stored in all nodes
 void GLFrame::drawKdTree(int& cont)
 {
-  KdTree3DNode* root = kdTree.Begin();
+  KdTree3DNode* root = cluster.mKDTree.Begin();
 
   glColor4f(0.3, 0.3, 1.0, 1.0);
   glLineWidth(1.0);
@@ -203,88 +203,11 @@ void GLFrame::drawKdTree(int& cont)
 
 void GLFrame::calLimits()
 {
+     cluster = Cluster<float,LAL::Surfel<float>*>(surfels);
 
-    LAL::BoundingBox3<float> world =     LAL::BoundingBox3<float>( LAL::Point3<float>(surfels.box().xMin(),surfels.box().yMin(),surfels.box().zMin()),
-				   						 LAL::Point3<float>(surfels.box().xMax(),surfels.box().yMax(),surfels.box().zMax()));
+     LAL::Surfel<float>* seed = new LAL::Surfel<float>(surfels.surfels[9999]);
 
-	if (kdTree.root ==  0)
-	{
-		kdTree = KdTree<float,LAL::Surfel<float>* >(world);
-	}
-	else
-	{
-		delete kdTree.root;
-		kdTree = KdTree<float,LAL::Surfel<float>* >(world);
-	}
-
-
-
-	std::cout << "Inserindo Pontos na KD-Tree" << std::endl;
-	for (std::vector<LAL::Surfel<float> >::iterator surf =  surfels.surfels.begin();surf != surfels.surfels.end(); ++ surf )
-	{
-	    kdTree.Insert ( new LAL::Surfel<float>(*surf) );
-	}
-	std::cout << "KD-Tree Construida" << std::endl;
-
-	std::cout << "Total = " << surfels.surfels.size() << std::endl;
-
-	std::vector< std::vector<LAL::Surfel<float>*> > cluster;
-	Cluster<float,LAL::Surfel<float>* > clusterClass(kdTree);
-
-    MergeEllipses<float> me;
-    std::vector< LAL::Surfel<float>* > newPtrSurfel;
-    for (std::vector< std::vector<LAL::Surfel<float>* > >::iterator i = cluster.begin(); i != cluster.end();++i)
-    {
-    	std::list<LAL::Surfel<float>* > l;
-    	for(std::vector<LAL::Surfel<float>* >::iterator j = i->begin(); j != i->end(); ++j)
-    	{
-    		l.push_back((*j));
-    	}
-//    	std::cout << "--------------------- ="<< l.size() <<  std::endl;
-//    	for (std::list<LAL::Surfel<float>* >::iterator y = l.begin(); y != l.end(); ++y)
-//    	{
-//    		std::cout << " =  "<<  (*y)->Normal()<< "-" <<  (*y)->Center() << std::endl;
-//    	}
-//    	std::cout << "---------------------"<< std::endl;
-    	if(l.size() > 0)
-    		me = MergeEllipses<float>(l);
-
-    	LAL::Surfel<float>* su1 = new LAL::Surfel<float>();
-
-    	su1 = me.NewPtrSurfel();
-
-//    	std::cout << su1->Normal()<< "-" <<  su1->Center()<<  " New Surfel " << std::endl;
-
-    	newSurfel.push_back(me.NewPtrSurfel());
-
-    }
-
-//    LAL::Surfel<float>* su1 =  new LAL::Surfel<float>(LAL::Point3<float>(7.938756, 8.396816, 5.958447),
-//                    LAL::Vector3<float>(0.000000, 0.000000, 1.000000),1.0f,1.0f,0.0f);
-//
-//
-//    su1->SetMinorAxis(std::make_pair(0.1,LAL::Vector3<float>(1.000000, 0.000000, 0.000000)));
-//    su1->SetMajorAxis(std::make_pair(0.5,LAL::Vector3<float>(0.000000, 1.000000, 0.00000)));
-//
-//
-//    LAL::Surfel<float>* su2 =  new LAL::Surfel<float>(LAL::Point3<float>(6.632136, 7.704408, 5.995052),
-//                            LAL::Vector3<float>(0.000000, 0.000000, 1.000000),1.0f,1.0f,0.0f);
-//
-//
-//    su2->SetMinorAxis(std::make_pair(0.4,LAL::Vector3<float>(1.000000, 0.000000, 0.000000)));
-//    su2->SetMajorAxis(std::make_pair(0.2,LAL::Vector3<float>(0.000000, 1.000000, 0.000000)));
-//
-//    std::list<LAL::Surfel<float>* > sl;
-//
-//    sl.push_back(su1);
-//    sl.push_back(su2);
-//
-//
-//    MergeEllipses<float> me = MergeEllipses<float>(sl);
-
-
-    std::cout << cluster.size() <<  "cluster size" << std::endl;
-//    std::cout << newSurfel.size() <<  "new " << std::endl;
+     cluster.Build(1,1000,seed);
 
 }
 
@@ -367,69 +290,11 @@ void GLFrame::paintGL()
 
     	if(mode)
     	{
+    		cluster.DrawClusters(0);
 
-//    		for (std::vector< std::vector<LAL::Surfel<float>* > >::iterator i = cluster.begin(); i != cluster.end();++i)
-    		c = colors.begin();
-//    		GPUKernel.use(true);
-    		for (int i = 0;i < mNumber; ++i)
-    		{
-
-
-    			glColor3fv(*c);
-    			++c;
-    			if(c == colors.end())
-    				c = colors.begin();
-    			for (std::vector<LAL::Surfel<float>* >::iterator j = cluster[i].begin(); j != cluster[i].end();++j)
-    			{
-    				glVertex3fv((*j)->Center());
-    			}
-    			glPointSize(7.0);
-    	    	//glColor3f(0.5f,0.5f,0.5f);//glColor4fv(*c);
-				glVertex3fv((newSurfel[i])->Center());//(newSurfel[i])->drawTriangleFan();//
-    			//    		glColor3fv(*c);
-    			//			++c;
-    			//			if(c == colors.end())
-    			//				c = colors.begin();
-    			//    		for (std::vector<LAL::Surfel<float> >::iterator j = cluster[1].begin(); j != cluster[1].end();++j)
-    			//    		{
-    			//    			glVertex3fv(j->Center());
-    			//    		}
-    			//    		glColor3fv(*c);
-    			//			++c;
-    			//			if(c == colors.end())
-    			//				c = colors.begin();
-    			//    		for (std::vector<LAL::Surfel<float> >::iterator j = cluster[2].begin(); j != cluster[2].end();++j)
-    			//    		{
-    			//    			glVertex3fv(j->Center());
-    			//    		}
-    			//    		glColor3fv(*c);
-    			//			++c;
-    			//			if(c == colors.end())
-    			//				c = colors.begin();
-    			//    		for (std::vector<LAL::Surfel<float> >::iterator j = cluster[3].begin(); j != cluster[3].end();++j)
-    			//    		{
-    			//    			glVertex3fv(j->Center());
-    			//    		}
-
-    		}
-//    		GPUKernel.use(false);
     	}else
     	{
-
-//    		for (std::vector<LAL::Surfel<float>*  >::iterator i = newSurfel.begin(); i != newSurfel.end();++i)
-
-    		c = colors.begin();
-//    		GPUKernel.use(true);
-    	    for (int i = 0;i < mNumber ; ++i)
-    		{
-    	    	//glColor4fv(*c);
-    			++c;
-    			if(c == colors.end())
-    				c = colors.begin();
-					glVertex3fv((newSurfel[i])->Center());//(newSurfel[i])->drawTriangleFan();//
-
-    		}
-//    	    GPUKernel.use(false);
+    		std::cout << "Estamos aqui" << std::endl;
     	}
 
 
@@ -560,4 +425,86 @@ void GLFrame::mouseMoveEvent(QMouseEvent *event)
     lastPos = event->pos();
 }
 
+
+//LAL::BoundingBox3<float> world =     LAL::BoundingBox3<float>( LAL::Point3<float>(surfels.box().xMin(),surfels.box().yMin(),surfels.box().zMin()),
+//			   						 LAL::Point3<float>(surfels.box().xMax(),surfels.box().yMax(),surfels.box().zMax()));
+//
+//if (kdTree.root ==  0)
+//{
+//	kdTree = KdTree<float,LAL::Surfel<float>* >(world);
+//}
+//else
+//{
+//	delete kdTree.root;
+//	kdTree = KdTree<float,LAL::Surfel<float>* >(world);
+//}
+//
+//
+//
+//std::cout << "Inserindo Pontos na KD-Tree" << std::endl;
+//for (std::vector<LAL::Surfel<float> >::iterator surf =  surfels.surfels.begin();surf != surfels.surfels.end(); ++ surf )
+//{
+//    kdTree.Insert ( new LAL::Surfel<float>(*surf) );
+//}
+//std::cout << "KD-Tree Construida" << std::endl;
+//
+//std::cout << "Total = " << surfels.surfels.size() << std::endl;
+//
+//std::vector< std::vector<LAL::Surfel<float>*> > cluster;
+//Cluster<float,LAL::Surfel<float>* > clusterClass(kdTree);
+//
+//MergeEllipses<float> me;
+//std::vector< LAL::Surfel<float>* > newPtrSurfel;
+//for (std::vector< std::vector<LAL::Surfel<float>* > >::iterator i = cluster.begin(); i != cluster.end();++i)
+//{
+//	std::list<LAL::Surfel<float>* > l;
+//	for(std::vector<LAL::Surfel<float>* >::iterator j = i->begin(); j != i->end(); ++j)
+//	{
+//		l.push_back((*j));
+//	}
+////    	std::cout << "--------------------- ="<< l.size() <<  std::endl;
+////    	for (std::list<LAL::Surfel<float>* >::iterator y = l.begin(); y != l.end(); ++y)
+////    	{
+////    		std::cout << " =  "<<  (*y)->Normal()<< "-" <<  (*y)->Center() << std::endl;
+////    	}
+////    	std::cout << "---------------------"<< std::endl;
+//	if(l.size() > 0)
+//		me = MergeEllipses<float>(l);
+//
+//	LAL::Surfel<float>* su1 = new LAL::Surfel<float>();
+//
+//	su1 = me.NewPtrSurfel();
+//
+////    	std::cout << su1->Normal()<< "-" <<  su1->Center()<<  " New Surfel " << std::endl;
+//
+//	newSurfel.push_back(me.NewPtrSurfel());
+//
+//}
+//
+////    LAL::Surfel<float>* su1 =  new LAL::Surfel<float>(LAL::Point3<float>(7.938756, 8.396816, 5.958447),
+////                    LAL::Vector3<float>(0.000000, 0.000000, 1.000000),1.0f,1.0f,0.0f);
+////
+////
+////    su1->SetMinorAxis(std::make_pair(0.1,LAL::Vector3<float>(1.000000, 0.000000, 0.000000)));
+////    su1->SetMajorAxis(std::make_pair(0.5,LAL::Vector3<float>(0.000000, 1.000000, 0.00000)));
+////
+////
+////    LAL::Surfel<float>* su2 =  new LAL::Surfel<float>(LAL::Point3<float>(6.632136, 7.704408, 5.995052),
+////                            LAL::Vector3<float>(0.000000, 0.000000, 1.000000),1.0f,1.0f,0.0f);
+////
+////
+////    su2->SetMinorAxis(std::make_pair(0.4,LAL::Vector3<float>(1.000000, 0.000000, 0.000000)));
+////    su2->SetMajorAxis(std::make_pair(0.2,LAL::Vector3<float>(0.000000, 1.000000, 0.000000)));
+////
+////    std::list<LAL::Surfel<float>* > sl;
+////
+////    sl.push_back(su1);
+////    sl.push_back(su2);
+////
+////
+////    MergeEllipses<float> me = MergeEllipses<float>(sl);
+//
+//
+//std::cout << cluster.size() <<  "cluster size" << std::endl;
+////    std::cout << newSurfel.size() <<  "new " << std::endl;
 

@@ -10,6 +10,7 @@
  **/
 
 #include <vector>
+#include <list>
 #include <cmath>
 
 #include <GL/gl.h>
@@ -44,9 +45,9 @@ template <class Real > class Surfel
 {
  public:
 
-	 typedef LAL::Point3<Real>  Point3;
-	 typedef LAL::Vector3<Real> Vector3;
-	 typedef LAL::Color         Color;
+	 typedef typename LAL::Point3<Real>  Point3;
+	 typedef typename LAL::Vector3<Real> Vector3;
+	 typedef typename LAL::Color         Color;
 
 
 	 typedef std::list<Point3>       			ListPoint3;

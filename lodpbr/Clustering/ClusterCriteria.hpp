@@ -45,9 +45,10 @@ class JoinByNormal : public JoinCriteria <Real,ItemPtr>
 {
 	/// Add an item to the clustering if the angle between the seed
 	/// and the item is over the NORMAL
+public:
 	static bool Join ( ItemPtr seed, ItemPtr  item)
 	{
-		return ( (seed->Normal() * item->Normal()) > 0.8  );
+		return ( (seed->Normal() * item->Normal()) > 0.85  );
 	}
 };
 
@@ -60,6 +61,7 @@ class MergeBySize : public MergeCriteria <Real,ItemPtr>
 {
 	/// Add an item to the clustering if the angle between the seed
 	/// and the item is over the NORMAL
+public:
 	static bool Merge ( ItemPtr seed, std::vector<ItemPtr>  item)
 	{
 		return 1;
