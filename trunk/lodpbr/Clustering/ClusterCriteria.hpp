@@ -48,7 +48,7 @@ class JoinByNormal : public JoinCriteria <Real,ItemPtr>
 public:
 	static bool Join ( ItemPtr seed, ItemPtr  item)
 	{
-		return ( (seed->Normal() * item->Normal()) > 0.85  );
+		return ( (seed->Normal() * item->Normal()) > 0.65  );
 	}
 };
 

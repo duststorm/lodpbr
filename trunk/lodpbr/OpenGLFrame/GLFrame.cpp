@@ -103,7 +103,7 @@ void GLFrame::initializeGL()
 
     GLfloat luzAmbiente[4]={0.2,0.2,0.2,1.0};
  	GLfloat luzDifusa[4]={1.0,1.0,0.0,1.0};         //cor
-	//GLfloat luzEspecular[4]={1.0, 1.0, 1.0, 1.0};   //brilho
+	GLfloat luzEspecular[4]={1.0, 1.0, 1.0, 1.0};   //brilho
 	GLfloat especularidade[4]={1.0,0.0,0.0,1.0};	  //brilho do material
 
 	GLint especMaterial = 64;
@@ -111,7 +111,6 @@ void GLFrame::initializeGL()
 	GLfloat light_position0[] = {0.0, 0.5, 10.0, 0.0};
 
 	glClearColor(1.0f, 1.0f, 1.0f, 1.0f);           //cor fundo
-	//glClearColor(1.0f, 1.0f, 1.0f, 0.0f);           //cor fundo
 	glShadeModel(GL_SMOOTH);                      	//gouraud
 	glMaterialfv(GL_FRONT_AND_BACK,GL_DIFFUSE, luzDifusa);//refletancia do material
 	glMaterialfv(GL_FRONT_AND_BACK,GL_SPECULAR, especularidade);//refletancia do material
@@ -131,7 +130,7 @@ void GLFrame::initializeGL()
 	glEnable(GL_LIGHT0);          //luz  0
 	glEnable(GL_DEPTH_TEST);      //depth-buffering
 
-	//glEnable(GL_NORMALIZE);
+	glEnable(GL_NORMALIZE);
 
 }
 
@@ -205,9 +204,9 @@ void GLFrame::calLimits()
 {
      cluster = Cluster<float,LAL::Surfel<float>*>(surfels);
 
-     LAL::Surfel<float>* seed = new LAL::Surfel<float>(surfels.surfels[9999]);
+     LAL::Surfel<float>* seed = new LAL::Surfel<float>(surfels.surfels[1]);
 
-     cluster.Build(1,8,seed);
+     cluster.Build(48000,8,seed);
 
 }
 
@@ -278,28 +277,18 @@ void GLFrame::paintGL()
     {
     	drawKdTree(cont);
 
-
-    	glPointSize(5.0);
-    	glEnable(GL_POINT_SMOOTH);
-    	glBegin(GL_POINTS);
-    	glPushMatrix();
-
     	std::vector<LAL::Vector4<float> >::iterator c = colors.begin();
 
     	int cont = 0;
 
     	if(mode)
     	{
-    		cluster.DrawClusters(0);
+    		cluster.DrawClusters(mNumber);
 
     	}else
     	{
-    		std::cout << "Estamos aqui" << std::endl;
-    	}
-
-
-    	glEnd();
-    	glPopMatrix();
+     		cluster.DrawSurfels();
+     	}
 
     	glColor3f(0.5,0.5,0.5);
     	renderText(10,5,QString("___________________________"));
