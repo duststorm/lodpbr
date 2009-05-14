@@ -471,7 +471,7 @@ template <class Real > class Surfel
 	 {
 
 		 	ListPoint3 lBoundaries = this->BoundariesSamples(p);
-
+		 	glPushMatrix();
 		 	glEnable (GL_BLEND);
 		 	glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
@@ -505,7 +505,7 @@ template <class Real > class Surfel
 	 		glEnd();
 
 	 		glEnable (GL_LIGHTING);
-
+	 		glPopMatrix();
 
 
 	 }
