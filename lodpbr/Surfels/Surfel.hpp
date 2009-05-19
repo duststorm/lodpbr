@@ -64,7 +64,11 @@ template <class Real > class Surfel
 		 mMinorAxis = std::make_pair(0.0,Vector3());
 		 mMajorAxis = std::make_pair(0.0,Vector3());
 		 mMarked = 0;
+		 mExpansionMarked = 0;
+		 mSeedMarked = 0;
+		 mCost 		= 9999;
 		 mClusterID = 0;
+
 
 	 }
 
@@ -77,6 +81,9 @@ template <class Real > class Surfel
 	   										 mPerpendicularError(0),
 	   										 mID(pSurfel.mID),
 	   										 mMarked(0),
+	   									     mExpansionMarked(0),
+	   									     mSeedMarked(0),
+	   									     mCost(9999),
 	   										 mClusterID(0)
 	 {
 
@@ -92,6 +99,9 @@ template <class Real > class Surfel
 	 							   mMajorAxis(pMajorAxis),
 	 							   mID(id),
 	 							   mMarked(0),
+								   mExpansionMarked(0),
+								   mSeedMarked(0),
+								   mCost(9999),
 	 							   mClusterID(0)
 	 	  {
 		 	mColor = Color(1.0,0.0,0.0);
@@ -108,6 +118,9 @@ template <class Real > class Surfel
 	 								   mPerpendicularError(pError),
 	 								   mID(id),
 	 								   mMarked(0),
+ 									   mExpansionMarked(0),
+ 									   mSeedMarked(0),
+ 									   mCost(9999),
 	 								   mClusterID(0)
 	 	  {
 		 	mColor = Color(0.0,0.0,0.0);
@@ -131,6 +144,9 @@ template <class Real > class Surfel
 			 						mPerpendicularError(0),
 			 						mID(id),
 			 						mMarked(0),
+									mExpansionMarked(0),
+									mSeedMarked(0),
+									mCost(9999),
 			 						mClusterID(0)
 
 
@@ -153,6 +169,9 @@ template <class Real > class Surfel
 			 						mPerpendicularError(0),
 			 						mID(id),
 			 						mMarked(0),
+									mExpansionMarked(0),
+									mSeedMarked(0),
+									mCost(9999),
 			 						mClusterID(0)
 		  {
 		 	mColor = Color(0.0,0.0,0.0);
@@ -166,13 +185,16 @@ template <class Real > class Surfel
 
 	 inline const Surfel<Real>& operator= ( const Surfel<Real>& pSurfel)
 	 {
-		 this->mCenter    = pSurfel.Center();
-		 this->mNormal    = pSurfel.Normal();
-		 this->mMinorAxis = pSurfel.MinorAxis();
-		 this->mMajorAxis = pSurfel.MajorAxis();
-		 this->mColor     = pSurfel.color();
-		 this->mMarked    = pSurfel.Marked();
-		 this->mClusterID = pSurfel.ClusterID();
+		 this->mCenter    		= pSurfel.Center();
+		 this->mNormal    		= pSurfel.Normal();
+		 this->mMinorAxis 		= pSurfel.MinorAxis();
+		 this->mMajorAxis 		= pSurfel.MajorAxis();
+		 this->mColor     		= pSurfel.color();
+		 this->mMarked    		= pSurfel.Marked();
+		 this->mExpansionMarked = pSurfel.ExpansionMarked();
+		 this->mSeedMarked		= pSurfel.SeedMarked();
+		 this->mCost			= pSurfel.Cost();
+		 this->mClusterID 		= pSurfel.ClusterID();
 
    	  	return ( *this );
 	 }
@@ -182,8 +204,6 @@ template <class Real > class Surfel
 		 this->mCenter 		= position;
 
 	 };
-
-
 
 	 ~Surfel() {};
 
@@ -252,6 +272,28 @@ template <class Real > class Surfel
 		 this->mMarked = pMarked;
 	 };
 
+	 bool ExpansionMarked (void) const
+	 {
+		 return this->mExpansionMarked;
+	 };
+
+	 void SetExpansionMarked ( bool pMarked)
+	 {
+		 this->mExpansionMarked = pMarked;
+	 };
+
+
+	 bool SeedMarked (void) const
+	 {
+		 return this->mSeedMarked;
+	 };
+
+	 void SetSeedMarked ( bool pMarked)
+	 {
+		 this->mSeedMarked = pMarked;
+	 };
+
+
 	 unsigned long int ClusterID (void) const
 	 {
 		 return this->mClusterID;
@@ -290,6 +332,16 @@ template <class Real > class Surfel
 	 std::pair<Real,Vector3> MajorAxis() const
 	 {
 		 return (this->mMajorAxis);
+	 }
+
+	 void SetCost ( const Real& pCost )
+	 {
+		 this->mCost = pCost;
+	 }
+
+	 Real Cost ( ) const
+	 {
+		 return this->mCost;
 	 }
 
 	 /// I/O operator - output
@@ -539,6 +591,10 @@ template <class Real > class Surfel
 	  unsigned int mID;
 
 	  bool mMarked;
+	  bool mExpansionMarked;
+	  bool mSeedMarked;
+
+	  Real mCost;
 
 	  unsigned long int mClusterID;
 

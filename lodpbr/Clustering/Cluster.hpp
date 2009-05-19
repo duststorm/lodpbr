@@ -103,7 +103,7 @@ public:
 		for(typename std::vector<ItemPtr>::iterator it = plNeighbors.begin(); it !=  plNeighbors.end();++it)
 		{
 
-			if (  (*it)->Marked() == 0 )
+			if (  ((*it)->ExpansionMarked() == 0) )
 			{
 				lNeighbors.push_back((*it));
 			}
@@ -124,7 +124,8 @@ public:
 
 	    int 				 KNearestSearchComps = 0;
 	    int 				 cont                = 0;
-	    ItemPtr				 lSeed               = pSeed;
+	    ItemPtr				 lCurrentSeed        = pSeed;
+	    ItemPtr				 lSurfel       		 = pSeed;
 
 	    /// lista dos surfels a serem expandidos
 	    std::deque<ItemPtr> lOpen;
@@ -139,52 +140,67 @@ public:
 		while ( (cont < pCont ) && (lSeeds.size() != 0))
 		{
 
-			lSeed = lSeeds.front();
+			lCurrentSeed = lSeeds.front();
+			lCurrentSeed->SetCost(0);
 			lSeeds.pop_front();
-			lSeed->SetMarked(1);
-		    ItemPtrList 		lNeighbors 		= mKDTree.KNearestNeighbors(lSeed ,8, KNearestSearchComps);
 
-		    for(typename std::vector<ItemPtr>::iterator it = lNeighbors.begin(); it !=  lNeighbors.end();++it)
-	   		{
-		    	if ((*it)->Marked() == 0)
-		    	{
-		    		(*it)->SetMarked(1);
-		    		lOpen.push_back((*it));
-		    	}
+			if (lCurrentSeed->SeedMarked() == 1)
+			{
+				continue;
+			}
+		    ItemPtrList 		lNeighbors;// 		= mKDTree.KNearestNeighbors(lCurrentSeed ,16, KNearestSearchComps);
 
-	   		}
-
-			lClose.push_back(lSeed);
+//		    for(typename std::vector<ItemPtr>::iterator it = lNeighbors.begin(); it !=  lNeighbors.end();++it)
+//	   		{
+//		    	if ((*it)->Marked() == 0)
+//		    	{
+//		    		(*it)->SetMarked(1);
+//		    		lOpen.push_back((*it));
+//		    	}
+//
+//	   		}
+		    lCurrentSeed->SetExpansionMarked(1);
+			lOpen.push_back(lCurrentSeed);
 
 			while ( (lOpen.size() != 0))
 			{
 				//std::cout << "lOpen " << lOpen.size() << "--"  <<  "lClose " << lClose.size() << "lExpansion " << lExpasion.size() << std::endl;
 
+				lNeighbors.clear();
+				lSurfel = lOpen.front();
+				lSurfel->SetSeedMarked(1);
+				lOpen.pop_front();
+				lClose.push_back(lSurfel);
+				lNeighbors 		= mKDTree.KNearestNeighbors(lSurfel ,	8, KNearestSearchComps);
+				lExpasion 		= GetNotMarked(lNeighbors);
+
 				for(typename std::vector<ItemPtr>::reverse_iterator it = lExpasion.rbegin(); it !=  lExpasion.rend();++it)
 				{
-					if ( Similarity::Join(pSeed,(*it)) )
+					if ( Similarity::Join(lCurrentSeed,lSurfel,(*it)) )
 					{
-						(*it)->SetMarked(1);
+						(*it)->SetExpansionMarked(1);
 						lOpen.push_back((*it));
 					}
 					else
 					{
-						lSeeds.push_back((*it));
-						break;
+						if ( (*it)->SeedMarked() == 0 )
+						{
+							(*it)->SetExpansionMarked(0);
+							lSeeds.push_back((*it));
+						}
+
+
 					}
 				}
-
-				lNeighbors.clear();
-				lSeed = lOpen.front();
-				lSeed->SetMarked(1);
-				lOpen.pop_front();
-				lClose.push_back(lSeed);
-				lNeighbors 		= mKDTree.KNearestNeighbors(lSeed ,	8, KNearestSearchComps);
-				lExpasion 		= GetNotMarked(lNeighbors);
 
 				//std::cout << "lOpen " << lOpen.size() << "--"  <<  "lClose " << lClose.size() << std::endl;
 			}
 
+
+			for(typename std::list<ItemPtr>::iterator it = lClose.begin(); it !=  lClose.end();++it)
+			{
+				(*it)->SetExpansionMarked(0);
+			}
 			Clusters.push_back(lClose);
 			MergeEllipses<Real> me = MergeEllipses<Real>(lClose);
 			mSurfels.push_back(me.NewPtrSurfel());
@@ -255,12 +271,7 @@ public:
 	{
 
 		std::vector<LAL::Vector4<float> >::iterator c = colors.begin();
-
-	   	glPointSize(5.0);
-	    glEnable(GL_POINT_SMOOTH);
-	    glBegin(GL_POINTS);
 	    glPushMatrix();
-
 		if (pNumber == 0)
 		{
 
@@ -284,18 +295,36 @@ public:
 			if (Clusters.size() >= pNumber)
 			{
 
-				for ( int  i = 0; i != pNumber; ++i )
+
+				for ( int  i = pNumber; i != 0; --i )
 				{
+					glPushMatrix();
+				   	glEnable(GL_POINT_SMOOTH);
+				   	glPointSize(10.0);
+				   	glColor3f(1.0,0.75,0.85);
+				    glBegin(GL_POINTS);
+					glVertex3fv( (*(Clusters[i].begin()))->Center() );
+					glEnd();
+					glPopMatrix();
 					std::cout << Clusters[i].size() << " Size" << std::endl;
-					glColor3fv(*c);
-					++c;
+					glPointSize(5.0);
 					if(c == colors.end())
 						c = colors.begin();
+					glPushMatrix();
+				   	glEnable(GL_POINT_SMOOTH);
+				   	glPointSize(5.0);
+					glColor3fv(*c);
+				    glBegin(GL_POINTS);
 					for ( typename std::list<ItemPtr>::iterator j = Clusters[i].begin() ; j != Clusters[i].end(); ++j )
 					{
 						glVertex3fv( (*j)->Center() );
 					}
+					++c;
+					glEnd();
+					glPopMatrix();
+
 				}
+
 
 			}
 
