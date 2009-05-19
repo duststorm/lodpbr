@@ -5,7 +5,7 @@
 #include <algorithm>
 
 #include "Math/BoundingBox3.hpp"
-#include "surfel.hpp"
+#include "Surfel.hpp"
 
 
 // For ply Reader
@@ -34,33 +34,38 @@ struct Bounding_box : public std::unary_function<LAL::Surfel<Real>, void>
 
 
 template <class Real >
-class Surfels
+class SurfelContainer
 {
 public:
 
-	typedef LAL::Color Color;
-	typedef LAL::Point3<Real> Point3;
-	typedef LAL::Vector3<Real> Vector3;
-	typedef LAL::BoundingBox3<Real> Box3;
-	typedef std::vector<LAL::Surfel<Real> > surfelContainer;
-	typedef typename surfelContainer::iterator surfelIterator;
+	typedef LAL::Point3<Real> 					Point3;
+	typedef LAL::Vector3<Real> 					Vector3;
+	typedef LAL::BoundingBox3<Real> 			Box3;
+	typedef std::vector<LAL::Surfel<Real> > 	SurfelContainer;
+	typedef typename surfelContainer::iterator 	SurfelIterator;
 
 
-	Surfels(){};
+	SurfelContainer Surfels;
+	SurfelContainer temp;
 
-	inline Box3 box() const
+	SurfelContainer(){};
+
+	inline Box3 Box() const
 	{
-		return ( this->box_ );
+		return ( this->mBox );
 	}
 
-	inline void compute_box ()
+	inline void ComputeBox ()
 	{
-		for (surfelIterator i = surfels.begin(); i != surfels.end(); ++i)
-			box_ = box_ + LAL::BoundingBox3<Real>(i->Center(0),i->Center(1),i->Center(2),
-												   i->Center(0),i->Center(1),i->Center(2));
+		for (SurfelIterator i = surfels.begin(); i != surfels.end(); ++i)
+		{
+			mBox = mBox + LAL::BoundingBox3<Real>(i->Center(0),i->Center(1),i->Center(2),
+												  i->Center(0),i->Center(1),i->Center(2));
+		}
+
 	}
 
-	static void loadPly (const char * filename, Surfels<Real>& surfels)
+	static void LoadPly (const char * filename, SurfelContainer<Real>& pSurfels)
 
 	{
 
@@ -146,7 +151,7 @@ public:
 		      Vector3 	n (v.nx, v.ny, v.nz);
 		      Color 	c (v.r/255.0, v.g/255.0, v.b/255.0);
 
-		      surfels.surfels.push_back ( LAL::Surfel<Real> (p,n,c, static_cast<Real> (v.radius), j) );
+		      pSurfels.Surfels.push_back ( LAL::Surfel<Real> (p,n,c, static_cast<Real> (v.radius), j) );
 
 
 		     }
@@ -154,18 +159,15 @@ public:
 		    } // End if (equal_strings ("vertex", elem_name))
 
 		  }
-		  surfels.compute_box();
+		  pSurfels.ComputeBox();
 		  close_ply(in_ply);
 	 }
 
-	virtual ~Surfels(){};
-
-	surfelContainer surfels;
-	surfelContainer temp;
+	virtual ~SurfelContainer(){};
 
 private:
 
-	Box3 box_;
+	Box3 mBox;
 
 };
 
