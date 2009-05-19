@@ -204,9 +204,9 @@ void GLFrame::calLimits()
 {
      cluster = Cluster<float,LAL::Surfel<float>*>(surfels);
 
-     LAL::Surfel<float>* seed = new LAL::Surfel<float>(surfels.surfels[1]);
+     LAL::Surfel<float>* seed = new LAL::Surfel<float>(surfels.mSurfels[1]);
 
-     cluster.Build(48000,8,seed);
+     cluster.Build(800,8,seed);
 
 }
 
@@ -273,7 +273,7 @@ void GLFrame::paintGL()
     int cont = 0;
 
     glDisable(GL_LIGHTING);
-    if ( surfels.surfels.size() != 0 )
+    if ( surfels.mSurfels.size() != 0 )
     {
     	drawKdTree(cont);
 

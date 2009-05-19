@@ -38,15 +38,15 @@ class SurfelContainer
 {
 public:
 
+	typedef LAL::Color		 					Color;
 	typedef LAL::Point3<Real> 					Point3;
 	typedef LAL::Vector3<Real> 					Vector3;
 	typedef LAL::BoundingBox3<Real> 			Box3;
-	typedef std::vector<LAL::Surfel<Real> > 	SurfelContainer;
-	typedef typename surfelContainer::iterator 	SurfelIterator;
+	typedef std::vector<LAL::Surfel<Real> > 	Surfels;
+	typedef typename Surfels::iterator 			SurfelIterator;
 
 
-	SurfelContainer Surfels;
-	SurfelContainer temp;
+	Surfels mSurfels;
 
 	SurfelContainer(){};
 
@@ -57,7 +57,7 @@ public:
 
 	inline void ComputeBox ()
 	{
-		for (SurfelIterator i = surfels.begin(); i != surfels.end(); ++i)
+		for (SurfelIterator i = mSurfels.begin(); i != mSurfels.end(); ++i)
 		{
 			mBox = mBox + LAL::BoundingBox3<Real>(i->Center(0),i->Center(1),i->Center(2),
 												  i->Center(0),i->Center(1),i->Center(2));
@@ -151,7 +151,7 @@ public:
 		      Vector3 	n (v.nx, v.ny, v.nz);
 		      Color 	c (v.r/255.0, v.g/255.0, v.b/255.0);
 
-		      pSurfels.Surfels.push_back ( LAL::Surfel<Real> (p,n,c, static_cast<Real> (v.radius), j) );
+		      pSurfels.mSurfels.push_back ( LAL::Surfel<Real> (p,n,c, static_cast<Real> (v.radius), j) );
 
 
 		     }

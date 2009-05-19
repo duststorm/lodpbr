@@ -455,19 +455,20 @@ template <class Real > class Surfel
 
 	 }
 
-	 void draw(int p = 8)
+	 void Draw(int p = 8)
 	 {
 
 		 	ListPoint3 lBoundaries = this->BoundariesSamples(p);
+		 	glPushMatrix();
 		 	glPointSize(1.0);
 			for(ListPoint3Iterator it = lBoundaries.begin();it != lBoundaries.end();++it)
 			{
 				glVertex3fv( it->ToRealPtr());
 			}
-
+		 	glPopMatrix();
 	 }
 
-	 void drawTriangleFan(int p = 8)
+	 void DrawTriangleFan(int p = 8)
 	 {
 
 		 	ListPoint3 lBoundaries = this->BoundariesSamples(p);

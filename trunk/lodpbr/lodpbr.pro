@@ -25,9 +25,9 @@ HEADERS += Interface/myMainWindow.hpp \
     Math/Matrix3x3.hpp \
     Math/BoundingBox3.hpp \
     Octree/ocTreeBox.hpp \
-    Surfels/surfel.hpp \
+    Surfels/Surfel.hpp \
     Surfels/ply.h \
-    Surfels/surfels.hpp \
+    Surfels/SurfelContainer.hpp \
     Octree/ocTreeInternalNode.hpp \
     Octree/ocTreeLeafNode.hpp \
     Octree/ocTreeNode.hpp \
