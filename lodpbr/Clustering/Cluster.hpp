@@ -25,7 +25,7 @@
 
 #include "Kd-Tree/Kd-Tree.hpp"
 
-#include "Surfels/surfels.hpp"
+#include "Surfels/SurfelContainer.hpp"
 #include "Surfels/MergeEllipses.hpp"
 
 #include "Math/BoundingBox3.hpp"
@@ -52,12 +52,12 @@ public:
 	/// Constructor
 	/// Initialize the KD-Tree member with list of surfels
 	/// @param Refernce to a list of surfels
-	Cluster(Surfels<Real>& pSurfels)
+	Cluster(SurfelContainer<Real>& pSurfels)
 	{
 		init();
 	    LAL::BoundingBox3<float> world =     LAL::BoundingBox3<float>(
-	    		LAL::Point3<float>(pSurfels.box().xMin(),pSurfels.box().yMin(),pSurfels.box().zMin()),
-				LAL::Point3<float>(pSurfels.box().xMax(),pSurfels.box().yMax(),pSurfels.box().zMax())
+	    		LAL::Point3<float>(pSurfels.Box().xMin(),pSurfels.Box().yMin(),pSurfels.Box().zMin()),
+				LAL::Point3<float>(pSurfels.Box().xMax(),pSurfels.Box().yMax(),pSurfels.Box().zMax())
 																     );
 
 		if (mKDTree.root ==  0)
@@ -71,7 +71,7 @@ public:
 		}
 
 		std::cout << "KD-Tree Start" << std::endl;
-		for (typename std::vector<LAL::Surfel<Real> >::iterator surf =  pSurfels.surfels.begin();surf != pSurfels.surfels.end(); ++ surf )
+		for (typename std::vector<LAL::Surfel<Real> >::iterator surf =  pSurfels.mSurfels.begin();surf != pSurfels.mSurfels.end(); ++ surf )
 		{
 			mKDTree.Insert ( new LAL::Surfel<Real>(*surf) );
 		}
@@ -247,7 +247,7 @@ public:
 			++c;
 			if(c == colors.end())
 				c = colors.begin();
-			(*it)->drawTriangleFan(8);
+			(*it)->DrawTriangleFan(8);
 			glPopMatrix();
 		}
 	}

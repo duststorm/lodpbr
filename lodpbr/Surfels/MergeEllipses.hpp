@@ -6,7 +6,7 @@
 #include <algorithm>
 #include <cassert>
 
-#include "surfel.hpp"
+#include "Surfel.hpp"
 
 #include "Math/Point3.hpp"
 #include "Math/Vector3.hpp"

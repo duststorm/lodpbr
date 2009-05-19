@@ -9,8 +9,8 @@
 #include "Math/Point3.hpp"
 #include "Math/Vector3.hpp"
 
-#include "Surfels/surfel.hpp"
-#include "Surfels/surfels.hpp"
+#include "Surfels/Surfel.hpp"
+#include "Surfels/SurfelContainer.hpp"
 
 #include "Scene/Camera.hpp"
 #include "Surfels/MergeEllipses.hpp"
@@ -40,7 +40,7 @@ public:
 
     void SetMode(bool);
 
-    Surfels<float> surfels;
+    SurfelContainer<float> surfels;
 
     Cluster<float,LAL::Surfel<float>*> cluster;
 
