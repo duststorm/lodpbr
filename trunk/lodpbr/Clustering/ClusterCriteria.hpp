@@ -18,7 +18,7 @@ template <class Real,class ItemPtr>
 class JoinCriteria
 {
   /// Decides whether or not add the item to the clustering start by seed
-  static bool Join ( ItemPtr seed, ItemPtr  item)
+  static bool Join ( ItemPtr seed,ItemPtr surfel, ItemPtr  item)
   {
     return 0;
   }
@@ -46,9 +46,37 @@ class JoinByNormal : public JoinCriteria <Real,ItemPtr>
 	/// Add an item to the clustering if the angle between the seed
 	/// and the item is over the NORMAL
 public:
-	static bool Join ( ItemPtr seed, ItemPtr  item)
+	static bool Join ( ItemPtr seed, ItemPtr surfel, ItemPtr  item)
 	{
-		return ( (seed->Normal() * item->Normal()) > 0.65  );
+		 if ( (seed->Normal() * item->Normal()) > 0.40  )
+		 {
+
+			 Real dist = surfel->Center().EuclideanDistance(item->Center());
+			 Real cost = (dist+surfel->Cost());
+			 if (cost < 0.1)
+			 {
+
+				 if( (item->SeedMarked() == 0) || (item->Cost() > cost) )
+				 {
+					 item->SetCost(cost);
+					 return 1;
+				 }else
+				 {
+					 return 0;
+				 }
+
+			 }else
+			 {
+				 return 0;
+			 }
+
+		 }else
+		 {
+			 return 0;
+		 }
+
+
+
 	}
 };
 
