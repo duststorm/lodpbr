@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading ui file 'interface.ui'
 **
-** Created: Tue May 19 16:10:02 2009
+** Created: Wed May 20 15:07:44 2009
 **      by: Qt User Interface Compiler version 4.5.0
 **
 ** WARNING! All changes made in this file will be lost when recompiling ui file!
@@ -66,7 +66,7 @@ public:
         if (MainWindow->objectName().isEmpty())
             MainWindow->setObjectName(QString::fromUtf8("MainWindow"));
         MainWindow->setWindowModality(Qt::WindowModal);
-        MainWindow->resize(526, 526);
+        MainWindow->resize(637, 526);
         MainWindow->setLayoutDirection(Qt::LeftToRight);
         MainWindow->setDockNestingEnabled(true);
         action_Open_File = new QAction(MainWindow);
@@ -111,7 +111,7 @@ public:
 
         SpinBoxNumber = new QSpinBox(centralwidget);
         SpinBoxNumber->setObjectName(QString::fromUtf8("SpinBoxNumber"));
-        SpinBoxNumber->setMinimum(1);
+        SpinBoxNumber->setMinimum(0);
         SpinBoxNumber->setMaximum(100000);
         SpinBoxNumber->setValue(1);
 
@@ -138,7 +138,6 @@ public:
 
         doubleSpinBoxThreshold = new QDoubleSpinBox(centralwidget);
         doubleSpinBoxThreshold->setObjectName(QString::fromUtf8("doubleSpinBoxThreshold"));
-        doubleSpinBoxThreshold->setWindowModality(Qt::WindowModal);
         doubleSpinBoxThreshold->setLayoutDirection(Qt::LeftToRight);
         doubleSpinBoxThreshold->setAutoFillBackground(false);
         doubleSpinBoxThreshold->setButtonSymbols(QAbstractSpinBox::UpDownArrows);
@@ -164,7 +163,7 @@ public:
         MainWindow->setStatusBar(statusbar);
         menubar = new QMenuBar(MainWindow);
         menubar->setObjectName(QString::fromUtf8("menubar"));
-        menubar->setGeometry(QRect(0, 0, 526, 25));
+        menubar->setGeometry(QRect(0, 0, 637, 25));
         menuSair = new QMenu(menubar);
         menuSair->setObjectName(QString::fromUtf8("menuSair"));
         menuHelp = new QMenu(menubar);
