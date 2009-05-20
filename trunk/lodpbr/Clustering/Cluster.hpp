@@ -296,7 +296,7 @@ public:
 			{
 
 
-				for ( int  i = pNumber; i != 0; --i )
+				for ( int  i = 0; i != pNumber; ++i )
 				{
 					glPushMatrix();
 				   	glEnable(GL_POINT_SMOOTH);
