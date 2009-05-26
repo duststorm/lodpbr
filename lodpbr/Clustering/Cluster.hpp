@@ -20,6 +20,7 @@
 #include <deque>
 #include <list>
 #include <algorithm>
+#include <iostream>
 
 #include "ClusterCriteria.hpp"
 
@@ -79,6 +80,8 @@ public:
 
 
 	}
+
+	int felipe();
 
 	void init()
 	{
@@ -141,13 +144,14 @@ public:
 		{
 
 			lCurrentSeed = lSeeds.front();
-			lCurrentSeed->SetCost(0);
 			lSeeds.pop_front();
 
 			if (lCurrentSeed->SeedMarked() == 1)
 			{
 				continue;
 			}
+			lCurrentSeed->SetCost(0);
+			lCurrentSeed->SetID(cont);
 		    ItemPtrList 		lNeighbors;// 		= mKDTree.KNearestNeighbors(lCurrentSeed ,16, KNearestSearchComps);
 
 //		    for(typename std::vector<ItemPtr>::iterator it = lNeighbors.begin(); it !=  lNeighbors.end();++it)
@@ -161,20 +165,23 @@ public:
 //	   		}
 		    lCurrentSeed->SetExpansionMarked(1);
 			lOpen.push_back(lCurrentSeed);
-
+			int contSurfel = 0;
 			while ( (lOpen.size() != 0))
 			{
 				//std::cout << "lOpen " << lOpen.size() << "--"  <<  "lClose " << lClose.size() << "lExpansion " << lExpasion.size() << std::endl;
-
+				++contSurfel;
 				lNeighbors.clear();
 				lSurfel = lOpen.front();
 				lSurfel->SetSeedMarked(1);
 				lOpen.pop_front();
 				lClose.push_back(lSurfel);
 				lNeighbors 		= mKDTree.KNearestNeighbors(lSurfel ,	8, KNearestSearchComps);
-				lExpasion 		= GetNotMarked(lNeighbors);
 
-				for(typename std::vector<ItemPtr>::reverse_iterator it = lExpasion.rbegin(); it !=  lExpasion.rend();++it)
+				//lExpasion 		= GetNotMarked(lNeighbors);
+
+//				std::cout << "SEED " <<  lCurrentSeed->ID() << std::endl;
+//				std::cout << "Surfel " << contSurfel << std::endl;
+				for(typename std::vector<ItemPtr>::reverse_iterator it = lNeighbors.rbegin(); it !=  lNeighbors.rend();++it)
 				{
 					if ( Similarity::Join(lCurrentSeed,lSurfel,(*it)) )
 					{
@@ -183,17 +190,18 @@ public:
 					}
 					else
 					{
-						if ( (*it)->SeedMarked() == 0 )
+
+						if ( ((*it)->SeedMarked() == 0) && ((*it)->ExpansionMarked() == 0))
 						{
-							(*it)->SetExpansionMarked(0);
 							lSeeds.push_back((*it));
 						}
 
 
 					}
+//					std::cout << "Cost " << (*it)->Cost() << std::endl;
 				}
+//				std::cout << "---" << std::endl;
 
-				//std::cout << "lOpen " << lOpen.size() << "--"  <<  "lClose " << lClose.size() << std::endl;
 			}
 
 
@@ -201,6 +209,7 @@ public:
 			{
 				(*it)->SetExpansionMarked(0);
 			}
+			//std::cout << "lOpen " << lOpen.size() << "--"  <<  "lClose " << lClose.size() << std::endl;
 			Clusters.push_back(lClose);
 			MergeEllipses<Real> me = MergeEllipses<Real>(lClose);
 			mSurfels.push_back(me.NewPtrSurfel());
@@ -282,7 +291,7 @@ public:
 				++c;
 				if(c == colors.end())
 					c = colors.begin();
-				for ( typename std::list<ItemPtr>::iterator j = i->begin() ; j != i->end(); ++j )
+				for ( typename std::list<ItemPtr>::iterator j = Clusters[pNumber].begin() ; j != Clusters[pNumber].end(); ++j )
 				{
 					glVertex3fv((*j)->Center());
 				}
@@ -296,7 +305,7 @@ public:
 			{
 
 
-				for ( int  i = 0; i != pNumber; ++i )
+				for ( int  i = pNumber; i !=0 ; --i )
 				{
 					glPushMatrix();
 				   	glEnable(GL_POINT_SMOOTH);
@@ -344,6 +353,7 @@ private:
 
     std::vector<LAL::Vector4<float> > colors;
 };
+
 
 
 #endif /*CLUSTER_HPP_*/

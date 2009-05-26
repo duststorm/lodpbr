@@ -2,6 +2,7 @@
 #define CLUSTERREFINE_HPP_
 
 #include <vector>
+#include <iostream>
 
 /*! \brief The ClusterRefine class .
  * Agglomerative criteria for  Clustering
@@ -48,15 +49,18 @@ class JoinByNormal : public JoinCriteria <Real,ItemPtr>
 public:
 	static bool Join ( ItemPtr seed, ItemPtr surfel, ItemPtr  item)
 	{
-		 if ( (seed->Normal() * item->Normal()) > 0.40  )
-		 {
-
-			 Real dist = surfel->Center().EuclideanDistance(item->Center());
-			 Real cost = (dist+surfel->Cost());
-			 if (cost < 0.1)
+//		 if ( 1 )//(seed->Normal() * item->Normal()) > 0.0  )
+//		 {
+			 Real lim = 0.3;
+			 Real alfa = 3;
+			 Real dist 		 = alfa*surfel->Center().EuclideanDistance(item->Center());
+			 Real Normaldist = ((1 - (surfel->Normal() * item->Normal()))*surfel->Cost())*(1/lim);
+			 Real cost = (dist+Normaldist+surfel->Cost());
+			 //std::cout << "cost " << Normaldist << std::endl;
+			 if (cost < lim)
 			 {
 
-				 if( (item->SeedMarked() == 0) || (item->Cost() > cost) )
+				 if( item->Cost() > cost )
 				 {
 					 item->SetCost(cost);
 					 return 1;
@@ -70,10 +74,10 @@ public:
 				 return 0;
 			 }
 
-		 }else
-		 {
-			 return 0;
-		 }
+//		 }else
+//		 {
+//			 return 0;
+//		 }
 
 
 
