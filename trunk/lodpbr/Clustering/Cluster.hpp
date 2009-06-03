@@ -81,8 +81,6 @@ public:
 
 	}
 
-	int felipe();
-
 	void init()
 	{
 		colors.push_back(LAL::Vector4<float>(1.0,0.0,0.0,0.5));
@@ -216,51 +214,12 @@ public:
 			lClose.clear();
 			++cont;
 		}
-		//std::cout << "lOpen4 " << lOpen.size() << "--"  <<  "lClose " << lClose.size() << std::endl;
-
-//		while ( (cont <= pCont) && (lNeighbors.size() != 0) )
-//		{
-//
-//			while ( (rellipse != lNeighbors.rend()) )
-//			{
-//				if ( Similarity::Join(lSeed,(*rellipse)) )
-//				{
-//					lCluster.push_back((*rellipse));
-//					(*rellipse)->SetMarked(1);
-//					++rellipse;
-//				}
-//				else
-//				{
-//					break;
-//				}
-//			}
-//
-//			for (typename std::vector<ItemPtr>::iterator i = lNeighbors.begin(); i != lNeighbors.end(); ++i )
-//			{
-//				std::cout << " Neibor " << (*i)->Marked() <<  std::endl;
-//			}
-//
-//		    Clusters.push_back(lCluster);
-//		    ++cont;
-//		    lSeed = lNeighbors[0];
-//			lSeed->SetMarked(1);
-//		    std::cout << "pSeed" << lSeed->Center() << "--"  <<  std::endl;
-//		    lNeighbors.clear();
-//		    lNeighbors 		= mKDTree.KNearestNeighborsClustering(lSeed ,	pKNeighborsSize,
-//		    													KNearestSearchComps);
-//			for (typename std::vector<ItemPtr>::iterator i = lNeighbors.begin(); i != lNeighbors.end(); ++i )
-//			{
-//				std::cout << " NeiborKDTREE " << (*i)->Marked() <<   std::endl;
-//			}
-//
-//		    rellipse = lNeighbors.rbegin();
-//		    lCluster.clear();
-//		    lCluster.push_back(lSeed);
-//
-//		}
 
 
 	}
+
+
+/* ---------------------------------------- Draw Functions ---------------------------------------- */
 
 	void DrawSurfels()
 	{
@@ -276,46 +235,19 @@ public:
 			glPopMatrix();
 		}
 	}
+
 	void DrawClusters (int pNumber)
 	{
 
 		std::vector<LAL::Vector4<float> >::iterator c = colors.begin();
 	    glPushMatrix();
-		if (pNumber == 0)
-		{
-
-			c = colors.begin();
-			for ( typename std::vector< std::list<ItemPtr> >::iterator i = Clusters.begin(); i != Clusters.end(); ++i )
-			{
-				glColor3fv(*c);
-				++c;
-				if(c == colors.end())
-					c = colors.begin();
-				for ( typename std::list<ItemPtr>::iterator j = Clusters[pNumber].begin() ; j != Clusters[pNumber].end(); ++j )
-				{
-					glVertex3fv((*j)->Center());
-				}
-			}
-
-
-		}else
-		{
 
 			if (Clusters.size() >= pNumber)
 			{
 
-
-				for ( int  i = pNumber; i !=0 ; --i )
+				for ( int  i = 0; i !=  pNumber ; ++i )
 				{
-					glPushMatrix();
-				   	glEnable(GL_POINT_SMOOTH);
-				   	glPointSize(10.0);
-				   	glColor3f(1.0,0.75,0.85);
-				    glBegin(GL_POINTS);
-					glVertex3fv( (*(Clusters[i].begin()))->Center() );
-					glEnd();
-					glPopMatrix();
-					std::cout << Clusters[i].size() << " Size" << std::endl;
+					//std::cout << Clusters[i].size() << " Size" << std::endl;
 					glPointSize(5.0);
 					if(c == colors.end())
 						c = colors.begin();
@@ -324,22 +256,28 @@ public:
 				   	glPointSize(5.0);
 					glColor3fv(*c);
 				    glBegin(GL_POINTS);
-					for ( typename std::list<ItemPtr>::iterator j = Clusters[i].begin() ; j != Clusters[i].end(); ++j )
-					{
-						glVertex3fv( (*j)->Center() );
-					}
-					++c;
+						for ( typename std::list<ItemPtr>::iterator j = Clusters[i].begin() ; j != Clusters[i].end(); ++j )
+						{
+							glVertex3fv( (*j)->Center() );
+						}
 					glEnd();
 					glPopMatrix();
 
+					// Desenha a semente
+
+					glPushMatrix();
+				   	glEnable(GL_POINT_SMOOTH);
+				   	glPointSize(15.0);
+				   	glColor3fv(*c);
+				    glBegin(GL_POINTS);
+						glVertex3fv( (*(Clusters[i].begin()))->Center() );
+					glEnd();
+					glPopMatrix();
+					++c;
+
 				}
 
-
 			}
-
-
-		}
-
 
     	glEnd();
     	glPopMatrix();
