@@ -114,6 +114,7 @@ public:
 	}
 
 	/// Build a set of Clusters by the Similarities and Aggregations.
+	/// @details ...
 	/// conditions pass by template parameter.
 	/// @param pCont Debug. How many clusters?
 	/// @param pCont pKNeighborsSize. The size of the Neighbor.
@@ -122,18 +123,24 @@ public:
 	void Build(int pCont,int pKNeighborsSize ,const ItemPtr& pSeed)
 	{
 
-
+		/// How many comparisons the Kd-Tree do to finding an element
 	    int 				 KNearestSearchComps = 0;
+	    /// Number of clustering. Only for debuging
 	    int 				 cont                = 0;
+	    ///
 	    ItemPtr				 lCurrentSeed        = pSeed;
+	    ///
 	    ItemPtr				 lSurfel       		 = pSeed;
 
-	    /// lista dos surfels a serem expandidos
+	    /// list of surfels for expansion
 	    std::deque<ItemPtr> lOpen;
-	    /// lista dos surfels que passaram pelo teste de agregação
+	    /// list of seeds
 	    std::deque<ItemPtr>	lSeeds;
+	    /// Surfel that belong to the cluster
+	    /// @detail
 	    std::list<ItemPtr> 	lClose;
 	    ItemPtrList			lExpasion;
+	    ItemPtrList 		lNeighbors;
 	    /// lista dos k vizinhos do surfel semente lSeed, em ordem decrescente de distância
 
 	    lSeeds.push_front(pSeed);
@@ -150,24 +157,12 @@ public:
 			}
 			lCurrentSeed->SetCost(0);
 			lCurrentSeed->SetID(cont);
-		    ItemPtrList 		lNeighbors;// 		= mKDTree.KNearestNeighbors(lCurrentSeed ,16, KNearestSearchComps);
-
-//		    for(typename std::vector<ItemPtr>::iterator it = lNeighbors.begin(); it !=  lNeighbors.end();++it)
-//	   		{
-//		    	if ((*it)->Marked() == 0)
-//		    	{
-//		    		(*it)->SetMarked(1);
-//		    		lOpen.push_back((*it));
-//		    	}
-//
-//	   		}
 		    lCurrentSeed->SetExpansionMarked(1);
 			lOpen.push_back(lCurrentSeed);
-			int contSurfel = 0;
+
+
 			while ( (lOpen.size() != 0))
 			{
-				//std::cout << "lOpen " << lOpen.size() << "--"  <<  "lClose " << lClose.size() << "lExpansion " << lExpasion.size() << std::endl;
-				++contSurfel;
 				lNeighbors.clear();
 				lSurfel = lOpen.front();
 				lSurfel->SetSeedMarked(1);
@@ -175,7 +170,7 @@ public:
 				lClose.push_back(lSurfel);
 				lNeighbors 		= mKDTree.KNearestNeighbors(lSurfel ,	8, KNearestSearchComps);
 
-				//lExpasion 		= GetNotMarked(lNeighbors);
+				lExpasion 		= GetNotMarked(lNeighbors);
 
 //				std::cout << "SEED " <<  lCurrentSeed->ID() << std::endl;
 //				std::cout << "Surfel " << contSurfel << std::endl;
