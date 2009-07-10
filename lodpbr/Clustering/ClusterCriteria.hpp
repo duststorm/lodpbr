@@ -49,12 +49,13 @@ class JoinByNormal : public JoinCriteria <Real,ItemPtr>
 public:
 	static bool Join ( ItemPtr seed, ItemPtr surfel, ItemPtr  item)
 	{
-//		 if ( 1 )//(seed->Normal() * item->Normal()) > 0.0  )
-//		 {
+
+		 if (  (seed->Normal() * item->Normal()) > 0.0  )
+		 {
 			 Real lim = 0.3;
 			 Real alfa = 3;
 			 Real dist 		 = alfa*surfel->Center().EuclideanDistance(item->Center());
-			 Real Normaldist = ((1 - (surfel->Normal() * item->Normal()))*surfel->Cost())*(1/lim);
+			 Real Normaldist = ( (1 - (surfel->Normal() * item->Normal()) )*surfel->Cost()) * (1/lim) ;
 			 Real cost = (dist+Normaldist+surfel->Cost());
 			 //std::cout << "cost " << Normaldist << std::endl;
 			 if (cost < lim)
@@ -71,13 +72,14 @@ public:
 
 			 }else
 			 {
-				 return 0;
+
 			 }
 
-//		 }else
-//		 {
-//			 return 0;
-//		 }
+
+		 }else
+		 {
+			 return 0;
+		 }
 
 
 

@@ -161,7 +161,7 @@ public:
 			lOpen.push_back(lCurrentSeed);
 
 
-			while ( (lOpen.size() != 0))
+			while ( (lOpen.size() != 0) && (lClose.size() < 200))
 			{
 				lNeighbors.clear();
 				lSurfel = lOpen.front();
@@ -176,6 +176,7 @@ public:
 //				std::cout << "Surfel " << contSurfel << std::endl;
 				for(typename std::vector<ItemPtr>::reverse_iterator it = lNeighbors.rbegin(); it !=  lNeighbors.rend();++it)
 				{
+
 					if ( Similarity::Join(lCurrentSeed,lSurfel,(*it)) )
 					{
 						(*it)->SetExpansionMarked(1);
