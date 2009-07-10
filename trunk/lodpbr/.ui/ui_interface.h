@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading ui file 'interface.ui'
 **
-** Created: Wed May 20 15:07:44 2009
+** Created: Thu May 28 16:33:03 2009
 **      by: Qt User Interface Compiler version 4.5.0
 **
 ** WARNING! All changes made in this file will be lost when recompiling ui file!
@@ -66,7 +66,7 @@ public:
         if (MainWindow->objectName().isEmpty())
             MainWindow->setObjectName(QString::fromUtf8("MainWindow"));
         MainWindow->setWindowModality(Qt::WindowModal);
-        MainWindow->resize(637, 526);
+        MainWindow->resize(783, 671);
         MainWindow->setLayoutDirection(Qt::LeftToRight);
         MainWindow->setDockNestingEnabled(true);
         action_Open_File = new QAction(MainWindow);
@@ -163,7 +163,7 @@ public:
         MainWindow->setStatusBar(statusbar);
         menubar = new QMenuBar(MainWindow);
         menubar->setObjectName(QString::fromUtf8("menubar"));
-        menubar->setGeometry(QRect(0, 0, 637, 25));
+        menubar->setGeometry(QRect(0, 0, 783, 25));
         menuSair = new QMenu(menubar);
         menuSair->setObjectName(QString::fromUtf8("menuSair"));
         menuHelp = new QMenu(menubar);

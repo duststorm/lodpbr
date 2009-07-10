@@ -204,9 +204,9 @@ void GLFrame::calLimits()
 {
      cluster = Cluster<float,LAL::Surfel<float>*>(surfels);
 
-     LAL::Surfel<float>* seed = new LAL::Surfel<float>(surfels.mSurfels[0]);
+     LAL::Surfel<float>* seed = new LAL::Surfel<float>(surfels.mSurfels[999]);
 
-     cluster.Build(10,8,seed);
+     cluster.Build(1,8,seed);
 
 }
 
