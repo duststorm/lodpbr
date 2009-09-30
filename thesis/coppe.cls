@@ -61,6 +61,8 @@
 \RequirePackage{graphicx}
 \RequirePackage{tabularx}
 \RequirePackage{eqparbox}
+\RequirePackage{algorithmic}
+\RequirePackage{algorithm}
 \RequirePackage[a4paper,bindingoffset=0.0cm,vcentering=true,%
 top=2.5cm,bottom=2.5cm,left=3.0cm,right=3.0cm]{geometry}
 \def\CoppeTeX{{\rm C\kern-.05em{\sc o\kern-.025em p\kern-.025em
@@ -449,6 +451,7 @@ p\kern-.025em e}}\kern-.08em\TeX}
   \global\let\author\relax
   \global\let\author\relax
   \global\let\date\relax}
+  
 \renewcommand\listoffigures{%
   \immediate\write\@auxout{%
   \string\newlabel{cat:lofflag}{{}{:~il.;}{}{page.\roman{page}}{}}}
@@ -464,6 +467,7 @@ p\kern-.025em e}}\kern-.08em\TeX}
     \@starttoc{lof}%
     \if@restonecol\twocolumn\fi
     }
+    
 \renewcommand\listoftables{%
     \if@twocolumn
       \@restonecoltrue\onecolumn
@@ -472,12 +476,35 @@ p\kern-.025em e}}\kern-.08em\TeX}
     \fi
     \chapter*{\listtablename}%
       \addcontentsline{toc}{chapter}{\listtablename}%
-      \@mkboth{%
-          \MakeUppercase\listtablename}%
-         {\MakeUppercase\listtablename}%
+      \@mkboth{\MakeUppercase\listtablename}%
+         	  {\MakeUppercase\listtablename}%
     \@starttoc{lot}%
     \if@restonecol\twocolumn\fi
     }
+
+\renewcommand\listofalgorithms{%
+\renewcommand\glossaryname{\listalgorithmname}%
+    \if@twocolumn
+      \@restonecoltrue\onecolumn
+    \else
+      \@restonecolfalse
+    \fi
+    \chapter*{\listalgorithmname}%
+      \addcontentsline{toc}{chapter}{\listalgorithmname}%
+      \@mkboth{\MakeUppercase\listalgorithmname}%
+         	  {\MakeUppercase\listalgorithmname}%
+    \@starttoc{loa}%
+    \if@restonecol\twocolumn\fi
+    }
+    
+\renewcommand{\listofalgorithms}{\begingroup
+\tocfile{List of Algorithms}{loa}
+\endgroup}    
+  
+%Modificado por mim%
+
+%------------------%    
+    
 \newcommand\printlosymbols{%
 \renewcommand\glossaryname{\listsymbolname}%
 \@input@{\jobname.los}}
@@ -592,6 +619,9 @@ p\kern-.025em e}}\kern-.08em\TeX}
 \newcommand\glossaryname{Glossary}
 \newcommand\listabbreviationname{Lista de Abreviaturas}
 \newcommand\listsymbolname{Lista de S{\' i}mbolos}
+% modificado por mim %
+\renewcommand\listalgorithmname{Lista de Algor{\' i}thmos}%
+%--%
 \newcommand\local@advisorstring{Orientador}
 \newcommand\foreign@advisorstring{Advisor}
 \ifthenelse{\boolean{maledoc}}{%
