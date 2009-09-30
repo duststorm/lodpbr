@@ -1,8 +1,66 @@
-\chapter{Revisão Bibliográfica}
+\chapter{Trabalhos Relacionados}
 
-No início dos anos 50, LANCZOS~\cite{Lan50a} desenvolveu um método para a
-solução de problemas de autovalor simétricos, empregando transformações
-similares, obtendo uma matriz da qual fosse mais simples obter seus autovalores
-do que a matriz original do problema. ARNOLDI \cite{Arn51a} generalizou o
-método, estendendo-o para problemas não simétricos.
+Neste capítulo iremos apresentar alguns trabalhos que inspiraram esta
+dissertação, com ênfase em dois deles em particular.
+O primeiro é \textit{QSplat} \cite{Rusinkiewicz2000}, um sistema para
+renderização de pontos baseado em uma hierarquia de esferas envolventes. O
+Segundo é o \textit{Sequential Point Tress} (SPT) \cite{Dachsbacher2003}% 
+\abbrev{SPT}{\textit{Sequential Point Trees}}, uma estrutura de dados
+que permite-nos renderizar em Nível de Detalhe e diretamente na GPU
+(\textit{Graphic Processor Unit}) % 
+\abbrev{SPT}{\textit{Graphic Processor Unit}} modelos de pontos. E por último
+serão apresentados outro trabalhos que seguem esta mesma linha mas de forma
+resumida e com suas principais contribuições.
 
+\section{\textit{QSplat}}
+Nessa secão iremos descrever o \textit{QSplat}, um sistema para representação e
+renderização progressiva ,de modelos grandes com amostras de $100$ milhões há
+$1$ bilhões de pontos comos os produzidos no Projeto Michelangelo Digital \cite{Levoy2000}.
+\textit{QSplat} combina uma hierarquia baseada em esfera envolventes com renderização baseado em pontos.
+Os nós intenos da hierarquia armazenam atributos (posição, normal, cor) que são
+estimados pelos seus nós filhos. O algoritmo de renderização percorre a hierarquia até que o tamanho da esfera envolvente seja menor que um valor pré-determinado (geralmente um
+pixel). Então o nó é renderizado e seus filhos podem ser descartados. O sistema
+será descrito com mais detalhes nas seções seguintes.
+\subsection{\textit{QSplat} Estrutura de Dados}
+\textit{QSplat} usa uma hierárquia de esfera envolventes que também é usada
+para controle de Nível de detalhe, \textit{view frustum cullling} e
+\textit{back facing culling}. Cada nó da hierarquia contem o centro e o raio da
+esfera envolvente, uma normal, e o ângulo do cone de normais, e uma cor. A
+hierarquia é criada em um pré-processamento e guardada em disco.
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=8.0cm]{img/cap02/schematicQSplat} 
+\caption{Figura esquemática da hierarquia de esferas de
+\textit{QSplat} (Retirada de \cite{Wand2004})}
+\label{fig:schematicQSplat}
+\end{figure}
+
+\begin{description}
+\item{Algorítmo de Renderização:}
+\item{Estrutura do Nó}
+\end{description}
+
+\begin{algorithm}
+\begin{algorithmic}[C]
+\label{Algorithm:PQ}
+\caption{Terceiro}
+\IF {$i\geq maxval$} 
+        \STATE $i\gets 0$
+\ELSE
+        \IF {$i+k\leq maxval$}
+                \STATE $i\gets i+k$
+        \ENDIF
+\ENDIF 
+\end{algorithmic}
+\end{algorithm}
+
+
+\subsection{Algorítmo de Renderização}
+\subsubsection{Pré-Processamento}
+\subsection{Estrutura do Nó e Quantização}
+\subsection{Discurssão}
+
+\section{\textit{Sequential Point Trees}}
+\subsection{Sequenlização}
+\subsection{}
