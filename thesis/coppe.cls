@@ -497,9 +497,6 @@ p\kern-.025em e}}\kern-.08em\TeX}
     \if@restonecol\twocolumn\fi
     }
     
-\renewcommand{\listofalgorithms}{\begingroup
-\tocfile{List of Algorithms}{loa}
-\endgroup}    
   
 %Modificado por mim%
 
