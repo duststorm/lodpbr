@@ -8,25 +8,27 @@ Segundo é o \textit{Sequential Point Tress} (SPT) \cite{Dachsbacher2003}%
 \abbrev{SPT}{\textit{Sequential Point Trees}}, uma estrutura de dados
 que permite-nos renderizar em Nível de Detalhe e diretamente na GPU
 (\textit{Graphic Processor Unit}) % 
-\abbrev{SPT}{\textit{Graphic Processor Unit}} modelos de pontos. E por último
+\abbrev{GPU}{\textit{Graphic Processor Unit}} modelos de pontos. E por último
 serão apresentados outro trabalhos que seguem esta mesma linha mas de forma
 resumida e com suas principais contribuições.
 
 \section{\textit{QSplat}}
-Nessa secão iremos descrever o \textit{QSplat}, um sistema para representação e
-renderização progressiva ,de modelos grandes com amostras de $100$ milhões há
-$1$ bilhões de pontos comos os produzidos no Projeto Michelangelo Digital \cite{Levoy2000}.
-\textit{QSplat} combina uma hierarquia baseada em esfera envolventes com renderização baseado em pontos.
-Os nós intenos da hierarquia armazenam atributos (posição, normal, cor) que são
-estimados pelos seus nós filhos. O algoritmo de renderização percorre a hierarquia até que o tamanho da esfera envolvente seja menor que um valor pré-determinado (geralmente um
-pixel). Então o nó é renderizado e seus filhos podem ser descartados. O sistema
-será descrito com mais detalhes nas seções seguintes.
+Nesta seção iremos descrever o \textit{QSplat}, um sistema para representação e
+renderização progressiva, de modelos grandes com amostras de $100$ milhões há
+$1$ bilhões de pontos como os produzidos no Projeto Michelangelo Digital \cite{Levoy2000}.
+\textit{QSplat} combina uma hierarquia de esfera envolventes com renderização
+baseado em pontos. Os nós internos da hierarquia armazenam atributos (posição, normal, cor) que são
+estimados pelos seus nós filhos. O algoritmo de renderização percorre a
+hierarquia até que o tamanho da projeção da esfera envolvente seja menor que um
+valor pré-determinado (geralmente um \textit{pixel}). Então o nó é renderizado
+e seus filhos podem ser descartados. O sistema será descrito com mais detalhes nas seções seguintes.
 \subsection{\textit{QSplat} Estrutura de Dados}
-\textit{QSplat} usa uma hierárquia de esfera envolventes que também é usada
-para controle de Nível de detalhe, \textit{view frustum cullling} e
-\textit{back facing culling}. Cada nó da hierarquia contem o centro e o raio da
-esfera envolvente, uma normal, e o ângulo do cone de normais, e uma cor. A
-hierarquia é criada em um pré-processamento e guardada em disco.
+\textit{QSplat} usa uma hierarquia de esfera envolventes que também é usada
+para controle de nível de detalhe, \textit{view frustum cullling} e
+\textit{back facing culling} \cite{Rusinkiewicz2000}. Cada nó da hierarquia
+contem o centro e o raio da esfera envolvente, uma normal, o ângulo do cone
+de normais e uma cor (opcional). A hierarquia é criada em um pré-processamento
+e guardada em disco. Na Figura \ref{fig:schematicQSplat} temos uma esquema de como seria a hierarquia.
 
 \begin{figure}[ht]
 \centering
@@ -36,31 +38,192 @@ hierarquia é criada em um pré-processamento e guardada em disco.
 \label{fig:schematicQSplat}
 \end{figure}
 
+A estrutura de cada nó na hierarquia de esferas é mostrada na Figura
+\ref{fig:NodeQSplat}. Um nó contem a posição e o tamanho da esfera  relativa a
+seus parentes, normal, cone de normais e uma cor (opcional) e poucos
+\textit{bits} que representam a estrutura da árvore.
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=12.0cm]{img/cap02/NodeQuantization} 
+\caption{Estrutura de um Nó}
+\label{fig:NodeQSplat}
+\end{figure}
+
 \begin{description}
-\item{Algorítmo de Renderização:}
-\item{Estrutura do Nó}
+\item[Posilçao e Raio:]{ A posição e o raio de cada esfera é codificada
+relativamente aos seus parentes na hierarquia de esferas envolventes. A fim de  
+economizar memória, seus valores são quantizados em $13$ valores. Então o
+raio de um esfera varia de $\frac{1}{13}$ a $\frac{13}{13}$ do raio de seus
+parentes e seu centro relativo ao centro de seus parentes (em cada um dos suas
+coordenadas $X$, $Y$ e $Z$) é algum múltiplo de $\frac{1}{13}$. Para garantir
+que a processo de quantização não introduza nenhum buraco durante a
+renderização, todos ou valores são arredondados para o maior valor que englobe
+seus parentes}
+\item[Normal]{A nomal é codificada em $14$ \textit{bits}. Sua quantização
+usa um grade de $52$$x$$52$ em cada uma das $6$ faces do cubo. Um tabela é
+usada para decodificar a normal representada. Na prática são usados
+$52\cdot52\cdot6 = 16224$  diferentes valores de normal}
+\item[Color]{O anglo do cone de normais é codificado em apenas $2$
+\textit{bits}. As quatros valores possíveis que representam o metade do
+anglo de abertura do cone são $\frac{1}{16}$, $\frac{4}{16}$, $\frac{9}{16}$ e
+$\frac{16}{16}$ }
+\item[Cor]{Dúvida \ldots}
+\end{description}
+\subsection{Renderização}
+O processo de renderização é simples, como mostrado na Figura
+\ref{fig:percorrimento}. Os estágios do algoritmo serão mostrados a seguir.
+
+\begin{description}
+\item[\textit{Visible Culling}]{Como é usado um hierarquia de esferas
+envolventes, nós que não são visíveis são eliminados durante o percorrimento.
+\textit{Frustum Culling} é feito, testando cada esfera contra os planos do
+tronco de pirâmide que representa o campo de visão. Se a esfera está fora, ela
+e sua sub-árvore são eliminados. Se ela está dentro do
+campo de visão, ela e seus filhos estão visíveis e não precisam mais passar
+pelo teste. \textit{Backface Culling} também é realizados durante o processo de
+renderização, usando o ângulo do cone de normais.}
+\item[Heurística de Renderização]{A heurística usando é o tamanho da imagem
+prjetada na tela, ou seja, área da esfera projetada na tela exceder
+um determinado valor (geralmente um \textit{pixel}).}
+\item[Renderizando um \textit{Splat}] Quando se atinge um nó desejado, de
+acordo com os critérios mencionados anteriormente, o \textit{splat} é
+renderizado representando a esfera corrente. O tamanho do \textit{splat} é
+baseado no diâmetro da projeção da esfera corrente, e sua cor é obtida usando
+cálculo de iluminação baseada na normal e cor da mesma.
+
 \end{description}
 
-\begin{algorithm}
-\begin{algorithmic}[C]
-\label{Algorithm:PQ}
-\caption{Terceiro}
-\IF {$i\geq maxval$} 
-        \STATE $i\gets 0$
-\ELSE
-        \IF {$i+k\leq maxval$}
-                \STATE $i\gets i+k$
-        \ENDIF
-\ENDIF 
-\end{algorithmic}
-\end{algorithm}
+\begin{figure}[tcb]
+  \centering \mbox{} \hfill
+  \begin{minipage}[b]{0.45\linewidth}
+ \centering
+  \includegraphics[width=1.25\linewidth]{img/cap02/ovoRender}\\[0cm](a)
+  \end{minipage}
+  \hfill
+  \begin{minipage}[b]{0.45\linewidth}
+    \centering
+    \includegraphics[width=1.25\linewidth]{img/cap02/CoelhoRender}\\[0cm](b)
+  \end{minipage}
+  \hfill \mbox{}
+  \caption{\label{fig:percorrimento}Esquema do algoritmo de renderização:  
+  \emph{(a)} Tamanho da imagem projetada do nó é maior que um \textit{pixel}.
+  Continua o percorrimento nas sub-árvores; \emph{(b)} Tamanho da imagem
+  projetad do nó é menor que um \textit{pixel}. Renderiza o \textit{splat}.}
+\end{figure}
 
-
-\subsection{Algorítmo de Renderização}
-\subsubsection{Pré-Processamento}
-\subsection{Estrutura do Nó e Quantização}
 \subsection{Discurssão}
+\textbf{QSplat} possui um processo bem simples, mas infelizmente ele não usa
+todo o potencial gráfico que as GPUs oferecem. Dada
+granularidade na sua determinação de nível de detalhes, um modelo chega e ser
+renderizado ponto por ponto. Como consequência, esse ``modo imediato'' de
+renderizar torna a GPU pouco utilizada, pois está sempre esperando
+por novos dados para renderizar. Levando em conta que não é apenas a coordenada
+de um ponto que está sendo utizada, mas todos os seus outros atributos, como
+cor e normal.
+
+No entanto, está simplicidade torna o \textit{Qsplat} um algoritmo que pode ser
+usado em outras aplicações. Sua hierarquia de esfera é uma boa estrutura para
+\textit{Ray Tracing}. Outra são aplicações em rede como a do \textit{Stream
+QSplat}\cite{Rusinkiewicz2001} que permite visualizar modelos $3D$ de forma
+progressiva e remotamente.
+
 
 \section{\textit{Sequential Point Trees}}
-\subsection{Sequenlização}
-\subsection{}
+\textit{QSplat} possui um processamento de dados muito simple e fácil de
+implementar, mas infelizmente sua estrutura hierarquica recursiva é dificil de
+ser implementada em GPU. Os pontos renderizados não são armazenados de forma
+contínua e não são processados sequencialmente.A \textit{CPU} (\textit{Central
+Processor Unit})%
+\abbrev{CPU}{\textit{Central Processor Unit}} percorre a
+árvore e faz chamadas independentes para renderizar cada nó. Isso causa um
+``gargalo'' entra a CPU e a GPU, sendo que esta última fica muito tempo ociosa
+esperando por dados da CPU.
+\textit{Sequential Point Trees} propoe o uso da estrutura de \textit{QSplat},
+so que de uma forma sequencial que é facilmente tratada em GPU. Sendo assim,
+transferindo mais trabalho para GPU e diminuindo este ``gargalo'';
+Nas seções que seguem , SPT será apresentado com mais detalhes. 
+\subsection{Hierarquia de Pontos}
+Inicialmente SPT possui um hierarquia de pontos representada por um
+\textit{Octree} \cite{Samet05}. Cada nó da hierarquia representa parte do
+objeto. Ela armazena um centro \textbf{c} e uma estimativa da normal
+\textbf{n}. Um nó armazena também um diâmentro \textbf{d} da esfera envolvente
+centrada em \textbf{c} que representa parte do objeto. O nó interior representa
+a unição de seus nós filhos, então o diâmetro cresce a medida que sobe na
+hierarquia. Os nós folhas possuem pontos que são distribuidos uniformente no
+objeto, então possue diâmentro aproximadamente iguais.
+
+\subsection{Métricas de Erro}
+
+Cada nó na hierarquia pode ser aproximada por um disco com o mesmo centro,
+normal e diâmetro do nó. O erro dessa aproximação é descrito por dois valores
+(TODO: Fala do erros implementados): o erro perpendicular $e_p$ e o error
+tangencial $e_t$.
+ 
+\noindent \textbf{Erro Perpendicular}
+
+O erro perpendicular $e_p$ é a distância mínima entre dois planos paralelo ao
+disco que engloba todos os filhos. Este erro mede variância e pode ser
+calculado como:
+
+\begin{eqnarray}
+ e_p & = & max\{((c_i-c)\cdot n)+d_i\} - min\{((c_i-c)\cdot n )-d_i\} \\
+     &   &\textnormal{with}\hspace{0.5cm}  d_i = r_i \sqrt{1-(n_i\cdot n)^2}
+     \nonumber
+  \label{perpendicular}
+\end{eqnarray}
+
+\begin{figure}[tcb]
+  \centering \mbox{} \hfill
+  \begin{minipage}[b]{0.40\linewidth}
+ \centering
+ 
+  \includegraphics[width=1.0\linewidth]{img/cap02/PosterSquential}
+  \end{minipage}
+  \hfill
+  \begin{minipage}[b]{0.40\linewidth}
+    \centering
+    \includegraphics[width=1.0\linewidth]{img/cap02/di}
+  \end{minipage}
+  \hfill \mbox{}
+  \caption{\label{fig:perpendicular}Como error perpendicular, usa-se a
+  distância entre dois plano paralelo ao disco que engloba todos so filhos
+  (Retirada de \cite{Dachsbacher2003}).}
+\end{figure}
+
+Durante a renderização, o erro perpendicular é projetado na imagem, resultando
+em um erro $\tilde{e}_p$. $\tilde{e}_p$ é proporcional ao seno do ângulo entre
+o vetor de visão $v$ e a normal do disco $n$ e diminui com $\frac{1}{r}$ e $r =
+|v|\cdot\tilde{e}_p$ caputra erros ao longo das siluetas:
+  
+\begin{equation}
+ \tilde{e}_p & = e_p \frac{\sin{(\alpha)}}{r} \quad \text{sendo} \quad \alpha =
+ \angle(n,v)
+  \label{tangencial}
+\end{equation}
+\noindent \textbf{Erro Tangencial}
+
+
+O erro tangencial $e_t$, analisa a projeção dos discos dos filhos no
+disco do pai como mostrado na Figura \ref{fig:Tangencial}. $e_t$ mede se o
+disco pai cobre um grande área desnecessária. O erro é medido usando várias
+retas ao redor dos filhos projetados. $e_t$ é portanto o menor diâmetro do
+disco pai menos o tamanho do menor intevalo entre retas. (dúvida em relação a
+escrita). $e_t$ negativos são setados em zero. $e_t$ é projetado no espaço de
+imagem como:
+\begin{equation}
+ \tilde{e}_t & = e_t \frac{\cos{(\alpha)}}{r} 
+  \label{tangencial}
+\end{equation}
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=15.0cm]{img/cap02/tangencial} 
+\caption{Erro tangencial, mede o quão aproximado é o disco pai em relação ao
+filho no plano tangente (Retirada de \cite{Dachsbacher2003}) .}
+\label{fig:Tangencial}
+\end{figure}
+
+\subsection{Rearranjamento}
+
+\subsection{Discurssão}
