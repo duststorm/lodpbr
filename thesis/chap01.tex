@@ -1,16 +1,41 @@
 \chapter{Introdução}
 
 \section{Motivaç{\~ a}o}
+Renderização Baseada em pontos vem se tornando popular no últimos anos
+devido a evolução do \textit{hardware} gráfico 3D 
+( e.g GPU \textit{Graphic Processor Unit}) % 
+\abbrev{GPU}{\textit{Graphic Processor Unit}} e devido ao fato, que modelos
+extremamente grandes produzidos pelos \textit{Scanners} $3D$ estarem
+disponíveis \cite{Levoy2000, Correa02towardspoint-based}. Ao contrário do
+método tradicional de renderização em que modelos $3D$ são aproximados por um
+conjunto de polígonos (malhas poligonais) e iluminados usando
+\textit{Gouraund} ou \textit{Phong} durante a projeção, técnicas de renderização
+baseada em pontos usa nuvem de pontos sem conectividade explicita.
 
 \begin{figure}[ht]
 \centering
-\includegraphics[width=16.0cm]{img/cap01/lucyIo} 
+\includegraphics[width=12.0cm]{img/cap01/triangle2point} 
 \caption{Lucy figure}
-\label{fig:merge}
+\label{fig:triangle2point}
 \end{figure}
 
-\section{Renderização Baseada em Pontos}
-\section{Nível de Detalhes}
+Há várias razões para o sucesso da renderização baseada em pontos. Primeiro,
+com o aumento na quantidade de memória das GPUs modernas tornou-se 
+possível tratar cenas com quantidade enormes de polígonos e como consequência a
+quantidade de polígonos que são mapeados em menos de um \textit{pixel} é
+grande, perdendo-se muito tempo no processo de rasterização(explicação) como
+ilustrado na Figura \ref{fig:triangle2point}. Como as GPUs são autamente otmizadas para
+renderizar polígonos, muitos modelos eram convertidos em um conjunto de poligonos usando
+métodos como o algoritmo \textit{marching cubes} \cite{Lorensen1978}. No
+entando as GPUs modernas agora possuem partes de seu \textit{pipeline} gráfico
+programáveis, permitindo a criação de algoritmos de renderização alternativos
+ultizando-se todo o poder de processamento das GPUs
+\cite{Ren2002,Botsch2003,marroquim07}. Segundo, representar superfícies curvas
+usando polígonos planares requer informação de conectividade e ainda permanecem
+como uma aproximação da superfície curva. Pontos no entanto não mantêm esse
+tipo de informação e operações como leve de detalhes, dormação geométrica e
+modificações na topologia são fáceis de implementar.
+
 \section{Objetivo}
 \section{Organizaç{\~ a}o da Dissertação}
 
