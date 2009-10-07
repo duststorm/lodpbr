@@ -7,9 +7,8 @@ renderização de pontos baseado em uma hierarquia de esferas envolventes. O
 Segundo é o \textit{Sequential Point Tress} (SPT) \cite{Dachsbacher2003}% 
 \abbrev{SPT}{\textit{Sequential Point Trees}}, uma estrutura de dados
 que permite-nos renderizar em Nível de Detalhe e diretamente na GPU
-(\textit{Graphic Processor Unit}) % 
-\abbrev{GPU}{\textit{Graphic Processor Unit}} modelos de pontos. E por último
-serão apresentados outro trabalhos que seguem esta mesma linha mas de forma
+modelos de pontos. E por último serão apresentados outro trabalhos que 
+seguem esta mesma linha mas de forma
 resumida e com suas principais contribuições.
 
 \section{\textit{QSplat}}
@@ -54,9 +53,9 @@ seus parentes, normal, cone de normais e uma cor (opcional) e poucos
 \item[Posilçao e Raio:]{ A posição e o raio de cada esfera é codificada
 relativamente aos seus parentes na hierarquia de esferas envolventes. A fim de  
 economizar memória, seus valores são quantizados em $13$ valores. Então o
-raio de um esfera varia de $\frac{1}{13}$ a $\frac{13}{13}$ do raio de seus
+raio de um esfera varia de $1\13$ a $13\13$ do raio de seus
 parentes e seu centro relativo ao centro de seus parentes (em cada um dos suas
-coordenadas $X$, $Y$ e $Z$) é algum múltiplo de $\frac{1}{13}$. Para garantir
+coordenadas $X$, $Y$ e $Z$) é algum múltiplo de $1\13$. Para garantir
 que a processo de quantização não introduza nenhum buraco durante a
 renderização, todos ou valores são arredondados para o maior valor que englobe
 seus parentes}
@@ -66,8 +65,8 @@ usada para decodificar a normal representada. Na prática são usados
 $52\cdot52\cdot6 = 16224$  diferentes valores de normal}
 \item[Color]{O anglo do cone de normais é codificado em apenas $2$
 \textit{bits}. As quatros valores possíveis que representam o metade do
-anglo de abertura do cone são $\frac{1}{16}$, $\frac{4}{16}$, $\frac{9}{16}$ e
-$\frac{16}{16}$ }
+anglo de abertura do cone são $1\16$, $4\16$, $9\16$ e
+$16\16$ }
 \item[Cor]{Dúvida \ldots}
 \end{description}
 \subsection{Renderização}
@@ -113,7 +112,7 @@ cálculo de iluminação baseada na normal e cor da mesma.
 \end{figure}
 
 \subsection{Discurssão}
-\textbf{QSplat} possui um processo bem simples, mas infelizmente ele não usa
+\textit{QSplat} possui um processo bem simples, mas infelizmente ele não usa
 todo o potencial gráfico que as GPUs oferecem. Dada
 granularidade na sua determinação de nível de detalhes, um modelo chega e ser
 renderizado ponto por ponto. Como consequência, esse ``modo imediato'' de
@@ -130,8 +129,8 @@ progressiva e remotamente.
 
 
 \section{\textit{Sequential Point Trees}}
-\textit{QSplat} possui um processamento de dados muito simple e fácil de
-implementar, mas infelizmente sua estrutura hierarquica recursiva é dificil de
+\textit{QSplat} possui um processamento de dados muito simple e de fácil
+implementação, mas infelizmente sua estrutura hierárquica recursiva é dificil de
 ser implementada em GPU. Os pontos renderizados não são armazenados de forma
 contínua, portanto não são processados sequencialmente.A \textit{CPU}
 (\textit{Central Processor Unit})%
