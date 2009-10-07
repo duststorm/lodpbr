@@ -133,22 +133,22 @@ progressiva e remotamente.
 \textit{QSplat} possui um processamento de dados muito simple e fácil de
 implementar, mas infelizmente sua estrutura hierarquica recursiva é dificil de
 ser implementada em GPU. Os pontos renderizados não são armazenados de forma
-contínua e não são processados sequencialmente.A \textit{CPU} (\textit{Central
-Processor Unit})%
+contínua, portanto não são processados sequencialmente.A \textit{CPU}
+(\textit{Central Processor Unit})%
 \abbrev{CPU}{\textit{Central Processor Unit}} percorre a
 árvore e faz chamadas independentes para renderizar cada nó. Isso causa um
 ``gargalo'' entra a CPU e a GPU, sendo que esta última fica muito tempo ociosa
 esperando por dados da CPU.
-\textit{Sequential Point Trees} propoe o uso da estrutura de \textit{QSplat},
+\textit{Sequential Point Trees} propõe o uso da estrutura de \textit{QSplat},
 so que de uma forma sequencial que é facilmente tratada em GPU. Sendo assim,
-transferindo mais trabalho para GPU e diminuindo este ``gargalo'';
+transferindo mais trabalho para GPU e diminuindo este ``gargalo''.
 Nas seções que seguem , SPT será apresentado com mais detalhes. 
 \subsection{Hierarquia de Pontos}
 Inicialmente SPT possui um hierarquia de pontos representada por um
 \textit{Octree} \cite{Samet05}. Cada nó da hierarquia representa parte do
 objeto. Ela armazena um centro \textbf{c} e uma estimativa da normal
 \textbf{n}. Um nó armazena também um diâmentro \textbf{d} da esfera envolvente
-centrada em \textbf{c} que representa parte do objeto. O nó interior representa
+centrada em \textbf{c}. O nó interior representa
 a unição de seus nós filhos, então o diâmetro cresce a medida que sobe na
 hierarquia. Os nós folhas possuem pontos que são distribuidos uniformente no
 objeto, então possue diâmentro aproximadamente iguais.
@@ -157,21 +157,12 @@ objeto, então possue diâmentro aproximadamente iguais.
 
 Cada nó na hierarquia pode ser aproximada por um disco com o mesmo centro,
 normal e diâmetro do nó. O erro dessa aproximação é descrito por dois valores
-(TODO: Fala do erros implementados): o erro perpendicular $e_p$ e o error
-tangencial $e_t$.
+: o erro perpendicular $e_p$ e o error tangencial $e_t$.
  
-\noindent \textbf{Erro Perpendicular}
-
-O erro perpendicular $e_p$ é a distância mínima entre dois planos paralelo ao
-disco que engloba todos os filhos. Este erro mede variância e pode ser
+\noindent \textbf{Erro Perpendicular:}
+O erro perpendicular $e_p$ é a distância mínima entre dois planos
+paralelo ao disco que engloba todos os filhos. Este erro mede variância e pode ser
 calculado como:
-
-\begin{eqnarray}
- e_p & = & max\{((c_i-c)\cdot n)+d_i\} - min\{((c_i-c)\cdot n )-d_i\} \\
-     &   &\textnormal{with}\hspace{0.5cm}  d_i = r_i \sqrt{1-(n_i\cdot n)^2}
-     \nonumber
-  \label{perpendicular}
-\end{eqnarray}
 
 \begin{figure}[tcb]
   \centering \mbox{} \hfill
@@ -191,19 +182,24 @@ calculado como:
   (Retirada de \cite{Dachsbacher2003}).}
 \end{figure}
 
+\begin{eqnarray}
+ e_p & = & max\{((c_i-c)\cdot n)+d_i\} - min\{((c_i-c)\cdot n )-d_i\} \\
+     &   &\textnormal{with}\hspace{0.5cm}  d_i = r_i \sqrt{1-(n_i\cdot n)^2}
+  \label{perpendicular}
+\end{eqnarray}
+
 Durante a renderização, o erro perpendicular é projetado na imagem, resultando
 em um erro $\tilde{e}_p$. $\tilde{e}_p$ é proporcional ao seno do ângulo entre
-o vetor de visão $v$ e a normal do disco $n$ e diminui com $\frac{1}{r}$ e $r =
+o vetor de visão $v$ e a normal do disco $n$ e diminui com $\cfrac{1}{r}$ e $r =
 |v|\cdot\tilde{e}_p$ caputra erros ao longo das siluetas:
   
-\begin{equation}
+  \begin{equation}
  \tilde{e}_p & = e_p \frac{\sin{(\alpha)}}{r} \quad \text{sendo} \quad \alpha =
  \angle(n,v)
   \label{tangencial}
 \end{equation}
-\noindent \textbf{Erro Tangencial}
 
-
+\noindent \textbf{Erro Tangencial:}
 O erro tangencial $e_t$, analisa a projeção dos discos dos filhos no
 disco do pai como mostrado na Figura \ref{fig:Tangencial}. $e_t$ mede se o
 disco pai cobre um grande área desnecessária. O erro é medido usando várias
@@ -211,8 +207,20 @@ retas ao redor dos filhos projetados. $e_t$ é portanto o menor diâmetro do
 disco pai menos o tamanho do menor intevalo entre retas. (dúvida em relação a
 escrita). $e_t$ negativos são setados em zero. $e_t$ é projetado no espaço de
 imagem como:
+
 \begin{equation}
- \tilde{e}_t & = e_t \frac{\cos{(\alpha)}}{r} 
+ \tilde{e}_t = e_t \frac{\cos{(\alpha)}}{r} 
+  \label{tangencial}
+\end{equation}
+
+\noindent \textbf{Erro Geometrico:}
+O erro perpendicular e tangencial podem ser combinados em um único erro
+geométrico:
+Agora o erro no espaço de image $\tilde{e}_g$ depende apenas de $r$, e não mais
+do ângulo do visão: $ \tilde{e}_g = \cfrac{e_g}{r}$
+ 
+ \begin{equation}
+ \tilde{e}_g  = \max\{e_p\sin{\alpha} + e_t\cos{\alpha}\} = \sqrt{e^2_p + e^2_t} 
   \label{tangencial}
 \end{equation}
 
@@ -224,6 +232,78 @@ filho no plano tangente (Retirada de \cite{Dachsbacher2003}) .}
 \label{fig:Tangencial}
 \end{figure}
 
+\subsection{Renderização Recursiva}
+Um objeto é renderizado na hierarquia de pontos usando um percorrimento em
+profundidade. Para cada nó um erro de imagem $\tilde{e}_g$ é calculado. Se
+$\tilde{e}_g$ está abaixo de um limite de error estabelecido $\epsilon$ e o nó
+não é uma nó folha , seus filhos são percorridos recursivamente. Por outro lado,
+um \textit{splat} de tamanho $\tilde{d} =  d/r$ é renderizado. Note que
+esta hierarquia de pontos não se adapta apenas a distância do observador $r$,
+mas também para propriedades da superfície. Grandes áreas planas são detectadas
+com pequenos erro geométrico $\tilde{e}_g$ e podem ser renderizados com splats
+grandes.
 \subsection{Rearranjamento}
+O procedimento de renderização da seção anterior é recursivo e não se adapta ao
+processamento to rápido e sequêncial da GPU. Assim, há um rearranjamento da
+estrutura em árvore para um estrutura em lista e o teste recursivo é
+substituido por um percorrimento sequêncial sobre a lista de pontos.
+
+Para isso, o erro simplificado $\tilde{e}_g$ é subistituido por um que sejem
+mais intuitivo. Assume-se que $\epsilon$ é constante. O teste
+recursivo é $\tilde{e}_g = {e}_g/r < \epsilon $ e ao invés de $e_g$, é
+armazenado um distância mínima $r_{\min} = e_g/ \epsilon$ que simplifica o
+teste recursivo para $r > r_{\min}$. Entretando, quando os nós da árvore são
+processados sequencialmente sem informação hierarquica, há necessidade de um
+teste não recursivo. Para esse fim, é adicionado um parâmetro $r_{\max}$, que é
+simplesmnete um $r_{\min}$ do seu nó pai, em cada nó e usa-se $r \in
+[r_{\min},r_{\max}]$ como um teste não recursivo. Desta maneira pode-se guiar o
+algoritmo de renderização com esse teste \textit{intervalar} para cada nó.
+
+\begin{figure}[tcb]
+  \centering \mbox{} \hfill
+  \begin{minipage}[b]{0.40\linewidth}
+ \centering
+  \includegraphics[width=1.0\linewidth]{img/cap02/SequentialTree}\\[0cm](a)
+  \end{minipage}
+  \hfill
+  \begin{minipage}[b]{0.40\linewidth}
+    \centering
+    \includegraphics[width=1.2\linewidth]{img/cap02/SequentialDamx}\\[0cm](b)
+  \end{minipage}
+  \hfill \mbox{}
+  \caption{\label{fig:list}Como error perpendicular, usa-se a
+  distância entre dois plano paralelo ao disco que engloba todos so filhos
+  (adaptada de \cite{Dachsbacher2003}).}
+\end{figure}
+
+
+Depois de substituir o teste recursivo por um simpleste teste intervalar, a
+hierarquia de pontos e transformada em um lista, que é processada
+sequencialmente. Neste estágio, $[r_{\min},r_{\max}]$ é usada para ordenar a
+lista de forma decrescente a partir de $r_{\max}]$ como ilustrado na
+Figura \ref{fig:list}.
+
+Um exemplo de como o algoritmo de renderização funciona é mostrado na Figura
+\cite{fig:SequentialList}. Onde para diferentes valores de $r$ um porção da
+lista é selecionada enquanto outras são descartadas.
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=15.0cm]{img/cap02/SequentialList} 
+\caption{Erro tangencial, mede o quão aproximado é o disco pai em relação ao
+filho no plano tangente (Retirada de \cite{Dachsbacher2003}) .}
+\label{fig:SequentialList}
+\end{figure}
 
 \subsection{Discurssão}
+
+SPT é simples, de fácil implementação e provê um renderização continua usando
+nível de detalhes.
+
+O autor da ênfanse no fato de que grande parte do trabalho é movido para GPU,
+deixando a CPU livre para outras tarefas. No entanto, SPT só é eficiente se o modelo 
+estiver na memória de vídeo, o que nem sempre é possível.
+
+SPT renderiza pontos em baixa qualidade, já que a GPU não suporta renderizar
+\textit{splat} com qualidade em tempo satisfatório. Outra desvantagem é que SPT
+não realiza \textit{frustum culling}, perdendo o pouco em eficiência.
