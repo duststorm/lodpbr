@@ -6,77 +6,77 @@ DEPENDPATH += . \
     ui \
     .ui \
     interface \
-    openGLFrame \
-    openGLFrame/suport
+    openGLFrame 
+
 INCLUDEPATH += . \
     ui \
     .ui \
-    GLSLKernel \
     Interface \
     OpenGLFrame
 
 # Input
-HEADERS += Interface/myMainWindow.hpp \
-    OpenGLFrame/GLFrame.hpp \
+HEADERS += Math/Math.hpp \
+    Math/Color.hpp \
+    Math/Vector2.hpp \
     Math/Vector3.hpp \
-    Octree/ocTree.hpp \
-    Octree/ocTreeIntersection.hpp \
+    Math/Vector4.hpp \
+    Math/Point2.hpp \
     Math/Point3.hpp \
     Math/Matrix3x3.hpp \
+    Math/Matrix4x4.hpp \
+    Math/Quaternion.hpp \
     Math/BoundingBox3.hpp \
-    Octree/ocTreeBox.hpp \
-    Surfels/Surfel.hpp \
-    Surfels/ply.h \
-    Surfels/SurfelContainer.hpp \
-    Octree/ocTreeInternalNode.hpp \
-    Octree/ocTreeLeafNode.hpp \
-    Octree/ocTreeNode.hpp \
-    Octree/ocTreeIterator.hpp \
-    Octree/ocTreeRefine.hpp \
-    Surfels/MergeEllipses.hpp \
+    Math/EigenSystem.hpp \
     Scene/Camera.hpp \
     Scene/Trackball.hpp \
-    Math/Color.hpp \
-    Math/EigenSystem.hpp \
-    Math/Matrix4x4.hpp \
-    Math/Vector4.hpp \
-    Math/Quaternion.hpp \
-    Math/Math.hpp \
-    Math/Vector2.hpp \
-    Math/Point2.hpp \
-    Math/Vector2.hpp \
+    Octree/ocTreeIntersection.hpp \
+    Octree/ocTreeBox.hpp \
+    Octree/ocTreeIterator.hpp \
+    Octree/ocTreeNode.hpp \
+    Octree/ocTreeLeafNode.hpp \
+    Octree/ocTreeInternalNode.hpp \
+    Octree/ocTreeRefine.hpp \
+    Octree/ocTree.hpp \
     Kd-Tree/Kd-Tree.hpp \
     Kd-Tree/Kd-TreeNode.hpp \
     Kd-Tree/Kd-TreeRefine.hpp \
+    Surfels/Surfel.hpp \
+    Surfels/ply.h \
+    Surfels/SurfelContainer.hpp \
+    Surfels/MergeEllipses.hpp \
     Clustering/Cluster.hpp \
     Clustering/ClusterCriteria.hpp \
+    OpenGLFrame/GLFrame.hpp \
+    Interface/myMainWindow.hpp 
 
 SOURCES += main.cpp \
-    Interface/myMainWindow.cpp \
-    OpenGLFrame/GLFrame.cpp \
-    OpenGLFrame/support/arcball.cpp \
+    Math/Math.cpp \
+    Math/Vector2.cpp \
+    Math/Vector3.cpp \
+    Math/Vector4.cpp \
+    Math/Point2.cpp \
+    Math/Point3.cpp \
+    Math/Matrix3x3.cpp \
+    Math/Matrix4x4.cpp \
+    Math/Quaternion.cpp \
+    Clustering/Cluster.cpp \
     Surfels/ply.c \
     Scene/Camera.cpp \
     Scene/Trackball.cpp \
-    Math/Quaternion.cpp \
-    Math/Math.cpp \
-    Math/Vector3.cpp \
-    Math/Point2.cpp \
-    Math/Vector4.cpp \
-    Math/Matrix3x3.cpp \
-    Math/Matrix4x4.cpp \
-    Math/Point3.cpp \
-    Math/Vector2.cpp \
-    Clustering/Cluster.cpp \
+    OpenGLFrame/GLFrame.cpp \
+    Interface/myMainWindow.cpp 
 
 QT += opengl
 FORMS += ui/interface.ui
 
-# matrixLibrary/Vector3.cpp
 # LIBRARIES
-unix:LIBS = 
+unix{
+	LIBS = 
+}
 
 # Output
-unix:MOC_DIR = .moc
-unix:OBJECTS_DIR = .obj
-unix:UI_HEADERS_DIR = .ui
+unix{
+	MOC_DIR = .moc
+	OBJECTS_DIR = .obj
+	UI_HEADERS_DIR = .ui
+}
