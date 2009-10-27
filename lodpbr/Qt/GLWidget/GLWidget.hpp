@@ -6,39 +6,48 @@
 
 #include "Kd-Tree/Kd-Tree.hpp"
 
-#include "Math/Point3.hpp"
-#include "Math/Vector3.hpp"
-
 #include "Surfels/Surfel.hpp"
 #include "Surfels/SurfelContainer.hpp"
 
-#include "Scene/Camera.hpp"
 #include "Surfels/MergeEllipses.hpp"
 
 #include "Clustering/Cluster.hpp"
 
-class GLFrame : public QGLWidget
+#include "Math/Point3.hpp"
+#include "Math/Vector3.hpp"
+
+#include "Scene/Camera.hpp"
+
+
+class GLWidget : public QGLWidget
 {
     Q_OBJECT
 
 public:
-    GLFrame(QWidget *parent = 0);
+    // From QGLWidget
 
+    explicit GLWidget(QWidget* parent = 0, const QGLWidget* shareWidget = 0, Qt::WindowFlags f = 0);
+    explicit GLWidget(QGLContext* context, QWidget* parent = 0, const QGLWidget* shareWidget = 0, Qt::WindowFlags f = 0);
+    explicit GLWidget(const QGLFormat& format, QWidget* parent = 0, const QGLWidget* shareWidget = 0, Qt::WindowFlags f = 0);
+    void initializeGL();
+    void resizeGL(int width, int height);
+    void paintGL();
+    void mousePressEvent(QMouseEvent *event);
+    void mouseMoveEvent(QMouseEvent *event);
+    void mouseReleaseEvent(QMouseEvent *event);
+    void wheelEvent(QWheelEvent *e);
+    void keyPressEvent ( QKeyEvent * e);
+    void glInit();
 
+    // From kglib
+    bool glInitialized() const  { return mGLInitialized; }
+
+    // From lodpbr
     void calLimits();
-
-
     void DrawGroud();
-
-    void SetThreshold(const float);
-    void SetCameraStep(const float);
-    void SetNumber(int);
-
-//    glslKernel GPUKernel;
-
+    void SetMode(bool);
     void SetCluster(const int);
 
-    void SetMode(bool);
 
     SurfelContainer<float> surfels;
 
@@ -53,28 +62,17 @@ public:
     std::vector<LAL::Surfel<float>* >  newSurfel;
     std::vector<LAL::Vector4<float> > colors;
 
-public slots:
-
-
 protected:
 
-    void initializeGL();
-    void resizeGL(int width, int height);
-    void paintGL();
-    void mousePressEvent(QMouseEvent *event);
-    void mouseMoveEvent(QMouseEvent *event);
-    void mouseReleaseEvent(QMouseEvent *event);
-    void wheelEvent(QWheelEvent *e);
-    void keyPressEvent ( QKeyEvent * e);
 
 private:
-    void draw();
+
+	void init();
 
     void drawKdTree(int& cont);
     void drawKdNodeRecursively(const KdTree3DNode* n,int& cont);
     bool drawKdNode(const KdTree3DNode* n,int& cont);
 
-    void model();
 
     template < class T>
     LAL::BoundingBox3<T> limits();
@@ -89,11 +87,13 @@ private:
 
     LAL::Camera camera;
 
-    float Threshold;
     float CameraStep;
+
     int mCluster;
     int mNumber;
     bool mode;
+
+    bool mGLInitialized;
 
 
 

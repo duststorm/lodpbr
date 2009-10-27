@@ -3,7 +3,7 @@
 
 
 
-#include "Interface/myMainWindow.hpp"
+#include "Qt/myMainWindow.hpp"
 
 int main(int argc, char *argv[])
 {
