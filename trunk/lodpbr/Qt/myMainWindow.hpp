@@ -6,21 +6,25 @@
 
 #include "ui_lodpbr.h"
 
-#include "OpenGLFrame/ContextGraphicsView.hpp"
-#include "OpenGLFrame/OpenGLScene.hpp"
+#include "Qt/GLWidget/GLWidget.hpp"
+#include "Qt/GLWidget/WidgetProxy.hpp"
 
 
-class MyMainWindow : public QMainWindow, private Ui::MainWindow 
+
+class MyMainWindow : public QMainWindow, private Ui::MainWindow
 {
     Q_OBJECT
-    
+
 public:
     MyMainWindow (QMainWindow *parent = 0);
-//    void open(QString fileName=QString(),bool who = true);
-    
+    void open(QString fileName=QString(),bool who = true,WidgetProxy * p = 0);
+
 public slots:
-	
-//	void on_action_Open_File_triggered();
+
+ 	void on_action_Open_File_triggered();
+ 	void on_action_Full_Screen_triggered();
+ 	static void createToplevelGLWidget();
+
 //
 //	void on_action_NewSurfel_triggered();
 //
@@ -40,7 +44,8 @@ public slots:
 
 private:
 	QString              fileModel_Off;
-		
+
+
 };
 
 #endif

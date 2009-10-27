@@ -3,19 +3,26 @@
 # #####################################################################
 
 VCGDIR  = ../../vcglib
+EIGENDIR  = ../../eigen2
 
 TARGET = lodpbr
 DEPENDPATH += . \
-    ui \
-    .ui \
-    interface \
-    openGLFrame 
+    Qt/UI 	\
+    .tmp/.ui 	\
+    QtGui 	\
+    QtGui/GLWidget\
+    $$VCGDIR  \
+    $$VCGDIR/vcg \
+    $$VCGDIR/wrap	
+     
 
 INCLUDEPATH += . \
-    ui \
-    .ui \
-    Interface \
-    OpenGLFrame
+    Qt/UI	\
+    .tmp/.ui 	\
+    QtGui 	\
+    QtGui/GLWidget
+    VCGDIR	\
+    EIGENDIR	
 
 # Input
 HEADERS += Math/Math.hpp \
@@ -49,10 +56,9 @@ HEADERS += Math/Math.hpp \
     Surfels/MergeEllipses.hpp \
     Clustering/Cluster.hpp \
     Clustering/ClusterCriteria.hpp \
-    OpenGLFrame/GLFrame.hpp \
-    OpenGLFrame/OpenGLScene.hpp \
-    OpenGLFrame/ContextGraphicsView.hpp \
-    Interface/myMainWindow.hpp 
+    Qt/GLWidget/GLWidget.hpp \
+    Qt/GLWidget/WidgetProxy.hpp \
+    Qt/myMainWindow.hpp 
 
 SOURCES += main.cpp \
     Math/Math.cpp \
@@ -68,13 +74,12 @@ SOURCES += main.cpp \
     Surfels/ply.c \
     Scene/Camera.cpp \
     Scene/Trackball.cpp \
-    OpenGLFrame/GLFrame.cpp \
-    OpenGLFrame/OpenGLScene.cpp \
-    OpenGLFrame/ContextGraphicsView.cpp \
-    Interface/myMainWindow.cpp 
+    Qt/GLWidget/GLWidget.cpp \
+    Qt/GLWidget/WidgetProxy.cpp \
+    Qt/myMainWindow.cpp
 
 QT += opengl
-FORMS += ui/lodpbr.ui
+FORMS += Qt/UI/lodpbr.ui
 
 # LIBRARIES
 unix{
@@ -83,7 +88,8 @@ unix{
 
 # Output
 unix{
-	MOC_DIR = .moc
-	OBJECTS_DIR = .obj
-	UI_HEADERS_DIR = .ui
+	MOC_DIR = .tmp\.moc
+	OBJECTS_DIR = .tmp\.obj
+	UI_HEADERS_DIR = .tmp\.ui
 }
+
