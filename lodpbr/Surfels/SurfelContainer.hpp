@@ -12,8 +12,8 @@
 #include <vcg/simplex/face/topology.h>
 
 
-#include <vcglib/wrap/io_trimesh/import_ply.h>
-#include <vcglib/wrap/io_trimesh/export_ply.h>
+#include <wrap/io_trimesh/import_ply.h>
+#include <wrap/io_trimesh/export_ply.h>
 
 #include "Math/BoundingBox3.hpp"
 #include "Surfel.hpp"
