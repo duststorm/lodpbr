@@ -8,9 +8,9 @@ DEPENDPATH += . \
     .tmp/.ui 	\
     QtGui 	\
     QtGui/GLWidget\
-    vcglib	\
-    vcglib/vcg \
-    vcglib/wrap	
+    ThirdParty/vcglib	\
+    ThirdParty/vcglib/vcg \
+    ThirdParty/vcglib/wrap	
      
 
 INCLUDEPATH += . \
@@ -18,7 +18,7 @@ INCLUDEPATH += . \
     .tmp/.ui 	\
     QtGui 	\
     QtGui/GLWidget \
-    vcglib	
+    ThirdParty/vcglib	
 
 # Input
 HEADERS += Math/Math.hpp \
