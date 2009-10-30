@@ -9,6 +9,9 @@
 #include "Scene/Trackball.hpp"
 #include "Math/Quaternion.hpp"
 
+#include <vcg/Eigen/Core>
+#include <vcg/Eigen/Geometry>
+
 /*!
 *@class Camera
 *@brief Class that represent a dense 4x4 Matrix and Homogeneous Coordinate ..
@@ -280,8 +283,8 @@ namespace LAL{
           }
 
 
-          pitch    = float(mouseLockedPosition.x - mousePosition.x)*Math::DEG2RAD*0.2;
-          heading  = float(mouseLockedPosition.y - mousePosition.y)*Math::DEG2RAD*0.2;
+          pitch    = float(mouseLockedPosition.x - mousePosition.x)*Math::kDeg2Rad*0.2;
+          heading  = float(mouseLockedPosition.y - mousePosition.y)*Math::kDeg2Rad*0.2;
 
 
 //          Vector3 vAxis     = mFocus;
@@ -430,7 +433,7 @@ namespace LAL{
             mViewMatrix[2][3] = -(zAxis * mEyes);
 
             // Extract the pitch angle from the view matrix.
-            mAccumPitchDegrees = Math::RAD2DEG * (std::asin(mViewMatrix[2][1]));
+            mAccumPitchDegrees = Math::kRad2Deg * (std::asin(mViewMatrix[2][1]));
 
             mOrientation.FromRotationMatrix(mViewMatrix);
         }

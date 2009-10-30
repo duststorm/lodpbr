@@ -529,7 +529,7 @@ namespace LAL{
 	template <class Real>
 	inline void  Quaternion<Real>::FromAxisAngle( const Vector3<Real> &axis, const Real& degrees )
 	{
-	    Real halfTheta = static_cast<Real> (Math::DEG2RAD * (degrees) * 0.5f);
+	    Real halfTheta = static_cast<Real> (Math::kDeg2Rad * (degrees) * 0.5f);
 
 	    Real s = std::sin(halfTheta);
 
@@ -566,7 +566,7 @@ namespace LAL{
 	        axis[0] = x * invSinHalfTheta;
 	        axis[1] = y * invSinHalfTheta;
 	        axis[2] = z * invSinHalfTheta;
-	        degrees = Math::RAD2DEG * (2.0f * std::acos(w));
+	        degrees = Math::kRad2Deg * (2.0f * std::acos(w));
 	    }
 	}
 

@@ -25,9 +25,9 @@ namespace LAL {
 		/*! @name Constants */
 		//@{
 		/*!  */
-		static const float PI;
+		static const float kPi;
 		/*! */
-	    static const float HALF_PI;
+	    static const float kHalfPi;
 	    /*!
 	     * \code
 	     *  /f[
@@ -35,7 +35,8 @@ namespace LAL {
 		 * /f]
 	     * \endcode
 	     *  */
-	    static const float SQRT_TWO;
+
+	    static const float kSqrtTwo;
 	    /*!
 	     * \code
 	     *  /f[
@@ -43,7 +44,7 @@ namespace LAL {
 		 * /f]
 	     * \endcode
 	     * */
-	    static const float SQRT_THREE;
+	    static const float kSqrtThree;
 	    /*!
 	     *  \code
 	     *  /f[
@@ -51,7 +52,7 @@ namespace LAL {
 		 * /f]
 	     * \endcode
 	     * */
-	    static const float INV_SQRT_TWO;
+	    static const float kInvSqrtTwo;
 	    /*!
 	     * \code
 	     *  /f[
@@ -59,7 +60,7 @@ namespace LAL {
 		 * /f]
 	     * \endcode
 	     *  */
-	    static const float INV_SQRT_THREE;
+	    static const float kInvSqrtThree;
 	    /*!
 	     * * \code
 	     * /f[
@@ -67,19 +68,19 @@ namespace LAL {
 		 * /f]
 	     * \endcode
 	     * */
-	    static const float INV_THREE;
+	    static const float kInvThree;
 	    /*! Dregrees to radians conversion
 	     * Only multiply the number in degrees by it
 	     * */
-	    static const float	DEG2RAD;
+	    static const float	kDeg2Rad;
 	    /*! Radians to dregrees conversion
 	     * * Only multiply the number in radians by it
 	     * */
-	    static const float	RAD2DEG;
+	    static const float	kRad2Deg;
 	    /*! */
-	    static const float	FLOAT_INFINITY;
+	    static const float	kFloatInfinty;
 	    /*! */
-	    static const float 	EPSILON;
+	    static const float 	kEpsilon;
 	    //@}
 
 		/*! @name functions ... */
@@ -90,7 +91,7 @@ namespace LAL {
 	        // Determines whether the two floating-point values f1 and f2 are
 	        // close enough together that they can be considered equal.
 
-	        return fabsf((f1 - f2) / ((f2 == 0.0f) ? 1.0f : f2)) < EPSILON;
+	        return fabsf((f1 - f2) / ((f2 == 0.0f) ? 1.0f : f2)) < kEpsilon;
 	    }
 	    /*!
 	     * \attention maybe move to another package
