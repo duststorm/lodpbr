@@ -357,7 +357,7 @@ template <class Real > class Surfel
 
 	 Real Area() const
 	 {
-		 return (  (LAL::Math::PI * mMinorAxis.first) * (LAL::Math::PI * mMajorAxis.first) );
+		 return (  (LAL::Math::kPi * mMinorAxis.first) * (LAL::Math::kPi * mMajorAxis.first) );
 	 }
 
 
@@ -428,7 +428,7 @@ template <class Real > class Surfel
 		 while (i < 360)
 		 {
 
-			 lAlpha = ( i / 180 ) * LAL::Math::PI;
+			 lAlpha = ( i / 180 ) * LAL::Math::kPi;
 			 lSinAlpha =  sin( lAlpha );
 			 lCosAlpha =  cos( lAlpha );
 
@@ -481,7 +481,7 @@ template <class Real > class Surfel
 		 while (i < 360)
 		 {
 
-			 lAlpha = ( i / 180 ) * LAL::Math::PI;
+			 lAlpha = ( i / 180 ) * LAL::Math::kPi;
 			 lSinAlpha =  sin( lAlpha );
 			 lCosAlpha =  cos( lAlpha );
 

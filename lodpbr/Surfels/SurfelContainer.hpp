@@ -4,8 +4,80 @@
 #include <vector>
 #include <algorithm>
 
+#include <vcg/simplex/vertex/base.h>
+#include <vcg/simplex/vertex/component_ocf.h>
+#include <vcg/simplex/edge/base.h>
+#include <vcg/simplex/face/base.h>
+#include <vcg/simplex/face/component_ocf.h>
+#include <vcg/simplex/face/topology.h>
+
+
+#include <vcglib/wrap/io_trimesh/import_ply.h>
+#include <vcglib/wrap/io_trimesh/export_ply.h>
+
 #include "Math/BoundingBox3.hpp"
 #include "Surfel.hpp"
+
+
+class CEdge;
+class CFaceO;
+class CVertexO;
+
+//Vert Mem Occupancy  --- 40b ---
+
+class CVertexO  : public vcg::VertexSimp2< CVertexO, CEdge, CFaceO,
+  vcg::vertex::InfoOcf,           /*  4b */
+  vcg::vertex::Coord3f,           /* 12b */
+  vcg::vertex::BitFlags,          /*  4b */
+  vcg::vertex::Normal3f,          /* 12b */
+  vcg::vertex::Qualityf,          /*  4b */
+  vcg::vertex::Color4b,           /*  4b */
+  vcg::vertex::VFAdjOcf,          /*  0b */
+  vcg::vertex::MarkOcf,           /*  0b */
+  vcg::vertex::TexCoordfOcf,      /*  0b */
+  vcg::vertex::CurvaturefOcf,     /*  0b */
+  vcg::vertex::CurvatureDirfOcf,  /*  0b */
+  vcg::vertex::RadiusfOcf         /*  0b */
+  >{
+};
+
+
+class CEdge : public vcg::EdgeSimp2<CVertexO,CEdge,CFaceO, vcg::edge::EVAdj> {
+public:
+	inline CEdge(){};
+  inline CEdge( CVertexO * v0, CVertexO * v1){ V(0)= v0 ; V(1)= v1;};
+  static inline CEdge OrderedEdge(CVertexO* v0,CVertexO* v1){
+   if(v0<v1) return CEdge(v0,v1);
+   else return CEdge(v1,v0);
+	}
+};
+
+//Face Mem Occupancy  --- 32b ---
+
+class CFaceO    : public vcg::FaceSimp2<  CVertexO, CEdge, CFaceO,
+      vcg::face::InfoOcf,              /* 4b */
+      vcg::face::VertexRef,            /*12b */
+      vcg::face::BitFlags,             /* 4b */
+      vcg::face::Normal3f,             /*12b */
+      vcg::face::QualityfOcf,          /* 0b */
+      vcg::face::MarkOcf,              /* 0b */
+      vcg::face::Color4bOcf,           /* 0b */
+      vcg::face::FFAdjOcf,             /* 0b */
+      vcg::face::VFAdjOcf,             /* 0b */
+      vcg::face::WedgeTexCoordfOcf     /* 0b */
+    > {};
+
+class CMeshO    : public vcg::tri::TriMesh< vcg::vertex::vector_ocf<CVertexO>, vcg::face::vector_ocf<CFaceO> > {
+public :
+	int sfn; //The number of selected faces.
+  vcg::Matrix44f Tr; // Usually it is the identity. It is applied in rendering and filters can or cannot use it. (most of the filter will ignore this)
+  const vcg::Box3f &trBB() {
+	static vcg::Box3f bb;
+	bb.SetNull();
+	bb.Add(Tr,bbox);
+		return bb;
+	}
+};
 
 
 // For ply Reader

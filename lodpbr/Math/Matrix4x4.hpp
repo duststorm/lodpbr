@@ -686,7 +686,7 @@ namespace LAL {
 	{
 
 
-		Real c 					= static_cast<Real> (1.0 / std::tan(LAL::Math::DEG2RAD * fov * 0.5) );
+		Real c 					= static_cast<Real> (1.0 / std::tan(LAL::Math::kDeg2Rad * fov * 0.5) );
 		Real aspectRationInv 	= static_cast<Real> (1.0 / aspectRation);
 		Real fovy 				= static_cast<Real> (2.0 * std::atan(aspectRationInv / c));
 		Real xScale 			= static_cast<Real> (1.0 / std::tan(0.5 * fovy));
@@ -753,9 +753,9 @@ namespace LAL {
 		// I use the popular NASA standard airplane convention of
 		// heading-pitch-roll (i.e., RzRxRy).
 
-		headDegrees 	= Math::DEG2RAD * headDegrees;
-		pitchDegrees 	= Math::DEG2RAD * pitchDegrees;
-		rollDegrees 	= Math::DEG2RAD * rollDegrees;
+		headDegrees 	= Math::kDeg2Rad * headDegrees;
+		pitchDegrees 	= Math::kDeg2Rad * pitchDegrees;
+		rollDegrees 	= Math::kDeg2Rad * rollDegrees;
 
 		Real cosH = std::cos(headDegrees);
 		Real cosP = std::cos(pitchDegrees);
@@ -790,7 +790,7 @@ namespace LAL {
 	{
 
 
-		degrees = Math::DEG2RAD * degrees;
+		degrees = Math::kDeg2Rad * degrees;
 
 		Real x = axis.x();
 		Real y = axis.y();
@@ -828,9 +828,9 @@ namespace LAL {
 		Real thetaY = static_cast< Real >(0);
 		Real thetaZ = static_cast< Real >(0);
 
-		if (thetaX < Math::HALF_PI)
+		if (thetaX < Math::kHalfPi)
 		{
-			if (thetaX > -Math::HALF_PI)
+			if (thetaX > -Math::kHalfPi)
 			{
 				thetaZ = std::atan2(-m[ 1 ].x, m[ 1 ].y);
 				thetaY = std::atan2(-m[ 0 ].z, m[ 2 ].z);
@@ -849,9 +849,9 @@ namespace LAL {
 			thetaY = static_cast< Real >(0);
 		}
 
-		headDegrees  = Math::RAD2DEG * (thetaY);
-		pitchDegrees = Math::RAD2DEG * (thetaX);
-		rollDegrees  = Math::RAD2DEG * (thetaZ);
+		headDegrees  = Math::kRad2Deg * (thetaY);
+		pitchDegrees = Math::kRad2Deg * (thetaX);
+		rollDegrees  = Math::kRad2Deg * (thetaZ);
 	}
 
 
