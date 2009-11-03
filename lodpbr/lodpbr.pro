@@ -49,12 +49,16 @@ HEADERS += Math/Math.hpp \
     Surfels/Surfel.hpp \
     Surfels/ply.h \
     Surfels/SurfelContainer.hpp \
+    Surfels/IOSurfel.hpp \
     Surfels/MergeEllipses.hpp \
     Clustering/Cluster.hpp \
     Clustering/ClusterCriteria.hpp \
     Qt/GLWidget/GLWidget.hpp \
     Qt/GLWidget/WidgetProxy.hpp \
-    Qt/myMainWindow.hpp 
+    Qt/myMainWindow.hpp \
+    ThirdParty/vcglib/wrap/io_trimesh/import_ply.h \
+    ThirdParty/vcglib/wrap/io_trimesh/export_ply.h \
+    ThirdParty/vcglib/wrap/ply/plylib.h
 
 SOURCES += main.cpp \
     Math/Math.cpp \
@@ -72,7 +76,8 @@ SOURCES += main.cpp \
     Scene/Trackball.cpp \
     Qt/GLWidget/GLWidget.cpp \
     Qt/GLWidget/WidgetProxy.cpp \
-    Qt/myMainWindow.cpp
+    Qt/myMainWindow.cpp \
+    ThirdParty/vcglib/wrap/ply/plylib.cpp
 
 QT += opengl
 FORMS += Qt/UI/lodpbr.ui
