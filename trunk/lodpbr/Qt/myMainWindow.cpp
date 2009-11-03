@@ -100,9 +100,9 @@ void MyMainWindow::open(QString filename,bool who,WidgetProxy * p ) {
     	  const char * text = filename.toLatin1();
 
     	  std::cout << "Felipe" << std::endl;
-    	  SurfelContainer<float>::LoadPly(text,p->mGLWidget->surfels);
+    	  SurfelContainer<float>::LoadPly(text,this->glWidget->surfels);
 
-    	  p->mGLWidget->calLimits();
+    	  this->glWidget->calLimits();
     	  std::cout << "Felipe2" << std::endl;
 
       }
@@ -146,24 +146,24 @@ void MyMainWindow::on_action_Open_File_triggered()
 
 //	if(mdiArea->subWindowList().size() == 0)
 //	{
-	     GLWidget * gl    = new GLWidget(this);
-	 	 WidgetProxy * proxy = new WidgetProxy(gl,this);
-
-
-
-
-	     QWidget* w = proxy->createWindow("Embedded window");
-	     w->move(20, 270);
-	     w->layout()->addWidget(new QLineEdit(this));
-	     QPushButton* pb = new QPushButton("Create new toplevel GL widget", this);
-	     connect(pb, SIGNAL(clicked()), this, SLOT(createToplevelGLWidget()));
-	     w->layout()->addWidget(pb);
-	     proxy->addWidget(w);
-
-
-	     mdiArea->addSubWindow(proxy);
-	     proxy->show();
-	//}
+//	     GLWidget * gl    = new GLWidget(this);
+//	 	 WidgetProxy * proxy = new WidgetProxy(gl,this);
+//
+//
+//
+//
+////	     QWidget* w = proxy->createWindow("Embedded window");
+////	     w->move(20, 270);
+////	     w->layout()->addWidget(new QLineEdit(this));
+////	     QPushButton* pb = new QPushButton("Create new toplevel GL widget", this);
+////	     connect(pb, SIGNAL(clicked()), this, SLOT(createToplevelGLWidget()));
+////	     w->layout()->addWidget(pb);
+////	     proxy->addWidget(w);
+//
+//
+//	     mdiArea->addSubWindow(proxy);
+//	     proxy->show();
+//	//}
 
     QString filename = QFileDialog::getOpenFileName (
                       this,
@@ -174,7 +174,8 @@ void MyMainWindow::on_action_Open_File_triggered()
     // Tries to load file if filename not empty.
     if (filename != "") {
 
-     open(filename,true,proxy);
+     open(filename,true);
+
     }
 }
 //

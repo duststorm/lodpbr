@@ -48,12 +48,15 @@ void GLWidget::init()
     setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
     setFocus();
     setMouseTracking(true);
-
-    //setFocusPolicy(Qt::StrongFocus);
+        //setFocusPolicy(Qt::StrongFocus);
 
 	CameraStep = 0.09;
 
 	mGLInitialized = false;
+
+	mNumber = 1;
+
+	mode = true;
 
 	colors.push_back(Celer::Vector4<float>(1.0,0.0,0.0,0.5));
 	colors.push_back(Celer::Vector4<float>(1.0,1.0,0.0,0.5));
@@ -170,9 +173,14 @@ void GLWidget::calLimits()
 {
      cluster = Cluster<float,Celer::Surfel<float>*>(surfels);
 
-     Celer::Surfel<float>* seed = new Celer::Surfel<float>(surfels.mSurfels[0]);
+     std::cout << "Felipe " << " "<< surfels.mSurfels.size() << std::endl;
 
-     cluster.Build(1,8,seed);
+     Celer::Surfel<float>* seed = new Celer::Surfel<float>(surfels.mSurfels[30000]);
+
+     std::cout << "Felipe2" << std::endl;
+
+     cluster.Build(1,5000,seed);
+
 
 }
 
@@ -268,7 +276,7 @@ void GLWidget::resizeGL(int width, int height)
     GLfloat x = GLfloat(width) / height;
     camera.SetProjectionMatrix(90.0,x,0.1,1000);
 
-    glLoadMatrixf((~camera.PespectiveProjectionMatrix()).ToRealPtr());
+    glMultMatrixf((~camera.PespectiveProjectionMatrix()).ToRealPtr());
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
     mCenterX =  static_cast<float> (width*0.5);
@@ -280,21 +288,21 @@ void GLWidget::paintGL()
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    glMatrixMode(GL_PROJECTION);
-    //glLoadIdentity();
-    //GLfloat x = GLfloat(width()) / height();
-    //camera.SetProjectionMatrix(90.0,x,0.1,1000);
+//    glMatrixMode(GL_PROJECTION);
+//    glLoadIdentity();
+//    GLfloat x = GLfloat(width()) / height();
+//    camera.SetProjectionMatrix(90.0,x,0.1,1000);
 //
-   glLoadMatrixf((~camera.PespectiveProjectionMatrix()).ToRealPtr());
-
+//    glMultMatrixf((~camera.PespectiveProjectionMatrix()).ToRealPtr());
+//
     glMatrixMode(GL_MODELVIEW);
-    //glLoadIdentity();
+    glLoadIdentity();
 
     camera.SetViewByMouse();
-    glLoadMatrixf((~camera.ViewMatrix()));
+    glMultMatrixf((~camera.ViewMatrix()));
 
     int cont = 0;
-
+    fps.nextFrame();
     glDisable(GL_LIGHTING);
 		if ( surfels.mSurfels.size() != 0 )
 		{
@@ -314,12 +322,14 @@ void GLWidget::paintGL()
 			}
 
 			glColor3f(0.5,0.5,0.5);
+
 			renderText(10,5,QString("___________________________"));
-			renderText(10,25,QString("Number of Points :"));renderText(145,25,QString::number(cont));
+			renderText(10,25,QString("Number of Points :"));renderText(145,25,fps.fpsString());
 			renderText(10,30,QString("___________________________"));
 			DrawGroud();
 		}
     glEnable(GL_LIGHTING);
+
 }
 
 void GLWidget::keyPressEvent(QKeyEvent * event)
@@ -329,37 +339,41 @@ void GLWidget::keyPressEvent(QKeyEvent * event)
 	if (event->key() == Qt::Key_Q)
 	{
 		camera.MoveUpward(CameraStep);
+		updateGL();
 
 	}else if (event->key() == Qt::Key_E)
 	{
 		camera.MoveUpward(-CameraStep);
+		updateGL();
 
 	}
 	else if (event->key() == Qt::Key_W)
 	{
 		camera.MoveForward(CameraStep);
+		updateGL();
 
 	}
 	else if (event->key() == Qt::Key_S){
 		camera.MoveForward(-CameraStep);
+		updateGL();
 
 	}
 	else if (event->key() == Qt::Key_A){
 		camera.StrafeRight(CameraStep);
+		updateGL();
 
 	}
 	else if (event->key() == Qt::Key_D){
 		camera.StrafeRight(-CameraStep);
+		updateGL();
 
 	}
 	else if (event->key() == Qt::Key_R){
 
 		camera.Reset();
+		updateGL();
 	}
 	else {}
-
-	update();
-
 }
 
 void GLWidget::mousePressEvent(QMouseEvent *event)
@@ -371,10 +385,11 @@ void GLWidget::mousePressEvent(QMouseEvent *event)
     	camera.lockMouse(true);
         mCenterX = static_cast<float>(event->x());
         mCenterY = static_cast<float>(event->y());
+        updateGL();
     }
 
     lastPos = event->pos();
-    update();
+
 }
 
 void GLWidget::mouseReleaseEvent(QMouseEvent *event)
@@ -384,11 +399,12 @@ void GLWidget::mouseReleaseEvent(QMouseEvent *event)
     if (event->button() == Qt::LeftButton)
     {
     	camera.lockMouse(false);
+    	updateGL();
     }
 
 
     lastPos = event->pos();
-    update();
+
 }
 
 void GLWidget::wheelEvent(QWheelEvent *event)
@@ -396,7 +412,7 @@ void GLWidget::wheelEvent(QWheelEvent *event)
    event->accept();
    camera.Zoom(event->delta()/120.0);
 
-   update();
+   updateGL();
 }
 
 
@@ -421,7 +437,7 @@ void GLWidget::mouseMoveEvent(QMouseEvent *event)
         //mouse.moveToWindowCenter();
 
         QCursor::setPos(mapToGlobal(QPoint(static_cast<int>(mCenterX),static_cast<int>(mCenterY))));
-
+        updateGL();
     }else if (event->buttons() & Qt::RightButton) {
 
 
@@ -440,7 +456,7 @@ void GLWidget::mouseMoveEvent(QMouseEvent *event)
     */
 
     lastPos = event->pos();
-    update();
+
 }
 
 

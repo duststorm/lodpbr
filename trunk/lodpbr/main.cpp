@@ -58,35 +58,35 @@ int main(int argc, char *argv[])
 //		std:: cout << "major_axisy " << s.major_axisy << std::endl;
 //		std:: cout << "major_axisz " << s.major_axisz << std::endl;
 //		std:: cout << "major_axis_size " << s.major_axis_size << std::endl;
-
-    std::vector<Celer::Surfel<float> > s;
-
-	QString fileName = 		 "../TesteMarked/surfel.ply";
-
-	std::string filename = QFile::encodeName(fileName).constData ();
-
-	vcg::tri::io::PlyInfo pi;
+//
+//    std::vector<Celer::Surfel<float> > s;
+//
+//	QString fileName = 		 "../TesteMarked/surfel.ply";
+//
+//	std::string filename = QFile::encodeName(fileName).constData ();
+//
+//	vcg::tri::io::PlyInfo pi;
 
 	MyMainWindow * form = new MyMainWindow;
-	QString fileNameLsplat = QFileDialog::getOpenFileName (
-						form,
-	                      ("Choose a mesh file"),
-	                      ".",
-	                      ("Ply file (*.ply)"));
-
-
-	std::string filenameLsplat = QFile::encodeName(fileNameLsplat).constData ();
-
-	std:: cout << "filenameLsplat" << filenameLsplat << " " << filenameLsplat << std::endl;
-
-	//int i = Celer::IOSurfels<>::LoadSurfels(filenameLsplat.c_str(),s);
-
-	Celer::BoundingBox3<float> bb;
-	int i = Celer::IOSurfels<float>::LoadMesh(filenameLsplat.c_str(),s,bb);
-
-
-
-	std:: cout << "s size " << s.size() << " " << filenameLsplat << std::endl;
+//	QString fileNameLsplat = QFileDialog::getOpenFileName (
+//						form,
+//	                      ("Choose a mesh file"),
+//	                      ".",
+//	                      ("Ply file (*.ply)"));
+//
+//
+//	std::string filenameLsplat = QFile::encodeName(fileNameLsplat).constData ();
+//
+//	std:: cout << "filenameLsplat" << filenameLsplat << " " << filenameLsplat << std::endl;
+//
+//	//int i = Celer::IOSurfels<>::LoadSurfels(filenameLsplat.c_str(),s);
+//
+//	Celer::BoundingBox3<float> bb;
+//	int i = Celer::IOSurfels<float>::LoadMesh(filenameLsplat.c_str(),s,bb);
+//
+//
+//
+//	std:: cout << "s size " << s.size() << " " << filenameLsplat << std::endl;
 
 
 	form->show();

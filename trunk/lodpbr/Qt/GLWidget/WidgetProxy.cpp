@@ -37,6 +37,7 @@ public:
     {
         mGLWidget = w;
         setSceneRect(QRect(QPoint(0, 0), mGLWidget->size()));
+        mGLWidget->updateGL();
     }
 
     void drawBackground(QPainter* painter, const QRectF& rect)

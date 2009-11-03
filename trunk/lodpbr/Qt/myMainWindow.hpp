@@ -45,7 +45,6 @@ public slots:
 private:
 	QString              fileModel_Off;
 
-
 };
 
 #endif

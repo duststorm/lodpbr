@@ -49,10 +49,11 @@ HEADERS += Math/Math.hpp \
     Surfels/Surfel.hpp \
     Surfels/ply.h \
     Surfels/SurfelContainer.hpp \
-    Surfels/IOSurfel.hpp \
+    Surfels/IOSurfels.hpp \
     Surfels/MergeEllipses.hpp \
     Clustering/Cluster.hpp \
     Clustering/ClusterCriteria.hpp \
+    Qt/Tools/FPSCounter.h\	
     Qt/GLWidget/GLWidget.hpp \
     Qt/GLWidget/WidgetProxy.hpp \
     Qt/myMainWindow.hpp \
@@ -74,6 +75,7 @@ SOURCES += main.cpp \
     Surfels/ply.c \
     Scene/Camera.cpp \
     Scene/Trackball.cpp \
+    Qt/Tools/FPSCounter.cpp\
     Qt/GLWidget/GLWidget.cpp \
     Qt/GLWidget/WidgetProxy.cpp \
     Qt/myMainWindow.cpp \
