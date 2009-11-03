@@ -1,5 +1,5 @@
-#ifndef LAL_VECTOR2_HPP_
-#define LAL_VECTOR2_HPP_
+#ifndef CELER_VECTOR2_HPP_
+#define CELER_VECTOR2_HPP_
 
 
 #include <iostream>
@@ -8,7 +8,7 @@
 #include <cmath>
 
 
-namespace LAL {
+namespace Celer {
 
 /*!
 *@class Vector2.
@@ -64,7 +64,7 @@ namespace LAL {
 
   	  	Useful to pass as a parameter to OpenGL functions:
   	  	\code
-  	  	LAL:Point2<float> pos, normal;
+  	  	Celer:Point2<float> pos, normal;
   	  	glNormal2fv(normal);
   	  	glVertex2fv(pos);
   	  	\endcode */
@@ -122,7 +122,7 @@ namespace LAL {
   	  //@{
   	  /*! Output stream operator. Enables debugging code like:
   	  \code
-  	  LAL::Vector2<> p(...);
+  	  Celer::Vector2<> p(...);
   	  std::cout << "Vector2" << " x = " << v.x << " ,y = " << v.y << std::endl;
   	  \endcode */
   	  template <class T>
@@ -452,7 +452,7 @@ namespace LAL {
 	template <class Real>
 	Vector2<Real>::~Vector2 (){};
 
-} /* LAL :: NAMESPACE */
+} /* Celer :: NAMESPACE */
 
 
 #endif /*VECTOR2_HPP_*/
@@ -461,9 +461,9 @@ namespace LAL {
 
 
 /* Teste operator+ e operator-
-LAL::Vector2<double> v1(1.0,1.0,1.0);
-LAL::Vector2<double> v2(-1.0,-1.0,-1.0);
-LAL::Vector2<double> v3(0.0,0.0,0.0);
+Celer::Vector2<double> v1(1.0,1.0,1.0);
+Celer::Vector2<double> v2(-1.0,-1.0,-1.0);
+Celer::Vector2<double> v3(0.0,0.0,0.0);
 
 v3 = v1 + v2;
 std::cout << v3.x << v3.y << v3.z << "#v1+v2#"<<std::endl;
@@ -480,8 +480,8 @@ std::cout << v3.x << v3.y << v3.z << "#+v1+v2#"<<std::endl;
 */
 
 /*Teste operator*
-	LAL::Vector2<double> v1(1.0,1.0,1.0);
-	LAL::Vector2<double> v3(0.0,0.0,0.0);
+	Celer::Vector2<double> v1(1.0,1.0,1.0);
+	Celer::Vector2<double> v3(0.0,0.0,0.0);
 
 	v3 = 3.0 * v1;
 	std::cout << v3.x << v3.y << v3.z << "#3*v1#"<<std::endl;
@@ -500,8 +500,8 @@ std::cout << v3.x << v3.y << v3.z << "#+v1+v2#"<<std::endl;
 */
 
 /* Teste operator* (puduto interno ou  produto escalar)
-LAL::Vector2<double> v1(6.0,-1.0,0.0);
-LAL::Vector2<double> v2(0.5,-4.0,0.0);
+Celer::Vector2<double> v1(6.0,-1.0,0.0);
+Celer::Vector2<double> v2(0.5,-4.0,0.0);
 double t = 0.0 ;
 t = v1 * v2
 std::cout << t << "#(v1)*(v2)#"<<std::endl;

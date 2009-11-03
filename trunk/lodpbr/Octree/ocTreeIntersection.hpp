@@ -12,7 +12,7 @@ namespace lcgOctree {
 /// Intersection test between a box and a point in 3D
 ///
 template <class Real>
-bool checkIntersection (const LAL::BoundingBox3<Real>& box, LAL::Point3<Real>* p) {
+bool checkIntersection (const Celer::BoundingBox3<Real>& box, Celer::Point3<Real>* p) {
 	return p->x >= box.xmin() && p->x < box.xmax &&
 	p->y >= box.ymin() && p->y < box.ymax &&
 	p->z >= box.zmin() && p->z < box.zmax;
@@ -24,10 +24,10 @@ bool checkIntersection (const LAL::BoundingBox3<Real>& box, LAL::Point3<Real>* p
 /// @param clsPt closest point on object.
 /// @return distance between p and the polygon.
 template <class Real>
-Real distance2Item (const LAL::Point3<Real>* pt, const LAL::Point3<Real>& p, LAL::Point3<Real>& clsp)
+Real distance2Item (const Celer::Point3<Real>* pt, const Celer::Point3<Real>& p, Celer::Point3<Real>& clsp)
 {
 	clsp = *pt;
-	LAL::Point3<Real> q = *pt;
+	Celer::Point3<Real> q = *pt;
 	Real a, b;
 	a = p[0] - q[0];
 	b = a * a;
@@ -42,7 +42,7 @@ Real distance2Item (const LAL::Point3<Real>* pt, const LAL::Point3<Real>& p, LAL
 /// Intersection test between a box and a point in 3D
 ///
 template <class Real>
-bool checkIntersection (const LAL::BoundingBox3<Real>& box, Surfel<Real>* s) {
+bool checkIntersection (const Celer::BoundingBox3<Real>& box, Surfel<Real>* s) {
 	return s->Center().x >= box.xMin() && s->Center().x < box.xMax() &&
 	s->Center().y >= box.yMin() && s->Center().y < box.yMax() &&
 	s->Center().z >= box.zMin() && s->Center().z < box.zMax();
@@ -54,10 +54,10 @@ bool checkIntersection (const LAL::BoundingBox3<Real>& box, Surfel<Real>* s) {
 /// @param clsPt closest point on object.
 /// @return distance between p and the polygon.
 template <class Real>
-Real distance2Item (const Surfel<Real>* st, const LAL::Point3<Real>& s, LAL::Point3<Real>& clsp)
+Real distance2Item (const Surfel<Real>* st, const Celer::Point3<Real>& s, Celer::Point3<Real>& clsp)
 {
 	clsp = st->Center();
-	LAL::Point3<Real> q = st->Center();
+	Celer::Point3<Real> q = st->Center();
 	Real a, b;
 	a = s[0] - q[0];
 	b = a * a;

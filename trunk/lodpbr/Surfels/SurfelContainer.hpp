@@ -33,13 +33,13 @@ typedef struct Vertex
 
 /// A function object for computing bounding boxes
 template <class Real>
-struct Bounding_box : public std::unary_function<LAL::Surfel<Real>, void>
+struct Bounding_box : public std::unary_function<Celer::Surfel<Real>, void>
 {
 
-	LAL::BoundingBox3<Real> box;
+	Celer::BoundingBox3<Real> box;
     Bounding_box() : box(1e10,1e10,1e10,-1e10,-1e10,-1e10) {}
-    void operator()(const LAL::Surfel<Real>& s) {
-        box = box + LAL::BoundingBox3<Real>(s.position(0),s.position(1),s.position(2),
+    void operator()(const Celer::Surfel<Real>& s) {
+        box = box + Celer::BoundingBox3<Real>(s.position(0),s.position(1),s.position(2),
         							   		s.position(0),s.position(1),s.position(2));
     }
 };
@@ -50,11 +50,11 @@ class SurfelContainer
 {
 public:
 
-	typedef LAL::Color		 					Color;
-	typedef LAL::Point3<Real> 					Point3;
-	typedef LAL::Vector3<Real> 					Vector3;
-	typedef LAL::BoundingBox3<Real> 			Box3;
-	typedef std::vector<LAL::Surfel<Real> > 	Surfels;
+	typedef Celer::Color		 					Color;
+	typedef Celer::Point3<Real> 					Point3;
+	typedef Celer::Vector3<Real> 					Vector3;
+	typedef Celer::BoundingBox3<Real> 			Box3;
+	typedef std::vector<Celer::Surfel<Real> > 	Surfels;
 	typedef typename Surfels::iterator 			SurfelIterator;
 
 
@@ -71,7 +71,7 @@ public:
 	{
 		for (SurfelIterator i = mSurfels.begin(); i != mSurfels.end(); ++i)
 		{
-			mBox = mBox + LAL::BoundingBox3<Real>(i->Center(0),i->Center(1),i->Center(2),
+			mBox = mBox + Celer::BoundingBox3<Real>(i->Center(0),i->Center(1),i->Center(2),
 												  i->Center(0),i->Center(1),i->Center(2));
 		}
 
@@ -163,7 +163,7 @@ public:
 		      Vector3 	n (v.nx, v.ny, v.nz);
 		      Color 	c (v.r/255.0, v.g/255.0, v.b/255.0);
 
-		      pSurfels.mSurfels.push_back ( LAL::Surfel<Real> (p,n,c, static_cast<Real> (v.radius), j) );
+		      pSurfels.mSurfels.push_back ( Celer::Surfel<Real> (p,n,c, static_cast<Real> (v.radius), j) );
 
 
 		     }

@@ -6,7 +6,7 @@
 
 #define  INVSQRT2 1.0f/std::sqrt(2.0)
 
-namespace LAL
+namespace Celer
 {
 template < class Real>	class Trackball
 	{
@@ -14,13 +14,13 @@ template < class Real>	class Trackball
 
 	    int width, height;
 
-	    LAL::Quaternion<Real> mOrientation;
-	    LAL::Quaternion<Real> startOrientation;
+	    Celer::Quaternion<Real> mOrientation;
+	    Celer::Quaternion<Real> startOrientation;
 
-	    LAL::Vector3<Real> startVector;
-	    LAL::Vector3<Real> endVector;
+	    Celer::Vector3<Real> startVector;
+	    Celer::Vector3<Real> endVector;
 
-	    void MapToSphere(LAL::Vector3<Real> &v);
+	    void MapToSphere(Celer::Vector3<Real> &v);
 
 	  public:
 	    Trackball(int w,  int h):width( w ), height( h ) {}
@@ -36,15 +36,15 @@ template < class Real>	class Trackball
 	    void BeginTracking(int x, int y);
 	    void Reset () { mOrientation.Identity(); }
 	    void Tracking(int x, int y);
-	    const LAL::Quaternion<Real>& Orientation() { return mOrientation; }
-	    LAL::Matrix4x4<Real> To4x4RotationMatrix();
+	    const Celer::Quaternion<Real>& Orientation() { return mOrientation; }
+	    Celer::Matrix4x4<Real> To4x4RotationMatrix();
 	    void ToOpenGL();
 
 	};//End Interface
 
 
 	template < class Real>
-	void Trackball<Real>::MapToSphere(LAL::Vector3<Real> &v)
+	void Trackball<Real>::MapToSphere(Celer::Vector3<Real> &v)
 	{
 		Real len2;
 
@@ -61,8 +61,8 @@ template < class Real>	class Trackball
 	void Trackball<Real>::Tracking(int x, int y)
 	{
 
-		LAL::Quaternion<Real> q;
-		LAL::Vector3<Real> endVector(Real(x), Real(y), 0);
+		Celer::Quaternion<Real> q;
+		Celer::Vector3<Real> endVector(Real(x), Real(y), 0);
 
 		MapToSphere(endVector);
 		q.ToRotationArc(startVector, endVector);
@@ -74,13 +74,13 @@ template < class Real>	class Trackball
 	template < class Real>
 	void Trackball<Real>::BeginTracking(int x, int y)
 	{
-		startVector = LAL::Vector3<Real>(Real(x), Real(y), 0);
+		startVector = Celer::Vector3<Real>(Real(x), Real(y), 0);
 		startOrientation = mOrientation;
 		MapToSphere(startVector);
 
 	}
 	template < class Real>
-	LAL::Matrix4x4<Real> Trackball<Real>::To4x4RotationMatrix()
+	Celer::Matrix4x4<Real> Trackball<Real>::To4x4RotationMatrix()
 	{
 		return mOrientation.To4x4Matrix();
 	}
@@ -97,6 +97,6 @@ template < class Real>	class Trackball
 
 	}
 
-} /* LAL :: NAMESPACE */
+} /* Celer :: NAMESPACE */
 
 #endif /*TRACKBALL_HPP_*/

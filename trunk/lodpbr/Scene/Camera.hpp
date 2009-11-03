@@ -24,18 +24,18 @@
 *@ resolvi o reverso depois de por assim (worldAhead * mZoomRadius) - mWorldLookAt ;
 */
 
-namespace LAL{
+namespace Celer{
 
     class Camera
     {
     public:
 
-    	typedef LAL::Quaternion<float> Quaternion;
-    	typedef LAL::Matrix4x4<float> Matrix4x4;
-    	typedef LAL::Vector4<float> Vector4;
-    	typedef LAL::Vector3<float> Vector3;
-    	typedef LAL::Vector2<int> Vector2;
-    	typedef LAL::Trackball<float> Trackball;
+    	typedef Celer::Quaternion<float> Quaternion;
+    	typedef Celer::Matrix4x4<float> Matrix4x4;
+    	typedef Celer::Vector4<float> Vector4;
+    	typedef Celer::Vector3<float> Vector3;
+    	typedef Celer::Vector2<int> Vector2;
+    	typedef Celer::Trackball<float> Trackball;
 
     	enum CameraBehavior
     	{
@@ -225,7 +225,7 @@ namespace LAL{
             return mViewMatrix;//ViewMatrixNormal();
 
                 // Get the inverse of the arcball's rotation matrix
-        		//LAL::Quaternion<float> cameraRotation = ~mTrackball.orientation();
+        		//Celer::Quaternion<float> cameraRotation = ~mTrackball.orientation();
 
                 // Transform vectors based on camera's rotation matrix
 //        		mUp = mOrientation.Rotate(Vector3::UNIT_Y);
@@ -516,6 +516,6 @@ namespace LAL{
         Matrix4x4 mOrthographicProjectionMatrix;
     };
 
-}/* LAL :: NAMESPACE */
+}/* Celer :: NAMESPACE */
 
 #endif /*CAMERA_HPP_*/

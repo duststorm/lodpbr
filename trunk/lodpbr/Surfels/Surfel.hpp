@@ -39,15 +39,15 @@ extern "C"
  * surface normal at it's center.
  **/
 
-namespace LAL{
+namespace Celer{
 
 template <class Real > class Surfel
 {
  public:
 
-	 typedef typename LAL::Point3<Real>  Point3;
-	 typedef typename LAL::Vector3<Real> Vector3;
-	 typedef typename LAL::Color         Color;
+	 typedef typename Celer::Point3<Real>  Point3;
+	 typedef typename Celer::Vector3<Real> Vector3;
+	 typedef typename Celer::Color         Color;
 
 
 	 typedef std::list<Point3>       			ListPoint3;
@@ -357,7 +357,7 @@ template <class Real > class Surfel
 
 	 Real Area() const
 	 {
-		 return (  (LAL::Math::kPi * mMinorAxis.first) * (LAL::Math::kPi * mMajorAxis.first) );
+		 return (  (Celer::Math::kPi * mMinorAxis.first) * (Celer::Math::kPi * mMajorAxis.first) );
 	 }
 
 
@@ -428,7 +428,7 @@ template <class Real > class Surfel
 		 while (i < 360)
 		 {
 
-			 lAlpha = ( i / 180 ) * LAL::Math::kPi;
+			 lAlpha = ( i / 180 ) * Celer::Math::kPi;
 			 lSinAlpha =  sin( lAlpha );
 			 lCosAlpha =  cos( lAlpha );
 
@@ -481,7 +481,7 @@ template <class Real > class Surfel
 		 while (i < 360)
 		 {
 
-			 lAlpha = ( i / 180 ) * LAL::Math::kPi;
+			 lAlpha = ( i / 180 ) * Celer::Math::kPi;
 			 lSinAlpha =  sin( lAlpha );
 			 lCosAlpha =  cos( lAlpha );
 

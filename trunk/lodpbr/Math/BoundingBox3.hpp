@@ -1,9 +1,9 @@
-#ifndef LAL_BOUNDINGBOX3_HPP_
-#define LAL_BOUNDINGBOX3_HPP_
+#ifndef CELER_BOUNDINGBOX3_HPP_
+#define CELER_BOUNDINGBOX3_HPP_
 
 #include "Point3.hpp"
 
-namespace LAL
+namespace Celer
 {
 
 /*!
@@ -141,6 +141,6 @@ public:
 	virtual ~BoundingBox3(){};
 };
 
-}/* LAL :: NAMESPACE */
+}/* Celer :: NAMESPACE */
 
 #endif /*BOUNDINGBOX3_HPP_*/

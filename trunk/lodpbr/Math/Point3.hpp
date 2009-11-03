@@ -1,5 +1,5 @@
-#ifndef POINT3_HPP_
-#define POINT3_HPP_
+#ifndef CELER_POINT3_HPP_
+#define CELER_POINT3_HPP_
 
 #include <iostream>
 // [C++ Header files]
@@ -9,7 +9,7 @@
 #include "Vector3.hpp"
 
 
-namespace LAL
+namespace Celer
 {
 /*!
 *@class Point3.
@@ -65,7 +65,7 @@ namespace LAL
 
     	  Useful to pass as a parameter to OpenGL functions:
     	  \code
-    	  LAL:Point3<float> pos, normal;
+    	  Celer:Point3<float> pos, normal;
     	  glNormal3fv(normal);
     	  glVertex3fv(pos);
     	  \endcode */
@@ -127,7 +127,7 @@ namespace LAL
       	  //@{
       	  /*! Output stream operator. Enables debugging code like:
       	  \code
-      	  LAL::Point3<> p(...);
+      	  Celer::Point3<> p(...);
       	  std::cout << "Point3" << " x = " << p.x << " ,y = " << p.y << " ,z = " << p.z << std::endl;
       	  \endcode */
     	  template <class T>
@@ -613,7 +613,7 @@ namespace LAL
 
 
 
-} /* LAL :: NAMESPACE */
+} /* Celer :: NAMESPACE */
 
 #endif /*POINT3_HPP_*/
 

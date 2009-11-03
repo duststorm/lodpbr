@@ -29,8 +29,8 @@ class OctreeNode {
 
   public:
 
-    typedef LAL::Point3<Real>                 			Point3;  ///< A Point in 3D
-    typedef LAL::Vector3<Real>                 			Vector3;  ///< A Point in 3D
+    typedef Celer::Point3<Real>                 			Point3;  ///< A Point in 3D
+    typedef Celer::Vector3<Real>                 			Vector3;  ///< A Point in 3D
     typedef Box_3<Real>                                 Box3; ///< Octant box type
     
 	typedef Surfel<Real>  								Surfel;

@@ -1,6 +1,6 @@
 #include "Vector3.hpp"
 
-namespace LAL
+namespace Celer
 {
 	template<>  const Vector3<float> Vector3<float>::ZERO( 0, 0, 0 );
 

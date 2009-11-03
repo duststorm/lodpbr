@@ -1,5 +1,5 @@
-#ifndef MATRIX4X4_HPP_
-#define MATRIX4X4_HPP_
+#ifndef CELER_MATRIX4X4_HPP_
+#define CELER_MATRIX4X4_HPP_
 
 // [Header files]
 #include <iostream>
@@ -11,7 +11,7 @@
 
 
 
-namespace LAL {
+namespace Celer {
 
 /*! \brief The Matrix4x4 class .
 
@@ -686,7 +686,7 @@ namespace LAL {
 	{
 
 
-		Real c 					= static_cast<Real> (1.0 / std::tan(LAL::Math::kDeg2Rad * fov * 0.5) );
+		Real c 					= static_cast<Real> (1.0 / std::tan(Celer::Math::kDeg2Rad * fov * 0.5) );
 		Real aspectRationInv 	= static_cast<Real> (1.0 / aspectRation);
 		Real fovy 				= static_cast<Real> (2.0 * std::atan(aspectRationInv / c));
 		Real xScale 			= static_cast<Real> (1.0 / std::tan(0.5 * fovy));
@@ -892,7 +892,7 @@ namespace LAL {
 	Matrix4x4<Real>::~Matrix4x4(){};
 
 
-}/* LAL :: NAMESPACE */
+}/* Celer :: NAMESPACE */
 
 #endif /*MATRIX4X4_HPP_*/
 
@@ -909,11 +909,11 @@ namespace LAL {
 //}
 
 
-//LAL::Matrix4x4<float> m2 (5.0,1.0,6.0,0.0,
+//Celer::Matrix4x4<float> m2 (5.0,1.0,6.0,0.0,
 //						   9.0,7.0,8.0,0.0,
 //						   4,5.0,6.0,0.0,
 //						   0.0,0.0,0.0,0.0);
-//LAL::Matrix4x4<float> m3;
+//Celer::Matrix4x4<float> m3;
 //
 //
 //std::cout << m3;

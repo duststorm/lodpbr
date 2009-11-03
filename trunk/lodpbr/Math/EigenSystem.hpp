@@ -1,5 +1,5 @@
-#ifndef LAL_EIGENSYSTEM_HPP_
-#define LAL_EIGENSYSTEM_HPP_
+#ifndef CELER_EIGENSYSTEM_HPP_
+#define CELER_EIGENSYSTEM_HPP_
 
 #include <cassert>
 
@@ -11,7 +11,7 @@
 #include "Point3.hpp"
 #include "Vector3.hpp"
 
-namespace LAL
+namespace Celer
 {
 /*! \brief The EigenSystem class. For now, EigenSystem finds numerical eigenvalues and eigenvectors
  * of a symetric 3x3 matrices
@@ -25,9 +25,9 @@ namespace LAL
 
 	public:
 
-		typedef LAL::Point3<Real>  		Point3;
-		typedef LAL::Vector3<Real> 		Vector3;
-		typedef LAL::Matrix3x3<Real> 	Matrix3x3;
+		typedef Celer::Point3<Real>  		Point3;
+		typedef Celer::Vector3<Real> 		Vector3;
+		typedef Celer::Matrix3x3<Real> 	Matrix3x3;
 
 		Real 	  mEigenvalue[3];
 		Vector3	  mEigenvector[3];
@@ -428,7 +428,7 @@ namespace LAL
 
 	};
 
-}/* LAL :: NAMESPACE */
+}/* Celer :: NAMESPACE */
 
 #endif /*POLYNOMIAL_HPP_*/
 

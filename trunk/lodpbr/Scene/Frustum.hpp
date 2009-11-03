@@ -1,7 +1,7 @@
 #ifndef FRUSTUM_HPP_
 #define FRUSTUM_HPP_
 
-namespace LAL{
+namespace Celer{
 
 	class Frustum
 	{
@@ -10,6 +10,6 @@ namespace LAL{
 		virtual ~Frustum();
 	};
 
-}/* LAL :: NAMESPACE */
+}/* Celer :: NAMESPACE */
 
 #endif /*FRUSTUM_HPP_*/

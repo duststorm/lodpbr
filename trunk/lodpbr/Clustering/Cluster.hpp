@@ -56,9 +56,9 @@ public:
 	Cluster(SurfelContainer<Real>& pSurfels)
 	{
 		init();
-	    LAL::BoundingBox3<float> world =     LAL::BoundingBox3<float>(
-	    		LAL::Point3<float>(pSurfels.Box().xMin(),pSurfels.Box().yMin(),pSurfels.Box().zMin()),
-				LAL::Point3<float>(pSurfels.Box().xMax(),pSurfels.Box().yMax(),pSurfels.Box().zMax())
+	    Celer::BoundingBox3<float> world =     Celer::BoundingBox3<float>(
+	    		Celer::Point3<float>(pSurfels.Box().xMin(),pSurfels.Box().yMin(),pSurfels.Box().zMin()),
+				Celer::Point3<float>(pSurfels.Box().xMax(),pSurfels.Box().yMax(),pSurfels.Box().zMax())
 																     );
 
 		if (mKDTree.root ==  0)
@@ -72,9 +72,9 @@ public:
 		}
 
 		std::cout << "KD-Tree Start" << std::endl;
-		for (typename std::vector<LAL::Surfel<Real> >::iterator surf =  pSurfels.mSurfels.begin();surf != pSurfels.mSurfels.end(); ++ surf )
+		for (typename std::vector<Celer::Surfel<Real> >::iterator surf =  pSurfels.mSurfels.begin();surf != pSurfels.mSurfels.end(); ++ surf )
 		{
-			mKDTree.Insert ( new LAL::Surfel<Real>(*surf) );
+			mKDTree.Insert ( new Celer::Surfel<Real>(*surf) );
 		}
 		std::cout << "KD-Tree End" << std::endl;
 
@@ -83,19 +83,19 @@ public:
 
 	void init()
 	{
-		colors.push_back(LAL::Vector4<float>(1.0,0.0,0.0,0.5));
-		colors.push_back(LAL::Vector4<float>(1.0,1.0,0.0,0.5));
-		colors.push_back(LAL::Vector4<float>(0.0,1.0,0.0,0.5));
-		colors.push_back(LAL::Vector4<float>(0.0,1.0,1.0,0.5));
-		colors.push_back(LAL::Vector4<float>(0.5,0.5,5.0,0.5));
-		colors.push_back(LAL::Vector4<float>(0.5,0.0,0.5,0.5));
-		colors.push_back(LAL::Vector4<float>(0.25,0.5,0.25,0.5));
-		colors.push_back(LAL::Vector4<float>(0.25,0.0,0.75,0.5));
-		colors.push_back(LAL::Vector4<float>(0.0,0.0,1.0,0.5));
-		colors.push_back(LAL::Vector4<float>(0.1,0.1,0.5,0.5));
-		colors.push_back(LAL::Vector4<float>(1.0,0.1,0.5,0.5));
-		colors.push_back(LAL::Vector4<float>(0.1,0.1,0.5,0.5));
-		colors.push_back(LAL::Vector4<float>(1.0,1.0,0.5,0.5));
+		colors.push_back(Celer::Vector4<float>(1.0,0.0,0.0,0.5));
+		colors.push_back(Celer::Vector4<float>(1.0,1.0,0.0,0.5));
+		colors.push_back(Celer::Vector4<float>(0.0,1.0,0.0,0.5));
+		colors.push_back(Celer::Vector4<float>(0.0,1.0,1.0,0.5));
+		colors.push_back(Celer::Vector4<float>(0.5,0.5,5.0,0.5));
+		colors.push_back(Celer::Vector4<float>(0.5,0.0,0.5,0.5));
+		colors.push_back(Celer::Vector4<float>(0.25,0.5,0.25,0.5));
+		colors.push_back(Celer::Vector4<float>(0.25,0.0,0.75,0.5));
+		colors.push_back(Celer::Vector4<float>(0.0,0.0,1.0,0.5));
+		colors.push_back(Celer::Vector4<float>(0.1,0.1,0.5,0.5));
+		colors.push_back(Celer::Vector4<float>(1.0,0.1,0.5,0.5));
+		colors.push_back(Celer::Vector4<float>(0.1,0.1,0.5,0.5));
+		colors.push_back(Celer::Vector4<float>(1.0,1.0,0.5,0.5));
 	}
 
 	ItemPtrList GetNotMarked( ItemPtrList& plNeighbors )
@@ -219,7 +219,7 @@ public:
 
 	void DrawSurfels()
 	{
-		std::vector<LAL::Vector4<float> >::iterator c = colors.begin();
+		std::vector<Celer::Vector4<float> >::iterator c = colors.begin();
 		for ( typename std::vector<ItemPtr>::iterator it = mSurfels.begin(); it != mSurfels.end();++it)
 		{
 			glPushMatrix();
@@ -235,7 +235,7 @@ public:
 	void DrawClusters (int pNumber)
 	{
 
-		std::vector<LAL::Vector4<float> >::iterator c = colors.begin();
+		std::vector<Celer::Vector4<float> >::iterator c = colors.begin();
 	    glPushMatrix();
 
 			if (Clusters.size() >= pNumber)
@@ -285,7 +285,7 @@ public:
 	}
 private:
 
-    std::vector<LAL::Vector4<float> > colors;
+    std::vector<Celer::Vector4<float> > colors;
 };
 
 

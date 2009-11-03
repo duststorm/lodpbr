@@ -1,5 +1,5 @@
-#ifndef LAL_MATH_HPP_
-#define LAL_MATH_HPP_
+#ifndef CELER_MATH_HPP_
+#define CELER_MATH_HPP_
 
 
 #include <cmath>
@@ -10,7 +10,7 @@
 
 
 
-namespace LAL {
+namespace Celer {
 
 /*! \brief The Math class represents some useful math function.
 \class Math Math.hpp
@@ -108,6 +108,6 @@ namespace LAL {
 	};
 
 
-}/* LAL :: NAMESPACE */
+}/* Celer :: NAMESPACE */
 
 #endif /*MATH_HPP_*/
