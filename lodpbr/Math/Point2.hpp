@@ -1,5 +1,5 @@
-#ifndef LAL_POINT2_HPP_
-#define LAL_POINT2_HPP_
+#ifndef CELER_POINT2_HPP_
+#define CELER_POINT2_HPP_
 
 // [System Include]
 #include <iostream>    // standard IO interface
@@ -9,7 +9,7 @@
 #include "Vector2.hpp" // Friend Class
 
 
-namespace LAL
+namespace Celer
 {
 
 /*!
@@ -54,7 +54,7 @@ namespace LAL
 
     	  Useful to pass as a parameter to OpenGL functions:
     	  \code
-    	  LAL:Point2<float> pos, normal;
+    	  Celer:Point2<float> pos, normal;
     	  glNormal2fv(normal);
     	  glVertex2fv(pos);
     	  \endcode */
@@ -140,7 +140,7 @@ namespace LAL
     	  //@{
     	  /*! Output stream operator. Enables debugging code like:
     	  \code
-    	  LAL::Point2<> p(...);
+    	  Celer::Point2<> p(...);
     	  std::cout << "Point2" << " x = " << p.x() << " ,y = " << p.y() << std::endl;
     	  \endcode */
     	  template <class T>
@@ -487,6 +487,6 @@ namespace LAL
       template<class Real>
       inline Point2<Real>::operator Real * ( void ) { return &x; }
 
-} /* LAL :: NAMESPACE */
+} /* Celer :: NAMESPACE */
 
 #endif /*POINT2_HPP_*/

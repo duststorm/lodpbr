@@ -18,8 +18,8 @@
 template < class Real,class ItemPtr, class Refine = OverflowKdTreeRefine<Real,ItemPtr> >
 class KdTreeNode {
 
-  typedef typename 	LAL::Point3<Real> 									Point3;     ///< A Point in 3D
-  typedef typename 	LAL::BoundingBox3<Real> 							Box3;
+  typedef typename 	Celer::Point3<Real> 									Point3;     ///< A Point in 3D
+  typedef typename 	Celer::BoundingBox3<Real> 							Box3;
   /// List of what is actually stored in a leaf node (non-leaf nodes stores only one reference)
   typedef 			std::vector<ItemPtr> 									ItemPtrList;
   typedef const 	KdTreeNode* 											NodePtr;

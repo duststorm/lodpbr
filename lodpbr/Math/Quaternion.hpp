@@ -1,12 +1,12 @@
-#ifndef LAL_QUATERNION_HPP_
-#define LAL_QUATERNION_HPP_
+#ifndef CELER_QUATERNION_HPP_
+#define CELER_QUATERNION_HPP_
 
 #include "Vector3.hpp"
 #include "Matrix3x3.hpp"
 #include "Matrix4x4.hpp"
 #include "Math.hpp"
 
-namespace LAL{
+namespace Celer{
 
 /*!
 *@class Quaternion.
@@ -773,6 +773,6 @@ namespace LAL{
 	{}
 
 
-} /* LAL :: NAMESPACE */
+} /* Celer :: NAMESPACE */
 
 #endif /*QUATERNION_HPP_*/

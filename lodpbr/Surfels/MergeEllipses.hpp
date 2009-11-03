@@ -17,16 +17,16 @@ template <class Real> class MergeEllipses
 {
 public:
 
-	typedef LAL::Point3<Real>    				Point3;
-	typedef LAL::Vector3<Real>   				Vector3;
-	typedef LAL::Matrix3x3<Real> 				Matrix3x3;
+	typedef Celer::Point3<Real>    				Point3;
+	typedef Celer::Vector3<Real>   				Vector3;
+	typedef Celer::Matrix3x3<Real> 				Matrix3x3;
 
-	typedef LAL::Point3<Real>*					PtrPoint3;
+	typedef Celer::Point3<Real>*					PtrPoint3;
 	typedef std::list<Point3>					ListPoint3;
 	typedef std::list<Point3* >       			ListPtrPoint3;
 	typedef typename ListPtrPoint3::iterator   	ListPtrPoint3Iterator;
 
-	typedef LAL::Surfel<Real>					  Surfel;
+	typedef Celer::Surfel<Real>					  Surfel;
 	typedef Surfel*								  PtrSurfel;
 	typedef std::list<Surfel> 					  SurfelContainer;
 	typedef std::list<PtrSurfel>				  PtrSurfelContainer;
@@ -137,7 +137,7 @@ public:
 	void NewAxis()
 	{
 
-		LAL::EigenSystem<Real> lEigen(mProjectedPoint,mNewCenter);
+		Celer::EigenSystem<Real> lEigen(mProjectedPoint,mNewCenter);
 
 		mNewMinorAxis = lEigen.MinorAxis();
 		mNewMajorAxis = lEigen.MajorAxis();

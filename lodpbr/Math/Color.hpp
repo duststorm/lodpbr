@@ -1,12 +1,12 @@
-#ifndef LAL_COLOR_HPP_
-#define LAL_COLOR_HPP_
+#ifndef CELER_COLOR_HPP_
+#define CELER_COLOR_HPP_
 
 #include <iostream>
 
 #include "Point3.hpp"
 #include "Vector3.hpp"
 
-namespace LAL
+namespace Celer
 {
 
 /*!
@@ -202,6 +202,6 @@ namespace LAL
 			
 	};
 
-}/* LAL::NAMESPACE */
+}/* Celer::NAMESPACE */
 
 #endif /*COLOR_HPP_*/

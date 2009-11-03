@@ -1,5 +1,5 @@
-#ifndef VECTOR4_HPP_
-#define VECTOR4_HPP_
+#ifndef CELER_VECTOR4_HPP_
+#define CELER_VECTOR4_HPP_
 
 #include <iostream>
 
@@ -8,7 +8,7 @@
 
 #include "Vector3.hpp"
 
-namespace LAL {
+namespace Celer {
 
 /*!
 *@class Vector4.
@@ -61,7 +61,7 @@ namespace LAL {
 		/*!Conversion operator returning the memory address of the Point.
 		 * Useful to pass as a parameter to OpenGL functions:
 		 * \code
-		 * LAL:Vector3<float> pos, normal;
+		 * Celer:Vector3<float> pos, normal;
 		 * glNormal3fv(normal);
 		 * glVertex3fv(pos);
 		 * \endcode */
@@ -119,7 +119,7 @@ namespace LAL {
 		//@{
 		/*! Output stream operator. Enables debugging code like:
     	  \code
-    	  LAL::Vector3<> v(...);
+    	  Celer::Vector3<> v(...);
     	  std::cout << "Vector4" << " x = " << v.x << " ,y = " << v.y << " ,z = " << v.z << " ,w = " << v.w << std::endl;
     	  \endcode */
 		template <class T>
@@ -514,7 +514,7 @@ namespace LAL {
 
 
 
-} /* LAL :: NAMESPACE */
+} /* Celer :: NAMESPACE */
 
 
 #endif
@@ -523,9 +523,9 @@ namespace LAL {
 
 
 //// Teste operator+ e operator- with vectors
-//LAL::Vector4<double> v1(1.0,1.0,1.0,0.0);
-//LAL::Vector4<double> v2(-1.0,-1.0,-1.0,0.0);
-//LAL::Vector4<double> v3(0.0,0.0,0.0,0.0);
+//Celer::Vector4<double> v1(1.0,1.0,1.0,0.0);
+//Celer::Vector4<double> v2(-1.0,-1.0,-1.0,0.0);
+//Celer::Vector4<double> v3(0.0,0.0,0.0,0.0);
 //
 //v3 = v1 + v2;
 //std::cout << "#v1+v2# = 0,0,0 " << v3 << std::endl;
@@ -553,8 +553,8 @@ namespace LAL {
 //
 //
 ////Teste operator* with scalar
-//v1 = LAL::Vector4<double>(1.0,1.0,1.0,0.0);
-//v3 = LAL::Vector4<double>(0.0,0.0,0.0,0.0);
+//v1 = Celer::Vector4<double>(1.0,1.0,1.0,0.0);
+//v3 = Celer::Vector4<double>(0.0,0.0,0.0,0.0);
 //
 //v3 = 3.0 * v1;
 //std::cout << "#3*v1# = 3,3,3 "<<v3 << std::endl;
@@ -571,26 +571,26 @@ namespace LAL {
 //v3 = (+v1) * v2[3];
 //std::cout << "#(+v1)*0.0# = 0,0,0" << v3 << std::endl;
 //
-//LAL::Vector4<double> v4(1.0,1.0,1.0,1.0);
-//LAL::Vector4<double> v5(-1.0,-1.0,-1.0,-1.0);
-//LAL::Vector4<double> v6(2.0,2.0,2.0,4.0);
+//Celer::Vector4<double> v4(1.0,1.0,1.0,1.0);
+//Celer::Vector4<double> v5(-1.0,-1.0,-1.0,-1.0);
+//Celer::Vector4<double> v6(2.0,2.0,2.0,4.0);
 //double r = 1.0;
 //
 //v3 += v4;
 //std::cout << "#v3+=v4# = 1,1,1 "<<v3 << std::endl;
-//v3 = LAL::Vector4<double>(0.0,0.0,0.0,0.0);
+//v3 = Celer::Vector4<double>(0.0,0.0,0.0,0.0);
 //v3 += -3.0*v4;
 //std::cout << "#v3+=-3*v4# = -3,-3,-3 "<<v3 << std::endl;
-//v3 = LAL::Vector4<double>(0.0,0.0,0.0,0.0);
+//v3 = Celer::Vector4<double>(0.0,0.0,0.0,0.0);
 //v3 += -v5+v4;
 //std::cout << "#v3+=-v5+v4# = 2,2,2 "<<v3 << std::endl;
 //
 //v3 -= v4;
 //std::cout << "#v3-=v4# = -1,-1,-1 "<<v3 << std::endl;
-//v3 = LAL::Vector4<double>(0.0,0.0,0.0,0.0);
+//v3 = Celer::Vector4<double>(0.0,0.0,0.0,0.0);
 //v3 -= -3.0*v4;
 //std::cout << "#v3-=-3*v4# = 3,3,3 "<<v3 << std::endl;
-//v3 = LAL::Vector4<double>(0.0,0.0,0.0,0.0);
+//v3 = Celer::Vector4<double>(0.0,0.0,0.0,0.0);
 //v3 -= -v5+v4;
 //std::cout << "#v3-=-v5+v4# = -2,-2,-2 "<<v3 << std::endl;
 //
@@ -601,10 +601,10 @@ namespace LAL {
 //
 //v6 /= v4;
 //std::cout << "#v6/=v4# = 2,2,2,4 "<<v6 << std::endl;
-//v6 = LAL::Vector4<double>(2.0,2.0,2.0,4.0);
+//v6 = Celer::Vector4<double>(2.0,2.0,2.0,4.0);
 //v6 /= -3.0*v4;
 //std::cout << "#v6/=-3*v4# = -0.666,-0.666,-0.666 "<<v6 << std::endl;
-//v6 = LAL::Vector4<double>(2.0,2.0,2.0,4.0);
+//v6 = Celer::Vector4<double>(2.0,2.0,2.0,4.0);
 //v6 /= -v5+v4;
 //std::cout << "#v6/=-v5+v4# = 1,1,1,2 "<<v6 << std::endl;
 //

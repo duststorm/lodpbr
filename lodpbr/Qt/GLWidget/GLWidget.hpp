@@ -51,16 +51,16 @@ public:
 
     SurfelContainer<float> surfels;
 
-    Cluster<float,LAL::Surfel<float>*> cluster;
+    Cluster<float,Celer::Surfel<float>*> cluster;
 
-    KdTree<float,LAL::Surfel<float>* > kdTree;
+    KdTree<float,Celer::Surfel<float>* > kdTree;
 
-    typedef  KdTree<float,LAL::Surfel<float>* >::Node KdTree3DNode;
+    typedef  KdTree<float,Celer::Surfel<float>* >::Node KdTree3DNode;
 
-    std::vector<LAL::Surfel<float>* > KNeibor;
-    std::vector< std::vector<LAL::Surfel<float>* > > clusters;
-    std::vector<LAL::Surfel<float>* >  newSurfel;
-    std::vector<LAL::Vector4<float> > colors;
+    std::vector<Celer::Surfel<float>* > KNeibor;
+    std::vector< std::vector<Celer::Surfel<float>* > > clusters;
+    std::vector<Celer::Surfel<float>* >  newSurfel;
+    std::vector<Celer::Vector4<float> > colors;
 
 protected:
 
@@ -75,17 +75,17 @@ private:
 
 
     template < class T>
-    LAL::BoundingBox3<T> limits();
+    Celer::BoundingBox3<T> limits();
 
     template < class T>
-    void drawBox(LAL::BoundingBox3<T> BBox);
+    void drawBox(Celer::BoundingBox3<T> BBox);
 
     QPoint 				lastPos;
 
     float mCenterX;
     float mCenterY;
 
-    LAL::Camera camera;
+    Celer::Camera camera;
 
     float CameraStep;
 

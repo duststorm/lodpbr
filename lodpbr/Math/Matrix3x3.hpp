@@ -1,5 +1,5 @@
-#ifndef MATRIX3X3_HPP_
-#define MATRIX3X3_HPP_
+#ifndef CELER_MATRIX3X3_HPP_
+#define CELER_MATRIX3X3_HPP_
 
 #include <iostream>
 
@@ -7,7 +7,7 @@
 #include "Point3.hpp"
 
 
-namespace LAL {
+namespace Celer {
 
 /*! \brief The Matrix3x3 class .
 
@@ -411,7 +411,7 @@ namespace LAL {
 
 
 
-}/* LAL :: NAMESPACE */
+}/* Celer :: NAMESPACE */
 
 #endif /*MATRIX3X3_HPP_*/
 

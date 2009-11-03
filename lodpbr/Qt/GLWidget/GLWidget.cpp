@@ -55,19 +55,19 @@ void GLWidget::init()
 
 	mGLInitialized = false;
 
-	colors.push_back(LAL::Vector4<float>(1.0,0.0,0.0,0.5));
-	colors.push_back(LAL::Vector4<float>(1.0,1.0,0.0,0.5));
-	colors.push_back(LAL::Vector4<float>(0.0,1.0,0.0,0.5));
-	colors.push_back(LAL::Vector4<float>(0.0,1.0,1.0,0.5));
-	colors.push_back(LAL::Vector4<float>(0.5,0.5,5.0,0.5));
-	colors.push_back(LAL::Vector4<float>(0.5,0.0,0.5,0.5));
-	colors.push_back(LAL::Vector4<float>(0.25,0.5,0.25,0.5));
-	colors.push_back(LAL::Vector4<float>(0.25,0.0,0.75,0.5));
-	colors.push_back(LAL::Vector4<float>(0.0,0.0,1.0,0.5));
-	colors.push_back(LAL::Vector4<float>(0.1,0.1,0.5,0.5));
-	colors.push_back(LAL::Vector4<float>(1.0,0.1,0.5,0.5));
-	colors.push_back(LAL::Vector4<float>(0.1,0.1,0.5,0.5));
-	colors.push_back(LAL::Vector4<float>(1.0,1.0,0.5,0.5));
+	colors.push_back(Celer::Vector4<float>(1.0,0.0,0.0,0.5));
+	colors.push_back(Celer::Vector4<float>(1.0,1.0,0.0,0.5));
+	colors.push_back(Celer::Vector4<float>(0.0,1.0,0.0,0.5));
+	colors.push_back(Celer::Vector4<float>(0.0,1.0,1.0,0.5));
+	colors.push_back(Celer::Vector4<float>(0.5,0.5,5.0,0.5));
+	colors.push_back(Celer::Vector4<float>(0.5,0.0,0.5,0.5));
+	colors.push_back(Celer::Vector4<float>(0.25,0.5,0.25,0.5));
+	colors.push_back(Celer::Vector4<float>(0.25,0.0,0.75,0.5));
+	colors.push_back(Celer::Vector4<float>(0.0,0.0,1.0,0.5));
+	colors.push_back(Celer::Vector4<float>(0.1,0.1,0.5,0.5));
+	colors.push_back(Celer::Vector4<float>(1.0,0.1,0.5,0.5));
+	colors.push_back(Celer::Vector4<float>(0.1,0.1,0.5,0.5));
+	colors.push_back(Celer::Vector4<float>(1.0,1.0,0.5,0.5));
 
 }
 
@@ -168,16 +168,16 @@ void GLWidget::drawKdTree(int& cont)
 
 void GLWidget::calLimits()
 {
-     cluster = Cluster<float,LAL::Surfel<float>*>(surfels);
+     cluster = Cluster<float,Celer::Surfel<float>*>(surfels);
 
-     LAL::Surfel<float>* seed = new LAL::Surfel<float>(surfels.mSurfels[0]);
+     Celer::Surfel<float>* seed = new Celer::Surfel<float>(surfels.mSurfels[0]);
 
      cluster.Build(1,8,seed);
 
 }
 
 template <class T>
-void GLWidget::drawBox(LAL::BoundingBox3<T> BBox){
+void GLWidget::drawBox(Celer::BoundingBox3<T> BBox){
   glColor3f (1.0, 1.0, 1.0);//white
 
   glBegin(GL_LINE_LOOP);
@@ -300,7 +300,7 @@ void GLWidget::paintGL()
 		{
 			drawKdTree(cont);
 
-			std::vector<LAL::Vector4<float> >::iterator c = colors.begin();
+			std::vector<Celer::Vector4<float> >::iterator c = colors.begin();
 
 			int cont = 0;
 

@@ -28,8 +28,8 @@ class OctreeInternalNode : public OctreeNode<Real, ItemPtr, Refine> {
 
     typedef OctreeNode<Real, ItemPtr, Refine> OctreeNode;
 
-    typedef  LAL::Point3<Real>   Point3;  ///< A Point in 3D
-    typedef  LAL::Vector3<Real>  Vector3;  ///< A Point in 3D
+    typedef  Celer::Point3<Real>   Point3;  ///< A Point in 3D
+    typedef  Celer::Vector3<Real>  Vector3;  ///< A Point in 3D
     typedef  MergeEllipses<Real> MergeEllipses;
 
     typedef Box_3<Real> Box3; ///< Octant box type
@@ -299,12 +299,12 @@ public:
 
     Real ComputeTangencialError (MergeEllipses &Merge)
     {
-    	LAL::Camera camera;
+    	Celer::Camera camera;
     	Real et;
 
     	camera.SetUp(Merge.MinorAxis().second);
-    	camera.SetEyes(LAL::Vector3<float>(Merge.Center().x,Merge.Center().y,Merge.Center().z));
-    	camera.SetFocus(LAL::Vector3<float>(Merge.Center().x,Merge.Center().y,Merge.Center().z)+(-Merge.Normal()*1.0f));
+    	camera.SetEyes(Celer::Vector3<float>(Merge.Center().x,Merge.Center().y,Merge.Center().z));
+    	camera.SetFocus(Celer::Vector3<float>(Merge.Center().x,Merge.Center().y,Merge.Center().z)+(-Merge.Normal()*1.0f));
 
 
         glViewport(0, 0, 32, 32);
