@@ -74,6 +74,11 @@ namespace Celer
 		    	this->mRed   = pRed;
 			};
 
+			float Red() const
+			{
+				return this->mRed;
+			}
+
 			/*!@brief Initialize Green color.
 			*  @param[in] g float.
 			*/
@@ -82,6 +87,10 @@ namespace Celer
 		    	this->mGreen = pGreen;
 			};
 
+			float Green() const
+			{
+				return this->mGreen;
+			}
 			/*!@brief Initialize Blue color.
 			*  @param[in] b float.
 			*/		
@@ -90,6 +99,11 @@ namespace Celer
 		    	this->mBlue  = pBlue;
 			};
 			
+			float Blue() const
+			{
+				return this->mBlue;
+			}
+
 			/*!@brief Initialize Alfa atribute.
 			*  @param[in] b float.
 			*/		
@@ -98,6 +112,11 @@ namespace Celer
 		    	this->mAlfa  = pAlfa;
 			};
 			
+			float Alfa() const
+			{
+				return this->mAlfa;
+			}
+
 			/*!@brief operator[]
 			 * @details array based index. "0" for x, "1" for y, "2" for z.
 			 * @ This is ready-only

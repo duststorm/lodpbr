@@ -16,20 +16,14 @@
 #include <GL/gl.h>
 #include <GL/glu.h>
 
+#include <wrap/io_trimesh/import_ply.h>
+#include <wrap/io_trimesh/io_ply.h>
+#include <wrap/ply/plylib.h>
+
 #include "Math/Point3.hpp"
 #include "Math/Vector3.hpp"
 #include "Math/Color.hpp"
 #include "Math/Math.hpp"
-
-extern "C"
-{
-	#include <stdio.h>
-
-	#include <strings.h>
-
-	#include "ply.h"
-}
-
 
 /**
  * Surfel class.
@@ -39,22 +33,113 @@ extern "C"
  * surface normal at it's center.
  **/
 
+extern "C"
+{
+#include "ply.h"
+}
+
 namespace Celer{
 
-template <class Real > class Surfel
+template <class Real = float > class Surfel
 {
  public:
 
 	 typedef typename Celer::Point3<Real>  Point3;
 	 typedef typename Celer::Vector3<Real> Vector3;
-	 typedef typename Celer::Color         Color;
-
+	 typedef typename Celer::Color 		   Color;
 
 	 typedef std::list<Point3>       			ListPoint3;
 	 typedef typename ListPoint3::iterator  	ListPoint3Iterator;
 	 typedef std::list<Point3* >       			ListPtrPoint3;
 	 typedef typename ListPtrPoint3::iterator  	ListPtrPoint3Iterator;
 
+	 typedef ::vcg::ply::PropDescriptor PropDescriptor ;
+
+/* IO PLY */
+
+		enum
+		{
+			IOM_SURFEL = 0x10002
+		};
+
+		struct LoadPlySurfel
+		{
+			float cx;
+			float cy;
+			float cz;
+			float nx;
+			float ny;
+			float nz;
+			float major_axisx;
+			float major_axisy;
+			float major_axisz;
+			float major_axis_size;
+			float minor_axisx;
+			float minor_axisy;
+			float minor_axisz;
+			float minor_axis_size;
+			float r;
+			float g;
+			float b;
+			float max_error;
+			float min_error;
+			inline const LoadPlySurfel& operator= ( const Surfel<Real>& pSurfel)
+			{
+
+				 this->cx    		= pSurfel.Center().x;
+				 this->cy    		= pSurfel.Center().y;
+				 this->cz    		= pSurfel.Center().z;
+				 this->nx    		= pSurfel.Normal().x;
+				 this->ny    		= pSurfel.Normal().y;
+				 this->nz    		= pSurfel.Normal().z;
+
+				 this->major_axisx  = pSurfel.MajorAxis().second.x;
+				 this->major_axisy  = pSurfel.MajorAxis().second.y;
+				 this->major_axisz  = pSurfel.MajorAxis().second.z;
+				 this->major_axis_size  = pSurfel.MajorAxis().first;
+
+				 this->minor_axisx  = pSurfel.MinorAxis().second.x;
+				 this->minor_axisy  = pSurfel.MinorAxis().second.y;
+				 this->minor_axisz  = pSurfel.MinorAxis().second.z;
+				 this->minor_axis_size  = pSurfel.MinorAxis().first;
+				 this->r	     		= pSurfel.ColorRGB().Red();
+				 this->g 				= pSurfel.ColorRGB().Green();
+				 this->b                = pSurfel.ColorRGB().Blue();
+				 this->max_error 		= pSurfel.MaxError();
+				 this->min_error 		= pSurfel.MinError();
+
+		   	  	return ( *this );
+			 }
+		};
+
+
+		static const  PropDescriptor &SurfelDesc(int i)
+		{
+			static const PropDescriptor surfel[19] =
+			{
+					{"surfel","cx"				,vcg::ply::T_FLOAT,vcg::ply::T_FLOAT,offsetof(LoadPlySurfel,cx)				,0,0,0,0,0  ,0},
+					{"surfel","cy"				,vcg::ply::T_FLOAT,vcg::ply::T_FLOAT,offsetof(LoadPlySurfel,cy)				,0,0,0,0,0  ,0},
+					{"surfel","cz"				,vcg::ply::T_FLOAT,vcg::ply::T_FLOAT,offsetof(LoadPlySurfel,cz)				,0,0,0,0,0  ,0},
+					{"surfel","nx"				,vcg::ply::T_FLOAT,vcg::ply::T_FLOAT,offsetof(LoadPlySurfel,nx)				,0,0,0,0,0  ,0},
+					{"surfel","ny"				,vcg::ply::T_FLOAT,vcg::ply::T_FLOAT,offsetof(LoadPlySurfel,ny)				,0,0,0,0,0  ,0},
+					{"surfel","nz"				,vcg::ply::T_FLOAT,vcg::ply::T_FLOAT,offsetof(LoadPlySurfel,nz)				,0,0,0,0,0  ,0},
+					{"surfel","major_axisx"		,vcg::ply::T_FLOAT,vcg::ply::T_FLOAT,offsetof(LoadPlySurfel,major_axisx)		,0,0,0,0,0  ,0},
+					{"surfel","major_axisy"		,vcg::ply::T_FLOAT,vcg::ply::T_FLOAT,offsetof(LoadPlySurfel,major_axisy)		,0,0,0,0,0  ,0},
+					{"surfel","major_axisz"		,vcg::ply::T_FLOAT,vcg::ply::T_FLOAT,offsetof(LoadPlySurfel,major_axisz)		,0,0,0,0,0  ,0},
+					{"surfel","major_axis_size"	,vcg::ply::T_FLOAT,vcg::ply::T_FLOAT,offsetof(LoadPlySurfel,major_axis_size)	,0,0,0,0,0  ,0},
+					{"surfel","minor_axisx"		,vcg::ply::T_FLOAT,vcg::ply::T_FLOAT,offsetof(LoadPlySurfel,minor_axisx)		,0,0,0,0,0  ,0},
+					{"surfel","minor_axisy"		,vcg::ply::T_FLOAT,vcg::ply::T_FLOAT,offsetof(LoadPlySurfel,minor_axisy)		,0,0,0,0,0  ,0},
+					{"surfel","minor_axisz"  	,vcg::ply::T_FLOAT,vcg::ply::T_FLOAT,offsetof(LoadPlySurfel,minor_axisz)		,0,0,0,0,0  ,0},
+					{"surfel","minor_axis_size" ,vcg::ply::T_FLOAT,vcg::ply::T_FLOAT,offsetof(LoadPlySurfel,minor_axis_size)	,0,0,0,0,0  ,0},
+					{"surfel","r"	 			,vcg::ply::T_FLOAT,vcg::ply::T_FLOAT,offsetof(LoadPlySurfel,r)					,0,0,0,0,0  ,0},
+					{"surfel","g"				,vcg::ply::T_FLOAT,vcg::ply::T_FLOAT,offsetof(LoadPlySurfel,g)					,0,0,0,0,0  ,0},
+					{"surfel","b"				,vcg::ply::T_FLOAT,vcg::ply::T_FLOAT,offsetof(LoadPlySurfel,b)					,0,0,0,0,0  ,0},
+					{"surfel","max_error"		,vcg::ply::T_FLOAT,vcg::ply::T_FLOAT,offsetof(LoadPlySurfel,max_error)			,0,0,0,0,0  ,0},
+					{"surfel","min_error"		,vcg::ply::T_FLOAT,vcg::ply::T_FLOAT,offsetof(LoadPlySurfel,min_error)			,0,0,0,0,0  ,0}
+			};
+			return surfel[i];
+		}
+/* END */
 
 	 Surfel ()
 	 {
@@ -78,8 +163,35 @@ template <class Real > class Surfel
 	   									 	 mSplatRadius(pSurfel.mSplatRadius),
 	   										 mMinorAxis(pSurfel.mMinorAxis),
 	   										 mMajorAxis(pSurfel.mMajorAxis),
+	   		   								 mMaxError(pSurfel.mMaxError),
+	   		   								 mMinError(pSurfel.mMinError),
 	   										 mPerpendicularError(0),
 	   										 mID(pSurfel.mID),
+	   										 mMarked(0),
+	   									     mExpansionMarked(0),
+	   									     mSeedMarked(0),
+	   									     mCost(9999),
+	   										 mClusterID(0)
+	 {
+
+	 };
+
+	 Surfel (const LoadPlySurfel& pSurfel) : mCenter(pSurfel.cx,pSurfel.cy,pSurfel.cz),
+	   										 mNormal(pSurfel.nx,pSurfel.ny,pSurfel.nz),
+	   									 	 mColor(pSurfel.r,pSurfel.g,pSurfel.b),
+	   									 	 mSplatRadius(0),
+	   										 mMajorAxis(std::pair<Real,Vector3>(pSurfel.major_axis_size,
+	   												              Vector3(pSurfel.major_axisx,
+	   												            		  pSurfel.major_axisy,
+	   												            		  pSurfel.major_axisz))),
+	   								         mMinorAxis(std::pair<Real,Vector3>(pSurfel.minor_axis_size,
+	   								        		              Vector3(pSurfel.minor_axisx,
+	   												               		  pSurfel.minor_axisy,
+	   												               		  pSurfel.minor_axisz))),
+	   										 mMaxError(pSurfel.max_error),
+	   										 mMinError(pSurfel.min_error),
+	   										 mPerpendicularError(0),
+	   										 mID(0),
 	   										 mMarked(0),
 	   									     mExpansionMarked(0),
 	   									     mSeedMarked(0),
@@ -105,6 +217,8 @@ template <class Real > class Surfel
 	 							   mClusterID(0)
 	 	  {
 		 	mColor = Color(1.0,0.0,0.0);
+			mMaxError = 0;
+			mMinError = 0;
 
 	 	  };
 
@@ -130,6 +244,8 @@ template <class Real > class Surfel
 		 	lU.Normalize();
 		 	mMinorAxis = std::make_pair(mSplatRadius,lV);
 		 	mMajorAxis = std::make_pair(mSplatRadius,lU);
+			mMaxError = 0;
+			mMinError = 0;
 	 	  };
 
 
@@ -157,6 +273,8 @@ template <class Real > class Surfel
 		 	lU.Normalize();
 		 	mMinorAxis = std::make_pair(mSplatRadius,lV);
 		 	mMajorAxis = std::make_pair(mSplatRadius,lU);
+			mMaxError = 0;
+			mMinError = 0;
 		 	//std::cout << " Value " << mMajorAxis.first << " Vector " << mMajorAxis.second << std::endl;
 		  };
 
@@ -181,6 +299,8 @@ template <class Real > class Surfel
 		 	lU.normalize();
 		 	mMinorAxis = std::make_pair(mSplatRadius,lV);
 		 	mMajorAxis = std::make_pair(mSplatRadius,lU);
+			mMaxError = 0;
+			mMinError = 0;
 		  };
 
 	 inline const Surfel<Real>& operator= ( const Surfel<Real>& pSurfel)
@@ -189,7 +309,9 @@ template <class Real > class Surfel
 		 this->mNormal    		= pSurfel.Normal();
 		 this->mMinorAxis 		= pSurfel.MinorAxis();
 		 this->mMajorAxis 		= pSurfel.MajorAxis();
-		 this->mColor     		= pSurfel.color();
+		 this->mMaxError 		= pSurfel.MaxError();
+		 this->mMinError 		= pSurfel.MinError();
+		 this->mColor     		= pSurfel.ColorRGB();
 		 this->mMarked    		= pSurfel.Marked();
 		 this->mExpansionMarked = pSurfel.ExpansionMarked();
 		 this->mSeedMarked		= pSurfel.SeedMarked();
@@ -257,9 +379,14 @@ template <class Real > class Surfel
 		 this->mSplatRadius = pRadius;
 	 };
 
-	 Color color (void) const
+	 Color ColorRGB (void) const
 	 {
 		 return this->mColor;
+	 };
+
+	 void SetColorRGB ( const Color& pColor )
+	 {
+		 this->mColor = pColor;
 	 };
 
 	 bool Marked (void) const
@@ -304,11 +431,6 @@ template <class Real > class Surfel
 		 this->mClusterID = pClusterID;
 	 };
 
-	 void SetColor ( const Color& pColor )
-	 {
-		 this->mColor = pColor;
-	 };
-
 	 Real perpendicularError () const
 	 {
 		 return ( this->mPerpendicularError );
@@ -334,6 +456,27 @@ template <class Real > class Surfel
 		 return (this->mMajorAxis);
 	 }
 
+	 Real MaxError () const
+	 {
+		 return ( this->mMaxError );
+	 };
+
+	 void SetMaxError (const Real& pMaxError) const
+	 {
+		 this->mMaxError = pMaxError;
+	 };
+
+	 Real MinError () const
+	 {
+		 return ( this->mMinError );
+	 };
+
+	 void SetMinError (const Real& pMinError) const
+	 {
+		 this->mMinError = pMinError;
+	 };
+
+
 	 void SetCost ( const Real& pCost )
 	 {
 		 this->mCost = pCost;
@@ -347,10 +490,18 @@ template <class Real > class Surfel
 	 /// I/O operator - output
 	 inline friend std::ostream& operator << (std::ostream& out, const Surfel &s)
 	 {
-	    out << s.perpendicularError() << " " << s.Center.x << " "
-	    	<< s.Center.y 	<< " " << s.Center.z << " "
-	       	<< s.radius() 		<< " " << s.Normal.x << " "
-	       	<< s.Normal.y 	<< " " << s.Normal.z;
+		 out 	 << "Center " << s.Center() << "\n"
+				 <<	"Normal " << s.Normal() << "\n"
+				 <<	"Radius " << s.Radius() << "\n"
+				 <<	"MajorAxis "<< s.MajorAxis().first << " -  " << s.MajorAxis().second << "\n"
+				 <<	"MinorAxis "<< s.MinorAxis().first << " -  " << s.MinorAxis().second << "\n"
+				 <<	"Color "    << s.ColorRGB() << "\n"
+				 <<	"MaxError " << s.MaxError() << "\n"
+				 <<	"MinError " << s.MinError() << "\n"
+				 <<	"ID       " << s.ID() << "\n";
+
+
+
 
 	    return out;
 	 };
@@ -563,8 +714,6 @@ template <class Real > class Surfel
 
 	 }
 
-
-
  private:
 
 	  /// Point coordinates
@@ -583,6 +732,9 @@ template <class Real > class Surfel
 
 	  /// Major Axis
 	  std::pair<Real,Vector3> mMajorAxis;
+
+	  Real mMaxError;
+	  Real mMinError;
 
 	  /// Perpendicular error
 	  Real mPerpendicularError;
