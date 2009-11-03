@@ -18,6 +18,7 @@
 
 #include "Scene/Camera.hpp"
 
+#include "Qt/Tools/FPSCounter.h"
 
 class GLWidget : public QGLWidget
 {
@@ -92,6 +93,8 @@ private:
     int mCluster;
     int mNumber;
     bool mode;
+
+    FPSCounter fps;
 
     bool mGLInitialized;
 
