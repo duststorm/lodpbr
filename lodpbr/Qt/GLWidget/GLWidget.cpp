@@ -45,8 +45,9 @@ void GLWidget::init()
     setMinimumSize(400, 400);
     setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
     setFocus();
+
     setMouseTracking(true);
-        //setFocusPolicy(Qt::StrongFocus);
+    setFocusPolicy(Qt::StrongFocus);
 
 	CameraStep = 0.09;
 
@@ -292,7 +293,7 @@ void GLWidget::paintGL()
 //    camera.SetProjectionMatrix(90.0,x,0.1,1000);
 //
 //    glMultMatrixf((~camera.PespectiveProjectionMatrix()).ToRealPtr());
-//
+
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
 
@@ -337,39 +338,39 @@ void GLWidget::keyPressEvent(QKeyEvent * event)
 	if (event->key() == Qt::Key_Q)
 	{
 		camera.MoveUpward(CameraStep);
-		updateGL();
+		update();
 
 	}else if (event->key() == Qt::Key_E)
 	{
 		camera.MoveUpward(-CameraStep);
-		updateGL();
+		update();
 
 	}
 	else if (event->key() == Qt::Key_W)
 	{
 		camera.MoveForward(CameraStep);
-		updateGL();
+		update();
 
 	}
 	else if (event->key() == Qt::Key_S){
 		camera.MoveForward(-CameraStep);
-		updateGL();
+		update();
 
 	}
 	else if (event->key() == Qt::Key_A){
 		camera.StrafeRight(CameraStep);
-		updateGL();
+		update();
 
 	}
 	else if (event->key() == Qt::Key_D){
 		camera.StrafeRight(-CameraStep);
-		updateGL();
+		update();
 
 	}
 	else if (event->key() == Qt::Key_R){
 
 		camera.Reset();
-		updateGL();
+		update();
 	}
 	else {}
 }
@@ -383,7 +384,7 @@ void GLWidget::mousePressEvent(QMouseEvent *event)
     	camera.lockMouse(true);
         mCenterX = static_cast<float>(event->x());
         mCenterY = static_cast<float>(event->y());
-        updateGL();
+        update();
     }
 
     lastPos = event->pos();
@@ -397,7 +398,7 @@ void GLWidget::mouseReleaseEvent(QMouseEvent *event)
     if (event->button() == Qt::LeftButton)
     {
     	camera.lockMouse(false);
-    	updateGL();
+    	update();
     }
 
 
@@ -410,7 +411,7 @@ void GLWidget::wheelEvent(QWheelEvent *event)
    event->accept();
    camera.Zoom(event->delta()/120.0);
 
-   updateGL();
+   update();
 }
 
 
@@ -435,7 +436,7 @@ void GLWidget::mouseMoveEvent(QMouseEvent *event)
         //mouse.moveToWindowCenter();
 
         QCursor::setPos(mapToGlobal(QPoint(static_cast<int>(mCenterX),static_cast<int>(mCenterY))));
-        updateGL();
+        update();
     }else if (event->buttons() & Qt::RightButton) {
 
 

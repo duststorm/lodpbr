@@ -252,7 +252,7 @@ public:
 				   	glPointSize(5.0);
 					glColor3fv(*c);
 				    glBegin(GL_POINTS);
-						for ( typename std::list<ItemPtr>::iterator j = Clusters[i].begin() ; j != Clusters[i].end(); ++j )
+						for ( typename std::list<ItemPtr>::iterator j = Clusters[1].begin() ; j != Clusters[1].end(); ++j )
 						{
 							glVertex3fv( (*j)->Center() );
 						}

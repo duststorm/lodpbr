@@ -15,27 +15,20 @@ MyMainWindow::MyMainWindow (QMainWindow *parent): QMainWindow(parent)
     setupUi (this);
 
 
+    glWidget = new GLWidget(this);
+    //       glWidget->show();
+    //
+    //		 WidgetProxy *proxy = new WidgetProxy(glWidget,this);
 
+    mdiArea->addSubWindow(glWidget);
 
-//     WidgetProxy *proxy = new WidgetProxy(gl,this);
-////
-//	 //QMdiSubWindow *subWindow1 = new QMdiSubWindow;
-//	 //subWindow1->setWidget(proxy);
-//     //subWindow1->setAttribute(Qt::WA_DeleteOnClose);
-//     mdiArea->addSubWindow(proxy);
-////
-//	 QMdiSubWindow *subWindow2 = new QMdiSubWindow;
-////	 subWindow2->setWidget(proxy);
-//     subWindow2->setAttribute(Qt::WA_DeleteOnClose);
-//     mdiArea->addSubWindow(subWindow2);
-////
-//     QWidget* w = proxy->createWindow("Embedded window");
-//     w->move(20, 270);
-//     w->layout()->addWidget(new QLineEdit(this));
-//     QPushButton* pb = new QPushButton("Create new toplevel GL widget", this);
-//     w->layout()->addWidget(pb);
-//     proxy->addWidget(w);
-     //	setCentralWidget(contextGraphicView);
+    //     QWidget* w = proxy->createWindow("Embedded window");
+    //     w->move(20, 270);
+    //     w->layout()->addWidget(new QLineEdit(this));
+    //     QPushButton* pb = new QPushButton("Create new toplevel GL widget", this);
+    //     w->layout()->addWidget(pb);
+    //     proxy->addWidget(w);
+
 
 
 
