@@ -2,6 +2,7 @@
 #define MYGLFRAME_H
 
 #include <QGLWidget>
+#include <QMdiSubWindow>
 #include <vector>
 
 #include "Kd-Tree/Kd-Tree.hpp"
