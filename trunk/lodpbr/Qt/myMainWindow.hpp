@@ -9,7 +9,7 @@
 #include "Qt/GLWidget/GLWidget.hpp"
 #include "Qt/GLWidget/WidgetProxy.hpp"
 
-
+class QWorkspace;
 
 class MyMainWindow : public QMainWindow, private Ui::MainWindow
 {
@@ -23,6 +23,7 @@ public slots:
 
  	void on_action_Open_File_triggered();
  	void on_action_Full_Screen_triggered();
+ 	void on_action_Cluster_Debug_triggered();
  	static void createToplevelGLWidget();
 
 //
@@ -43,8 +44,9 @@ public slots:
 //	void on_push_Button_Vertex_Around_clicked();
 
 private:
+ 	QWorkspace  		*workspace;
 	QString              fileModel_Off;
-//	GLWidget*       	 glWidget;
+	GLWidget*       	 glWidget;
 };
 
 #endif

@@ -79,6 +79,7 @@ SOURCES += main.cpp \
     Qt/GLWidget/GLWidget.cpp \
     Qt/GLWidget/WidgetProxy.cpp \
     Qt/myMainWindow.cpp \
+    Qt/myMainWindowInit.cpp \
     ThirdParty/vcglib/wrap/ply/plylib.cpp
 
 QT += opengl
