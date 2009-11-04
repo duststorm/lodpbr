@@ -3,6 +3,9 @@
 #include <iostream>
 
 
+#include <QtOpenGL>
+
+
 #include "myMainWindow.hpp"
 
 using namespace std;
@@ -12,7 +15,8 @@ MyMainWindow::MyMainWindow (QMainWindow *parent): QMainWindow(parent)
     setupUi (this);
 
 
-//    GLWidget * gl    = new GLWidget(this);
+
+
 //     WidgetProxy *proxy = new WidgetProxy(gl,this);
 ////
 //	 //QMdiSubWindow *subWindow1 = new QMdiSubWindow;
@@ -32,6 +36,8 @@ MyMainWindow::MyMainWindow (QMainWindow *parent): QMainWindow(parent)
 //     w->layout()->addWidget(pb);
 //     proxy->addWidget(w);
      //	setCentralWidget(contextGraphicView);
+
+
 
 }
 
@@ -98,6 +104,7 @@ void MyMainWindow::open(QString filename,bool who,WidgetProxy * p ) {
       if (who)
       {
     	  const char * text = filename.toLatin1();
+
 
     	  std::cout << "Felipe" << std::endl;
     	  SurfelContainer<float>::LoadPly(text,this->glWidget->surfels);
@@ -194,3 +201,12 @@ void MyMainWindow::on_action_Open_File_triggered()
 //
 //}
 
+void MyMainWindow::keyPressEvent(QKeyEvent *e)
+{
+  if(e->key()==Qt::Key_Return && e->modifiers()==Qt::AltModifier)
+  {
+//    fullScreen();
+    e->accept();
+  }
+  else e->ignore();
+}

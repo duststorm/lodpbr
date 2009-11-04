@@ -18,7 +18,7 @@ class MyMainWindow : public QMainWindow, private Ui::MainWindow
 public:
     MyMainWindow (QMainWindow *parent = 0);
     void open(QString fileName=QString(),bool who = true,WidgetProxy * p = 0);
-
+    void keyPressEvent(QKeyEvent *e);
 public slots:
 
  	void on_action_Open_File_triggered();
@@ -44,7 +44,7 @@ public slots:
 
 private:
 	QString              fileModel_Off;
-
+//	GLWidget*       	 glWidget;
 };
 
 #endif

@@ -42,8 +42,6 @@ void GLWidget::init()
 {
     //setFormat(QGLFormat(QGL::DoubleBuffer | QGL::DepthBuffer));
 
-    setMouseTracking(false);
-
     setMinimumSize(400, 400);
     setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
     setFocus();
@@ -54,7 +52,7 @@ void GLWidget::init()
 
 	mGLInitialized = false;
 
-	mNumber = 1;
+	mNumber = 4;
 
 	mode = true;
 
@@ -179,7 +177,7 @@ void GLWidget::calLimits()
 
      std::cout << "Felipe2" << std::endl;
 
-     cluster.Build(1,5000,seed);
+     cluster.Build(10,5000,seed);
 
 
 }
