@@ -1,8 +1,7 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<ui version="4.0">
+<ui version="4.0" >
  <class>MainWindow</class>
- <widget class="QMainWindow" name="MainWindow">
-  <property name="geometry">
+ <widget class="QMainWindow" name="MainWindow" >
+  <property name="geometry" >
    <rect>
     <x>0</x>
     <y>0</y>
@@ -10,233 +9,224 @@
     <height>772</height>
    </rect>
   </property>
-  <property name="windowTitle">
+  <property name="windowTitle" >
    <string>MainWindow</string>
   </property>
-  <widget class="QWidget" name="centralwidget">
-   <layout class="QVBoxLayout" name="verticalLayout">
+  <widget class="QWidget" name="centralwidget" >
+   <layout class="QVBoxLayout" name="verticalLayout" >
     <item>
-     <widget class="QMdiArea" name="mdiArea"/>
+     <widget class="QMdiArea" name="mdiArea" />
     </item>
    </layout>
   </widget>
-  <widget class="QMenuBar" name="menubar">
-   <property name="geometry">
+  <widget class="QMenuBar" name="menubar" >
+   <property name="geometry" >
     <rect>
      <x>0</x>
      <y>0</y>
      <width>652</width>
-     <height>25</height>
+     <height>27</height>
     </rect>
    </property>
-   <widget class="QMenu" name="menuFile">
-    <property name="title">
+   <widget class="QMenu" name="menuFile" >
+    <property name="title" >
      <string>File</string>
     </property>
-    <addaction name="action_Open_File"/>
+    <addaction name="action_Open_File" />
    </widget>
-   <widget class="QMenu" name="menuView">
-    <property name="title">
+   <widget class="QMenu" name="menuView" >
+    <property name="title" >
      <string>View</string>
     </property>
-    <addaction name="action_Full_Screen"/>
-    <addaction name="action_Cluster_Debug"/>
+    <addaction name="action_Full_Screen" />
+    <addaction name="action_Cluster_Debug" />
    </widget>
-   <addaction name="menuFile"/>
-   <addaction name="menuView"/>
+   <addaction name="menuFile" />
+   <addaction name="menuView" />
   </widget>
-  <widget class="QStatusBar" name="statusbar"/>
-  <widget class="QDockWidget" name="dockWidgetCluster">
-   <property name="enabled">
+  <widget class="QStatusBar" name="statusbar" />
+  <widget class="QDockWidget" name="dockWidgetCluster" >
+   <property name="enabled" >
     <bool>true</bool>
    </property>
-   <property name="layoutDirection">
+   <property name="sizePolicy" >
+    <sizepolicy vsizetype="MinimumExpanding" hsizetype="MinimumExpanding" >
+     <horstretch>0</horstretch>
+     <verstretch>0</verstretch>
+    </sizepolicy>
+   </property>
+   <property name="layoutDirection" >
     <enum>Qt::LeftToRight</enum>
    </property>
-   <property name="allowedAreas">
+   <property name="allowedAreas" >
     <set>Qt::LeftDockWidgetArea|Qt::RightDockWidgetArea</set>
    </property>
-   <property name="windowTitle">
+   <property name="windowTitle" >
     <string>Cluster Dedug</string>
    </property>
-   <attribute name="dockWidgetArea">
+   <attribute name="dockWidgetArea" >
     <number>1</number>
    </attribute>
-   <widget class="QWidget" name="dockWidgetContents_3">
-    <layout class="QGridLayout" name="gridLayoutDockCluster">
-     <item row="0" column="0">
-      <widget class="QFrame" name="frame">
-       <property name="frameShape">
+   <widget class="QWidget" name="dockWidgetContents_3" >
+    <layout class="QGridLayout" name="gridLayoutDockCluster" >
+     <item row="0" column="0" >
+      <widget class="QFrame" name="frame" >
+       <property name="sizePolicy" >
+        <sizepolicy vsizetype="MinimumExpanding" hsizetype="MinimumExpanding" >
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="frameShape" >
         <enum>QFrame::StyledPanel</enum>
        </property>
-       <property name="frameShadow">
+       <property name="frameShadow" >
         <enum>QFrame::Raised</enum>
        </property>
-       <layout class="QVBoxLayout" name="verticalLayout_2">
+       <layout class="QVBoxLayout" name="verticalLayout_2" >
         <item>
-         <widget class="QGroupBox" name="groupBox">
-          <property name="title">
-           <string>Cluster</string>
+         <widget class="QGroupBox" name="groupBoxCluster_DrawCluster" >
+          <property name="title" >
+           <string>Build</string>
           </property>
-          <layout class="QGridLayout" name="gridLayout_3">
-           <item row="0" column="0">
-            <widget class="QGroupBox" name="groupBox_2">
-             <property name="title">
-              <string>Draw Cluster </string>
+          <layout class="QGridLayout" name="gridLayout" >
+           <item row="0" column="1" >
+            <widget class="QComboBox" name="comboBox" >
+             <item>
+              <property name="text" >
+               <string>ByNormal</string>
+              </property>
+             </item>
+             <item>
+              <property name="text" >
+               <string>ByMelodyAndInterdeMilao</string>
+              </property>
+             </item>
+             <item>
+              <property name="text" >
+               <string>ByGeodesic</string>
+              </property>
+             </item>
+            </widget>
+           </item>
+           <item row="0" column="0" >
+            <widget class="QLabel" name="label_2" >
+             <property name="text" >
+              <string>Surfel Similarity</string>
              </property>
-             <layout class="QGridLayout" name="gridLayout">
-              <item row="0" column="0">
-               <widget class="QGroupBox" name="groupBox_4">
-                <property name="title">
-                 <string>With ID</string>
+            </widget>
+           </item>
+           <item row="1" column="0" >
+            <widget class="QLabel" name="label_3" >
+             <property name="text" >
+              <string>Stop Criteria</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="1" >
+            <widget class="QComboBox" name="comboBox_2" />
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item>
+         <widget class="QGroupBox" name="groupBoxCluster_Draw" >
+          <property name="title" >
+           <string>Draw</string>
+          </property>
+          <layout class="QGridLayout" name="gridLayout_3" >
+           <item row="3" column="0" >
+            <widget class="QGroupBox" name="groupBox_5" >
+             <property name="title" >
+              <string>With Range</string>
+             </property>
+             <property name="checkable" >
+              <bool>true</bool>
+             </property>
+             <layout class="QHBoxLayout" name="horizontalLayout_2" >
+              <item>
+               <widget class="QSpinBox" name="spinBox_2" />
+              </item>
+              <item>
+               <widget class="QLabel" name="label" >
+                <property name="text" >
+                 <string>to</string>
                 </property>
-                <property name="checkable">
-                 <bool>true</bool>
+                <property name="alignment" >
+                 <set>Qt::AlignCenter</set>
                 </property>
-                <layout class="QHBoxLayout" name="horizontalLayout">
-                 <item>
-                  <widget class="QSlider" name="horizontalSlider">
-                   <property name="orientation">
-                    <enum>Qt::Horizontal</enum>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QSpinBox" name="spinBox"/>
-                 </item>
-                </layout>
                </widget>
               </item>
-              <item row="1" column="0">
-               <widget class="QGroupBox" name="groupBox_5">
-                <property name="title">
-                 <string>With Range</string>
+              <item>
+               <widget class="QSpinBox" name="spinBox_3" >
+                <property name="layoutDirection" >
+                 <enum>Qt::LeftToRight</enum>
                 </property>
-                <property name="checkable">
+                <property name="wrapping" >
+                 <bool>false</bool>
+                </property>
+                <property name="frame" >
                  <bool>true</bool>
                 </property>
-                <layout class="QHBoxLayout" name="horizontalLayout_2">
-                 <item>
-                  <widget class="QSpinBox" name="spinBox_2"/>
-                 </item>
-                 <item>
-                  <widget class="QLabel" name="label">
-                   <property name="text">
-                    <string>to</string>
-                   </property>
-                   <property name="alignment">
-                    <set>Qt::AlignCenter</set>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QSpinBox" name="spinBox_3">
-                   <property name="layoutDirection">
-                    <enum>Qt::LeftToRight</enum>
-                   </property>
-                   <property name="wrapping">
-                    <bool>false</bool>
-                   </property>
-                   <property name="frame">
-                    <bool>true</bool>
-                   </property>
-                   <property name="buttonSymbols">
-                    <enum>QAbstractSpinBox::UpDownArrows</enum>
-                   </property>
-                   <property name="accelerated">
-                    <bool>true</bool>
-                   </property>
-                  </widget>
-                 </item>
-                </layout>
+                <property name="buttonSymbols" >
+                 <enum>QAbstractSpinBox::UpDownArrows</enum>
+                </property>
+                <property name="accelerated" >
+                 <bool>true</bool>
+                </property>
                </widget>
               </item>
              </layout>
             </widget>
            </item>
-           <item row="1" column="0">
-            <widget class="QGroupBox" name="groupBox_3">
-             <property name="title">
-              <string>Seed </string>
+           <item row="2" column="0" >
+            <widget class="QCheckBox" name="checkBox" >
+             <property name="text" >
+              <string>Show Seed</string>
              </property>
-             <layout class="QGridLayout" name="gridLayout_4">
-              <item row="0" column="0">
-               <widget class="QGroupBox" name="groupBox_6">
-                <property name="title">
-                 <string>Draw Seed</string>
+            </widget>
+           </item>
+           <item row="1" column="0" >
+            <widget class="QCheckBox" name="checkBox_2" >
+             <property name="text" >
+              <string>Show Cluster</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="0" >
+            <widget class="QGroupBox" name="groupBoxCluster_DrawClusterWithID" >
+             <property name="title" >
+              <string>With ID</string>
+             </property>
+             <property name="checkable" >
+              <bool>true</bool>
+             </property>
+             <layout class="QHBoxLayout" name="horizontalLayout" >
+              <item>
+               <widget class="QSlider" name="horizontalSlider_DrawClusterWithID" >
+                <property name="orientation" >
+                 <enum>Qt::Horizontal</enum>
                 </property>
-                <layout class="QGridLayout" name="gridLayout_2">
-                 <item row="0" column="0">
-                  <widget class="QGroupBox" name="groupBox_7">
-                   <property name="title">
-                    <string>With ID</string>
-                   </property>
-                   <property name="checkable">
-                    <bool>true</bool>
-                   </property>
-                   <layout class="QHBoxLayout" name="horizontalLayout_3">
-                    <item>
-                     <widget class="QSlider" name="horizontalSlider_2">
-                      <property name="orientation">
-                       <enum>Qt::Horizontal</enum>
-                      </property>
-                     </widget>
-                    </item>
-                    <item>
-                     <widget class="QSpinBox" name="spinBox_4"/>
-                    </item>
-                   </layout>
-                  </widget>
-                 </item>
-                 <item row="1" column="0">
-                  <widget class="QGroupBox" name="groupBox_8">
-                   <property name="title">
-                    <string>With Range</string>
-                   </property>
-                   <property name="checkable">
-                    <bool>true</bool>
-                   </property>
-                   <layout class="QHBoxLayout" name="horizontalLayout_4">
-                    <item>
-                     <widget class="QSpinBox" name="spinBox_5"/>
-                    </item>
-                    <item>
-                     <widget class="QLabel" name="label_2">
-                      <property name="text">
-                       <string>to</string>
-                      </property>
-                      <property name="alignment">
-                       <set>Qt::AlignCenter</set>
-                      </property>
-                     </widget>
-                    </item>
-                    <item>
-                     <widget class="QSpinBox" name="spinBox_6">
-                      <property name="layoutDirection">
-                       <enum>Qt::LeftToRight</enum>
-                      </property>
-                      <property name="wrapping">
-                       <bool>false</bool>
-                      </property>
-                      <property name="frame">
-                       <bool>true</bool>
-                      </property>
-                      <property name="buttonSymbols">
-                       <enum>QAbstractSpinBox::UpDownArrows</enum>
-                      </property>
-                      <property name="accelerated">
-                       <bool>true</bool>
-                      </property>
-                     </widget>
-                    </item>
-                   </layout>
-                  </widget>
-                 </item>
-                </layout>
                </widget>
+              </item>
+              <item>
+               <widget class="QSpinBox" name="spinBox" />
               </item>
              </layout>
             </widget>
+           </item>
+           <item row="4" column="0" >
+            <spacer name="verticalSpacer" >
+             <property name="orientation" >
+              <enum>Qt::Vertical</enum>
+             </property>
+             <property name="sizeHint" stdset="0" >
+              <size>
+               <width>20</width>
+               <height>40</height>
+              </size>
+             </property>
+            </spacer>
            </item>
           </layout>
          </widget>
@@ -247,21 +237,21 @@
     </layout>
    </widget>
   </widget>
-  <action name="action_Open_File">
-   <property name="text">
+  <action name="action_Open_File" >
+   <property name="text" >
     <string>Open</string>
    </property>
   </action>
-  <action name="action_Full_Screen">
-   <property name="text">
+  <action name="action_Full_Screen" >
+   <property name="text" >
     <string>Full Screen</string>
    </property>
   </action>
-  <action name="action_Cluster_Debug">
-   <property name="checkable">
+  <action name="action_Cluster_Debug" >
+   <property name="checkable" >
     <bool>true</bool>
    </property>
-   <property name="text">
+   <property name="text" >
     <string>Cluster Debug</string>
    </property>
   </action>
