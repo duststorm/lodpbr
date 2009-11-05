@@ -30,7 +30,6 @@
 #include "Surfels/MergeEllipses.hpp"
 
 #include "Math/BoundingBox3.hpp"
-
 #include "Math/Vector4.hpp"
 
 template <class Real,class ItemPtr, class Similarity  = JoinByNormal<Real,ItemPtr>,
