@@ -23,6 +23,8 @@
  * overhead for manipulating or checking the bitmask.
  */
 
+#include <iostream>
+
 #pragma once
 
 
@@ -32,9 +34,13 @@ class Bitmask
 public:
 	Bitmask(Holder defval = 0) : Bitfield(defval) { }
 
-	// Sets all bitmask bits which are set in "flags"
-	inline void Set(Holder flags)
+
+	// Set on Bit mask
+	inline void Add(Holder flags)
 	{ Bitfield |= flags; }
+	// Set on Bit mask
+	inline void Set(Holder flags)
+	{ Bitfield = flags; }
 
 	// Clears all bitmask bits which are set in "flags"
 	inline void Clear(FlagEnum flags)
@@ -49,6 +55,8 @@ public:
 	// also set for the bitmask
 	inline bool TestAllFlags(Holder flags) const
 	{ return ((Bitfield & flags) == flags); }
+
+
 
 protected:
 	Holder Bitfield;

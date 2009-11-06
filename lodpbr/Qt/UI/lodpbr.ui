@@ -26,7 +26,7 @@
      <x>0</x>
      <y>0</y>
      <width>718</width>
-     <height>25</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -130,7 +130,18 @@
             </widget>
            </item>
            <item row="1" column="1">
-            <widget class="QComboBox" name="comboBoxCluster_BuildStopCriteria"/>
+            <widget class="QComboBox" name="comboBoxCluster_BuildStopCriteria">
+             <item>
+              <property name="text">
+               <string>by Size</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>by Curvatura</string>
+              </property>
+             </item>
+            </widget>
            </item>
            <item row="0" column="0">
             <widget class="QLabel" name="labelCluster_SurfelSimilarity">
@@ -143,17 +154,12 @@
             <widget class="QComboBox" name="comboBoxCluster_BuildSurfelSimilarity">
              <item>
               <property name="text">
-               <string>ByNormal</string>
+               <string>by Normal</string>
               </property>
              </item>
              <item>
               <property name="text">
-               <string>ByMelodyAndInterdeMilao</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>ByGeodesic</string>
+               <string>by Geral</string>
               </property>
              </item>
             </widget>
@@ -189,6 +195,9 @@
         </item>
         <item>
          <widget class="QGroupBox" name="groupBoxCluster_Draw">
+          <property name="enabled">
+           <bool>true</bool>
+          </property>
           <property name="title">
            <string>Draw</string>
           </property>
@@ -372,5 +381,38 @@
   </action>
  </widget>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>horizontalSliderCluster_DrawClusterWithID</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>spinBoxCluster_DrawClusterWithID</receiver>
+   <slot>setValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>168</x>
+     <y>400</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>279</x>
+     <y>400</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>spinBoxCluster_DrawClusterWithID</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>horizontalSliderCluster_DrawClusterWithID</receiver>
+   <slot>setValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>338</x>
+     <y>399</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>130</x>
+     <y>408</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
 </ui>

@@ -12,6 +12,7 @@
  *@author Felipe Moura.
  *@email fmc@cos.ufrj.br
  *@version 1.0.
+ *@*@todo Real generic class
  * \nosubgrouping */
 
 #include <GL/gl.h>
@@ -22,8 +23,6 @@
 #include <algorithm>
 #include <iostream>
 
-#include "ClusterCriteria.hpp"
-
 #include "Kd-Tree/Kd-Tree.hpp"
 
 #include "Surfels/SurfelContainer.hpp"
@@ -32,8 +31,10 @@
 #include "Math/BoundingBox3.hpp"
 #include "Math/Vector4.hpp"
 
-template <class Real,class ItemPtr, class Similarity  = JoinByNormal<Real,ItemPtr>,
-									class Aggregation = MergeBySize <Real,ItemPtr> >
+#include "ClusterCriteria.hpp"
+
+
+template <class Real,class ItemPtr>
 class Cluster
 {
 
@@ -45,6 +46,7 @@ public:
 	std::vector<ItemPtr>			    mSurfels;
 	KdTree<Real,ItemPtr>				mKDTree;
 
+
 	Cluster()
 	{
 		init();
@@ -52,26 +54,23 @@ public:
 	/// Constructor
 	/// Initialize the KD-Tree member with list of surfels
 	/// @param Refernce to a list of surfels
-	Cluster(SurfelContainer<Real>& pSurfels)
+	Cluster(std::vector< Celer::Surfel<float> >& pSurfels,Celer::BoundingBox3<float> pWorld)
 	{
 		init();
-	    Celer::BoundingBox3<float> world =     Celer::BoundingBox3<float>(
-	    		Celer::Point3<float>(pSurfels.Box().xMin(),pSurfels.Box().yMin(),pSurfels.Box().zMin()),
-				Celer::Point3<float>(pSurfels.Box().xMax(),pSurfels.Box().yMax(),pSurfels.Box().zMax())
-																     );
+
 
 		if (mKDTree.root ==  0)
 		{
-			mKDTree = KdTree<Real,ItemPtr >(world);
+			mKDTree = KdTree<Real,ItemPtr >(pWorld);
 		}
 		else
 		{
 			delete mKDTree.root;
-			mKDTree = KdTree<Real,ItemPtr >(world);
+			mKDTree = KdTree<Real,ItemPtr >(pWorld);
 		}
 
 		std::cout << "KD-Tree Start" << std::endl;
-		for (typename std::vector<Celer::Surfel<Real> >::iterator surf =  pSurfels.mSurfels.begin();surf != pSurfels.mSurfels.end(); ++ surf )
+		for (typename std::vector<Celer::Surfel<Real> >::iterator surf =  pSurfels.begin();surf != pSurfels.end(); ++ surf )
 		{
 			mKDTree.Insert ( new Celer::Surfel<Real>(*surf) );
 		}
@@ -118,7 +117,7 @@ public:
 	/// @param pCont Debug. How many clusters?
 	/// @param pCont pKNeighborsSize. The size of the Neighbor.
 	/// @param pSeed pKNeighborsSize. Initial Seed.
-
+	template <class Similarity ,class Aggregation>
 	void Build(int pCont,int pKNeighborsSize ,const ItemPtr& pSeed)
 	{
 

@@ -36,7 +36,101 @@ GLWidget::GLWidget(const QGLFormat& format, QWidget* parent, const QGLWidget* sh
 
 // Slots
 
+void GLWidget::setClusterBuiltType(const QString & text)
+{
 
+	if ( text == "by Normal")
+	{
+		mClusterLog.maskBuildClusterWith.Set(ClusterLog::NormalOnly);
+
+	}
+}
+
+void GLWidget::setClusterBuiltSystem	(const QString & text)
+{
+	if 		( text == "Continuous")
+	{
+		mClusterLog.maskBuildClusterSystem.Set(ClusterLog::Continuous);
+	}
+	else if ( text == "Interactive")
+	{
+		mClusterLog.maskBuildClusterSystem.Set(ClusterLog::Interactive);
+	}
+	else
+	{
+
+	}
+}
+
+void GLWidget::setClusterRendererType	(const QString & text)
+{
+	if 		( text == "Range")
+	{
+		mClusterLog.maskRenderingClusterBy.Set(ClusterLog::Range);
+	}
+	else if ( text == "Index")
+	{
+		mClusterLog.maskRenderingClusterBy.Set(ClusterLog::Index);
+	}
+	else if ( text == "All")
+	{
+		mClusterLog.maskRenderingClusterBy.Set(ClusterLog::All);
+	}else
+	{
+
+	}
+
+
+}
+
+void GLWidget::setClusterRenderingMode	(const QString & text)
+{
+	if 		( text == "GLPoint")
+	{
+		mClusterLog.maskRenderingClusterWith.Set(ClusterLog::GLPoint);
+	}
+	else if ( text == "GLPointSmooth")
+	{
+		mClusterLog.maskRenderingClusterWith.Set(ClusterLog::GLPointSmooth);
+	}
+	else if ( text == "PyramidSplat")
+	{
+		mClusterLog.maskRenderingClusterWith.Set(ClusterLog::PyramidSplat);
+	}else
+	{
+
+	}
+
+}
+
+
+void GLWidget::setShowCluster(bool checked)
+{
+	if (checked == true)
+	{
+		mClusterLog.maskShow.Add(ClusterLog::Cluster);
+	}
+	else
+	{
+		mClusterLog.maskShow.Clear(ClusterLog::Cluster);
+	}
+
+
+}
+
+void GLWidget::setShowSeed(bool checked)
+{
+	if (checked == true)
+	{
+		mClusterLog.maskShow.Add(ClusterLog::Seed);
+	}
+	else
+	{
+		mClusterLog.maskShow.Clear(ClusterLog::Seed);
+	}
+
+
+}
 
 void GLWidget::init()
 {
@@ -56,20 +150,6 @@ void GLWidget::init()
 	mNumber = 4;
 
 	mode = true;
-
-	colors.push_back(Celer::Vector4<float>(1.0,0.0,0.0,0.5));
-	colors.push_back(Celer::Vector4<float>(1.0,1.0,0.0,0.5));
-	colors.push_back(Celer::Vector4<float>(0.0,1.0,0.0,0.5));
-	colors.push_back(Celer::Vector4<float>(0.0,1.0,1.0,0.5));
-	colors.push_back(Celer::Vector4<float>(0.5,0.5,5.0,0.5));
-	colors.push_back(Celer::Vector4<float>(0.5,0.0,0.5,0.5));
-	colors.push_back(Celer::Vector4<float>(0.25,0.5,0.25,0.5));
-	colors.push_back(Celer::Vector4<float>(0.25,0.0,0.75,0.5));
-	colors.push_back(Celer::Vector4<float>(0.0,0.0,1.0,0.5));
-	colors.push_back(Celer::Vector4<float>(0.1,0.1,0.5,0.5));
-	colors.push_back(Celer::Vector4<float>(1.0,0.1,0.5,0.5));
-	colors.push_back(Celer::Vector4<float>(0.1,0.1,0.5,0.5));
-	colors.push_back(Celer::Vector4<float>(1.0,1.0,0.5,0.5));
 
 }
 
@@ -167,19 +247,27 @@ void GLWidget::drawKdTree(int& cont)
 
 }
 
+void GLWidget::LoadModel(const char * filename )
+{
+
+	Celer::IOSurfels<float>::LoadMesh(filename,lSurfels,mBox);
+
+	for (int i = 0; i < 100 ; ++i)
+	{
+		std::cout << lSurfels[i] << std::endl;
+	}
+
+}
 
 void GLWidget::calLimits()
 {
-     cluster = Cluster<float,Celer::Surfel<float>*>(surfels);
 
-     std::cout << "Felipe " << " "<< surfels.mSurfels.size() << std::endl;
+     Celer::Surfel<float>* seed = new Celer::Surfel<float>(lSurfels[30000]);
 
-     Celer::Surfel<float>* seed = new Celer::Surfel<float>(surfels.mSurfels[30000]);
-
-     std::cout << "Felipe2" << std::endl;
-
-     cluster.Build(10,5000,seed);
-
+     cluster = Cluster<float,Celer::Surfel<float>* >(lSurfels,mBox);
+     std::cout << "cluster " << std::endl;
+     cluster.Build<JoinByNormal<float,Celer::Surfel<float>* >,MergeBySize<float,Celer::Surfel<float>* > >(10,5000,seed);
+     std::cout << "cluster end" << std::endl;
 
 }
 
@@ -303,13 +391,10 @@ void GLWidget::paintGL()
     int cont = 0;
     fps.nextFrame();
     glDisable(GL_LIGHTING);
-		if ( surfels.mSurfels.size() != 0 )
+		if ( lSurfels.size() != 0 )
 		{
 			drawKdTree(cont);
 
-			std::vector<Celer::Vector4<float> >::iterator c = colors.begin();
-
-			int cont = 0;
 
 			if(mode)
 			{

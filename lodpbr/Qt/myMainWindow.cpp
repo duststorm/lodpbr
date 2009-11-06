@@ -65,23 +65,20 @@ using namespace std;
 //
 
 
-void MyMainWindow::open(QString filename,bool who,WidgetProxy * p ) {
+void MyMainWindow::open(QString pFilename,bool who,WidgetProxy * p ) {
 
-   if (filename != "") {
+   if (pFilename != "") {
 
-      QByteArray filename_ = filename.toLatin1();
-      fileModel_Off = filename;
+      std::string filename =  QFile::encodeName(pFilename).constData ();
 
       if (who)
       {
-    	  const char * text = filename.toLatin1();
 
 
-    	  std::cout << "Felipe" << std::endl;
-    	  SurfelContainer<float>::LoadPly(text,this->glWidget->surfels);
+    	  this->glWidget->LoadModel(filename.c_str());
 
     	  this->glWidget->calLimits();
-    	  std::cout << "Felipe2" << std::endl;
+
 
       }
 
