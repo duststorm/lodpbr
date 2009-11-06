@@ -56,8 +56,11 @@ HEADERS += Math/Math.hpp \
     Clustering/Cluster.hpp \
     Clustering/ClusterCriteria.hpp \
     Qt/Tools/FPSCounter.h\	
+    Qt/Tools/BitMask.h\
     Qt/GLWidget/GLWidget.hpp \
     Qt/GLWidget/WidgetProxy.hpp \
+    Qt/GLWidget/Log/ClusterLog.hpp \
+    Qt/GLWidget/Log/LSplatLog.hpp \
     Qt/myMainWindow.hpp \
     ThirdParty/vcglib/wrap/io_trimesh/import_ply.h \
     ThirdParty/vcglib/wrap/io_trimesh/export_ply.h \
@@ -80,6 +83,8 @@ SOURCES += main.cpp \
     Qt/Tools/FPSCounter.cpp\
     Qt/GLWidget/GLWidget.cpp \
     Qt/GLWidget/WidgetProxy.cpp \
+    Qt/GLWidget/Log/ClusterLog.cpp \
+    Qt/GLWidget/Log/LSplatLog.cpp \
     Qt/myMainWindow.cpp \
     Qt/myMainWindowInit.cpp \
     ThirdParty/vcglib/wrap/ply/plylib.cpp

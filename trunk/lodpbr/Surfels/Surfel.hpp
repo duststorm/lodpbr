@@ -753,4 +753,5 @@ template <class Real = float > class Surfel
 
 };
 }
+
 #endif

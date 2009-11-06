@@ -8,8 +8,6 @@
 #include "Kd-Tree/Kd-Tree.hpp"
 
 #include "Surfels/Surfel.hpp"
-#include "Surfels/SurfelContainer.hpp"
-
 #include "Surfels/MergeEllipses.hpp"
 
 #include "Clustering/Cluster.hpp"
@@ -21,6 +19,9 @@
 
 #include "Qt/Tools/FPSCounter.h"
 
+#include "Log/ClusterLog.hpp"
+#include "Log/LSplatLog.hpp"
+
 class GLWidget : public QGLWidget
 {
     Q_OBJECT
@@ -28,44 +29,47 @@ class GLWidget : public QGLWidget
 public:
     // From QGLWidget
 
-    explicit GLWidget(QWidget* parent = 0, const QGLWidget* shareWidget = 0, Qt::WindowFlags f = 0);
-    explicit GLWidget(QGLContext* context, QWidget* parent = 0, const QGLWidget* shareWidget = 0, Qt::WindowFlags f = 0);
-    explicit GLWidget(const QGLFormat& format, QWidget* parent = 0, const QGLWidget* shareWidget = 0, Qt::WindowFlags f = 0);
-    void initializeGL();
-    void resizeGL(int width, int height);
-    void paintGL();
-    void mousePressEvent(QMouseEvent *event);
-    void mouseMoveEvent(QMouseEvent *event);
-    void mouseReleaseEvent(QMouseEvent *event);
-    void wheelEvent(QWheelEvent *e);
-    void keyPressEvent ( QKeyEvent * e);
+    typedef  KdTree<float,Celer::Surfel<float>* >::Node KdTree3DNode;
+
+    explicit GLWidget		(QWidget* parent = 0, const QGLWidget* shareWidget = 0, Qt::WindowFlags f = 0);
+    explicit GLWidget		(QGLContext* context, QWidget* parent = 0, const QGLWidget* shareWidget = 0, Qt::WindowFlags f = 0);
+    explicit GLWidget		(const QGLFormat& format, QWidget* parent = 0, const QGLWidget* shareWidget = 0, Qt::WindowFlags f = 0);
+    void initializeGL		();
+    void resizeGL			(int width, int height);
+    void paintGL			();
+    void mousePressEvent	(QMouseEvent *event);
+    void mouseMoveEvent		(QMouseEvent *event);
+    void mouseReleaseEvent	(QMouseEvent *event);
+    void wheelEvent			(QWheelEvent *e);
+    void keyPressEvent 		(QKeyEvent * e);
     void glInit();
 
     // From kglib
     bool glInitialized() const  { return mGLInitialized; }
 
     // From lodpbr
+    void LoadModel(const char * filename);
     void calLimits();
     void DrawGroud();
     void SetMode(bool);
     void SetCluster(const int);
 
+    ClusterLog mClusterLog;
+    LSplatLog  mLSplatLog;
 
-    SurfelContainer<float> surfels;
+public slots:
+	void setClusterBuiltType	(const QString & text);
+	void setClusterBuiltSystem	(const QString & text);
 
-    Cluster<float,Celer::Surfel<float>*> cluster;
+	void setClusterRendererType	(const QString & text);
+	void setClusterRenderingMode(const QString & text);
 
-    KdTree<float,Celer::Surfel<float>* > kdTree;
+	void setShowCluster	(bool checked);
+	void setShowSeed	(bool checked);
 
-    typedef  KdTree<float,Celer::Surfel<float>* >::Node KdTree3DNode;
 
-    std::vector<Celer::Surfel<float>* > KNeibor;
-    std::vector< std::vector<Celer::Surfel<float>* > > clusters;
-    std::vector<Celer::Surfel<float>* >  newSurfel;
-    std::vector<Celer::Vector4<float> > colors;
 
 protected:
-
 
 private:
 
@@ -99,6 +103,15 @@ private:
 
     bool mGLInitialized;
 
+    //lodpbr
+
+    Cluster<float,Celer::Surfel<float>*> 				cluster;
+
+    KdTree<float,Celer::Surfel<float>* > 				kdTree;
+
+    std::vector<Celer::Surfel<float> > 					lSurfels;
+
+    Celer::BoundingBox3<float>   	   					mBox;
 
 
 };

@@ -1,5 +1,5 @@
 #include "myMainWindow.hpp"
-
+#include <iostream>
 
 MyMainWindow::MyMainWindow (QMainWindow *parent): QMainWindow(parent)
 {
@@ -20,6 +20,15 @@ MyMainWindow::MyMainWindow (QMainWindow *parent): QMainWindow(parent)
     //     w->layout()->addWidget(pb);
     //     proxy->addWidget(w);
 
+
+    connect(comboBoxCluster_BuildSurfelSimilarity,SIGNAL(activated(const QString &)),
+		   	this->glWidget,SLOT(setClusterBuiltType(const QString &)));
+
+    connect(checkBoxCluster_ShowCluster,SIGNAL(toggled(bool)),
+    		this->glWidget,SLOT(setShowCluster(bool )));
+
+    connect(checkBoxCluster_ShowSeed,SIGNAL(toggled(bool)),
+    		this->glWidget,SLOT(setShowSeed(bool)));
 }
 
 
@@ -30,3 +39,4 @@ void MyMainWindow::on_action_Cluster_Debug_triggered()
 	else
 		dockWidgetCluster->setVisible(false);
 }
+

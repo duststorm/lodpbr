@@ -127,7 +127,13 @@ public:
 		mesh.Clear();
 
 		vcg::tri::io::ImporterPLY<CMesh>::LoadMask(filename, mask,pi);
-		vcg::tri::io::ImporterPLY<CMesh>::Open(mesh,filename,pi);
+		int i = vcg::tri::io::ImporterPLY<CMesh>::Open(mesh,filename,pi);
+
+
+		std::cout << "i =  " << i << std::endl;
+
+
+
 
 		bool normal_per_vertex = false;
 		if (mask & vcg::tri::io::Mask::IOM_VERTNORMAL)
@@ -148,6 +154,7 @@ public:
 
         unsigned int pos = 0;
         Surfel<Real> s;
+
 		for (CMesh::VertexIterator vit = mesh.vert.begin(); vit != mesh.vert.end(); ++vit)
 		{
 		        Celer::Vector3<Real> v = Celer::Vector3<Real> ((*vit).P().X(),(*vit).P().Y(),(*vit).P().Z());
@@ -166,10 +173,12 @@ public:
 		        }
 
 		        s = Surfel<Real> (v, n, c,radius,pos);
+
 		        pSurfel.push_back (s);
 				pBox = pBox + Celer::BoundingBox3<Real>(s.Center(0),s.Center(1),s.Center(2),
 													    s.Center(0),s.Center(1),s.Center(2));
 		        ++pos;
+		        std::cout << "Entrou ? " << std::endl;
 		  }
 		mesh.Clear();
 		return 0;

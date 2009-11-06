@@ -5,13 +5,23 @@
  *      Author: fmc
  */
 
-#include "Log.hpp"
+#include "ClusterLog.hpp"
 
-Log::ClusterRenderLog() {
+ClusterLog::ClusterLog()
+{
 	// TODO Auto-generated constructor stub
+
+    mKNeighborsSize 	= 0;
+    mSeedIndex 			= 0;
+	mSeedRangeBegin 	= 0;
+	mSeedRangeEnd		= 0;
+	mNumberOfCluster    = 0;
+	mClusteIndex		= 0;
+	mClusterRangeBegin	= 0;
+	mClusterRangeEnd	= 0;
 
 }
 
-Log::~ClusterRenderLog() {
+ClusterLog::~ClusterLog() {
 	// TODO Auto-generated destructor stub
 }
