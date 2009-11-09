@@ -10,8 +10,10 @@ struct KdTreeRefine
 {
   typedef typename Celer::Point3<Real> 		Point3;     ///< A Point in 3D
   typedef typename Celer::BoundingBox3<Real> 	Box3;
+  typedef  			std::vector<ItemPtr>		ItemPtrVector;
+  typedef typename  ItemPtrVector::iterator		ItemPtrVectorIterator;
   /// Decides whether or not to split a leaf node
-  static bool Split (const Box3& world, const std::vector<ItemPtr>& items)
+  static bool Split (const Box3& world, const ItemPtrVector& items)
   {
     return false;
   }
@@ -27,8 +29,10 @@ struct OverflowKdTreeRefine : public KdTreeRefine <Real,ItemPtr>
 
   typedef typename Celer::Point3<Real> 		Point3;     ///< A Point in 3D
   typedef typename Celer::BoundingBox3<Real> 	Box3;
+  typedef  			std::vector<ItemPtr>		ItemPtrVector;
+  typedef typename  ItemPtrVector::iterator		ItemPtrVectorIterator;
   /// Split a leaf node if the list contains more than Max items
-  static bool Split (const Box3& world, const std::vector<ItemPtr>& items)
+  static bool Split (const Box3& world, const ItemPtrVector& items)
   {
     return items.size() > Max;
   }

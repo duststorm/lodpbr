@@ -79,7 +79,7 @@ void GLWidget::setClusterRendererType	(const QString & text)
 	{
 
 	}
-
+	updateGL();
 
 }
 
@@ -100,7 +100,7 @@ void GLWidget::setClusterRenderingMode	(const QString & text)
 	{
 
 	}
-
+	updateGL();
 }
 
 
@@ -109,13 +109,14 @@ void GLWidget::setShowCluster(bool checked)
 	if (checked == true)
 	{
 		mClusterLog.maskShow.Add(ClusterLog::Cluster);
+
 	}
 	else
 	{
 		mClusterLog.maskShow.Clear(ClusterLog::Cluster);
+		std::cout << "No Cluster" << std::endl;
 	}
-
-
+	updateGL();
 }
 
 void GLWidget::setShowSeed(bool checked)
@@ -129,8 +130,66 @@ void GLWidget::setShowSeed(bool checked)
 		mClusterLog.maskShow.Clear(ClusterLog::Seed);
 	}
 
-
+	updateGL();
 }
+
+void GLWidget::setShowModel(bool checked)
+{
+	if (checked == true)
+	{
+		mClusterLog.maskShow.Add(ClusterLog::Model);
+	}
+	else
+	{
+		mClusterLog.maskShow.Clear(ClusterLog::Model);
+	}
+	updateGL();
+}
+
+void GLWidget::setShowDrawClusterWithID	(bool checked)
+{
+	if (checked == true)
+	{
+		mClusterLog.maskRenderingClusterBy.Set(ClusterLog::Index);
+		std::cout << "Index ? : " << mClusterLog.maskRenderingClusterBy.Test(ClusterLog::Index) <<
+				    " Range  ?: " << mClusterLog.maskRenderingClusterBy.Test(ClusterLog::Range) << std::endl;
+	}
+	updateGL();
+}
+
+void GLWidget::setShowDrawClusterWithRange	(bool checked)
+{
+	if (checked == true)
+	{
+		mClusterLog.maskRenderingClusterBy.Set(ClusterLog::Range);
+		std::cout << "Index ? : " << mClusterLog.maskRenderingClusterBy.Test(ClusterLog::Index) <<
+				    " Range  ?: " << mClusterLog.maskRenderingClusterBy.Test(ClusterLog::Range) << std::endl;
+	}
+	updateGL();
+}
+
+void GLWidget::setDrawClusterWithID (int value)
+{
+	mClusterLog.setClusteIndex(value);
+	updateGL();
+}
+
+
+void GLWidget::setDrawClusterWithRangeBegin	(int value)
+{
+	mClusterLog.setClusterRangeBegin(value);
+	updateGL();
+}
+
+void GLWidget::setDrawClusterWithRangeEnd	(int value)
+{
+	mClusterLog.setClusterRangeEnd(value);
+	updateGL();
+}
+
+
+
+
 
 void GLWidget::init()
 {
@@ -143,7 +202,7 @@ void GLWidget::init()
     setMouseTracking(true);
     setFocusPolicy(Qt::StrongFocus);
 
-	CameraStep = 0.09;
+	CameraStep = 0.01;
 
 	mGLInitialized = false;
 
@@ -165,6 +224,7 @@ void GLWidget::DrawGroud()
 	glColor3f(0.2f, 0.2f, 0.2f);
 
 	// draw the lines
+
 	glBegin(GL_LINES);
 
 
@@ -180,6 +240,7 @@ void GLWidget::DrawGroud()
 		glVertex3i(250, 0, z);
 	}
 	glEnd();
+
 	glEnable(GL_LIGHTING);
 }
 
@@ -194,7 +255,10 @@ bool GLWidget::drawKdNode(const KdTree3DNode* n,int& cont) {
   GLfloat cur_color[4];
   glGetFloatv(GL_CURRENT_COLOR, cur_color);
 
+
   glPointSize(1.0);
+  //glEnable(GL_MULTISAMPLE);
+
   glBegin(GL_POINTS);
   glColor4f(0.3, 0.3, 0.3, 1.0);
 
@@ -206,6 +270,7 @@ bool GLWidget::drawKdNode(const KdTree3DNode* n,int& cont) {
   }
 
   glEnd();
+
 
   glColor4fv(cur_color);
 
@@ -236,7 +301,7 @@ void GLWidget::drawKdNodeRecursively(const KdTree3DNode* n,int& cont) {
 /// Draw the kd-tree leaf nodes' boxes and all elements stored in all nodes
 void GLWidget::drawKdTree(int& cont)
 {
-  KdTree3DNode* root = cluster.mKDTree.Begin();
+  KdTree3DNode* root = cluster.KDTree.Begin();
 
   glColor4f(0.3, 0.3, 1.0, 1.0);
   glLineWidth(1.0);
@@ -259,17 +324,6 @@ void GLWidget::LoadModel(const char * filename )
 
 }
 
-void GLWidget::calLimits()
-{
-
-     Celer::Surfel<float>* seed = new Celer::Surfel<float>(lSurfels[30000]);
-
-     cluster = Cluster<float,Celer::Surfel<float>* >(lSurfels,mBox);
-     std::cout << "cluster " << std::endl;
-     cluster.Build<JoinByNormal<float,Celer::Surfel<float>* >,MergeBySize<float,Celer::Surfel<float>* > >(10,5000,seed);
-     std::cout << "cluster end" << std::endl;
-
-}
 
 template <class T>
 void GLWidget::drawBox(Celer::BoundingBox3<T> BBox){
@@ -361,13 +415,25 @@ void GLWidget::resizeGL(int width, int height)
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
     GLfloat x = GLfloat(width) / height;
-    camera.SetProjectionMatrix(90.0,x,0.1,1000);
+    camera.SetProjectionMatrix(90.0,x,0.1,100000);
 
     glMultMatrixf((~camera.PespectiveProjectionMatrix()).ToRealPtr());
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
     mCenterX =  static_cast<float> (width*0.5);
     mCenterY =  static_cast<float> (height*0.5);
+
+}
+
+void GLWidget::calLimits()
+{
+
+     Celer::Surfel<float>* seed = new Celer::Surfel<float>(lSurfels[999]);
+
+     cluster = Cluster<float,Celer::Surfel<float>* >(lSurfels,mBox);
+     std::cout << "cluster " << std::endl;
+     cluster.Build<JoinByNormal<float,Celer::Surfel<float>* >,MergeBySize<float,Celer::Surfel<float>* > >(50,200,seed);
+     std::cout << "cluster end" << std::endl;
 
 }
 
@@ -390,29 +456,38 @@ void GLWidget::paintGL()
 
     int cont = 0;
     fps.nextFrame();
-    glDisable(GL_LIGHTING);
-		if ( lSurfels.size() != 0 )
-		{
-			drawKdTree(cont);
 
+    if ( lSurfels.size() != 0 )
+    {
+    	if (mClusterLog.maskShow.Test(ClusterLog::Model))
+    	{
+    		drawKdTree(cont);
+    	}
 
-			if(mode)
-			{
-				cluster.DrawClusters(mNumber);
+    	if (mClusterLog.maskShow.Test(ClusterLog::Cluster))
+    	{
 
-			}else
-			{
-				cluster.DrawSurfels();
-			}
+    		if 		(mClusterLog.maskRenderingClusterBy.Test(ClusterLog::Index))
+    		{
+    			cluster.DrawClustersIndex(mClusterLog.getClusteIndex(),(mClusterLog.maskShow.Test(ClusterLog::Seed)));
+    		}
+    		else if (mClusterLog.maskRenderingClusterBy.Test(ClusterLog::Range))
+    		{
+    			std::cout << "Range : " << mClusterLog.getClusterRangeBegin() << " End : " << mClusterLog.getClusterRangeEnd() << std::endl;
+    			std::cout << "ClusterSize : " << cluster.Clusters.size() << std::endl;
+    			cluster.DrawClustersRange(mClusterLog.getClusterRangeBegin(),mClusterLog.getClusterRangeEnd(),(mClusterLog.maskShow.Test(ClusterLog::Seed)));
+    		}
 
-			glColor3f(0.5,0.5,0.5);
+    	}
 
-			renderText(10,5,QString("___________________________"));
-			renderText(10,25,QString("Number of Points :"));renderText(145,25,fps.fpsString());
-			renderText(10,30,QString("___________________________"));
-			DrawGroud();
-		}
-    glEnable(GL_LIGHTING);
+    	glColor3f(0.5,0.5,0.5);
+
+    	renderText(10,5,QString("___________________________"));
+    	renderText(10,25,QString("Number of Points :"));renderText(145,25,fps.fpsString());
+    	renderText(10,30,QString("___________________________"));
+    	DrawGroud();
+    }
+
 
 }
 

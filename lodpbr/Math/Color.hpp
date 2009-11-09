@@ -202,6 +202,8 @@ namespace Celer
 				return ( s );
 			};
 			
+
+
 			virtual ~Color(){};
 		
 		private:

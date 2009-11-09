@@ -20,6 +20,12 @@ ClusterLog::ClusterLog()
 	mClusterRangeBegin	= 0;
 	mClusterRangeEnd	= 0;
 
+	maskRenderingClusterBy			= ClusterLog::Index;
+	maskRenderingClusterWith 		= ClusterLog::GLPointSmooth;
+
+	maskBuildClusterSystem 		= ClusterLog::Continuous;
+	maskBuildClusterWith 		= ClusterLog::NormalOnly;
+	maskShow					=  0;
 }
 
 ClusterLog::~ClusterLog() {
