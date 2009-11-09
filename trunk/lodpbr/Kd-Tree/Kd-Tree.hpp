@@ -42,7 +42,9 @@ public:
   typedef typename 	Celer::BoundingBox3<Real> 										Box3;
 
   /// List of what is actually stored in a leaf node (non-leaf nodes stores only one reference)
-  typedef 			std::vector<ItemPtr> 											    ItemPtrList;
+
+	typedef  std::vector<ItemPtr>												ItemPtrVector;
+	typedef typename  ItemPtrVector::iterator									ItemPtrVectorIterator;
 
   /// kd-tree node
   typedef 			KdTreeNode<Real,ItemPtr, Refine> 								    Node;
@@ -109,14 +111,14 @@ public:
   /// Returns the nearesNeighbor to a given point
   /// @param p Given point.
   /// @return Pointer to the nearest neighbor object.
-  ItemPtrList KNearestNeighbors (const ItemPtr& p, unsigned int k, int &comps) const
+  ItemPtrVector KNearestNeighbors (const ItemPtr& p, unsigned int k, int &comps) const
   {
 
 	  KNearestMap kNearest;
 	  
 	  comps = root->KNearestNeighbors (p, kNearest, k);
 
-	  ItemPtrList kCloose;
+	  ItemPtrVector kCloose;
 	  KNearestMapIterator i;
 
 	  
@@ -139,13 +141,13 @@ public:
   
 // =======================================================================================//
 
-  ItemPtrList KNearestNeighborsClustering ( ItemPtr& p, unsigned int k, int &comps) 
+  ItemPtrVector KNearestNeighborsClustering ( ItemPtr& p, unsigned int k, int &comps)
   {
 
 	  KNearestMap kNearest;
 	  comps = root->KNearestNeighborsClustering (p, kNearest, k);
 
-	  ItemPtrList kCloose;
+	  ItemPtrVector kCloose;
 	  KNearestMapIterator i;
 
 	  for (i = kNearest.begin (); i != kNearest.end(); ++i)

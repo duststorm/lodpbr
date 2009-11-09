@@ -74,7 +74,7 @@ namespace Celer{
         	mFieldOfView = 90.0;
         	mAspectRatio = 1.0f;
         	mNearPlane  = 0.001f;
-        	mFarPlane   = 1000.0f;
+        	mFarPlane   = 100000.0f;
 
         }
 

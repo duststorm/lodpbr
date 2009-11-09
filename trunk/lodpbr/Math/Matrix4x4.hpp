@@ -29,6 +29,11 @@ namespace Celer {
 	template<class Real> class Matrix4x4
 	{
 	public:
+		enum
+		{
+			ColumMajor = 1,
+			RowMajor = 1 << 2
+		};
 
 		friend class Vector3<Real>;
 		friend class Vector4<Real>;
@@ -251,7 +256,6 @@ namespace Celer {
 	{
 	 	return m[ rowIndex ];
 	}
-	//----------------------------------------------------------------------------
 
 	template <class Real>
 	inline Vector4<Real>& Matrix4x4<Real>::operator[]( int rowIndex )

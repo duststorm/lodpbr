@@ -40,51 +40,51 @@ class MergeCriteria
 /*@class ClusterRefine.
  *@brief Agglomerative criteria for  Clustering.
  * A node is ...*/
-
 template <class Real,class ItemPtr>
 class JoinByNormal : public JoinCriteria <Real,ItemPtr>
 {
-	/// Add an item to the clustering if the angle between the seed
-	/// and the item is over the NORMAL
+        /// Add an item to the clustering if the angle between the seed
+        /// and the item is over the NORMAL
 public:
-	static bool Join ( ItemPtr seed, ItemPtr surfel, ItemPtr  item)
-	{
+        static bool Join ( ItemPtr seed, ItemPtr surfel, ItemPtr  item)
+        {
 
-		 if (  (seed->Normal() * item->Normal()) > 0.0  )
-		 {
-			 Real lim = 0.3;
-			 Real alfa = 3;
-			 Real dist 		 = alfa*surfel->Center().EuclideanDistance(item->Center());
-			 Real Normaldist = ( (1 - (surfel->Normal() * item->Normal()) )*surfel->Cost()) * (1/lim) ;
-			 Real cost = (dist+Normaldist+surfel->Cost());
-			 //std::cout << "cost " << Normaldist << std::endl;
-			 if (cost < lim)
-			 {
+                 if (  (seed->Normal() * item->Normal()) > 0.0  )
+                 {
+                         Real lim = 0.3;
+                         Real alfa = 3;
+                         Real dist               = alfa*surfel->Center().EuclideanDistance(item->Center());
+                         Real Normaldist = ( (1 - (surfel->Normal() * item->Normal()) )*surfel->Cost()) * (1/lim) ;
+                         Real cost = (dist+Normaldist+surfel->Cost());
+                         //std::cout << "cost " << Normaldist << std::endl;
+                         if (cost < lim)
+                         {
 
-				 if( item->Cost() > cost )
-				 {
-					 item->SetCost(cost);
-					 return 1;
-				 }else
-				 {
-					 return 0;
-				 }
+                                 if( item->Cost() > cost )
+                                 {
+                                         item->SetCost(cost);
+                                         return 1;
+                                 }else
+                                 {
+                                         return 0;
+                                 }
 
-			 }else
-			 {
+                         }else
+                         {
 
-			 }
-
-
-		 }else
-		 {
-			 return 0;
-		 }
+                         }
 
 
+                 }else
+                 {
+                         return 0;
+                 }
 
-	}
+
+
+        }
 };
+
 
 /*@class ClusterRefine.
  *@brief Agglomerative criteria for  Clustering.

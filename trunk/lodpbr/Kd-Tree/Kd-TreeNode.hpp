@@ -21,7 +21,8 @@ class KdTreeNode {
   typedef typename 	Celer::Point3<Real> 									Point3;     ///< A Point in 3D
   typedef typename 	Celer::BoundingBox3<Real> 							Box3;
   /// List of what is actually stored in a leaf node (non-leaf nodes stores only one reference)
-  typedef 			std::vector<ItemPtr> 									ItemPtrList;
+  typedef  			std::vector<ItemPtr>								ItemPtrVector;
+  typedef typename  ItemPtrVector::iterator		ItemPtrVectorIterator;
   typedef const 	KdTreeNode* 											NodePtr;
 
   typedef 			std::multimap < Real, ItemPtr, std::greater<Real> >		KNearestMap;
@@ -48,7 +49,7 @@ public:
 
   /// List of pointers to points contained in node (if it is leaf) or point that
   /// splits this node in two
-  ItemPtrList 	   mListPtr;
+  ItemPtrVector 	   mListPtr;
   /// constructor
   KdTreeNode (const Box3& w) : mWorld(w)
   {

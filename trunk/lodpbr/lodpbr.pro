@@ -49,14 +49,12 @@ HEADERS += Math/Math.hpp \
     Kd-Tree/Kd-TreeNode.hpp \
     Kd-Tree/Kd-TreeRefine.hpp \
     Surfels/Surfel.hpp \
-    Surfels/ply.h \
-    Surfels/SurfelContainer.hpp \
     Surfels/IOSurfels.hpp \
     Surfels/MergeEllipses.hpp \
     Clustering/Cluster.hpp \
     Clustering/ClusterCriteria.hpp \
     Qt/Tools/FPSCounter.h\	
-    Qt/Tools/BitMask.h\
+    Qt/Tools/BitMask.hpp\
     Qt/GLWidget/GLWidget.hpp \
     Qt/GLWidget/WidgetProxy.hpp \
     Qt/GLWidget/Log/ClusterLog.hpp \
@@ -77,7 +75,6 @@ SOURCES += main.cpp \
     Math/Matrix4x4.cpp \
     Math/Quaternion.cpp \
     Clustering/Cluster.cpp \
-    Surfels/ply.c \
     Scene/Camera.cpp \
     Scene/Trackball.cpp \
     Qt/Tools/FPSCounter.cpp\

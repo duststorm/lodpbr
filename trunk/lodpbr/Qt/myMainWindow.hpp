@@ -19,12 +19,23 @@ public:
     MyMainWindow (QMainWindow *parent = 0);
     void open(QString fileName=QString(),bool who = true,WidgetProxy * p = 0);
     void keyPressEvent(QKeyEvent *e);
+
 public slots:
 
  	void on_action_Open_File_triggered();
  	void on_action_Full_Screen_triggered();
  	void on_action_Cluster_Debug_triggered();
+
+ 	void on_spinBoxCluster_DrawClusterWithRangeBegin_valueChanged(int);
+ 	void on_sliderCluster_DrawClusterWithRangeBegin_valueChanged(int);
+
+ 	void on_spinBoxCluster_DrawClusterWithRangeEnd_valueChanged(int value);
+ 	void on_sliderCluster_DrawClusterWithRangeEnd_valueChanged(int value);
+
  	static void createToplevelGLWidget();
+
+signals:
+
 
 //
 //	void on_action_NewSurfel_triggered();

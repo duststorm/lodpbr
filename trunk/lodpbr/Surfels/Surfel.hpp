@@ -33,10 +33,6 @@
  * surface normal at it's center.
  **/
 
-extern "C"
-{
-#include "ply.h"
-}
 
 namespace Celer{
 
@@ -44,14 +40,20 @@ template <class Real = float > class Surfel
 {
  public:
 
-	 typedef typename Celer::Point3<Real>  Point3;
-	 typedef typename Celer::Vector3<Real> Vector3;
-	 typedef typename Celer::Color 		   Color;
+	typedef typename Celer::Point3<Real>  			Point3;
+	typedef typename Celer::Vector3<Real>			Vector3;
+	typedef typename Celer::Color 		  			Color;
 
-	 typedef std::list<Point3>       			ListPoint3;
-	 typedef typename ListPoint3::iterator  	ListPoint3Iterator;
-	 typedef std::list<Point3* >       			ListPtrPoint3;
-	 typedef typename ListPtrPoint3::iterator  	ListPtrPoint3Iterator;
+	typedef std::vector<Surfel<Real> >				VectorOfSurfel;
+	typedef typename VectorOfSurfel::iterator		VectorOfSurfelIterator;
+
+	typedef std::vector<Surfel<Real>* >				VectorOfPtrSurfel;
+	typedef typename VectorOfPtrSurfel::iterator	VectorOfPrtSurfelIterator;
+
+	typedef std::list<Point3>       				ListPoint3;
+	typedef typename ListPoint3::iterator  			ListPoint3Iterator;
+	typedef std::list<Point3* >       				ListPtrPoint3;
+	typedef typename ListPtrPoint3::iterator  		ListPtrPoint3Iterator;
 
 	 typedef ::vcg::ply::PropDescriptor PropDescriptor ;
 
@@ -302,6 +304,8 @@ template <class Real = float > class Surfel
 			mMaxError = 0;
 			mMinError = 0;
 		  };
+
+
 
 	 inline const Surfel<Real>& operator= ( const Surfel<Real>& pSurfel)
 	 {
@@ -716,6 +720,7 @@ template <class Real = float > class Surfel
 
  private:
 
+	 void init();
 	  /// Point coordinates
 	  Point3 mCenter;
 
@@ -742,13 +747,14 @@ template <class Real = float > class Surfel
 	  /// An identification number for the surfel
 	  unsigned int mID;
 
+	  //Cluster building
 	  bool mMarked;
 	  bool mExpansionMarked;
 	  bool mSeedMarked;
 
 	  Real mCost;
 
-	  unsigned long int mClusterID;
+	  unsigned  int mClusterID;
 
 
 };

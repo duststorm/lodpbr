@@ -130,11 +130,6 @@ public:
 		int i = vcg::tri::io::ImporterPLY<CMesh>::Open(mesh,filename,pi);
 
 
-		std::cout << "i =  " << i << std::endl;
-
-
-
-
 		bool normal_per_vertex = false;
 		if (mask & vcg::tri::io::Mask::IOM_VERTNORMAL)
 			normal_per_vertex = true;
@@ -178,7 +173,7 @@ public:
 				pBox = pBox + Celer::BoundingBox3<Real>(s.Center(0),s.Center(1),s.Center(2),
 													    s.Center(0),s.Center(1),s.Center(2));
 		        ++pos;
-		        std::cout << "Entrou ? " << std::endl;
+
 		  }
 		mesh.Clear();
 		return 0;

@@ -79,6 +79,15 @@ void MyMainWindow::open(QString pFilename,bool who,WidgetProxy * p ) {
 
     	  this->glWidget->calLimits();
 
+    	spinBoxCluster_DrawClusterWithID->setMaximum(glWidget->cluster.Clusters.size()-1);
+    	sliderCluster_DrawClusterWithID->setMaximum(glWidget->cluster.Clusters.size()-1);
+
+
+		spinBoxCluster_DrawClusterWithRangeBegin->setMaximum(glWidget->cluster.Clusters.size()-1);
+		spinBoxCluster_DrawClusterWithRangeEnd->setMaximum(glWidget->cluster.Clusters.size());
+
+		sliderCluster_DrawClusterWithRangeBegin->setMaximum(glWidget->cluster.Clusters.size()-1);
+		sliderCluster_DrawClusterWithRangeEnd->setMaximum(glWidget->cluster.Clusters.size()-1);
 
       }
 

@@ -8,6 +8,7 @@
 #include "Kd-Tree/Kd-Tree.hpp"
 
 #include "Surfels/Surfel.hpp"
+#include "Surfels/IOSurfels.hpp"
 #include "Surfels/MergeEllipses.hpp"
 
 #include "Clustering/Cluster.hpp"
@@ -57,6 +58,15 @@ public:
     ClusterLog mClusterLog;
     LSplatLog  mLSplatLog;
 
+    Cluster<float,Celer::Surfel<float>*> 				cluster;
+
+    KdTree<float,Celer::Surfel<float>* > 				kdTree;
+
+    std::vector<Celer::Surfel<float> > 					lSurfels;
+
+    Celer::BoundingBox3<float>   	   					mBox;
+
+
 public slots:
 	void setClusterBuiltType	(const QString & text);
 	void setClusterBuiltSystem	(const QString & text);
@@ -64,9 +74,16 @@ public slots:
 	void setClusterRendererType	(const QString & text);
 	void setClusterRenderingMode(const QString & text);
 
-	void setShowCluster	(bool checked);
-	void setShowSeed	(bool checked);
+	void setShowCluster				(bool checked);
+	void setShowSeed				(bool checked);
+	void setShowModel				(bool checked);
 
+	void setShowDrawClusterWithID		(bool checked);
+	void setShowDrawClusterWithRange	(bool checked);
+
+	void setDrawClusterWithID 	 (int values);
+	void setDrawClusterWithRangeBegin 	 (int value);
+	void setDrawClusterWithRangeEnd 	 (int value);
 
 
 protected:
@@ -104,14 +121,6 @@ private:
     bool mGLInitialized;
 
     //lodpbr
-
-    Cluster<float,Celer::Surfel<float>*> 				cluster;
-
-    KdTree<float,Celer::Surfel<float>* > 				kdTree;
-
-    std::vector<Celer::Surfel<float> > 					lSurfels;
-
-    Celer::BoundingBox3<float>   	   					mBox;
 
 
 };

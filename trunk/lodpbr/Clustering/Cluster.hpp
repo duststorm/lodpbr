@@ -25,7 +25,6 @@
 
 #include "Kd-Tree/Kd-Tree.hpp"
 
-#include "Surfels/SurfelContainer.hpp"
 #include "Surfels/MergeEllipses.hpp"
 
 #include "Math/BoundingBox3.hpp"
@@ -38,13 +37,16 @@ template <class Real,class ItemPtr>
 class Cluster
 {
 
-	typedef  std::vector<ItemPtr>		ItemPtrList;
+	typedef  std::vector<ItemPtr>						ItemPtrVector;
+	typedef typename  ItemPtrVector::iterator			ItemPtrVectorIterator;
+	typedef typename  ItemPtrVector::reverse_iterator	ItemPtrVectorReverseIterator;
 
 public:
 	/// public attributes
 	std::vector< std::list<ItemPtr> >   Clusters;
-	std::vector<ItemPtr>			    mSurfels;
-	KdTree<Real,ItemPtr>				mKDTree;
+	std::vector<ItemPtr>			    Surfels;
+	KdTree<Real,ItemPtr>				KDTree;
+
 
 
 	Cluster()
@@ -54,25 +56,25 @@ public:
 	/// Constructor
 	/// Initialize the KD-Tree member with list of surfels
 	/// @param Refernce to a list of surfels
-	Cluster(std::vector< Celer::Surfel<float> >& pSurfels,Celer::BoundingBox3<float> pWorld)
+	Cluster(std::vector< Celer::Surfel<Real> >& pSurfels,Celer::BoundingBox3<Real> pWorld)
+
 	{
 		init();
 
-
-		if (mKDTree.root ==  0)
+		if (KDTree.root ==  0)
 		{
-			mKDTree = KdTree<Real,ItemPtr >(pWorld);
+			KDTree = KdTree<Real,ItemPtr >(pWorld);
 		}
 		else
 		{
-			delete mKDTree.root;
-			mKDTree = KdTree<Real,ItemPtr >(pWorld);
+			delete KDTree.root;
+			KDTree = KdTree<Real,ItemPtr >(pWorld);
 		}
 
 		std::cout << "KD-Tree Start" << std::endl;
 		for (typename std::vector<Celer::Surfel<Real> >::iterator surf =  pSurfels.begin();surf != pSurfels.end(); ++ surf )
 		{
-			mKDTree.Insert ( new Celer::Surfel<Real>(*surf) );
+			KDTree.Insert ( new Celer::Surfel<Real>(*surf) );
 		}
 		std::cout << "KD-Tree End" << std::endl;
 
@@ -96,10 +98,10 @@ public:
 		colors.push_back(Celer::Vector4<float>(1.0,1.0,0.5,0.5));
 	}
 
-	ItemPtrList GetNotMarked( ItemPtrList& plNeighbors )
+	ItemPtrVector GetNotMarked( ItemPtrVector& plNeighbors )
 	{
-		ItemPtrList lNeighbors;
-		for(typename std::vector<ItemPtr>::iterator it = plNeighbors.begin(); it !=  plNeighbors.end();++it)
+		ItemPtrVector lNeighbors;
+		for(ItemPtrVectorIterator it = plNeighbors.begin(); it !=  plNeighbors.end();++it)
 		{
 
 			if (  ((*it)->ExpansionMarked() == 0) )
@@ -118,164 +120,206 @@ public:
 	/// @param pCont pKNeighborsSize. The size of the Neighbor.
 	/// @param pSeed pKNeighborsSize. Initial Seed.
 	template <class Similarity ,class Aggregation>
-	void Build(int pCont,int pKNeighborsSize ,const ItemPtr& pSeed)
-	{
 
-		/// How many comparisons the Kd-Tree do to finding an element
-	    int 				 KNearestSearchComps = 0;
-	    /// Number of clustering. Only for debuging
-	    int 				 cont                = 0;
-	    ///
-	    ItemPtr				 lCurrentSeed        = pSeed;
-	    ///
-	    ItemPtr				 lSurfel       		 = pSeed;
+    void Build(int pCont,int pKNeighborsSize ,const ItemPtr& pSeed)
+    {
 
-	    /// list of surfels for expansion
-	    std::deque<ItemPtr> lOpen;
-	    /// list of seeds
-	    std::deque<ItemPtr>	lSeeds;
-	    /// Surfel that belong to the cluster
-	    /// @detail
-	    std::list<ItemPtr> 	lClose;
-	    ItemPtrList			lExpasion;
-	    ItemPtrList 		lNeighbors;
-	    /// lista dos k vizinhos do surfel semente lSeed, em ordem decrescente de distância
+            /// How many comparisons the Kd-Tree do to finding an element
+        int                                  KNearestSearchComps = 0;
+        /// Number of clustering. Only for debuging
+        int                                  cont                = 0;
+        ///
+        ItemPtr                              lCurrentSeed        = pSeed;
+        ///
+        ItemPtr                              lSurfel                 = pSeed;
 
-	    lSeeds.push_front(pSeed);
+        /// list of surfels for expansion
+        std::deque<ItemPtr> lOpen;
+        /// list of seeds
+        std::deque<ItemPtr> lSeeds;
+        /// Surfel that belong to the cluster
+        /// @detail
+        std::list<ItemPtr>  lClose;
+        ItemPtrVector                 lExpasion;
+        ItemPtrVector                 lNeighbors;
+        /// lista dos k vizinhos do surfel semente lSeed, em ordem decrescente de distância
 
-		while ( (cont < pCont ) && (lSeeds.size() != 0))
-		{
+        lSeeds.push_front(pSeed);
 
-			lCurrentSeed = lSeeds.front();
-			lSeeds.pop_front();
+            while ( (cont < pCont ) && (lSeeds.size() != 0))
+            {
 
-			if (lCurrentSeed->SeedMarked() == 1)
-			{
-				continue;
-			}
-			lCurrentSeed->SetCost(0);
-			lCurrentSeed->SetID(cont);
-		    lCurrentSeed->SetExpansionMarked(1);
-			lOpen.push_back(lCurrentSeed);
+                    lCurrentSeed = lSeeds.front();
+                    lSeeds.pop_front();
 
-
-			while ( (lOpen.size() != 0) && (lClose.size() < 200))
-			{
-				lNeighbors.clear();
-				lSurfel = lOpen.front();
-				lSurfel->SetSeedMarked(1);
-				lOpen.pop_front();
-				lClose.push_back(lSurfel);
-				lNeighbors 		= mKDTree.KNearestNeighbors(lSurfel ,	8, KNearestSearchComps);
-
-				lExpasion 		= GetNotMarked(lNeighbors);
-
-//				std::cout << "SEED " <<  lCurrentSeed->ID() << std::endl;
-//				std::cout << "Surfel " << contSurfel << std::endl;
-				for(typename std::vector<ItemPtr>::reverse_iterator it = lNeighbors.rbegin(); it !=  lNeighbors.rend();++it)
-				{
-
-					if ( Similarity::Join(lCurrentSeed,lSurfel,(*it)) )
-					{
-						(*it)->SetExpansionMarked(1);
-						lOpen.push_back((*it));
-					}
-					else
-					{
-
-						if ( ((*it)->SeedMarked() == 0) && ((*it)->ExpansionMarked() == 0))
-						{
-							lSeeds.push_back((*it));
-						}
+                    if (lCurrentSeed->SeedMarked() == 1)
+                    {
+                            continue;
+                    }
+                    lCurrentSeed->SetCost(0);
+                    lCurrentSeed->SetID(cont);
+                lCurrentSeed->SetExpansionMarked(1);
+                    lOpen.push_back(lCurrentSeed);
 
 
-					}
-//					std::cout << "Cost " << (*it)->Cost() << std::endl;
-				}
-//				std::cout << "---" << std::endl;
+                    while ( (lOpen.size() != 0) && (lClose.size() < 1000))
+                    {
+                            lNeighbors.clear();
+                            lSurfel = lOpen.front();
+                            lSurfel->SetSeedMarked(1);
+                            lOpen.pop_front();
+                            lClose.push_back(lSurfel);
+                            lNeighbors              = KDTree.KNearestNeighbors(lSurfel ,50 , KNearestSearchComps);
 
-			}
+                            lExpasion               = GetNotMarked(lNeighbors);
+
+//                              std::cout << "SEED " <<  lCurrentSeed->ID() << std::endl;
+//                              std::cout << "Surfel " << contSurfel << std::endl;
+                            for(typename std::vector<ItemPtr>::reverse_iterator it = lNeighbors.rbegin(); it !=  lNeighbors.rend();++it)
+                            {
+
+                                    if ( Similarity::Join(lCurrentSeed,lSurfel,(*it)) )
+                                    {
+                                            (*it)->SetExpansionMarked(1);
+                                            lOpen.push_back((*it));
+                                    }
+                                    else
+                                    {
+
+                                            if ( ((*it)->SeedMarked() == 0) && ((*it)->ExpansionMarked() == 0))
+                                            {
+                                                    lSeeds.push_back((*it));
+                                            }
 
 
-			for(typename std::list<ItemPtr>::iterator it = lClose.begin(); it !=  lClose.end();++it)
-			{
-				(*it)->SetExpansionMarked(0);
-			}
-			//std::cout << "lOpen " << lOpen.size() << "--"  <<  "lClose " << lClose.size() << std::endl;
-			Clusters.push_back(lClose);
-			MergeEllipses<Real> me = MergeEllipses<Real>(lClose);
-			mSurfels.push_back(me.NewPtrSurfel());
-			lClose.clear();
-			++cont;
-		}
+                                    }
+//                                      std::cout << "Cost " << (*it)->Cost() << std::endl;
+                            }
+//                              std::cout << "---" << std::endl;
+
+                    }
 
 
-	}
+                    for(typename std::list<ItemPtr>::iterator it = lClose.begin(); it !=  lClose.end();++it)
+                    {
+                            (*it)->SetExpansionMarked(0);
+                    }
+                    //std::cout << "lOpen " << lOpen.size() << "--"  <<  "lClose " << lClose.size() << std::endl;
+                    Clusters.push_back(lClose);
+                    MergeEllipses<Real> me = MergeEllipses<Real>(lClose);
+                    Surfels.push_back(me.NewPtrSurfel());
+                    lClose.clear();
+                    ++cont;
+            }
+
+
+    }
+
 
 
 /* ---------------------------------------- Draw Functions ---------------------------------------- */
 
 	void DrawSurfels()
 	{
-		std::vector<Celer::Vector4<float> >::iterator c = colors.begin();
-		for ( typename std::vector<ItemPtr>::iterator it = mSurfels.begin(); it != mSurfels.end();++it)
-		{
-			glPushMatrix();
-			glColor3fv(*c);
-			++c;
-			if(c == colors.end())
-				c = colors.begin();
-			(*it)->DrawTriangleFan(8);
-			glPopMatrix();
-		}
-	}
-
-	void DrawClusters (int pNumber)
-	{
-
-		std::vector<Celer::Vector4<float> >::iterator c = colors.begin();
+		itColor = colors.begin();
+		glPushAttrib(GL_ALL_ATTRIB_BITS);
 	    glPushMatrix();
-
-			if (Clusters.size() >= pNumber)
-			{
-
-				for ( int  i = 0; i !=  pNumber ; ++i )
-				{
-					//std::cout << Clusters[i].size() << " Size" << std::endl;
-					glPointSize(5.0);
-					if(c == colors.end())
-						c = colors.begin();
-					glPushMatrix();
-				   	glEnable(GL_POINT_SMOOTH);
-				   	glPointSize(5.0);
-					glColor3fv(*c);
-				    glBegin(GL_POINTS);
-						for ( typename std::list<ItemPtr>::iterator j = Clusters[1].begin() ; j != Clusters[1].end(); ++j )
-						{
-							glVertex3fv( (*j)->Center() );
-						}
-					glEnd();
-					glPopMatrix();
-
-					// Desenha a semente
-
-					glPushMatrix();
-				   	glEnable(GL_POINT_SMOOTH);
-				   	glPointSize(15.0);
-				   	glColor3fv(*c);
-				    glBegin(GL_POINTS);
-						glVertex3fv( (*(Clusters[i].begin()))->Center() );
-					glEnd();
-					glPopMatrix();
-					++c;
-
-				}
-
-			}
-
-    	glEnd();
+	    glDisable(GL_LIGHTING);
+		for ( ItemPtrVectorIterator it = Surfels.begin(); it != Surfels.end();++it)
+		{
+			glColor3fv(Colors(true));
+			(*it)->DrawTriangleFan(8);
+		}
+    	glEnable(GL_LIGHTING);
     	glPopMatrix();
+    	glPopAttrib();
 	}
+
+	void DrawClustersIndex (unsigned int pNumber,bool pShowSeed )
+	{
+		glPushAttrib(GL_ALL_ATTRIB_BITS);
+	    glPushMatrix();
+	    glDisable(GL_LIGHTING);
+		itColor = colors.begin();
+	    if (Clusters.size() >= pNumber)
+	    {
+
+				glPushMatrix();
+				glEnable(GL_POINT_SMOOTH);
+	    		glPointSize(5.0);
+	    	 	glColor3fv(Colors(false));
+	    		glBegin(GL_POINTS);
+	    		for ( typename std::list<ItemPtr>::iterator j = Clusters[pNumber].begin() ; j != Clusters[pNumber].end(); ++j )
+	    		{
+	    			glVertex3fv( (*j)->Center() );
+	    		}
+	    		glEnd();
+	    		glPopMatrix();
+
+	    		if (pShowSeed == true)
+	    		{
+		    		glPushMatrix();
+		    		glPointSize(10.0);
+		    		glEnable(GL_POINT_SMOOTH);
+		    	 	glColor3fv(Colors(true));
+		    		glBegin(GL_POINTS);
+		    		{
+		    			glVertex3fv( (*Clusters[pNumber].begin())->Center() );
+		    		}
+		    		glEnd();
+		    		glPopMatrix();
+	    		}
+	    }
+    	glEnd();
+    	glEnable(GL_LIGHTING);
+    	glPopMatrix();
+    	glPopAttrib();
+	}
+
+	void DrawClustersRange (unsigned int Begin, unsigned int End,bool pShowSeed)
+	{
+		glPushAttrib(GL_ALL_ATTRIB_BITS);
+	    glPushMatrix();
+	    glDisable(GL_LIGHTING);
+		itColor = colors.begin();
+	    for(unsigned int i = Begin; i < End ; ++i )
+	    {
+				glPushMatrix();
+				glEnable(GL_POINT_SMOOTH);
+	    		glPointSize(5.0);
+	    	 	glColor3fv(Colors(false));
+	    		glBegin(GL_POINTS);
+	    		for ( typename std::list<ItemPtr>::iterator j = Clusters[i].begin() ; j != Clusters[i].end(); ++j )
+	    		{
+	    			glVertex3fv( (*j)->Center() );
+
+	    		}
+	    		glEnd();
+	    		glPopMatrix();
+
+
+    			if (pShowSeed == true)
+    			{
+    				glPushMatrix();
+    				glPointSize(10.0);
+    				glEnable(GL_POINT_SMOOTH);
+    				glColor3fv(Colors(true));
+    				glBegin(GL_POINTS);
+    				{
+    					glVertex3fv( (*Clusters[i].begin())->Center() );
+    				}
+    				glEnd();
+    				glPopMatrix();
+    			}
+
+
+	    }
+    	glEnd();
+    	glEnable(GL_LIGHTING);
+    	glPopMatrix();
+    	glPopAttrib();
+	}
+
 	/// destructor
 	virtual ~Cluster()
 	{
@@ -283,7 +327,24 @@ public:
 	}
 private:
 
-    std::vector<Celer::Vector4<float> > colors;
+	Celer::Vector4<float> Colors(bool change)
+	{
+
+		if(itColor == colors.end())
+		{
+			itColor = colors.begin();
+		}
+		if (change == false)
+		{
+			++itColor;
+		}
+
+		return (*itColor);
+	}
+
+	std::deque<Celer::Vector4<float> >::iterator itColor;
+
+    std::deque<Celer::Vector4<float> > colors;
 };
 
 

@@ -17,27 +17,28 @@ public:
 	enum Show
 	{
 		Seed		= 1 << 1,
-		Cluster		= 1 << 2
+		Cluster		= 1 << 2,
+		Model		= 1 << 3
 	};
 
 	enum RenderingClusterBy
 	{
-		Range 			= 1 << 3,
-		Index 			= 1 << 4,
-		All				= 1 << 5
+		Range 			= 1 << 4,
+		Index 			= 1 << 5,
+		All				= 1 << 6
 	};
     enum RenderingClusterWith
     {
-		GLPoint 		= 1 << 6,
-		GLPointSmooth 	= 1 << 7,
-		PyramidSplat 	= 1 << 8,
-		EWASplat 		= 1 << 9
+		GLPoint 		= 1 << 7,
+		GLPointSmooth 	= 1 << 8,
+		PyramidSplat 	= 1 << 9,
+		EWASplat 		= 1 << 10
     };
     enum BuildClusterWith
     {
-    	NormalOnly 				= 1 << 10,
-    	AllPossibleCluster 		= 1 << 11,
-    	LimitedNumberOfCluster 	= 1 << 12
+    	NormalOnly 				= 1 << 11,
+    	AllPossibleCluster 		= 1 << 12,
+    	LimitedNumberOfCluster 	= 1 << 13
     };
 
     enum BuildClusterSystem
@@ -45,6 +46,12 @@ public:
     	Continuous    		 = 1 << 14,
     	Interactive			 = 1 << 15
     };
+
+    Bitmask<unsigned int,Show				 > 	maskShow;
+    Bitmask<unsigned int,RenderingClusterBy  > 	maskRenderingClusterBy;
+    Bitmask<unsigned int,RenderingClusterWith> 	maskRenderingClusterWith;
+    Bitmask<unsigned int,BuildClusterWith    >  maskBuildClusterWith;
+    Bitmask<unsigned int,BuildClusterSystem  >  maskBuildClusterSystem;
 
     ClusterLog();
 
@@ -130,11 +137,7 @@ public:
         this->mSeedRangeEnd = mSeedRangeEnd;
     }
 
-    Bitmask<unsigned int,Show				 > 	maskShow;
-    Bitmask<unsigned int,RenderingClusterBy  > 	maskRenderingClusterBy;
-    Bitmask<unsigned int,RenderingClusterWith> 	maskRenderingClusterWith;
-    Bitmask<unsigned int,BuildClusterWith    >  maskBuildClusterWith;
-    Bitmask<unsigned int,BuildClusterSystem  >  maskBuildClusterSystem;
+
 
 private:
 
