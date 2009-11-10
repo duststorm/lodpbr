@@ -12,7 +12,7 @@
  *@author Felipe Moura.
  *@email fmc@cos.ufrj.br
  *@version 1.0.
- *@*@todo Real generic class
+ *@todo Real generic class
  * \nosubgrouping */
 
 #include <GL/gl.h>
@@ -121,7 +121,7 @@ public:
 	/// @param pSeed pKNeighborsSize. Initial Seed.
 	template <class Similarity ,class Aggregation>
 
-    void Build(int pCont,int pKNeighborsSize ,const ItemPtr& pSeed)
+    void Build1(int pCont,int pKNeighborsSize ,const ItemPtr& pSeed)
     {
 
             /// How many comparisons the Kd-Tree do to finding an element
@@ -216,21 +216,102 @@ public:
     }
 
 
+	/// Build a set of Clusters by the Similarities and Aggregations.
+	/// @details ...
+	/// conditions pass by template parameter.
+	/// @param pCont Debug. How many clusters?
+	/// @param pCont pKNeighborsSize. The size of the Neighbor.
+	/// @param pSeed pKNeighborsSize. Initial Seed.
+	template <class Similarity ,class Aggregation>
+	void Build(int pCont,int pKNeighborsSize ,const ItemPtr& pSeed)
+	{
+
+		/// How many comparisons the Kd-Tree do to finding an element
+		int                                  KNearestSearchComps = 0;
+		///
+		/// Surfel that belong to the cluster
+		/// @detail
+		std::list<ItemPtr>  lClose;
+		std::list<ItemPtr>  lOpen;
+		ItemPtrVector                 lNeighbors;
+		ItemPtr                  lSurfel                 = 0;
+
+		int cont = 0;
+
+		if(pSeed == 0)
+		{
+			return;
+		}
+
+		lOpen.push_back(pSeed);
+
+		// Para cada semente , gera seus vizinhos e depois escolhe uma semenete que nao esteje na intersecao
+		// de sua vizinhanca
+		while ( (lOpen.size() != 0) )
+		{
+			lSurfel                 = lOpen.front();
+			lOpen.pop_front();
+			if(lSurfel->ExpansionMarked() == true)
+			{
+				//std::cout << "cont " << cont << std::endl;
+				continue;
+			}
+			lSurfel->SetMarked			(true);
+			lSurfel->SetExpansionMarked	(true);
+			lSurfel->SetClusterID		(cont);
+
+			lNeighbors  = KDTree.KNearestNeighbors(lSurfel ,100 , KNearestSearchComps);
+
+			for(size_t i = lNeighbors.size(); i != 0; --i)
+			{
+				if( lClose.size() >= 50)
+				{
+					for(size_t j = i; j != 0; --j)
+					{
+						if (lNeighbors[j]->ExpansionMarked()== false)
+							lOpen.push_back(lNeighbors[j]);
+					}
+					break;
+				}
+				else
+				{
+					if (lNeighbors[i]->Marked() == false)
+					{
+						lNeighbors[i]->SetClusterID		(cont);
+						lNeighbors[i]->SetExpansionMarked(true);
+						lClose.push_back(lNeighbors[i]);
+
+					}
+
+				}
+				//std::cout << "cont " << cont << std::endl;
+			}
+			++cont;
+			lClose.pop_front();
+			lClose.push_front(lSurfel);
+			Clusters.push_back(lClose);
+            MergeEllipses<Real> me = MergeEllipses<Real>(lClose);
+            Surfels.push_back(me.NewPtrSurfel());
+			lClose.clear();
+			lNeighbors.clear();
+		}
+
+	}
+
+
+
+
+
 
 /* ---------------------------------------- Draw Functions ---------------------------------------- */
 
-	void DrawSurfels()
+	void DrawSurfels(unsigned int pNumber)
 	{
 		itColor = colors.begin();
 		glPushAttrib(GL_ALL_ATTRIB_BITS);
 	    glPushMatrix();
-	    glDisable(GL_LIGHTING);
-		for ( ItemPtrVectorIterator it = Surfels.begin(); it != Surfels.end();++it)
-		{
-			glColor3fv(Colors(true));
-			(*it)->DrawTriangleFan(8);
-		}
-    	glEnable(GL_LIGHTING);
+	    glColor3fv(Colors(true));
+	    Surfels[pNumber]->DrawTriangleFan(64);
     	glPopMatrix();
     	glPopAttrib();
 	}
@@ -241,11 +322,12 @@ public:
 	    glPushMatrix();
 	    glDisable(GL_LIGHTING);
 		itColor = colors.begin();
+		glEnable(GL_POINT_SMOOTH);
+		glEnable(GL_MULTISAMPLE);
 	    if (Clusters.size() >= pNumber)
 	    {
 
 				glPushMatrix();
-				glEnable(GL_POINT_SMOOTH);
 	    		glPointSize(5.0);
 	    	 	glColor3fv(Colors(false));
 	    		glBegin(GL_POINTS);
@@ -260,8 +342,7 @@ public:
 	    		{
 		    		glPushMatrix();
 		    		glPointSize(10.0);
-		    		glEnable(GL_POINT_SMOOTH);
-		    	 	glColor3fv(Colors(true));
+		    	 	glColor3f(0.0,0.0,0.0);
 		    		glBegin(GL_POINTS);
 		    		{
 		    			glVertex3fv( (*Clusters[pNumber].begin())->Center() );
@@ -270,7 +351,7 @@ public:
 		    		glPopMatrix();
 	    		}
 	    }
-    	glEnd();
+	    glDisable(GL_MULTISAMPLE);
     	glEnable(GL_LIGHTING);
     	glPopMatrix();
     	glPopAttrib();
@@ -303,7 +384,7 @@ public:
     				glPushMatrix();
     				glPointSize(10.0);
     				glEnable(GL_POINT_SMOOTH);
-    				glColor3fv(Colors(true));
+    				glColor3f(0.0,0.0,0.0);
     				glBegin(GL_POINTS);
     				{
     					glVertex3fv( (*Clusters[i].begin())->Center() );
