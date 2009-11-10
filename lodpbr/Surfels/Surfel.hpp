@@ -167,13 +167,32 @@ template <class Real = float > class Surfel
 	   										 mMajorAxis(pSurfel.mMajorAxis),
 	   		   								 mMaxError(pSurfel.mMaxError),
 	   		   								 mMinError(pSurfel.mMinError),
-	   										 mPerpendicularError(0),
+	   										 mPerpendicularError(pSurfel.mPerpendicularError),
 	   										 mID(pSurfel.mID),
-	   										 mMarked(0),
-	   									     mExpansionMarked(0),
-	   									     mSeedMarked(0),
-	   									     mCost(9999),
-	   										 mClusterID(0)
+	   										 mMarked(pSurfel.mMarked),
+	   									     mExpansionMarked(pSurfel.mExpansionMarked),
+	   									     mSeedMarked(pSurfel.mSeedMarked),
+	   									     mCost(pSurfel.mCost),
+	   										 mClusterID(pSurfel.mClusterID)
+	 {
+
+	 };
+
+	 Surfel (const Surfel<Real>* pSurfel) :  mCenter(pSurfel->mCenter),
+	   										 mNormal(pSurfel->mNormal),
+	   									 	 mColor(pSurfel->mColor),
+	   									 	 mSplatRadius(pSurfel->mSplatRadius),
+	   										 mMinorAxis(pSurfel->mMinorAxis),
+	   										 mMajorAxis(pSurfel->mMajorAxis),
+	   		   								 mMaxError(pSurfel->mMaxError),
+	   		   								 mMinError(pSurfel->mMinError),
+	   										 mPerpendicularError(pSurfel->mPerpendicularError),
+	   										 mID(pSurfel->mID),
+	   										 mMarked(pSurfel->mMarked),
+	   									     mExpansionMarked(pSurfel->mExpansionMarked),
+	   									     mSeedMarked(pSurfel->mSeedMarked),
+	   									     mCost(pSurfel->mCost),
+	   										 mClusterID(pSurfel->mClusterID)
 	 {
 
 	 };
@@ -684,7 +703,7 @@ template <class Real = float > class Surfel
 		 	glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 
-		    glEnable(GL_POLYGON_OFFSET_FILL);
+		    glEnable(GL_POLYGON_OFFSET_FILL | GL_POLYGON_SMOOTH_HINT | GL_MULTISAMPLE);
 		    glPolygonOffset(1,1);
 		    //glColor3f(0.0,0.5,0.5);
 		 	glBegin (GL_POLYGON);
@@ -694,12 +713,13 @@ template <class Real = float > class Surfel
 		 			glVertex3fv( it->ToRealPtr() );
 		 		}
 			glEnd();
-			glDisable(GL_POLYGON_OFFSET_FILL);
+			glDisable(GL_POLYGON_OFFSET_FILL | GL_POLYGON_SMOOTH_HINT |  GL_MULTISAMPLE) ;
 			glDisable (GL_BLEND);
 
 
 		    glDisable (GL_LIGHTING);
 			glColor3f(0.0,0.0,0.0);
+			glEnable(GL_MULTISAMPLE) ;
 			glBegin(GL_LINES);
 	 			for(ListPoint3Iterator it = lBoundaries.begin();it != lBoundaries.end();++it)
 	 			{
@@ -712,6 +732,7 @@ template <class Real = float > class Surfel
 	 			glVertex3fv( this->mCenter.ToRealPtr());
 	 		glEnd();
 
+	 		glDisable(GL_MULTISAMPLE) ;
 	 		glEnable (GL_LIGHTING);
 	 		glPopMatrix();
 
