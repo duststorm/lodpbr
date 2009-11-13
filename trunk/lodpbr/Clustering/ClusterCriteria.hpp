@@ -15,9 +15,10 @@
 *@version 1.0.
 *\nosubgrouping */
 
-template <class Real,class ItemPtr>
+template <class Real,class Item>
 class JoinCriteria
 {
+  typedef  Item*														ItemPtr;
   /// Decides whether or not add the item to the clustering start by seed
   static bool Join ( ItemPtr seed,ItemPtr surfel, ItemPtr  item)
   {
@@ -26,9 +27,10 @@ class JoinCriteria
 
 };
 
-template <class Real,class ItemPtr>
+template <class Real,class Item>
 class MergeCriteria
 {
+  typedef  Item*														ItemPtr;
   /// Decides whether or not add the item to the clustering start by seed
   static bool Merge ( ItemPtr seed, std::vector<ItemPtr>  item)
   {
@@ -40,9 +42,10 @@ class MergeCriteria
 /*@class ClusterRefine.
  *@brief Agglomerative criteria for  Clustering.
  * A node is ...*/
-template <class Real,class ItemPtr>
-class JoinByNormal : public JoinCriteria <Real,ItemPtr>
+template <class Real,class Item>
+class JoinByNormal : public JoinCriteria <Real,Item>
 {
+	typedef  Item*														ItemPtr;
         /// Add an item to the clustering if the angle between the seed
         /// and the item is over the NORMAL
 public:
@@ -90,9 +93,10 @@ public:
  *@brief Agglomerative criteria for  Clustering.
  * A node is ...*/
 
-template <class Real,class ItemPtr>
-class MergeBySize : public MergeCriteria <Real,ItemPtr>
+template <class Real,class Item>
+class MergeBySize : public MergeCriteria <Real,Item>
 {
+	typedef  Item*														ItemPtr;
 	/// Add an item to the clustering if the angle between the seed
 	/// and the item is over the NORMAL
 public:

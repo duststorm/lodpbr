@@ -11,6 +11,7 @@
 
 #include <vector>
 #include <list>
+#include <map>
 #include <cmath>
 
 #include <GL/gl.h>
@@ -40,20 +41,33 @@ template <class Real = float > class Surfel
 {
  public:
 
+	typedef Surfel* 											SurfelPtr;
+
+	/// List of what is actually stored in a leaf node (non-leaf nodes stores only one reference)
+
+	/// kd-tree node
+
+	/// Map definitions for k-nearest neighbors algorithm
+	typedef 			std::multimap <Real, SurfelPtr, std::greater<Real> > 				KNearestMap;
+	typedef typename 	std::multimap <Real, SurfelPtr, std::greater<Real> >::iterator 	    KNearestMapIterator;
+	typedef 			std::pair<Real, SurfelPtr> 										    KNearestPair;
+
+
+	typedef typename Celer::BoundingBox3<Real> 		Box3;
 	typedef typename Celer::Point3<Real>  			Point3;
 	typedef typename Celer::Vector3<Real>			Vector3;
 	typedef typename Celer::Color 		  			Color;
 
-	typedef std::vector<Surfel<Real> >				VectorOfSurfel;
+	typedef std::vector<Surfel>						VectorOfSurfel;
 	typedef typename VectorOfSurfel::iterator		VectorOfSurfelIterator;
 
-	typedef std::vector<Surfel<Real>* >				VectorOfPtrSurfel;
+	typedef std::vector<SurfelPtr >					VectorOfPtrSurfel;
 	typedef typename VectorOfPtrSurfel::iterator	VectorOfPrtSurfelIterator;
 
-	typedef std::list<Point3>       				ListPoint3;
-	typedef typename ListPoint3::iterator  			ListPoint3Iterator;
-	typedef std::list<Point3* >       				ListPtrPoint3;
-	typedef typename ListPtrPoint3::iterator  		ListPtrPoint3Iterator;
+	typedef std::list<Point3>       				ListOfPoint3;
+	typedef typename ListOfPoint3::iterator  		ListOfPoint3Iterator;
+	typedef std::list<Point3* >       				ListOfPtrPoint3;
+	typedef typename ListOfPtrPoint3::iterator  	ListOfPtrPoint3Iterator;
 
 	 typedef ::vcg::ply::PropDescriptor PropDescriptor ;
 

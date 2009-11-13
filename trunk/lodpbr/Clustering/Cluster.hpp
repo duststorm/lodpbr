@@ -23,7 +23,7 @@
 #include <algorithm>
 #include <iostream>
 
-#include "Kd-Tree/Kd-Tree.hpp"
+#include "Kd-Tree/Kd-TreeOfSurfels.hpp"
 
 #include "Surfels/MergeEllipses.hpp"
 
@@ -33,19 +33,24 @@
 #include "ClusterCriteria.hpp"
 
 
-template <class Real,class ItemPtr>
+template <class Real,class Item>
 class Cluster
 {
 
-	typedef  std::vector<ItemPtr>						ItemPtrVector;
-	typedef typename  ItemPtrVector::iterator			ItemPtrVectorIterator;
-	typedef typename  ItemPtrVector::reverse_iterator	ItemPtrVectorReverseIterator;
+	typedef  Item*														ItemPtr;
+	typedef  std::vector<ItemPtr>										ItemPtrVector;
+	typedef typename  ItemPtrVector::iterator							ItemPtrVectorIterator;
+	typedef typename  ItemPtrVector::reverse_iterator					ItemPtrVectorReverseIterator;
+	typedef std::vector<std::list<ItemPtr> >							ClusterContainer;
+	typedef typename std::vector<std::list<ItemPtr> >::iterator			ClusterContainerIterator;
+
+	typedef Celer::BoundingBox3<Real>									Box3;
 
 public:
 	/// public attributes
 	std::vector< std::list<ItemPtr> >   Clusters;
 	std::vector<ItemPtr>			    Surfels;
-	KdTree<Real,ItemPtr>				KDTree;
+	KdTreeOfSurfels<Real,ItemPtr>				KDTree;
 
 
 
@@ -56,25 +61,25 @@ public:
 	/// Constructor
 	/// Initialize the KD-Tree member with list of surfels
 	/// @param Refernce to a list of surfels
-	Cluster(std::vector< Celer::Surfel<Real> >& pSurfels,Celer::BoundingBox3<Real> pWorld)
+	Cluster(std::vector< Celer::Surfel<Real> >& pSurfels,Box3 pWorld)
 
 	{
 		init();
 
 		if (KDTree.root ==  0)
 		{
-			KDTree = KdTree<Real,ItemPtr >(pWorld);
+			KDTree = KdTreeOfSurfels<Real,Item >(pWorld);
 		}
 		else
 		{
 			delete KDTree.root;
-			KDTree = KdTree<Real,ItemPtr >(pWorld);
+			KDTree = KdTreeOfSurfels<Real,Item >(pWorld);
 		}
 
 		std::cout << "KD-Tree Start" << std::endl;
 		for (typename std::vector<Celer::Surfel<Real> >::iterator surf =  pSurfels.begin();surf != pSurfels.end(); ++ surf )
 		{
-			KDTree.Insert ( new Celer::Surfel<Real>(*surf) );
+			KDTree.Insert ( new Item(*surf) );
 		}
 		std::cout << "KD-Tree End" << std::endl;
 

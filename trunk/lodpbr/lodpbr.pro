@@ -45,9 +45,9 @@ HEADERS += Math/Math.hpp \
     Octree/ocTreeInternalNode.hpp \
     Octree/ocTreeRefine.hpp \
     Octree/ocTree.hpp \
-    Kd-Tree/Kd-Tree.hpp \
-    Kd-Tree/Kd-TreeNode.hpp \
-    Kd-Tree/Kd-TreeRefine.hpp \
+    Kd-Tree/Kd-TreeOfSurfels.hpp \
+    Kd-Tree/Kd-TreeOfSurfelsNode.hpp \
+    Kd-Tree/Kd-TreeOfSurfelsRefine.hpp \
     Surfels/Surfel.hpp \
     Surfels/IOSurfels.hpp \
     Surfels/MergeEllipses.hpp \
