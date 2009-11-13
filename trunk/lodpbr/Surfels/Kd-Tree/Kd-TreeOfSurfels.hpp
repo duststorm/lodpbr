@@ -16,8 +16,8 @@
 #ifndef KDTREE_HPP_
 #define KDTREE_HPP_
 
-#include "Kd-TreeNode.hpp"
-#include "Kd-TreeRefine.hpp"
+#include "Kd-TreeNodeOfSurfels.hpp"
+#include "Kd-TreeOfSurfelsRefine.hpp"
 
 /**
  * Base class for a kd-tree data structure -- only 3D!
@@ -41,7 +41,7 @@ protected:
 public:
 
   /// kd-tree root node
-  KdTreeNode <Surfel, Refine> * root;
+  Node* root;
 
   KdTree() : root (0)
   {
@@ -55,9 +55,9 @@ public:
   }
 
   /// destructor
-  virtual ~KdTree()
+  virtual ~KdTree(bool delElemets)
   {
-
+	 root->~Node(delElemets);
   }
 
   /// Inserts a pointer to an object in this kd-tree

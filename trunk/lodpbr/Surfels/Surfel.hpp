@@ -17,15 +17,15 @@
 #include <GL/gl.h>
 #include <GL/glu.h>
 
-#include <wrap/io_trimesh/import_ply.h>
-#include <wrap/io_trimesh/io_ply.h>
-#include <wrap/ply/plylib.h>
-
 #include "Math/Point3.hpp"
 #include "Math/Vector3.hpp"
 #include "Math/Color.hpp"
 #include "Math/Math.hpp"
 #include "Math/BoundingBox3.hpp"
+
+#include <wrap/io_trimesh/import_ply.h>
+#include <wrap/io_trimesh/io_ply.h>
+#include <wrap/ply/plylib.h>
 
 /**
  * Surfel class.

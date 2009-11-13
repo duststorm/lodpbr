@@ -7,6 +7,6 @@
  *
  **/
 
-#include "Kd-Tree.hpp"
+#include "Kd-TreeOfSurfels.hpp"
 
 using namespace std;

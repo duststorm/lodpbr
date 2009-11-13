@@ -16,12 +16,12 @@
 #include <cassert>
 //  VCGLib
 
-#include <vcg/simplex/vertex/base.h>
-#include <vcg/simplex/vertex/component_ocf.h>
-#include <vcg/simplex/edge/base.h>
-#include <vcg/simplex/face/base.h>
+#include <vcglib/vcg/simplex/vertex/base.h>
+#include <vcglib/vcg/simplex/vertex/component_ocf.h>
+#include <vcglib/vcg/simplex/edge/base.h>
+#include <vcglib/vcg/simplex/face/base.h>
 #include <vcg/simplex/face/component_ocf.h>
-#include <vcg/simplex/face/topology.h>
+#include <vcglib/vcg/simplex/face/topology.h>
 
 #include <vcg/complex/trimesh/base.h>
 #include <vcg/complex/trimesh/update/topology.h>

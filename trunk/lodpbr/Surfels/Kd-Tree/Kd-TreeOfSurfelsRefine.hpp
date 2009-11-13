@@ -4,7 +4,6 @@
 /// Refinement criteria for kd-tree
 ///
 
-class Surfel;
 
 template <class Surfel >
 struct KdTreeRefine
