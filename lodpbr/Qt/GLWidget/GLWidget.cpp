@@ -244,109 +244,11 @@ void GLWidget::DrawGroud()
 	glEnable(GL_LIGHTING);
 }
 
-/// Draw a node's bounding box and it's contained points
-/// @param n kd-tree node
-/// @return 1 if empty or leaf node, 0 if internal node
-bool GLWidget::drawKdNode(const KdTree3DNode* n,int& cont) {
 
-  if (n == NULL)
-    return 1;
-
-  GLfloat cur_color[4];
-  glGetFloatv(GL_CURRENT_COLOR, cur_color);
-
-
-  glPointSize(1.0);
-  //glEnable(GL_MULTISAMPLE);
-
-  glBegin(GL_POINTS);
-  glColor4f(0.3, 0.3, 0.3, 1.0);
-
-  cont += n->mListPtr.size();
-
-  for (unsigned int i = 0; i < n->mListPtr.size(); ++i)
-  {
-	  glVertex3fv( n->mListPtr[i]->Center() );
-  }
-
-  glEnd();
-
-
-  glColor4fv(cur_color);
-
-  // Only draw leaf node's boxes
-
-  if (!n->IsLeaf())
-    return 0;
-
-  //drawBox(n->Box());
-
-  return 1;
-}
-
-/// Recursively draw all kd-tree nodes
-/// @param n kd-tree node
-void GLWidget::drawKdNodeRecursively(const KdTree3DNode* n,int& cont) {
-  const KdTree3DNode* leftNode = n->Left();
-  const KdTree3DNode* rightNode = n->Right();
-
-
-  if (!drawKdNode(leftNode,cont))
-    drawKdNodeRecursively(leftNode,cont);
-
-  if (!drawKdNode(rightNode,cont))
-    drawKdNodeRecursively(rightNode,cont);
-}
-
-/// Draw the kd-tree leaf nodes' boxes and all elements stored in all nodes
-void GLWidget::drawKdTree(int& cont)
-{
-  KdTree3DNode* root = cluster.KDTree.Begin();
-
-  glColor4f(0.3, 0.3, 1.0, 1.0);
-  glLineWidth(1.0);
-
-  drawKdNode(root,cont); //draw root node first
-
-  drawKdNodeRecursively(root,cont); //draw entire tree
-
-}
 
 void GLWidget::LoadModel(const char * filename )
 {
 	Celer::IOSurfels<float>::LoadMesh(filename,lSurfels,mBox);
-}
-
-template <class T>
-void GLWidget::drawBox(Celer::BoundingBox3<T> BBox){
-  glColor3f (1.0, 1.0, 1.0);//white
-
-  glBegin(GL_LINE_LOOP);
-    glVertex3f(BBox.xMin(), BBox.yMin(), BBox.zMin());
-    glVertex3f(BBox.xMax(), BBox.yMin(), BBox.zMin());
-    glVertex3f(BBox.xMax(), BBox.yMax(), BBox.zMin());
-    glVertex3f(BBox.xMin(), BBox.yMax(), BBox.zMin());
-  glEnd();
-
-  glBegin(GL_LINE_LOOP);
-    glVertex3f(BBox.xMin(), BBox.yMin(), BBox.zMax());
-    glVertex3f(BBox.xMax(), BBox.yMin(), BBox.zMax());
-    glVertex3f(BBox.xMax(), BBox.yMax(), BBox.zMax());
-    glVertex3f(BBox.xMin(), BBox.yMax(), BBox.zMax());
-  glEnd();
-
-  glBegin(GL_LINES);
-    glVertex3f(BBox.xMin(), BBox.yMin(), BBox.zMax());
-    glVertex3f(BBox.xMin(), BBox.yMin(), BBox.zMin());
-    glVertex3f(BBox.xMax(), BBox.yMin(), BBox.zMax());
-    glVertex3f(BBox.xMax(), BBox.yMin(), BBox.zMin());
-
-    glVertex3f(BBox.xMax(), BBox.yMax(), BBox.zMax());
-    glVertex3f(BBox.xMax(), BBox.yMax(), BBox.zMin());
-
-    glVertex3f(BBox.xMin(), BBox.yMax(), BBox.zMax());
-    glVertex3f(BBox.xMin(), BBox.yMax(), BBox.zMin());
-  glEnd();
 }
 
 
@@ -370,8 +272,9 @@ void GLWidget::initializeGL()
 	GLint especMaterial = 64;
 
 	GLfloat light_position0[] = {0.0, 0.5, 10.0, 0.0};
+	GLfloat light_position1[] = {0.0, 0.5, -10.0, 0.0};
 
-	glClearColor(1.0f, 1.0f, 1.0f, 1.0f);           //cor fundo
+	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);           //cor fundo
 	glShadeModel(GL_SMOOTH);                      	//gouraud
 	glMaterialfv(GL_FRONT_AND_BACK,GL_DIFFUSE, luzDifusa);//refletancia do material
 	glMaterialfv(GL_FRONT_AND_BACK,GL_SPECULAR, especularidade);//refletancia do material
@@ -384,11 +287,16 @@ void GLWidget::initializeGL()
 	glLightfv(GL_LIGHT0, GL_DIFFUSE, luzDifusa );
 	glLightfv(GL_LIGHT0, GL_SPECULAR, light_position0 );
 
+	glLightfv(GL_LIGHT1, GL_AMBIENT, luzAmbiente);  //parametros da luz 0
+	glLightfv(GL_LIGHT1, GL_DIFFUSE, luzDifusa );
+	glLightfv(GL_LIGHT1, GL_SPECULAR, light_position1 );
+
 
 	glEnable(GL_POINT_SMOOTH);
 	glEnable(GL_COLOR_MATERIAL);  //cor do material a partir da cor corrente
 	glEnable(GL_LIGHTING);        //uso de iluminacao
 	glEnable(GL_LIGHT0);          //luz  0
+	glEnable(GL_LIGHT1);          //luz  0
 	glEnable(GL_DEPTH_TEST);      //depth-buffering
 
 	glEnable(GL_NORMALIZE);
@@ -422,9 +330,9 @@ void GLWidget::calLimits()
 
      Celer::Surfel<float>* seed = new Celer::Surfel<float>(lSurfels[0]);
 
-     cluster = Cluster<float,Celer::Surfel<float>* >(lSurfels,mBox);
+     cluster = Cluster<float,Celer::Surfel<float> >(lSurfels,mBox);
      std::cout << "cluster " << std::endl;
-     cluster.Build<JoinByNormal<float,Celer::Surfel<float>* >,MergeBySize<float,Celer::Surfel<float>* > >(1000,200,seed);
+     cluster.Build<JoinByNormal<float,Celer::Surfel<float> >,MergeBySize<float,Celer::Surfel<float> > >(1000,200,seed);
      std::cout << "cluster end" << std::endl;
 
 
@@ -460,12 +368,12 @@ void GLWidget::paintGL()
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-//    glMatrixMode(GL_PROJECTION);
-//    glLoadIdentity();
-//    GLfloat x = GLfloat(width()) / height();
-//    camera.SetProjectionMatrix(90.0,x,0.1,1000);
-//
-//    glMultMatrixf((~camera.PespectiveProjectionMatrix()).ToRealPtr());
+    camera.SetWindowSize(width(),height());
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    GLfloat x = GLfloat(width()) / height();
+    camera.SetProjectionMatrix(90.0,x,0.1,100000);
+    glMultMatrixf((~camera.PespectiveProjectionMatrix()).ToRealPtr());
 
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
@@ -480,7 +388,7 @@ void GLWidget::paintGL()
     {
     	if (mClusterLog.maskShow.Test(ClusterLog::Model))
     	{
-    		drawKdTree(cont);
+    		cluster.KDTree.drawTree(cont);
     	}
 
     	if (mClusterLog.maskShow.Test(ClusterLog::Cluster))
