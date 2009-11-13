@@ -54,7 +54,7 @@ public:
     ClusterLog mClusterLog;
     LSplatLog  mLSplatLog;
 
-    Cluster<float,Celer::Surfel<float> > 				cluster;
+    Cluster<Celer::Surfel<float> > 				cluster;
 
     std::vector<Celer::Surfel<float> > 					lSurfels;
 

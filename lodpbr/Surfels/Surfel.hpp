@@ -25,6 +25,7 @@
 #include "Math/Vector3.hpp"
 #include "Math/Color.hpp"
 #include "Math/Math.hpp"
+#include "Math/BoundingBox3.hpp"
 
 /**
  * Surfel class.
@@ -34,23 +35,24 @@
  * surface normal at it's center.
  **/
 
-
 namespace Celer{
 
 template <class Real = float > class Surfel
 {
  public:
 
-	typedef Surfel* 											SurfelPtr;
+	typedef Real												Type;
+	typedef Surfel* 											Pointer;
+	typedef const Surfel* 										ConstPointer;
 
 	/// List of what is actually stored in a leaf node (non-leaf nodes stores only one reference)
 
 	/// kd-tree node
 
 	/// Map definitions for k-nearest neighbors algorithm
-	typedef 			std::multimap <Real, SurfelPtr, std::greater<Real> > 				KNearestMap;
-	typedef typename 	std::multimap <Real, SurfelPtr, std::greater<Real> >::iterator 	    KNearestMapIterator;
-	typedef 			std::pair<Real, SurfelPtr> 										    KNearestPair;
+	typedef 			std::multimap <Real, Pointer, std::greater<Real> > 				KNearestMap;
+	typedef typename 	std::multimap <Real, Pointer, std::greater<Real> >::iterator 	    KNearestMapIterator;
+	typedef 			std::pair<Real, Pointer> 										    KNearestPair;
 
 
 	typedef typename Celer::BoundingBox3<Real> 		Box3;
@@ -58,11 +60,15 @@ template <class Real = float > class Surfel
 	typedef typename Celer::Vector3<Real>			Vector3;
 	typedef typename Celer::Color 		  			Color;
 
+	typedef std::list<Pointer>						ListOfPointerSurfel;
+	typedef typename std::list<Pointer>::iterator	ListOfPointerSurfelIterator;
+
 	typedef std::vector<Surfel>						VectorOfSurfel;
 	typedef typename VectorOfSurfel::iterator		VectorOfSurfelIterator;
 
-	typedef std::vector<SurfelPtr >					VectorOfPtrSurfel;
-	typedef typename VectorOfPtrSurfel::iterator	VectorOfPrtSurfelIterator;
+	typedef std::vector<Pointer >					VectorOfPointerSurfel;
+	typedef typename VectorOfPointerSurfel::iterator			VectorOfPointerSurfelIterator;
+	typedef typename VectorOfPointerSurfel::reverse_iterator	VectorOfPointerSurfelReverseIterator;
 
 	typedef std::list<Point3>       				ListOfPoint3;
 	typedef typename ListOfPoint3::iterator  		ListOfPoint3Iterator;
@@ -698,10 +704,10 @@ template <class Real = float > class Surfel
 	 void Draw(int p = 8)
 	 {
 
-		 	ListPoint3 lBoundaries = this->BoundariesSamples(p);
+			ListOfPoint3 lBoundaries = this->BoundariesSamples(p);
 		 	glPushMatrix();
 		 	glPointSize(1.0);
-			for(ListPoint3Iterator it = lBoundaries.begin();it != lBoundaries.end();++it)
+			for(ListOfPoint3Iterator it = lBoundaries.begin();it != lBoundaries.end();++it)
 			{
 				glVertex3fv( it->ToRealPtr());
 			}
@@ -711,7 +717,7 @@ template <class Real = float > class Surfel
 	 void DrawTriangleFan(int p = 8)
 	 {
 
-		 	ListPoint3 lBoundaries = this->BoundariesSamples(p);
+		 	ListOfPoint3 lBoundaries = this->BoundariesSamples(p);
 		 	glPushMatrix();
 		 	glEnable (GL_BLEND);
 		 	glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -721,7 +727,7 @@ template <class Real = float > class Surfel
 		    glPolygonOffset(1,1);
 		    //glColor3f(0.0,0.5,0.5);
 		 	glBegin (GL_POLYGON);
-		 		for(ListPoint3Iterator it = lBoundaries.begin();it != lBoundaries.end();++it)
+		 		for(ListOfPoint3Iterator it = lBoundaries.begin();it != lBoundaries.end();++it)
 		 		{
 		 			glNormal3fv (this->mNormal.ToRealPtr());
 		 			glVertex3fv( it->ToRealPtr() );
@@ -735,7 +741,7 @@ template <class Real = float > class Surfel
 			glColor3f(0.0,0.0,0.0);
 			glEnable(GL_MULTISAMPLE) ;
 			glBegin(GL_LINES);
-	 			for(ListPoint3Iterator it = lBoundaries.begin();it != lBoundaries.end();++it)
+	 			for(ListOfPoint3Iterator it = lBoundaries.begin();it != lBoundaries.end();++it)
 	 			{
 	 				glVertex3fv( it->ToRealPtr() );
 	 				glVertex3fv( this->mCenter.ToRealPtr());

@@ -37,17 +37,17 @@ HEADERS += Math/Math.hpp \
     Math/EigenSystem.hpp \
     Scene/Camera.hpp \
     Scene/Trackball.hpp \
-    Octree/ocTreeIntersection.hpp \
-    Octree/ocTreeBox.hpp \
-    Octree/ocTreeIterator.hpp \
-    Octree/ocTreeNode.hpp \
-    Octree/ocTreeLeafNode.hpp \
-    Octree/ocTreeInternalNode.hpp \
-    Octree/ocTreeRefine.hpp \
-    Octree/ocTree.hpp \
-    Kd-Tree/Kd-TreeOfSurfels.hpp \
-    Kd-Tree/Kd-TreeOfSurfelsNode.hpp \
-    Kd-Tree/Kd-TreeOfSurfelsRefine.hpp \
+    Surfels/Octree/ocTreeIntersection.hpp \
+    Surfels/Octree/ocTreeBox.hpp \
+    Surfels/Octree/ocTreeIterator.hpp \
+    Surfels/Octree/ocTreeNode.hpp \
+    Surfels/Octree/ocTreeLeafNode.hpp \
+    Surfels/Octree/ocTreeInternalNode.hpp \
+    Surfels/Octree/ocTreeRefine.hpp \
+    Surfels/Octree/ocTree.hpp \
+    Surfels/Kd-Tree/Kd-Tree.hpp \
+    Surfels/Kd-Tree/Kd-TreeNode.hpp \
+    Surfels/Kd-Tree/Kd-TreeRefine.hpp \
     Surfels/Surfel.hpp \
     Surfels/IOSurfels.hpp \
     Surfels/MergeEllipses.hpp \
