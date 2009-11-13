@@ -330,7 +330,7 @@ void GLWidget::calLimits()
 
      Celer::Surfel<float>* seed = new Celer::Surfel<float>(lSurfels[0]);
 
-     cluster = Cluster<float,Celer::Surfel<float> >(lSurfels,mBox);
+     cluster = Cluster<Celer::Surfel<float> >(lSurfels,mBox);
      std::cout << "cluster " << std::endl;
      cluster.Build<JoinByNormal<float,Celer::Surfel<float> >,MergeBySize<float,Celer::Surfel<float> > >(1000,200,seed);
      std::cout << "cluster end" << std::endl;
@@ -388,7 +388,7 @@ void GLWidget::paintGL()
     {
     	if (mClusterLog.maskShow.Test(ClusterLog::Model))
     	{
-    		cluster.KDTree.drawTree(cont);
+    		//cluster.KDTree.drawTree(cont);
     	}
 
     	if (mClusterLog.maskShow.Test(ClusterLog::Cluster))
