@@ -9,9 +9,6 @@
 #include "Scene/Trackball.hpp"
 #include "Math/Quaternion.hpp"
 
-#include <vcg/Eigen/Core>
-#include <vcg/Eigen/Geometry>
-
 /*!
 *@class Camera
 *@brief Class that represent a dense 4x4 Matrix and Homogeneous Coordinate ..

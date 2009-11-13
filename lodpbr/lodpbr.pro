@@ -3,24 +3,27 @@
 # #####################################################################
 
 
-
 TARGET = lodpbr
-DEPENDPATH += . \
-    Qt/UI 	\
+
+VCGLIB  = ../vcglib
+
+DEPENDPATH *= Qt/UI 	\
     .tmp/.ui 	\
     QtGui 	\
     QtGui/GLWidget\
-    ThirdParty/vcglib	\
-    ThirdParty/vcglib/vcg \
-    ThirdParty/vcglib/wrap	
+    $$VCGLIB \
+    $$VCGLIB/vcg \
+    $$VCGLIB/wrap	
      
 
-INCLUDEPATH += . \
-    Qt/UI	\
+INCLUDEPATH *= Qt/UI	\
     .tmp/.ui 	\
     QtGui 	\
     QtGui/GLWidget \
-    ThirdParty/vcglib	
+    $$VCGLIB \
+    $$VCGLIB/vcg \
+    $$VCGLIB/wrap	
+     
 
 # Input
 HEADERS += Math/Math.hpp \
@@ -37,17 +40,9 @@ HEADERS += Math/Math.hpp \
     Math/EigenSystem.hpp \
     Scene/Camera.hpp \
     Scene/Trackball.hpp \
-    Surfels/Octree/ocTreeIntersection.hpp \
-    Surfels/Octree/ocTreeBox.hpp \
-    Surfels/Octree/ocTreeIterator.hpp \
-    Surfels/Octree/ocTreeNode.hpp \
-    Surfels/Octree/ocTreeLeafNode.hpp \
-    Surfels/Octree/ocTreeInternalNode.hpp \
-    Surfels/Octree/ocTreeRefine.hpp \
-    Surfels/Octree/ocTree.hpp \
-    Surfels/Kd-Tree/Kd-Tree.hpp \
-    Surfels/Kd-Tree/Kd-TreeNode.hpp \
-    Surfels/Kd-Tree/Kd-TreeRefine.hpp \
+    Surfels/Kd-Tree/Kd-TreeOfSurfels.hpp \
+    Surfels/Kd-Tree/Kd-TreeNodeOfSurfels.hpp \
+    Surfels/Kd-Tree/Kd-TreeOfSurfelsRefine.hpp \
     Surfels/Surfel.hpp \
     Surfels/IOSurfels.hpp \
     Surfels/MergeEllipses.hpp \
@@ -60,9 +55,9 @@ HEADERS += Math/Math.hpp \
     Qt/GLWidget/Log/ClusterLog.hpp \
     Qt/GLWidget/Log/LSplatLog.hpp \
     Qt/myMainWindow.hpp \
-    ThirdParty/vcglib/wrap/io_trimesh/import_ply.h \
-    ThirdParty/vcglib/wrap/io_trimesh/export_ply.h \
-    ThirdParty/vcglib/wrap/ply/plylib.h
+    $$VCGLIB/wrap/io_trimesh/import_ply.h \
+    $$VCGLIB/wrap/io_trimesh/export_ply.h \
+    $$VCGLIB/wrap/ply/plylib.h
 
 SOURCES += main.cpp \
     Math/Math.cpp \
@@ -84,7 +79,7 @@ SOURCES += main.cpp \
     Qt/GLWidget/Log/LSplatLog.cpp \
     Qt/myMainWindow.cpp \
     Qt/myMainWindowInit.cpp \
-    ThirdParty/vcglib/wrap/ply/plylib.cpp
+    $$VCGLIB/wrap/ply/plylib.cpp
 
 QT += opengl
 FORMS += Qt/UI/lodpbr.ui

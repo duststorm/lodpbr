@@ -3,7 +3,7 @@
 
 
 
-#include "Kd-TreeRefine.hpp"
+#include "Kd-TreeOfSurfelsRefine.hpp"
 #include <cmath>
 ///
 /// A KdTree of Pointers to Objects
@@ -66,16 +66,25 @@ public:
   }
 
   /// destructor
-  virtual ~KdTreeNode ()
+  virtual ~KdTreeNode (bool delElements)
   {
 
     if (son[0] != 0)
     {
-    	delete son[0];
+       son[0]->~KdTreeNode(delElementes);
     }
     if (son[1] != 0)
     {
-    	delete son[1];
+       son[1]->~KdTreeNode(delElementes);
+    }
+    if (delElements == true)
+    {
+    	for(typename Surfel::VectorOfPointerSurfelIterator it = mListPtr.begin();
+														   it != mListPtr.end(); ++it)
+    	{
+    		delete (*it);
+    	}
+    	mListPtr.clear();
     }
 
   }

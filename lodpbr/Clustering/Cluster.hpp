@@ -23,7 +23,7 @@
 #include <algorithm>
 #include <iostream>
 
-#include "Surfels/Kd-Tree/Kd-Tree.hpp"
+#include "Surfels/Kd-Tree/Kd-TreeOfSurfels.hpp"
 
 #include "Surfels/MergeEllipses.hpp"
 
@@ -73,6 +73,18 @@ public:
 
 	{
 		init();
+		std::cout << "KD-Tree Start" << std::endl;
+		for (VectorOfSurfelIterator surf =  pSurfels.begin();surf != pSurfels.end(); ++ surf )
+		{
+			KDTree.Insert ( new Surfel(*surf) );
+		}
+		std::cout << "KD-Tree End" << std::endl;
+		KDTree.~KdTree(false);
+
+	}
+
+	void init()
+	{
 
 		if (KDTree.root ==  0)
 		{
@@ -80,22 +92,32 @@ public:
 		}
 		else
 		{
-			delete KDTree.root;
+			KDTree.~KdTree(true);
 			KDTree = KdTree<Surfel>(pWorld);
 		}
 
-		std::cout << "KD-Tree Start" << std::endl;
-		for (VectorOfSurfelIterator surf =  pSurfels.begin();surf != pSurfels.end(); ++ surf )
+		if (Clusters.size() > 0)
 		{
-			KDTree.Insert ( new Surfel(*surf) );
+			for (ClusterContainerIterator itCluster = Clusters.begin(); itCluster != Cluster.end();++itCluster)
+			{
+				for(ListOfPointerSurfelIterator itSurfel = itCluster->begin();itSurfel != itCluster.end();++irSurfel)
+				{
+					delete (*itSurfel);
+				}
+				itCluster->clear();
+			}
+			Clusters.clear();
 		}
-		std::cout << "KD-Tree End" << std::endl;
 
+		if (Surfels.size() > 0)
+		{
+			for (VectorOfPointerSurfelIterator itSurfel = Surfels.begin(); itSurfel != Surfels.end();++itSurfel)
+			{
+				delete (*itSurfel);
+			}
+			Surfels.clear();
+		}
 
-	}
-
-	void init()
-	{
 		colors.push_back(Celer::Vector4<float>(1.0,0.0,0.0,0.5));
 		colors.push_back(Celer::Vector4<float>(1.0,1.0,0.0,0.5));
 		colors.push_back(Celer::Vector4<float>(0.0,1.0,0.0,0.5));
