@@ -18,14 +18,14 @@
 #include <GL/gl.h>
 #include <GL/glu.h>
 
-#include <deque>
 #include <list>
+#include <vector>
 #include <algorithm>
 #include <iostream>
 
 #include "Surfels/Kd-Tree/Kd-Tree.hpp"
-
 #include "Surfels/MergeEllipses.hpp"
+#include "Surfels/Surfel.hpp"
 
 #include "Math/BoundingBox3.hpp"
 #include "Math/Vector4.hpp"
@@ -33,19 +33,29 @@
 #include "ClusterCriteria.hpp"
 
 
-template <class Real,class ItemPtr>
+template <class Real>
 class Cluster
 {
 
-	typedef  std::vector<ItemPtr>						ItemPtrVector;
-	typedef typename  ItemPtrVector::iterator			ItemPtrVectorIterator;
-	typedef typename  ItemPtrVector::reverse_iterator	ItemPtrVectorReverseIterator;
-
 public:
+
+	typedef typename Celer::Surfel<Real>				Surfel;
+	typedef typename Celer::Surfel<Real>* 				SurfelPtr;
+
+	typedef  std::vector<Surfel>						SurfelVector;
+	typedef  typename std::vector<Surfel>::iterator	    SurfelVectorIterator;
+	typedef  std::vector<SurfelPtr>						SurfelPtrVector;
+	typedef typename  SurfelPtrVector::iterator			SurfelPtrVectorIterator;
+	typedef typename  SurfelPtrVector::reverse_iterator	SurfelPtrVectorReverseIterator;
+
+	typedef  std::list<SurfelPtr>						SurfelPtrList;
+	typedef typename  SurfelPtrList::iterator			SurfelPtrListIterator;
+	typedef typename  SurfelPtrList::reverse_iterator	SurfelPtrListReverseIterator;
+
 	/// public attributes
-	std::vector< std::list<ItemPtr> >   Clusters;
-	std::vector<ItemPtr>			    Surfels;
-	KdTree<Real,ItemPtr>				KDTree;
+	std::vector< SurfelPtrList >   Clusters;
+	SurfelPtrVector					    Surfels;
+	KdTree<Real,Celer::Surfel<Real>* >				KDTree;
 
 
 
@@ -56,28 +66,28 @@ public:
 	/// Constructor
 	/// Initialize the KD-Tree member with list of surfels
 	/// @param Refernce to a list of surfels
-	Cluster(std::vector< Celer::Surfel<Real> >& pSurfels,Celer::BoundingBox3<Real> pWorld)
+	Cluster(SurfelVector& pSurfels,Celer::BoundingBox3<Real> pWorld)
 
 	{
 		init();
 
 		if (KDTree.root ==  0)
 		{
-			KDTree = KdTree<Real,ItemPtr >(pWorld);
+			KDTree = KdTree<Real,SurfelPtr >(pWorld);
 		}
 		else
 		{
 			delete KDTree.root;
-			KDTree = KdTree<Real,ItemPtr >(pWorld);
+			KDTree = KdTree<Real,SurfelPtr >(pWorld);
 		}
 
 		std::cout << "KD-Tree Start" << std::endl;
-		for (typename std::vector<Celer::Surfel<Real> >::iterator surf =  pSurfels.begin();surf != pSurfels.end(); ++ surf )
+		for (SurfelVectorIterator it =  pSurfels.begin();it != pSurfels.end(); ++ it )
 		{
-			KDTree.Insert ( new Celer::Surfel<Real>(*surf) );
+			SurfelPtr s = (&(*it));
+			KDTree.Insert (s);
 		}
 		std::cout << "KD-Tree End" << std::endl;
-
 
 	}
 
@@ -98,10 +108,10 @@ public:
 		colors.push_back(Celer::Vector4<float>(1.0,1.0,0.5,0.5));
 	}
 
-	ItemPtrVector GetNotMarked( ItemPtrVector& plNeighbors )
+	SurfelPtrVector GetNotMarked( SurfelPtrVector& plNeighbors )
 	{
-		ItemPtrVector lNeighbors;
-		for(ItemPtrVectorIterator it = plNeighbors.begin(); it !=  plNeighbors.end();++it)
+		SurfelPtrVector lNeighbors;
+		for(SurfelPtrVectorIterator it = plNeighbors.begin(); it !=  plNeighbors.end();++it)
 		{
 
 			if (  ((*it)->ExpansionMarked() == 0) )
@@ -120,8 +130,7 @@ public:
 	/// @param pCont pKNeighborsSize. The size of the Neighbor.
 	/// @param pSeed pKNeighborsSize. Initial Seed.
 	template <class Similarity ,class Aggregation>
-
-    void Build1(int pCont,int pKNeighborsSize ,const ItemPtr& pSeed)
+    void Build1(int pCont,int pKNeighborsSize ,const SurfelPtr& pSeed)
     {
 
             /// How many comparisons the Kd-Tree do to finding an element
@@ -129,19 +138,20 @@ public:
         /// Number of clustering. Only for debuging
         int                                  cont                = 0;
         ///
-        ItemPtr                              lCurrentSeed        = pSeed;
+        SurfelPtr                              lCurrentSeed        = pSeed;
         ///
-        ItemPtr                              lSurfel                 = pSeed;
+        SurfelPtr                              lSurfel                 = pSeed;
 
         /// list of surfels for expansion
-        std::deque<ItemPtr> lOpen;
+        SurfelPtrList lOpen;
         /// list of seeds
-        std::deque<ItemPtr> lSeeds;
+        SurfelPtrList lSeeds;
         /// Surfel that belong to the cluster
         /// @detail
-        std::list<ItemPtr>  lClose;
-        ItemPtrVector                 lExpasion;
-        ItemPtrVector                 lNeighbors;
+        SurfelPtrList  					lClose;
+
+        SurfelPtrVector                 lExpasion;
+        SurfelPtrVector                 lNeighbors;
         /// lista dos k vizinhos do surfel semente lSeed, em ordem decrescente de distância
 
         lSeeds.push_front(pSeed);
@@ -175,7 +185,7 @@ public:
 
 //                              std::cout << "SEED " <<  lCurrentSeed->ID() << std::endl;
 //                              std::cout << "Surfel " << contSurfel << std::endl;
-                            for(typename std::vector<ItemPtr>::reverse_iterator it = lNeighbors.rbegin(); it !=  lNeighbors.rend();++it)
+                            for(SurfelPtrListReverseIterator it = lNeighbors.rbegin(); it !=  lNeighbors.rend();++it)
                             {
 
                                     if ( Similarity::Join(lCurrentSeed,lSurfel,(*it)) )
@@ -200,14 +210,14 @@ public:
                     }
 
 
-                    for(typename std::list<ItemPtr>::iterator it = lClose.begin(); it !=  lClose.end();++it)
+                    for(SurfelPtrListIterator it = lClose.begin(); it !=  lClose.end();++it)
                     {
                             (*it)->SetExpansionMarked(0);
                     }
                     //std::cout << "lOpen " << lOpen.size() << "--"  <<  "lClose " << lClose.size() << std::endl;
                     Clusters.push_back(lClose);
                     MergeEllipses<Real> me = MergeEllipses<Real>(lClose);
-                    Surfels.push_back(me.NewPtrSurfel());
+                    Surfels.push_back(me.NewSurfelPtr());
                     lClose.clear();
                     ++cont;
             }
@@ -223,7 +233,7 @@ public:
 	/// @param pCont pKNeighborsSize. The size of the Neighbor.
 	/// @param pSeed pKNeighborsSize. Initial Seed.
 	template <class Similarity ,class Aggregation>
-	void Build(int pCont,int pKNeighborsSize ,const ItemPtr& pSeed)
+	void Build(int pCont,int pKNeighborsSize ,const SurfelPtr& pSeed)
 	{
 
 		/// How many comparisons the Kd-Tree do to finding an element
@@ -231,10 +241,10 @@ public:
 		///
 		/// Surfel that belong to the cluster
 		/// @detail
-		std::list<ItemPtr>  lClose;
-		std::list<ItemPtr>  lOpen;
-		ItemPtrVector                 lNeighbors;
-		ItemPtr                  lSurfel                 = 0;
+		SurfelPtrList  lClose;
+		SurfelPtrList  lOpen;
+		SurfelPtrVector                 lNeighbors;
+		SurfelPtr                  lSurfel                 = 0;
 
 		int cont = 0;
 
@@ -295,7 +305,7 @@ public:
 			lClose.clear();
 			lNeighbors.clear();
 		}
-
+		delete KDTree.root;
 	}
 
 
@@ -331,7 +341,7 @@ public:
 	    		glPointSize(5.0);
 	    	 	glColor3fv(Colors(false));
 	    		glBegin(GL_POINTS);
-	    		for ( typename std::list<ItemPtr>::iterator j = Clusters[pNumber].begin() ; j != Clusters[pNumber].end(); ++j )
+	    		for ( SurfelPtrListIterator j = Clusters[pNumber].begin() ; j != Clusters[pNumber].end(); ++j )
 	    		{
 	    			glVertex3fv( (*j)->Center() );
 	    		}
@@ -370,7 +380,7 @@ public:
 	    		glPointSize(5.0);
 	    	 	glColor3fv(Colors(false));
 	    		glBegin(GL_POINTS);
-	    		for ( typename std::list<ItemPtr>::iterator j = Clusters[i].begin() ; j != Clusters[i].end(); ++j )
+	    		for ( SurfelPtrListIterator j = Clusters[i].begin() ; j != Clusters[i].end(); ++j )
 	    		{
 	    			glVertex3fv( (*j)->Center() );
 
@@ -423,9 +433,9 @@ private:
 		return (*itColor);
 	}
 
-	std::deque<Celer::Vector4<float> >::iterator itColor;
+	std::vector<Celer::Vector4<float> >::iterator itColor;
 
-    std::deque<Celer::Vector4<float> > colors;
+    std::vector<Celer::Vector4<float> > colors;
 };
 
 

@@ -56,7 +56,7 @@ public:
     ClusterLog mClusterLog;
     LSplatLog  mLSplatLog;
 
-    Cluster<float,Celer::Surfel<float>*> 				cluster;
+    Cluster<float> 				cluster;
 
     KdTree<float,Celer::Surfel<float>* > 				kdTree;
 
