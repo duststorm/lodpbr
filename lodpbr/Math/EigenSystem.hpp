@@ -26,6 +26,9 @@ namespace Celer
 	public:
 
 		typedef Celer::Point3<Real>  		Point3;
+		typedef std::list<Point3>					ListPoint3;
+		typedef typename ListPoint3::iterator   	ListPoint3Iterator;
+
 		typedef Celer::Vector3<Real> 		Vector3;
 		typedef Celer::Matrix3x3<Real> 	Matrix3x3;
 
@@ -47,7 +50,7 @@ namespace Celer
 			EigenDecomposition();
 		}
 		/*!  */
-		EigenSystem(std::list<Point3* >& pPoint3List, const Point3& pMean)
+		EigenSystem(ListPoint3& pPoint3List, const Point3& pMean)
 		{
 			CovarianceMatrix (pPoint3List,pMean);
 			EigenDecomposition();
@@ -71,7 +74,7 @@ namespace Celer
 			return (this->mNormal);
 		}
 
-		void CovarianceMatrix (std::list<Point3* >& pPoint3List, const Point3& pMean)
+		void CovarianceMatrix (ListPoint3& pPoint3List, const Point3& pMean)
 		{
 
 			Real correlationXY = static_cast<Real> (0);
@@ -88,17 +91,16 @@ namespace Celer
 			Real N  = static_cast<Real> (1.0 / pPoint3List.size());
 
 
-			typedef typename std::list<Point3* >::iterator ListIterator;
 
-			for (ListIterator it = pPoint3List.begin(); it != pPoint3List.end() ; ++it)
+			for (ListPoint3Iterator it = pPoint3List.begin(); it != pPoint3List.end() ; ++it)
 			{
-				correlationXX += ( ((*it)->x - pMean.x) * ((*it)->x - pMean.x) );
-				correlationYY += ( ((*it)->y - pMean.y) * ((*it)->y - pMean.y) );
-				correlationZZ += ( ((*it)->z - pMean.z) * ((*it)->z - pMean.z) );
+				correlationXX += ( (it->x - pMean.x) * (it->x - pMean.x) );
+				correlationYY += ( (it->y - pMean.y) * (it->y - pMean.y) );
+				correlationZZ += ( (it->z - pMean.z) * (it->z - pMean.z) );
 
-				correlationXY += ( ((*it)->x - pMean.x) * ((*it)->y - pMean.y) );
-				correlationXZ += ( ((*it)->x - pMean.x) * ((*it)->z - pMean.z) );
-				correlationYZ += ( ((*it)->y - pMean.y) * ((*it)->z - pMean.z) );
+				correlationXY += ( (it->x - pMean.x) * (it->y - pMean.y) );
+				correlationXZ += ( (it->x - pMean.x) * (it->z - pMean.z) );
+				correlationYZ += ( (it->y - pMean.y) * (it->z - pMean.z) );
 
 			}
 
