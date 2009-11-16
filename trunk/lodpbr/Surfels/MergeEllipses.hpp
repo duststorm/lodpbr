@@ -23,6 +23,7 @@ public:
 
 	typedef Celer::Point3<Real>*					PtrPoint3;
 	typedef std::list<Point3>					ListPoint3;
+	typedef typename ListPoint3::iterator   	ListPoint3Iterator;
 	typedef std::list<Point3* >       			ListPtrPoint3;
 	typedef typename ListPtrPoint3::iterator   	ListPtrPoint3Iterator;
 
@@ -109,19 +110,18 @@ public:
 	{
 
 
-		ListPtrPoint3 		lPoints;
-		ListPtrPoint3 		lPtrBoundariesPoints;
-		PtrPoint3 			lPoint;
-
+		ListPoint3 	lPoints;
+		ListPoint3 	lPtrBoundariesPoints;
+		Point3 		lPoint;
 
 		for (PtrSurfelIterator itEllipse = mEllipses.begin(); itEllipse != mEllipses.end(); ++itEllipse)
 		{
-			lPtrBoundariesPoints = (*itEllipse)->PtrBoundariesSamples(8);
+			lPtrBoundariesPoints = (*itEllipse)->BoundariesSamples(8);
 
-			for(ListPtrPoint3Iterator it = lPtrBoundariesPoints.begin();it != lPtrBoundariesPoints.end();++it)
+			for(ListPoint3Iterator it = lPtrBoundariesPoints.begin();it != lPtrBoundariesPoints.end();++it)
 			{
 
-				lPoint = ProjectPointToPlane(mNewNormal,mNewCenter,(*(*it)) );
+				lPoint = ProjectPointToPlane(mNewNormal,mNewCenter,(*it) );
 				lPoints.push_back ( lPoint );
 
 			}
@@ -152,9 +152,9 @@ public:
 		Point3 lCenter = m*mNewCenter;
 		Point3 lPoint;
 
-		for(ListPtrPoint3Iterator it = mProjectedPoint.begin();it != mProjectedPoint.end();++it)
+		for(ListPoint3Iterator it = mProjectedPoint.begin();it != mProjectedPoint.end();++it)
 		{
-			lPoint = m*(*(*it));
+			lPoint = m*(*it);
 
 			lFactor = ( ( ( lPoint.x - lCenter.x ) * (lPoint.x - lCenter.x ) ) / (mNewMinorAxis.first) +
 						( ( lPoint.y - lCenter.y ) * (lPoint.y - lCenter.y ) ) / (mNewMajorAxis.first) );
@@ -191,10 +191,10 @@ public:
 
 	}
 
-	Point3 * ProjectPointToPlane(const Vector3& pNormal,const Point3& pCenter,const Point3& pPoint) const
+	Point3  ProjectPointToPlane(const Vector3& pNormal,const Point3& pCenter,const Point3& pPoint) const
 	{
 
-		return  (new Point3 (  pPoint - ( (  (pPoint - pCenter) * pNormal  ) * pNormal)  ));
+		return  ( Point3 (  pPoint - ( (  (pPoint - pCenter) * pNormal  ) * pNormal)  ));
 	}
 
 	 const Point3 Center () const
@@ -220,7 +220,7 @@ public:
 	virtual ~MergeEllipses(){};
 
 	// Pontos Projetados no plano to novo splat
-	std::list<Point3* > 		mProjectedPoint;
+	ListPoint3		mProjectedPoint;
 
 private:
 

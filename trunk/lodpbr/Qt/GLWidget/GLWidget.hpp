@@ -5,6 +5,8 @@
 #include <QMdiSubWindow>
 #include <vector>
 
+#include "Surfels/Kd-Tree/Kd-Tree.hpp"
+
 #include "Surfels/Surfel.hpp"
 #include "Surfels/IOSurfels.hpp"
 #include "Surfels/MergeEllipses.hpp"
@@ -54,7 +56,9 @@ public:
     ClusterLog mClusterLog;
     LSplatLog  mLSplatLog;
 
-    Cluster<Celer::Surfel<float> > 				cluster;
+    Cluster<float,Celer::Surfel<float>*> 				cluster;
+
+    KdTree<float,Celer::Surfel<float>* > 				kdTree;
 
     std::vector<Celer::Surfel<float> > 					lSurfels;
 
@@ -85,6 +89,17 @@ protected:
 private:
 
 	void init();
+
+//    void drawKdTree(int& cont);
+//    void drawKdNodeRecursively(const KdTree3DNode* n,int& cont);
+//    bool drawKdNode(const KdTree3DNode* n,int& cont);
+
+
+    template < class T>
+    Celer::BoundingBox3<T> limits();
+
+    template < class T>
+    void drawBox(Celer::BoundingBox3<T> BBox);
 
     QPoint 				lastPos;
 
