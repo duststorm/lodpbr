@@ -37,14 +37,6 @@ HEADERS += Math/Math.hpp \
     Math/EigenSystem.hpp \
     Scene/Camera.hpp \
     Scene/Trackball.hpp \
-    Octree/ocTreeIntersection.hpp \
-    Octree/ocTreeBox.hpp \
-    Octree/ocTreeIterator.hpp \
-    Octree/ocTreeNode.hpp \
-    Octree/ocTreeLeafNode.hpp \
-    Octree/ocTreeInternalNode.hpp \
-    Octree/ocTreeRefine.hpp \
-    Octree/ocTree.hpp \
     Surfels/Kd-Tree/Kd-Tree.hpp \
     Surfels/Kd-Tree/Kd-TreeNode.hpp \
     Surfels/Kd-Tree/Kd-TreeRefine.hpp \

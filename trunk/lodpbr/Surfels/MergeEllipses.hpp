@@ -17,22 +17,18 @@ template <class Real> class MergeEllipses
 {
 public:
 
-	typedef Celer::Point3<Real>    				Point3;
-	typedef Celer::Vector3<Real>   				Vector3;
-	typedef Celer::Matrix3x3<Real> 				Matrix3x3;
+	typedef Celer::Point3<Real>    					Point3;
+	typedef Celer::Vector3<Real>   					Vector3;
+	typedef Celer::Matrix3x3<Real> 					Matrix3x3;
 
-	typedef Celer::Point3<Real>*					PtrPoint3;
-	typedef std::list<Point3>					ListPoint3;
-	typedef typename ListPoint3::iterator   	ListPoint3Iterator;
-	typedef std::list<Point3* >       			ListPtrPoint3;
-	typedef typename ListPtrPoint3::iterator   	ListPtrPoint3Iterator;
 
-	typedef Celer::Surfel<Real>					  Surfel;
-	typedef Surfel*								  PtrSurfel;
-	typedef std::list<Surfel> 					  SurfelContainer;
-	typedef std::list<PtrSurfel>				  PtrSurfelContainer;
-	typedef typename SurfelContainer::iterator 	  SurfelIterator;
-	typedef typename PtrSurfelContainer::iterator PtrSurfelIterator;
+	typedef std::list<Point3>						ListPoint3;
+	typedef typename ListPoint3::iterator   		ListPoint3Iterator;
+
+	typedef Celer::Surfel<Real>   				  	Surfel;
+	typedef Celer::Surfel<Real>*   				  	SurfelPtr;
+	typedef std::list<SurfelPtr>				  	SurfelPtrList;
+	typedef typename SurfelPtrList::iterator 		SurfelPtrListIterator;
 
 	MergeEllipses( )
 	{}
@@ -54,14 +50,14 @@ public:
 		mNewMajorValue 	= mMerge.mNewMajorValue;
 	}
 
-	MergeEllipses( const PtrSurfelContainer& pEllipses , const Point3& pNewCenter , const Vector3& pNewNormal)
+	MergeEllipses( const SurfelPtrList& pEllipses , const Point3& pNewCenter , const Vector3& pNewNormal)
 	: mEllipses(pEllipses)
 	{
 		mNewCenter = pNewCenter;
 		mNewNormal = pNewNormal;
 	};
 
-	MergeEllipses( const PtrSurfelContainer& pEllipses )
+	MergeEllipses( const SurfelPtrList& pEllipses )
 	: mEllipses(pEllipses)
 	{
 
@@ -76,7 +72,7 @@ public:
 		return ( Surfel(mNewCenter,mNewNormal,mNewMinorAxis,mNewMajorAxis,1) );
 	}
 
-	Surfel * NewPtrSurfel()
+	SurfelPtr  NewPtrSurfel()
 	{
 
 		return ( new Surfel(mNewCenter,mNewNormal,mNewMinorAxis,mNewMajorAxis,1) );
@@ -90,7 +86,7 @@ public:
 		Real    lSomaAreas = 0.0;
 
 
-		for (PtrSurfelIterator itEllipse = mEllipses.begin(); itEllipse != mEllipses.end(); ++itEllipse)
+		for (SurfelPtrListIterator itEllipse = mEllipses.begin(); itEllipse != mEllipses.end(); ++itEllipse)
 		{
 			lSomaCenterAreas += (*itEllipse)->Area() * (*itEllipse)->Center();
 			lSomaNormalAreas += (*itEllipse)->Area() * (*itEllipse)->Normal();
@@ -111,14 +107,14 @@ public:
 
 
 		ListPoint3 	lPoints;
-		ListPoint3 	lPtrBoundariesPoints;
+		ListPoint3 	lBoundariesPoints;
 		Point3 		lPoint;
 
-		for (PtrSurfelIterator itEllipse = mEllipses.begin(); itEllipse != mEllipses.end(); ++itEllipse)
+		for (SurfelPtrListIterator itEllipse = mEllipses.begin(); itEllipse != mEllipses.end(); ++itEllipse)
 		{
-			lPtrBoundariesPoints = (*itEllipse)->BoundariesSamples(8);
+			lBoundariesPoints = (*itEllipse)->BoundariesSamples(8);
 
-			for(ListPoint3Iterator it = lPtrBoundariesPoints.begin();it != lPtrBoundariesPoints.end();++it)
+			for(ListPoint3Iterator it = lBoundariesPoints.begin();it != lBoundariesPoints.end();++it)
 			{
 
 				lPoint = ProjectPointToPlane(mNewNormal,mNewCenter,(*it) );
@@ -126,7 +122,7 @@ public:
 
 			}
 
-			lPtrBoundariesPoints.clear();
+			lBoundariesPoints.clear();
 		}
 
 		mProjectedPoint.clear();
@@ -175,14 +171,14 @@ public:
 
 	}
 
-	Point3 Mean (const std::list<Point3* >& pPoint3List)
+	Point3 Mean (const ListPoint3& pPoint3List)
 	{
 
-		Real lMean;
+		Point3 lMean;
 
-		for(ListPtrPoint3Iterator it = pPoint3List.begin();it != pPoint3List.end();++it)
+		for(ListPoint3Iterator it = pPoint3List.begin();it != pPoint3List.end();++it)
 		{
-			lMean += (*(*it));
+			lMean += (*it);
 		}
 
 		lMean /= pPoint3List.size();
@@ -225,7 +221,7 @@ public:
 private:
 
 	// Lista de Ellipses a sofrem "merge"
-	PtrSurfelContainer 			mEllipses;
+	SurfelPtrList				mEllipses;
 
 	Point3	 					mNewCenter;
 
