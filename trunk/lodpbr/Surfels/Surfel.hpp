@@ -41,18 +41,17 @@ class Surfel
 {
  public:
 
-	typedef	Real		   					Type;
-	typedef Surfel<Real>*					Pointer;
-	typedef Surfel<Real>					This;
-	typedef  Celer::Point3<Real>  			Point3;
-	typedef  Celer::Vector3<Real>			Vector3;
-	typedef  Celer::Color 		  			Color;
-	typedef  Celer::BoundingBox3<Real>		Box3;
+	typedef	Real		   						Type;
+	typedef Surfel<Real>*						Pointer;
+	typedef Surfel<Real>						This;
+	typedef  Celer::Point3<Real>  				Point3;
+	typedef  Celer::Vector3<Real>				Vector3;
+	typedef  Celer::Color 		  				Color;
 
 	typedef typename std::vector<This>				Vector;
 	typedef typename Vector::iterator				VectorIterator;
 
-	typedef std::vector<Pointer>						VectorPointers;
+	typedef std::vector<Pointer>					VectorPointers;
 	typedef typename VectorPointers::iterator		VectorPointersIterator;
 
 	typedef std::list<This>							List;

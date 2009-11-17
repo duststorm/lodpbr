@@ -47,6 +47,7 @@ HEADERS += Math/Math.hpp \
     Clustering/ClusterCriteria.hpp \
     Qt/Tools/FPSCounter.h\	
     Qt/Tools/BitMask.hpp\
+    Qt/Tools/Counted_Ptr.hpp\
     Qt/GLWidget/GLWidget.hpp \
     Qt/GLWidget/WidgetProxy.hpp \
     Qt/GLWidget/Log/ClusterLog.hpp \
@@ -83,7 +84,7 @@ FORMS += Qt/UI/lodpbr.ui
 
 # LIBRARIES
 unix{
-	LIBS = 
+	LIBS = -lboost_filesystem
 }
 
 # Output

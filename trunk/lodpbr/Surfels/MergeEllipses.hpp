@@ -26,9 +26,8 @@ public:
 	typedef typename ListPoint3::iterator   		ListPoint3Iterator;
 
 	typedef Celer::Surfel<Real>   				  	Surfel;
-	typedef Celer::Surfel<Real>*   				  	SurfelPtr;
-	typedef std::list<SurfelPtr>				  	SurfelPtrList;
-	typedef typename SurfelPtrList::iterator 		SurfelPtrListIterator;
+	typedef std::list<Surfel>				  		SurfelList;
+	typedef typename SurfelList::iterator 			SurfelListIterator;
 
 	MergeEllipses( )
 	{}
@@ -50,14 +49,14 @@ public:
 		mNewMajorValue 	= mMerge.mNewMajorValue;
 	}
 
-	MergeEllipses( const SurfelPtrList& pEllipses , const Point3& pNewCenter , const Vector3& pNewNormal)
+	MergeEllipses( const SurfelList& pEllipses , const Point3& pNewCenter , const Vector3& pNewNormal)
 	: mEllipses(pEllipses)
 	{
 		mNewCenter = pNewCenter;
 		mNewNormal = pNewNormal;
 	};
 
-	MergeEllipses( const SurfelPtrList& pEllipses )
+	MergeEllipses( const SurfelList& pEllipses )
 	: mEllipses(pEllipses)
 	{
 
@@ -72,7 +71,7 @@ public:
 		return ( Surfel(mNewCenter,mNewNormal,mNewMinorAxis,mNewMajorAxis,1) );
 	}
 
-	SurfelPtr  NewPtrSurfel()
+	Surfel*  NewPtrSurfel()
 	{
 
 		return ( new Surfel(mNewCenter,mNewNormal,mNewMinorAxis,mNewMajorAxis,1) );
@@ -86,11 +85,11 @@ public:
 		Real    lSomaAreas = 0.0;
 
 
-		for (SurfelPtrListIterator itEllipse = mEllipses.begin(); itEllipse != mEllipses.end(); ++itEllipse)
+		for (SurfelListIterator itEllipse = mEllipses.begin(); itEllipse != mEllipses.end(); ++itEllipse)
 		{
-			lSomaCenterAreas += (*itEllipse)->Area() * (*itEllipse)->Center();
-			lSomaNormalAreas += (*itEllipse)->Area() * (*itEllipse)->Normal();
-			lSomaAreas       += (*itEllipse)->Area();
+			lSomaCenterAreas += itEllipse->Area() * itEllipse->Center();
+			lSomaNormalAreas += itEllipse->Area() * itEllipse->Normal();
+			lSomaAreas       += itEllipse->Area();
 
 		}
 
@@ -110,9 +109,9 @@ public:
 		ListPoint3 	lBoundariesPoints;
 		Point3 		lPoint;
 
-		for (SurfelPtrListIterator itEllipse = mEllipses.begin(); itEllipse != mEllipses.end(); ++itEllipse)
+		for (SurfelListIterator itEllipse = mEllipses.begin(); itEllipse != mEllipses.end(); ++itEllipse)
 		{
-			lBoundariesPoints = (*itEllipse)->BoundariesSamples(8);
+			lBoundariesPoints = itEllipse->BoundariesSamples(8);
 
 			for(ListPoint3Iterator it = lBoundariesPoints.begin();it != lBoundariesPoints.end();++it)
 			{
@@ -221,7 +220,7 @@ public:
 private:
 
 	// Lista de Ellipses a sofrem "merge"
-	SurfelPtrList				mEllipses;
+	SurfelList					mEllipses;
 
 	Point3	 					mNewCenter;
 

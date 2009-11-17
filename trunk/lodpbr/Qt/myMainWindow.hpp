@@ -26,6 +26,8 @@ public slots:
  	void on_action_Full_Screen_triggered();
  	void on_action_Cluster_Debug_triggered();
 
+ 	void on_pushButtonBuild_clicked();
+
  	void on_spinBoxCluster_DrawClusterWithRangeBegin_valueChanged(int);
  	void on_sliderCluster_DrawClusterWithRangeBegin_valueChanged(int);
 

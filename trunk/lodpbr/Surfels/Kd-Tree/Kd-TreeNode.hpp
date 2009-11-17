@@ -72,6 +72,27 @@ public:
     mSplitCoordnate = 0;
   }
 
+
+  void Clear()
+  {
+
+	  if (son[0] != 0)
+	  {
+		  son[0]->Clear();
+	  }
+	  if (son[1] != 0)
+	  {
+		  son[1]->Clear();
+	  }
+
+//	  for(SurfelPtrVectorIterator it = mListPtr.being(); it != mListPtr.end();++it)
+//	  {
+//		  delete (*it);
+//		  (*it) = 0;
+//	  }
+	  mListPtr.clear();
+
+  }
   /// destructor
   virtual ~KdTreeNode ()
   {
@@ -574,6 +595,8 @@ public:
 	  	  for (unsigned int i = 0; i < mListPtr.size(); ++i)
 	  	  {
 	  		  mListPtr[i]->SetMarked(0);
+	  		  mListPtr[i]->SetExpansionMarked(0);
+	  		  mListPtr[i]->SetClusterID(0);
 	  	  }
 
 		  if (son[0] != 0)
