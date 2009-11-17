@@ -19,6 +19,13 @@ public:
     MyMainWindow (QMainWindow *parent = 0);
     void open(QString fileName=QString(),bool who = true,WidgetProxy * p = 0);
     void keyPressEvent(QKeyEvent *e);
+    static bool QCallBack(const int pos, const char * str);
+
+    static QStatusBar *&globalStatusBar()
+    {
+      static QStatusBar *_qsb=0;
+      return _qsb;
+    }
 
 public slots:
 
@@ -57,6 +64,7 @@ signals:
 //	void on_push_Button_Vertex_Around_clicked();
 
 private:
+	static QProgressBar *progress;
  	QWorkspace  		*workspace;
 	QString              fileModel_Off;
 	GLWidget*       	 glWidget;

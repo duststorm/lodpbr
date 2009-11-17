@@ -1,12 +1,23 @@
 #include "myMainWindow.hpp"
 #include <iostream>
 
+QProgressBar *MyMainWindow::progress;
+
 MyMainWindow::MyMainWindow (QMainWindow *parent): QMainWindow(parent)
 {
     setupUi (this);
 
+
     this->glWidget =  new GLWidget(QGLFormat(QGLFormat(QGL::SampleBuffers)),this);
 	this->setCentralWidget(glWidget);
+
+	globalStatusBar()=statusBar();
+
+	progress = new QProgressBar(this);
+	progress->setMaximum(100);
+	progress->setMinimum(0);
+
+	this->statusBar()->addPermanentWidget(progress,0);
 
 	 connect(comboBoxCluster_BuildSurfelSimilarity,SIGNAL(activated(const QString &)),
 	 	   	this->glWidget,SLOT(setClusterBuiltType(const QString &)));

@@ -64,6 +64,25 @@ using namespace std;
 //
 //
 
+//form Meshlab
+bool MyMainWindow::QCallBack(const int pos, const char * str)
+{
+	int static lastPos=-1;
+	if(pos==lastPos) return true;
+	lastPos=pos;
+
+	static QTime currTime;
+	if(currTime.elapsed()< 100) return true;
+	currTime.start();
+	MyMainWindow::globalStatusBar()->showMessage(str,5000);
+	progress->show();
+	progress->setEnabled(true);
+	progress->setValue(pos);
+	MyMainWindow::globalStatusBar()->update();
+	qApp->processEvents();
+	return true;
+}
+
 
 void MyMainWindow::open(QString pFilename,bool who,WidgetProxy * p ) {
 
@@ -81,9 +100,10 @@ void MyMainWindow::open(QString pFilename,bool who,WidgetProxy * p ) {
 
 
 
-    	  this->glWidget->LoadModel(filename.c_str());
+    	  this->glWidget->LoadModel(filename.c_str(),QCallBack);
 
     	  this->glWidget->calLimits();
+    	  progress->reset();
 
       }
 
