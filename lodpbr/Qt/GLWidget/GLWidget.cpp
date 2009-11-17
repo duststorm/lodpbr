@@ -312,10 +312,6 @@ void GLWidget::DrawGroud()
 //
 //}
 
-void GLWidget::LoadModel(const char * filename )
-{
-	Celer::IOSurfels<float>::LoadMesh(filename,lSurfels,mBox);
-}
 
 template <class T>
 void GLWidget::drawBox(Celer::BoundingBox3<T> BBox){
@@ -417,43 +413,71 @@ void GLWidget::resizeGL(int width, int height)
 
 }
 
+
+void GLWidget::LoadModel(const char * filename )
+{
+
+	mClusterLog = ClusterLog();
+	mLSplatLog = LSplatLog();
+	lSurfels.clear();
+	mBox = Celer::BoundingBox3<float>();
+	Celer::IOSurfels<float>::LoadMesh(filename,lSurfels,mBox);
+	std::cout << lSurfels.capacity();
+}
+
 void GLWidget::calLimits()
 {
 
-     Celer::Surfel<float>* seed = new Celer::Surfel<float>(lSurfels[0]);
-
      cluster = Cluster<float>(lSurfels,mBox);
-     std::cout << "cluster " << std::endl;
-     cluster.Build<JoinByNormal<float,Celer::Surfel<float>* >,MergeBySize<float,Celer::Surfel<float>* > >(1000,200,seed);
-     std::cout << "cluster end" << std::endl;
 
+//
+//
+//     for( std::list<Celer::Surfel<float>*>::iterator it = cluster.Clusters[0].begin(); it !=  cluster.Clusters[0].end();++it)
+//     {
+//         for( std::list<Celer::Surfel<float>*>::iterator i = cluster.Clusters[500].begin(); i !=  cluster.Clusters[500].end();++i)
+//         {
+//        	 if((*i)->Center() == (*it)->Center())
+//        	 {
+//        		std::cout << "=D " << (*i)->Center() << std::endl;
+//        	 }
+//
+//             for( std::list<Celer::Surfel<float>*>::iterator j = cluster.Clusters[800].begin(); j !=  cluster.Clusters[800].end();++j)
+//             {
+//            	 if(  ((*j)->Center() == (*it)->Center())  && (*j)->Center() == (*i)->Center() )
+//            	 {
+//            		std::cout << "=D ele ?" << (*i)->Center() <<   distance(cluster.Clusters[500].begin(),i)  << std::endl;
+//            		std::cout << "=D ele ?" << (*it)->Center() << distance(cluster.Clusters[0].begin(),it)  << std::endl;
+//            		std::cout << "=D ele ?" << (*j)->Center() << distance(cluster.Clusters[800].begin(),j)  << std::endl;
+//            	 }
+//             }
+//
+//
+//         }
+//
+//
+//
+//     }
 
-     for( std::list<Celer::Surfel<float>*>::iterator it = cluster.Clusters[0].begin(); it !=  cluster.Clusters[0].end();++it)
-     {
-         for( std::list<Celer::Surfel<float>*>::iterator i = cluster.Clusters[500].begin(); i !=  cluster.Clusters[500].end();++i)
-         {
-        	 if((*i)->Center() == (*it)->Center())
-        	 {
-        		std::cout << "=D " << (*i)->Center() << std::endl;
-        	 }
+}
 
-             for( std::list<Celer::Surfel<float>*>::iterator j = cluster.Clusters[800].begin(); j !=  cluster.Clusters[800].end();++j)
-             {
-            	 if(  ((*j)->Center() == (*it)->Center())  && (*j)->Center() == (*i)->Center() )
-            	 {
-            		std::cout << "=D ele ?" << (*i)->Center() <<   distance(cluster.Clusters[500].begin(),i)  << std::endl;
-            		std::cout << "=D ele ?" << (*it)->Center() << distance(cluster.Clusters[0].begin(),it)  << std::endl;
-            		std::cout << "=D ele ?" << (*j)->Center() << distance(cluster.Clusters[800].begin(),j)  << std::endl;
-            	 }
-             }
+void GLWidget::BuildCluster()
+{
+	if (lSurfels.size() > 0)
+	{
+		if (mClusterLog.maskBuildClusterWith.Test(ClusterLog::NormalOnly))
+		{
+			Celer::Surfel<float>* seed = new Celer::Surfel<float>(lSurfels[0]);
+			cluster.Build<JoinByNormal<float,Celer::Surfel<float>* >,
+						  MergeBySize <float,Celer::Surfel<float>* > >(1000,200,(seed));
+		}
+	}
+}
 
+void GLWidget::Clear()
+{
+    cluster.Clear();
 
-         }
-
-
-
-     }
-
+    lSurfels.clear();
 }
 
 void GLWidget::paintGL()
@@ -497,7 +521,7 @@ void GLWidget::paintGL()
     			std::cout << "ClusterSize : " << cluster.Clusters.size() << std::endl;
     			cluster.DrawClustersRange(mClusterLog.getClusterRangeBegin(),mClusterLog.getClusterRangeEnd(),(mClusterLog.maskShow.Test(ClusterLog::Seed)));
 
-    			for(int i = mClusterLog.getClusterRangeBegin();i != mClusterLog.getClusterRangeEnd();++i)
+    			for(unsigned int i = mClusterLog.getClusterRangeBegin();i != mClusterLog.getClusterRangeEnd();++i)
     				cluster.DrawSurfels(i);
     		}
 

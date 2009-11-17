@@ -5,8 +5,6 @@
 #include <QMdiSubWindow>
 #include <vector>
 
-#include "Surfels/Kd-Tree/Kd-Tree.hpp"
-
 #include "Surfels/Surfel.hpp"
 #include "Surfels/IOSurfels.hpp"
 #include "Surfels/MergeEllipses.hpp"
@@ -56,9 +54,7 @@ public:
     ClusterLog mClusterLog;
     LSplatLog  mLSplatLog;
 
-    Cluster<float> 				cluster;
-
-    KdTree<float,Celer::Surfel<float>* > 				kdTree;
+    Cluster<float> 										cluster;
 
     std::vector<Celer::Surfel<float> > 					lSurfels;
 
@@ -66,6 +62,8 @@ public:
 
 
 public slots:
+	void Clear();
+
 	void setClusterBuiltType	(const QString & text);
 	void setClusterBuiltSystem	(const QString & text);
 
@@ -82,6 +80,8 @@ public slots:
 	void setDrawClusterWithID 	 (int values);
 	void setDrawClusterWithRangeBegin 	 (int value);
 	void setDrawClusterWithRangeEnd 	 (int value);
+
+	void BuildCluster					 (void);
 
 
 protected:

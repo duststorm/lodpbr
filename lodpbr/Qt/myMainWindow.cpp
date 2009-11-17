@@ -74,20 +74,16 @@ void MyMainWindow::open(QString pFilename,bool who,WidgetProxy * p ) {
       if (who)
       {
 
+//			  glWidget->Clear();
+    	    //       glWidget->show();
+    	    //
+    	    //		 WidgetProxy *proxy = new WidgetProxy(glWidget,this);
+
+
 
     	  this->glWidget->LoadModel(filename.c_str());
 
     	  this->glWidget->calLimits();
-
-    	spinBoxCluster_DrawClusterWithID->setMaximum(glWidget->cluster.Clusters.size()-1);
-    	sliderCluster_DrawClusterWithID->setMaximum(glWidget->cluster.Clusters.size()-1);
-
-
-		spinBoxCluster_DrawClusterWithRangeBegin->setMaximum(glWidget->cluster.Clusters.size()-1);
-		spinBoxCluster_DrawClusterWithRangeEnd->setMaximum(glWidget->cluster.Clusters.size());
-
-		sliderCluster_DrawClusterWithRangeBegin->setMaximum(glWidget->cluster.Clusters.size()-1);
-		sliderCluster_DrawClusterWithRangeEnd->setMaximum(glWidget->cluster.Clusters.size()-1);
 
       }
 

@@ -17,11 +17,7 @@
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <layout class="QHBoxLayout" name="horizontalLayout_3">
-    <item>
-     <widget class="QMdiArea" name="mdiArea"/>
-    </item>
-   </layout>
+   <layout class="QHBoxLayout" name="horizontalLayout_3"/>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
@@ -29,7 +25,7 @@
      <x>0</x>
      <y>0</y>
      <width>877</width>
-     <height>21</height>
+     <height>25</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -191,7 +187,7 @@
                   <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
                  </property>
                  <item row="0" column="0">
-                  <widget class="QPushButton" name="pushButton">
+                  <widget class="QPushButton" name="pushButtonBuild">
                    <property name="text">
                     <string>Next</string>
                    </property>
