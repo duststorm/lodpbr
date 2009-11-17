@@ -45,7 +45,7 @@ public:
     bool glInitialized() const  { return mGLInitialized; }
 
     // From lodpbr
-    void LoadModel(const char * filename);
+    void LoadModel(const char * filename,vcg::CallBackPos *cb);
     void calLimits();
     void DrawGroud();
     void SetMode(bool);

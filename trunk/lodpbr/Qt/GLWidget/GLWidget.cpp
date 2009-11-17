@@ -414,14 +414,14 @@ void GLWidget::resizeGL(int width, int height)
 }
 
 
-void GLWidget::LoadModel(const char * filename )
+void GLWidget::LoadModel(const char * filename,vcg::CallBackPos *cb=0 )
 {
 
 	mClusterLog = ClusterLog();
 	mLSplatLog = LSplatLog();
 	lSurfels.clear();
 	mBox = Celer::BoundingBox3<float>();
-	Celer::IOSurfels<float>::LoadMesh(filename,lSurfels,mBox);
+	Celer::IOSurfels<float>::LoadMesh(filename,lSurfels,mBox,cb);
 	std::cout << lSurfels.capacity();
 }
 

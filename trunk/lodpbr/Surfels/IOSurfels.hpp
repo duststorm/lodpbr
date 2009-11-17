@@ -117,17 +117,22 @@ public:
 	static int LoadMesh (
 			const char * filename,
 			std::vector<Surfel<Real> >& pSurfel,
-			Celer::BoundingBox3<Real>& pBox)
+			Celer::BoundingBox3<Real>& pBox,vcg::CallBackPos *cb)
 	{
 		CMesh mesh;
-		vcg::tri::io::PlyInfo pi;
 
 		int mask = 0;
 
 		mesh.Clear();
 
-		vcg::tri::io::ImporterPLY<CMesh>::LoadMask(filename, mask,pi);
-		int i = vcg::tri::io::ImporterPLY<CMesh>::Open(mesh,filename,pi);
+		if (cb != NULL) 	(*cb)(0, "Loading Model...");
+
+
+		vcg::tri::io::PlyInfo info;
+		info.cb = cb;
+
+		vcg::tri::io::ImporterPLY<CMesh>::LoadMask(filename, mask,info);
+		int i = vcg::tri::io::ImporterPLY<CMesh>::Open(mesh,filename,info);
 
 
 		bool normal_per_vertex = false;
@@ -175,6 +180,7 @@ public:
 		        ++pos;
 
 		  }
+		if (cb != NULL)	(*cb)(99, "Done");
 		mesh.Clear();
 		return 0;
 	}
