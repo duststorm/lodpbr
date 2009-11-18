@@ -93,15 +93,14 @@ void MyMainWindow::open(QString pFilename,bool who,WidgetProxy * p ) {
       if (who)
       {
 
-//			  glWidget->Clear();
-    	    //       glWidget->show();
-    	    //
-    	    //		 WidgetProxy *proxy = new WidgetProxy(glWidget,this);
-
+//    	  glWidget->Clear();
+//    	  glWidget->show();
+//    	  WidgetProxy *proxy = new WidgetProxy(glWidget,this);
 
     	  GLWidget*  gl = new GLWidget(QGLFormat(QGLFormat(QGL::SampleBuffers)),this);
     	  gl->setAttribute(Qt::WA_DeleteOnClose);
     	  mdiArea->addSubWindow(gl);
+
     	  gl->show();
     	  gl->LoadModel(filename.c_str(),QCallBack);
     	  gl->calLimits();
@@ -112,14 +111,6 @@ void MyMainWindow::open(QString pFilename,bool who,WidgetProxy * p ) {
       this->setWindowTitle("");
    }
 }
-
-void MyMainWindow::on_action_Full_Screen_triggered()
-{
-
-	this->showFullScreen();
-
-}
-
 
 void MyMainWindow::createToplevelGLWidget()
 {

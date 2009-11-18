@@ -233,10 +233,10 @@ class Surfel
 	 Real 						Area				(  ) const;
 
 	 Vector3 					Perpendicular		( const Vector3& pVector );
-	 ListPoint3 				BoundariesSamples	( unsigned int pSteps ) const;
+	 ListPoint3 				BoundariesSamples	( unsigned int pSteps,const Real& pRadius = 1.0 ) const;
 
-	 void 						Draw				( int p = 8 );
-	 void 						DrawTriangleFan		( int p = 8 );
+	 void 						Draw				( int p = 8 ,const Real& pRadius = 1.0);
+	 void 						DrawTriangleFan		( int p = 8 ,const Real& pRadius = 1.0);
 
 	 template <class T>
 	 inline friend std::ostream& operator << 		( std::ostream& out, const Surfel<T> &s );
@@ -754,7 +754,7 @@ Vector3<Real> Surfel<Real>::Perpendicular( const Vector3& pVector)
 }
 
 template<class Real>
-typename Surfel<Real>::ListPoint3 Surfel<Real>::BoundariesSamples(unsigned int pSteps) const
+typename Surfel<Real>::ListPoint3 Surfel<Real>::BoundariesSamples(unsigned int pSteps,const Real& pRadius) const
 {
 
 	 if (pSteps == 0)
@@ -786,9 +786,9 @@ typename Surfel<Real>::ListPoint3 Surfel<Real>::BoundariesSamples(unsigned int p
 		 lCosAlpha =  cos( lAlpha );
 
 
-		 lX = mMinorAxis.first * lCosAlpha;
+		 lX = pRadius * mMinorAxis.first * lCosAlpha;
 
-		 lY = mMajorAxis.first * lSinAlpha;
+		 lY = pRadius * mMajorAxis.first * lSinAlpha;
 
 		 lFactor = sqrt( lX*lX + lY*lY );
 
@@ -808,10 +808,10 @@ typename Surfel<Real>::ListPoint3 Surfel<Real>::BoundariesSamples(unsigned int p
 }
 
 template<class Real>
-void Surfel<Real>::Draw(int p)
+void Surfel<Real>::Draw(int p,const Real& pRadius)
 {
 
-		ListPoint3 lBoundaries = this->BoundariesSamples(p);
+		ListPoint3 lBoundaries = this->BoundariesSamples(p,pRadius);
 	 	glPushMatrix();
 	 	glPointSize(1.0);
 		for(ListPoint3Iterator it = lBoundaries.begin();it != lBoundaries.end();++it)
@@ -822,10 +822,10 @@ void Surfel<Real>::Draw(int p)
 }
 
 template<class Real>
-void Surfel<Real>::DrawTriangleFan(int p)
+void Surfel<Real>::DrawTriangleFan(int p,const Real& pRadius)
 {
 
-	 	ListPoint3 lBoundaries = this->BoundariesSamples(p);
+	 	ListPoint3 lBoundaries = this->BoundariesSamples(p,pRadius);
 	 	glPushMatrix();
 	 	glEnable (GL_BLEND);
 	 	glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
