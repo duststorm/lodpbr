@@ -99,10 +99,12 @@ void MyMainWindow::open(QString pFilename,bool who,WidgetProxy * p ) {
     	    //		 WidgetProxy *proxy = new WidgetProxy(glWidget,this);
 
 
-
-    	  this->glWidget->LoadModel(filename.c_str(),QCallBack);
-
-    	  this->glWidget->calLimits();
+    	  GLWidget*  gl = new GLWidget(QGLFormat(QGLFormat(QGL::SampleBuffers)),this);
+    	  gl->setAttribute(Qt::WA_DeleteOnClose);
+    	  mdiArea->addSubWindow(gl);
+    	  gl->show();
+    	  gl->LoadModel(filename.c_str(),QCallBack);
+    	  gl->calLimits();
     	  progress->reset();
 
       }

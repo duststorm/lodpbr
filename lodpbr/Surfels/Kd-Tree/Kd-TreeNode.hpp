@@ -73,9 +73,8 @@ public:
   }
 
 
-  void Clear()
+  bool Clear()
   {
-
 	  if (son[0] != 0)
 	  {
 		  son[0]->Clear();
@@ -84,14 +83,13 @@ public:
 	  {
 		  son[1]->Clear();
 	  }
-
-//	  for(SurfelPtrVectorIterator it = mListPtr.being(); it != mListPtr.end();++it)
-//	  {
-//		  delete (*it);
-//		  (*it) = 0;
-//	  }
-	  mListPtr.clear();
-
+	  for(SurfelPtrVectorIterator it = mListPtr.begin(); it != mListPtr.end();++it)
+	  {
+		  if ( (*it) != 0 )
+			  delete (*it);
+		  (*it) = 0;
+	  }
+	  return 1;
   }
   /// destructor
   virtual ~KdTreeNode ()
