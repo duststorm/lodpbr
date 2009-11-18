@@ -8,8 +8,10 @@ MyMainWindow::MyMainWindow (QMainWindow *parent): QMainWindow(parent)
     setupUi (this);
 
 
-    this->glWidget =  new GLWidget(QGLFormat(QGLFormat(QGL::SampleBuffers)),this);
-	this->setCentralWidget(glWidget);
+	mdiArea = new QMdiArea(this),
+	setCentralWidget(mdiArea);
+//    this->glWidget =  new GLWidget(QGLFormat(QGLFormat(QGL::SampleBuffers)),this);
+//	this->setCentralWidget(glWidget);
 
 	globalStatusBar()=statusBar();
 
@@ -19,27 +21,18 @@ MyMainWindow::MyMainWindow (QMainWindow *parent): QMainWindow(parent)
 
 	this->statusBar()->addPermanentWidget(progress,0);
 
-	 connect(comboBoxCluster_BuildSurfelSimilarity,SIGNAL(activated(const QString &)),
-	 	   	this->glWidget,SLOT(setClusterBuiltType(const QString &)));
+
+	connect(mdiArea, SIGNAL(subWindowActivated(QMdiSubWindow *)),this, SLOT(updateMenus()));
+	connect(mdiArea, SIGNAL(subWindowActivated(QMdiSubWindow *)),this, SLOT(updateWindowMenu()));
+	connect(mdiArea, SIGNAL(subWindowActivated(QMdiSubWindow *)),this, SLOT(updateDockCluster()));
+
+
+
+	dockWidgetClusterContents->setEnabled(0);
+
 	 // Group Box Draw  -
 
-	 connect(checkBoxCluster_ShowCluster,SIGNAL(toggled(bool)),
-	 		this->glWidget,SLOT(setShowCluster(bool )));
 
-	 connect(checkBoxCluster_ShowSeed,SIGNAL(toggled(bool)),
-	 		this->glWidget,SLOT(setShowSeed(bool)));
-
-	 connect(checkBoxCluster_ShowModel,SIGNAL(toggled(bool)),
-	 		this->glWidget,SLOT(setShowModel(bool)));
-
-	 connect(radioButtonCluster_DrawIndex,SIGNAL(toggled(bool)),
-	 		this->glWidget,SLOT(setShowDrawClusterWithID(bool)));
-
-	 connect(radioButtonCluster_DrawRange,SIGNAL(toggled(bool)),
-	 		this->glWidget,SLOT(setShowDrawClusterWithRange(bool)));
-
-	 connect(sliderCluster_DrawClusterWithID,SIGNAL(valueChanged(int)),
-	 		this->glWidget,SLOT(setDrawClusterWithID(int)));
 //    glWidget = new GLWidget(QGLFormat(QGLFormat(QGL::SampleBuffers)),this);
 //
 //    //       glWidget->show();
@@ -58,63 +51,108 @@ MyMainWindow::MyMainWindow (QMainWindow *parent): QMainWindow(parent)
 
 }
 
+
+void MyMainWindow::updateMenus()
+{}
+
+void MyMainWindow::updateWindowMenu()
+{}
+
+void MyMainWindow::updateDockCluster()
+{
+	if (GLWIDGET())
+	{
+		dockWidgetClusterContents->setEnabled(1);
+		if(GLWIDGET()->cluster.Clusters.size() > 0)
+		{
+			dockWidgetClusterContents->setEnabled(1);
+			spinBoxCluster_DrawClusterWithID->setMaximum(GLWIDGET()->cluster.Clusters.size());
+
+			sliderCluster_DrawClusterWithID->setMaximum(GLWIDGET()->cluster.Clusters.size());
+
+			spinBoxCluster_DrawClusterWithRangeBegin->setMaximum(GLWIDGET()->cluster.Clusters.size());
+			spinBoxCluster_DrawClusterWithRangeEnd->setMaximum(GLWIDGET()->cluster.Clusters.size());
+
+			sliderCluster_DrawClusterWithRangeBegin->setMaximum(GLWIDGET()->cluster.Clusters.size());
+			sliderCluster_DrawClusterWithRangeEnd->setMaximum(GLWIDGET()->cluster.Clusters.size());
+		}else
+		{
+
+		}
+	}
+	else
+	{
+		dockWidgetClusterContents->setEnabled(0);
+	}
+}
+
 void MyMainWindow::on_pushButtonBuild_clicked()
 {
-	glWidget->BuildCluster();
+	GLWIDGET()->BuildCluster();
 
+	if(GLWIDGET()->cluster.Clusters.size() > 0)
+	{
+		dockWidgetClusterContents->setEnabled(1);
+		spinBoxCluster_DrawClusterWithID->setMaximum(GLWIDGET()->cluster.Clusters.size());
 
-	spinBoxCluster_DrawClusterWithID->setMaximum(glWidget->cluster.Clusters.size()-1);
-	sliderCluster_DrawClusterWithID->setMaximum(glWidget->cluster.Clusters.size()-1);
+		sliderCluster_DrawClusterWithID->setMaximum(GLWIDGET()->cluster.Clusters.size());
 
+		spinBoxCluster_DrawClusterWithRangeBegin->setMaximum(GLWIDGET()->cluster.Clusters.size());
+		spinBoxCluster_DrawClusterWithRangeEnd->setMaximum(GLWIDGET()->cluster.Clusters.size());
 
-	spinBoxCluster_DrawClusterWithRangeBegin->setMaximum(glWidget->cluster.Clusters.size()-1);
-	spinBoxCluster_DrawClusterWithRangeEnd->setMaximum(glWidget->cluster.Clusters.size());
+		sliderCluster_DrawClusterWithRangeBegin->setMaximum(GLWIDGET()->cluster.Clusters.size());
+		sliderCluster_DrawClusterWithRangeEnd->setMaximum(GLWIDGET()->cluster.Clusters.size());
+	}else
+	{
 
-	sliderCluster_DrawClusterWithRangeBegin->setMaximum(glWidget->cluster.Clusters.size()-1);
-	sliderCluster_DrawClusterWithRangeEnd->setMaximum(glWidget->cluster.Clusters.size()-1);
+	}
 
 }
 
 void MyMainWindow::on_spinBoxCluster_DrawClusterWithRangeBegin_valueChanged(int value)
 {
-	glWidget->setDrawClusterWithRangeBegin(value);
+	GLWIDGET()->setDrawClusterWithRangeBegin(value-1);
 
 	spinBoxCluster_DrawClusterWithRangeEnd->setMinimum(value);
 	sliderCluster_DrawClusterWithRangeEnd->setMinimum(value);
-	if ( spinBoxCluster_DrawClusterWithRangeEnd->value() <= value)
-	{
-		spinBoxCluster_DrawClusterWithRangeEnd->setValue(value);
-		glWidget->setDrawClusterWithRangeEnd(value);
-	}
+//	if ( spinBoxCluster_DrawClusterWithRangeEnd->value() <= value)
+//	{
+//		spinBoxCluster_DrawClusterWithRangeEnd->setValue(value);
+//		GLWIDGET()->setDrawClusterWithRangeEnd(value);
+//	}
 }
 
 
 void MyMainWindow::on_sliderCluster_DrawClusterWithRangeBegin_valueChanged(int value)
 {
-	glWidget->setDrawClusterWithRangeBegin(value);
+	GLWIDGET()->setDrawClusterWithRangeBegin(value-1);
 
 	spinBoxCluster_DrawClusterWithRangeEnd->setMinimum(value);
 	sliderCluster_DrawClusterWithRangeEnd->setMinimum(value);
-	if ( spinBoxCluster_DrawClusterWithRangeEnd->value() <= value)
-	{
-		spinBoxCluster_DrawClusterWithRangeEnd->setValue(value);
-		glWidget->setDrawClusterWithRangeEnd(value);
-	}
+//	if ( spinBoxCluster_DrawClusterWithRangeEnd->value() <= value)
+//	{
+//		spinBoxCluster_DrawClusterWithRangeEnd->setValue(value);
+//		GLWIDGET()->setDrawClusterWithRangeEnd(value);
+//	}
 
 }
 
 void MyMainWindow::on_sliderCluster_DrawClusterWithRangeEnd_valueChanged(int value)
 {
-	glWidget->setDrawClusterWithRangeEnd(value);
+	GLWIDGET()->setDrawClusterWithRangeEnd(value-1);
 
 }
 
 void MyMainWindow::on_spinBoxCluster_DrawClusterWithRangeEnd_valueChanged(int value)
 {
-	glWidget->setDrawClusterWithRangeEnd(value);
+	GLWIDGET()->setDrawClusterWithRangeEnd(value-1);
 
 }
 
+void MyMainWindow::on_sliderCluster_DrawClusterWithID_valueChanged(int value)
+{
+	GLWIDGET()->setDrawClusterWithID(value-1);
+}
 
 void MyMainWindow::on_action_Cluster_Debug_triggered()
 {
@@ -122,5 +160,38 @@ void MyMainWindow::on_action_Cluster_Debug_triggered()
 		dockWidgetCluster->setVisible(true);
 	else
 		dockWidgetCluster->setVisible(false);
+}
+
+//--------
+
+void MyMainWindow::on_comboBoxCluster_BuildSurfelSimilarity_activated(const QString &s)
+{
+	GLWIDGET()->setClusterBuiltType(s);
+}
+
+void MyMainWindow::on_checkBoxCluster_ShowCluster_toggled(bool checked)
+{
+	GLWIDGET()->setShowCluster(checked);
+}
+
+
+void MyMainWindow::on_checkBoxCluster_ShowSeed_toggled(bool checked)
+{
+	GLWIDGET()->setShowSeed(checked);
+}
+
+void MyMainWindow::on_checkBoxCluster_ShowModel_toggled(bool checked)
+{
+	GLWIDGET()->setShowModel(checked);
+}
+
+void MyMainWindow::on_radioButtonCluster_DrawIndex_toggled(bool checked)
+{
+	GLWIDGET()->setShowDrawClusterWithID(checked);
+}
+
+void MyMainWindow::on_radioButtonCluster_DrawRange_toggled(bool checked)
+{
+	GLWIDGET()->setShowDrawClusterWithRange(checked);
 }
 

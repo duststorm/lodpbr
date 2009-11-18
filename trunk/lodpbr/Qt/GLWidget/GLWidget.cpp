@@ -517,11 +517,11 @@ void GLWidget::paintGL()
     		}
     		else if (mClusterLog.maskRenderingClusterBy.Test(ClusterLog::Range))
     		{
-    			std::cout << "Range : " << mClusterLog.getClusterRangeBegin() << " End : " << mClusterLog.getClusterRangeEnd() << std::endl;
+    			std::cout << "Range : Being " << mClusterLog.getClusterRangeBegin() << " End : " << mClusterLog.getClusterRangeEnd() << std::endl;
     			std::cout << "ClusterSize : " << cluster.Clusters.size() << std::endl;
     			cluster.DrawClustersRange(mClusterLog.getClusterRangeBegin(),mClusterLog.getClusterRangeEnd(),(mClusterLog.maskShow.Test(ClusterLog::Seed)));
 
-    			for(unsigned int i = mClusterLog.getClusterRangeBegin();i != mClusterLog.getClusterRangeEnd();++i)
+    			for(unsigned int i = mClusterLog.getClusterRangeBegin();i <= mClusterLog.getClusterRangeEnd();++i)
     				cluster.DrawSurfels(i);
     		}
 

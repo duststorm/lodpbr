@@ -76,18 +76,13 @@ public:
 
   bool Clear()
   {
-	  if ( root !=0 )
-	  {
-		  delete root;
-		  root = 0;
-		  return true;
-	  }
-	  return false;
+	  return root->Clear();
   }
 
   /// destructor
   virtual ~KdTree()
   {
+
   }
 
   /// Inserts a pointer to an object in this kd-tree

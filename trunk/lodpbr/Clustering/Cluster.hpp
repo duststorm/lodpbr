@@ -84,7 +84,6 @@ public:
                 std::cout << "KD-Tree Start" << std::endl;
                 for (SurfelVectorIterator it =  pSurfels.begin();it != pSurfels.end(); ++ it )
                 {
-
 						SurfelPtr s = new Surfel(*it);
                         KDTree.Insert (s);
                 }
@@ -285,7 +284,7 @@ public:
         	glPushMatrix();
         	glDisable(GL_LIGHTING);
         	itColor = colors.begin();
-        	for(unsigned int i = Begin; i < End ; ++i )
+        	for(unsigned int i = Begin; i <= End ; ++i )
         	{
         		glPushMatrix();
         		glEnable(GL_POINT_SMOOTH);

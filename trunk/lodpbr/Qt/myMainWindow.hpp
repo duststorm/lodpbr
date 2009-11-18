@@ -21,6 +21,19 @@ public:
     void keyPressEvent(QKeyEvent *e);
     static bool QCallBack(const int pos, const char * str);
 
+    GLWidget *GLWIDGET() const
+    {
+    	if(mdiArea->currentSubWindow()==0)
+    		return 0;
+    	GLWidget *lglWiget = qobject_cast<GLWidget *>(mdiArea->currentSubWindow());
+    	if(lglWiget)
+    		return lglWiget;
+    	lglWiget = qobject_cast<GLWidget *>(mdiArea->currentSubWindow()->widget());
+    	assert(lglWiget);
+    	return lglWiget;
+    }
+
+
     static QStatusBar *&globalStatusBar()
     {
       static QStatusBar *_qsb=0;
@@ -29,10 +42,15 @@ public:
 
 public slots:
 
+	void updateMenus();
+	void updateWindowMenu();
+	void updateDockCluster();
+
  	void on_action_Open_File_triggered();
  	void on_action_Full_Screen_triggered();
  	void on_action_Cluster_Debug_triggered();
 
+ 	// Cluster Dock Widget
  	void on_pushButtonBuild_clicked();
 
  	void on_spinBoxCluster_DrawClusterWithRangeBegin_valueChanged(int);
@@ -40,6 +58,18 @@ public slots:
 
  	void on_spinBoxCluster_DrawClusterWithRangeEnd_valueChanged(int value);
  	void on_sliderCluster_DrawClusterWithRangeEnd_valueChanged(int value);
+
+	void on_comboBoxCluster_BuildSurfelSimilarity_activated(const QString &);
+
+	void on_checkBoxCluster_ShowCluster_toggled(bool checked);
+	void on_checkBoxCluster_ShowSeed_toggled(bool checked);
+	void on_checkBoxCluster_ShowModel_toggled(bool checked);
+	void on_radioButtonCluster_DrawIndex_toggled(bool checked);
+	void on_radioButtonCluster_DrawRange_toggled(bool checked);
+	void on_sliderCluster_DrawClusterWithID_valueChanged(int value);
+
+
+
 
  	static void createToplevelGLWidget();
 
@@ -64,6 +94,7 @@ signals:
 //	void on_push_Button_Vertex_Around_clicked();
 
 private:
+	QMdiArea 			*mdiArea;
 	static QProgressBar *progress;
  	QWorkspace  		*workspace;
 	QString              fileModel_Off;
