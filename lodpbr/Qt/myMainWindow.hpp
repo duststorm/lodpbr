@@ -42,31 +42,35 @@ public:
 
 public slots:
 
-	void updateMenus();
-	void updateWindowMenu();
-	void updateDockCluster();
+	void updateMenus												();
+	void updateWindowMenu											();
+	void updateDockCluster											();
 
- 	void on_action_Open_File_triggered();
- 	void on_action_Full_Screen_triggered();
- 	void on_action_Cluster_Debug_triggered();
+ 	void on_action_Open_File_triggered								();
+ 	void on_action_Full_Screen_triggered							();
 
- 	// Cluster Dock Widget
- 	void on_pushButtonBuild_clicked();
+ 	void on_pushButtonBuild_clicked									();
 
- 	void on_spinBoxCluster_DrawClusterWithRangeBegin_valueChanged(int);
- 	void on_sliderCluster_DrawClusterWithRangeBegin_valueChanged(int);
+ 	// Cluster Dock Widget Draw
 
- 	void on_spinBoxCluster_DrawClusterWithRangeEnd_valueChanged(int value);
- 	void on_sliderCluster_DrawClusterWithRangeEnd_valueChanged(int value);
 
-	void on_comboBoxCluster_BuildSurfelSimilarity_activated(const QString &);
+ 	void  on_toolButtonDrawCluster_toggled							(bool checked);
 
-	void on_checkBoxCluster_ShowCluster_toggled(bool checked);
-	void on_checkBoxCluster_ShowSeed_toggled(bool checked);
-	void on_checkBoxCluster_ShowModel_toggled(bool checked);
-	void on_radioButtonCluster_DrawIndex_toggled(bool checked);
-	void on_radioButtonCluster_DrawRange_toggled(bool checked);
-	void on_sliderCluster_DrawClusterWithID_valueChanged(int value);
+ 	void on_spinBoxCluster_DrawClusterWithRangeBegin_valueChanged	(int);
+ 	void on_sliderCluster_DrawClusterWithRangeBegin_valueChanged	(int);
+
+ 	void on_spinBoxCluster_DrawClusterWithRangeEnd_valueChanged		(int value);
+ 	void on_sliderCluster_DrawClusterWithRangeEnd_valueChanged		(int value);
+
+	void on_comboBoxCluster_BuildSurfelSimilarity_activated			(const QString &);
+
+//	void on_checkBoxCluster_ShowCluster_toggled						(bool checked);
+//	void on_checkBoxCluster_ShowSeed_toggled						(bool checked);
+//	void on_checkBoxCluster_ShowModel_toggled						(bool checked);
+
+	void on_radioButtonCluster_DrawIndex_toggled					(bool checked);
+	void on_radioButtonCluster_DrawRange_toggled					(bool checked);
+	void on_sliderCluster_DrawClusterWithID_valueChanged			(int value);
 
 
 
@@ -94,7 +98,6 @@ signals:
 //	void on_push_Button_Vertex_Around_clicked();
 
 private:
-	QMdiArea 			*mdiArea;
 	static QProgressBar *progress;
  	QWorkspace  		*workspace;
 	QString              fileModel_Off;

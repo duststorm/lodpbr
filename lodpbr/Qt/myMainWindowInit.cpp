@@ -8,11 +8,10 @@ MyMainWindow::MyMainWindow (QMainWindow *parent): QMainWindow(parent)
     setupUi (this);
 
 
-	mdiArea = new QMdiArea(this),
-	setCentralWidget(mdiArea);
 //    this->glWidget =  new GLWidget(QGLFormat(QGLFormat(QGL::SampleBuffers)),this);
-//	this->setCentralWidget(glWidget);
+//	  this->setCentralWidget(glWidget);
 
+    // Loucuras do MeshLab
 	globalStatusBar()=statusBar();
 
 	progress = new QProgressBar(this);
@@ -22,35 +21,39 @@ MyMainWindow::MyMainWindow (QMainWindow *parent): QMainWindow(parent)
 	this->statusBar()->addPermanentWidget(progress,0);
 
 
+	//Atualiza para a GLWidget corrente ...
+	// .. os menus da barras de menus
 	connect(mdiArea, SIGNAL(subWindowActivated(QMdiSubWindow *)),this, SLOT(updateMenus()));
+
+	// .. Nao sei =)
 	connect(mdiArea, SIGNAL(subWindowActivated(QMdiSubWindow *)),this, SLOT(updateWindowMenu()));
+
+	//.. as possiveis acoes - (Construir, Renderizar ...)
 	connect(mdiArea, SIGNAL(subWindowActivated(QMdiSubWindow *)),this, SLOT(updateDockCluster()));
 
-
-
 	dockWidgetClusterContents->setEnabled(0);
+	dockWidgetDrawClusterContents->setEnabled(0);
 
-	 // Group Box Draw  -
+	dockWidgetClusterBuilder->hide();
+	dockWidgetDrawCluster->hide();
 
+// Loucuras da KglLib
+//	glWidget = new GLWidget(QGLFormat(QGLFormat(QGL::SampleBuffers)),this);
+//	glWidget->show();
+//	WidgetProxy *proxy = new WidgetProxy(glWidget,this);
+//	mdiArea->addSubWindow(glWidget);
 
-//    glWidget = new GLWidget(QGLFormat(QGLFormat(QGL::SampleBuffers)),this);
-//
-//    //       glWidget->show();
-//    //
-//    //		 WidgetProxy *proxy = new WidgetProxy(glWidget,this);
-//
-//    mdiArea->addSubWindow(glWidget);
-
-    //     QWidget* w = proxy->createWindow("Embedded window");
-    //     w->move(20, 270);
-    //     w->layout()->addWidget(new QLineEdit(this));
-    //     QPushButton* pb = new QPushButton("Create new toplevel GL widget", this);
-    //     w->layout()->addWidget(pb);
-    //     proxy->addWidget(w);
+//	QWidget* w = proxy->createWindow("Embedded window");
+//	w->move(20, 270);
+//	w->layout()->addWidget(new QLineEdit(this));
+//	QPushButton* pb = new QPushButton("Create new toplevel GL widget", this);
+//	w->layout()->addWidget(pb);
+//	proxy->addWidget(w);
 
 
 }
 
+//==== Slot SubWindow Activated ===============================================
 
 void MyMainWindow::updateMenus()
 {}
@@ -63,9 +66,11 @@ void MyMainWindow::updateDockCluster()
 	if (GLWIDGET())
 	{
 		dockWidgetClusterContents->setEnabled(1);
+		// Atualiza os Menus para GLWidget Corrente
 		if(GLWIDGET()->cluster.Clusters.size() > 0)
 		{
-			dockWidgetClusterContents->setEnabled(1);
+			// Atualiza os limites de renderização
+			dockWidgetDrawClusterContents->setEnabled(1);
 			spinBoxCluster_DrawClusterWithID->setMaximum(GLWIDGET()->cluster.Clusters.size());
 
 			sliderCluster_DrawClusterWithID->setMaximum(GLWIDGET()->cluster.Clusters.size());
@@ -75,15 +80,42 @@ void MyMainWindow::updateDockCluster()
 
 			sliderCluster_DrawClusterWithRangeBegin->setMaximum(GLWIDGET()->cluster.Clusters.size());
 			sliderCluster_DrawClusterWithRangeEnd->setMaximum(GLWIDGET()->cluster.Clusters.size());
-		}else
+		}
+		// Não tem clusters a serem renderizados
+		else
 		{
-
+			dockWidgetDrawClusterContents->setEnabled(0);
 		}
 	}
+	// Não há GLWidget
 	else
 	{
 		dockWidgetClusterContents->setEnabled(0);
+		dockWidgetDrawClusterContents->setEnabled(0);
 	}
+}
+
+//==== Actions ================================================================
+
+void MyMainWindow::on_action_Full_Screen_triggered()
+{
+
+	if (action_Full_Screen->isChecked())
+	{
+		this->showFullScreen();
+	}
+	else
+	{
+		this->showMaximized();
+	}
+
+}
+
+//==== DockBuildCluster =======================================================
+
+void MyMainWindow::on_comboBoxCluster_BuildSurfelSimilarity_activated(const QString &s)
+{
+	GLWIDGET()->setClusterBuiltType(s);
 }
 
 void MyMainWindow::on_pushButtonBuild_clicked()
@@ -93,6 +125,7 @@ void MyMainWindow::on_pushButtonBuild_clicked()
 	if(GLWIDGET()->cluster.Clusters.size() > 0)
 	{
 		dockWidgetClusterContents->setEnabled(1);
+		dockWidgetDrawClusterContents->setEnabled(1);
 		spinBoxCluster_DrawClusterWithID->setMaximum(GLWIDGET()->cluster.Clusters.size());
 
 		sliderCluster_DrawClusterWithID->setMaximum(GLWIDGET()->cluster.Clusters.size());
@@ -102,12 +135,16 @@ void MyMainWindow::on_pushButtonBuild_clicked()
 
 		sliderCluster_DrawClusterWithRangeBegin->setMaximum(GLWIDGET()->cluster.Clusters.size());
 		sliderCluster_DrawClusterWithRangeEnd->setMaximum(GLWIDGET()->cluster.Clusters.size());
-	}else
+	}
+	else
 	{
-
+		dockWidgetDrawClusterContents->setEnabled(0);
 	}
 
 }
+
+//==== DockWidget Draw Cluster ================================================
+
 
 void MyMainWindow::on_spinBoxCluster_DrawClusterWithRangeBegin_valueChanged(int value)
 {
@@ -115,11 +152,7 @@ void MyMainWindow::on_spinBoxCluster_DrawClusterWithRangeBegin_valueChanged(int 
 
 	spinBoxCluster_DrawClusterWithRangeEnd->setMinimum(value);
 	sliderCluster_DrawClusterWithRangeEnd->setMinimum(value);
-//	if ( spinBoxCluster_DrawClusterWithRangeEnd->value() <= value)
-//	{
-//		spinBoxCluster_DrawClusterWithRangeEnd->setValue(value);
-//		GLWIDGET()->setDrawClusterWithRangeEnd(value);
-//	}
+
 }
 
 
@@ -129,11 +162,6 @@ void MyMainWindow::on_sliderCluster_DrawClusterWithRangeBegin_valueChanged(int v
 
 	spinBoxCluster_DrawClusterWithRangeEnd->setMinimum(value);
 	sliderCluster_DrawClusterWithRangeEnd->setMinimum(value);
-//	if ( spinBoxCluster_DrawClusterWithRangeEnd->value() <= value)
-//	{
-//		spinBoxCluster_DrawClusterWithRangeEnd->setValue(value);
-//		GLWIDGET()->setDrawClusterWithRangeEnd(value);
-//	}
 
 }
 
@@ -154,35 +182,11 @@ void MyMainWindow::on_sliderCluster_DrawClusterWithID_valueChanged(int value)
 	GLWIDGET()->setDrawClusterWithID(value-1);
 }
 
-void MyMainWindow::on_action_Cluster_Debug_triggered()
-{
-	if (action_Cluster_Debug->isChecked())
-		dockWidgetCluster->setVisible(true);
-	else
-		dockWidgetCluster->setVisible(false);
-}
 
-//--------
 
-void MyMainWindow::on_comboBoxCluster_BuildSurfelSimilarity_activated(const QString &s)
-{
-	GLWIDGET()->setClusterBuiltType(s);
-}
-
-void MyMainWindow::on_checkBoxCluster_ShowCluster_toggled(bool checked)
+void MyMainWindow::on_toolButtonDrawCluster_toggled(bool checked)
 {
 	GLWIDGET()->setShowCluster(checked);
-}
-
-
-void MyMainWindow::on_checkBoxCluster_ShowSeed_toggled(bool checked)
-{
-	GLWIDGET()->setShowSeed(checked);
-}
-
-void MyMainWindow::on_checkBoxCluster_ShowModel_toggled(bool checked)
-{
-	GLWIDGET()->setShowModel(checked);
 }
 
 void MyMainWindow::on_radioButtonCluster_DrawIndex_toggled(bool checked)
