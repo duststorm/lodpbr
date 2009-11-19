@@ -42,9 +42,9 @@ namespace Celer{
 
         Camera()
         {
-        	mZoomRadius = 0.0f;
+        	mZoomRadius = 1.0f;
         	mMinRadius  = 1.0f;
-        	mMaxRadius  = 10.0f;
+        	mMaxRadius  = 6.0f;
 
         	mInitalPosition = Vector3(0.0,0.0,0.0);
 
@@ -68,7 +68,7 @@ namespace Celer{
 
         	mViewMatrix.Identity();
 
-        	mFieldOfView = 90.0;
+        	mFieldOfView = 30.0;
         	mAspectRatio = 1.0f;
         	mNearPlane  = 0.001f;
         	mFarPlane   = 100000.0f;
@@ -157,7 +157,12 @@ namespace Celer{
             mNearPlane  = pNearPlane;
             mFarPlane   = pFarPlane;
 
-            mPespectiveProjectionMatrix = Matrix4x4::MakePespectiveProjectionMatrix(mFieldOfView, mAspectRatio, mNearPlane, mFarPlane);
+            mPespectiveProjectionMatrix = Matrix4x4::MakePespectiveProjectionMatrix(mFieldOfView*mZoomRadius, mAspectRatio, mNearPlane, mFarPlane);
+        }
+
+        void SetProjectionMatrix()
+        {
+            mPespectiveProjectionMatrix = Matrix4x4::MakePespectiveProjectionMatrix(mFieldOfView*mZoomRadius, mAspectRatio, mNearPlane, mFarPlane);
         }
 
         void SetProjectionMatrix (const float& left, const float& right,const float& bottom, const float& top, const float& near, const float& far)
@@ -438,7 +443,10 @@ namespace Celer{
         void Zoom(float mouseWheelDelta)
         {
             // Change the radius from the camera to the model based on wheel scrolling
-            mZoomRadius -= mouseWheelDelta * mZoomRadius * 0.1f;
+            mZoomRadius -= mouseWheelDelta * 0.1f;
+
+            std::cout << "Wheel "<< mouseWheelDelta << " zoom  "<< mZoomRadius <<  std::endl;
+
             mZoomRadius  = std::min ( mMaxRadius, mZoomRadius );
             mZoomRadius  = std::max ( mMinRadius, mZoomRadius );
         }

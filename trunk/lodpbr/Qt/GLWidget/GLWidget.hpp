@@ -89,6 +89,7 @@ protected:
 private:
 
 	void init();
+	std::vector<Celer::Surfel<float> > result;
 
 //    void drawKdTree(int& cont);
 //    void drawKdNodeRecursively(const KdTree3DNode* n,int& cont);
