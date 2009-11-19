@@ -11,6 +11,7 @@
 #include "Math/Vector3.hpp"
 #include "Math/Vector4.hpp"
 
+#include <wrap/gl/picking.h>
 
 #define DA_APLICACAO_PASSADA 0
 
@@ -403,7 +404,7 @@ void GLWidget::resizeGL(int width, int height)
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
     GLfloat x = GLfloat(width) / height;
-    camera.SetProjectionMatrix(90.0,x,0.1,100000);
+    camera.SetProjectionMatrix(30.0,x,0.1,100000);
 
     glMultMatrixf((~camera.PespectiveProjectionMatrix()).ToRealPtr());
     glMatrixMode(GL_MODELVIEW);
@@ -484,12 +485,10 @@ void GLWidget::paintGL()
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-//    glMatrixMode(GL_PROJECTION);
-//    glLoadIdentity();
-//    GLfloat x = GLfloat(width()) / height();
-//    camera.SetProjectionMatrix(90.0,x,0.1,1000);
-//
-//    glMultMatrixf((~camera.PespectiveProjectionMatrix()).ToRealPtr());
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    camera.SetProjectionMatrix();
+    glMultMatrixf((~camera.PespectiveProjectionMatrix()).ToRealPtr());
 
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
@@ -500,8 +499,11 @@ void GLWidget::paintGL()
     int cont = 0;
     fps.nextFrame();
 
+
     if ( lSurfels.size() != 0 )
     {
+    	for (int i = 0; i != result.size();++i)
+    		result[i].Draw(8,1.0);
     	if (mClusterLog.maskShow.Test(ClusterLog::Model))
     	{
     		//drawKdTree(cont);
@@ -582,6 +584,7 @@ void GLWidget::keyPressEvent(QKeyEvent * event)
 	else {}
 }
 
+
 void GLWidget::mousePressEvent(QMouseEvent *event)
 {
 	event->accept();
@@ -592,6 +595,71 @@ void GLWidget::mousePressEvent(QMouseEvent *event)
         mCenterX = static_cast<float>(event->x());
         mCenterY = static_cast<float>(event->y());
         update();
+    }
+    if (event->button() == Qt::RightButton)
+    {
+
+		result.clear();
+		long hits;
+		int sz = int(lSurfels.size())*5;
+		GLuint *selectBuf =new GLuint[sz];
+		glSelectBuffer(sz, selectBuf);
+		glRenderMode(GL_SELECT);
+		glInitNames();
+
+		/* Because LoadName() won't work with no names on the stack */
+		glPushName(-1);
+		double mp[16];
+
+		GLint viewport[4];
+		glGetIntegerv(GL_VIEWPORT,viewport);
+		glPushAttrib(GL_TRANSFORM_BIT);
+		glMatrixMode(GL_PROJECTION);
+		glGetDoublev(GL_PROJECTION_MATRIX ,mp);
+		glPushMatrix();
+		glLoadIdentity();
+		//gluPickMatrix(x, viewport[3]-y, 4, 4, viewport);
+		gluPickMatrix(event->x(), event->y(), width(), height(), viewport);
+		glMultMatrixd(mp);
+
+		glMatrixMode(GL_MODELVIEW);
+		glPushMatrix();
+		int cnt=0;
+		std::vector<Celer::Surfel<float> >::iterator  ei;
+		for(ei=lSurfels.begin();ei!=lSurfels.end();++ei)
+		{
+
+				glLoadName(cnt);
+				Celer::Surfel<float>::DrawSurfel((*ei));
+				cnt++;
+		}
+
+		glPopMatrix();
+		glMatrixMode(GL_PROJECTION);
+		glPopMatrix();
+		glMatrixMode(GL_MODELVIEW);
+		hits = glRenderMode(GL_RENDER);
+
+		if (hits <= 0){}
+		else{
+			std::vector< std::pair<double,unsigned int> > H;
+			for(int ii=0;ii<hits;ii++){
+				H.push_back( std::pair<double,unsigned int>(selectBuf[ii*4+1]/4294967295.0,selectBuf[ii*4+3]));
+			}
+			std::sort(H.begin(),H.end());
+
+			result.resize(H.size());
+			for(int ii=0;ii<hits;ii++){
+				std::vector<Celer::Surfel<float> >::iterator ei=lSurfels.begin();
+				std::advance(ei ,H[ii].second);
+				result[ii]=&*ei;
+			}
+			glPopAttrib();
+			delete [] selectBuf;
+
+		}
+
+    	std::cout << "é = esse " << result[0] << std::endl;
     }
 
     lastPos = event->pos();
@@ -617,7 +685,6 @@ void GLWidget::wheelEvent(QWheelEvent *event)
 {
    event->accept();
    camera.Zoom(event->delta()/120.0);
-
    update();
 }
 

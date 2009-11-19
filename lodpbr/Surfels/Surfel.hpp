@@ -235,6 +235,13 @@ class Surfel
 	 Vector3 					Perpendicular		( const Vector3& pVector );
 	 ListPoint3 				BoundariesSamples	( unsigned int pSteps,const Real& pRadius = 1.0 ) const;
 
+	 static void 				DrawSurfel			(Surfel<Real>& s)
+	 {
+	 	 	glPushMatrix();
+	 	 	glPointSize(1.0);
+	 	 	glVertex3fv( s.Center().ToRealPtr());
+	 	 	glPopMatrix();
+	 }
 	 void 						Draw				( int p = 8 ,const Real& pRadius = 1.0);
 	 void 						DrawTriangleFan		( int p = 8 ,const Real& pRadius = 1.0);
 
