@@ -386,10 +386,9 @@ void GLWidget::initializeGL()
 	glEnable(GL_COLOR_MATERIAL);  //cor do material a partir da cor corrente
 	glEnable(GL_LIGHTING);        //uso de iluminacao
 	glEnable(GL_LIGHT0);          //luz  0
-	glEnable(GL_DEPTH_TEST);      //depth-buffering
-
+	glEnable(GL_DEPTH_TEST);
+	//depth-buffering
 	glEnable(GL_NORMALIZE);
-
 
 }
 
@@ -420,16 +419,16 @@ void GLWidget::LoadModel(const char * filename,vcg::CallBackPos *cb=0 )
 
 	mClusterLog = ClusterLog();
 	mLSplatLog = LSplatLog();
-	lSurfels.clear();
+	Surfels.clear();
 	mBox = Celer::BoundingBox3<float>();
-	Celer::IOSurfels<float>::LoadMesh(filename,lSurfels,mBox,cb);
-	std::cout << lSurfels.capacity();
+	Celer::IOSurfels<float>::LoadMesh(filename,Surfels,mBox,cb);
+	std::cout << Surfels.capacity();
 }
 
 void GLWidget::calLimits()
 {
 
-     cluster = Cluster<float>(lSurfels,mBox);
+     cluster = Cluster<float>(Surfels,mBox);
 
 //
 //
@@ -463,11 +462,11 @@ void GLWidget::calLimits()
 
 void GLWidget::BuildCluster()
 {
-	if (lSurfels.size() > 0)
+	if (Surfels.size() > 0)
 	{
 		if (mClusterLog.maskBuildClusterWith.Test(ClusterLog::NormalOnly))
 		{
-			Celer::Surfel<float>* seed = new Celer::Surfel<float>(lSurfels[0]);
+			Celer::Surfel<float>* seed = new Celer::Surfel<float>(Surfels[0]);
 			cluster.Build<JoinByNormal<float,Celer::Surfel<float>* >,
 						  MergeBySize <float,Celer::Surfel<float>* > >(1000,200,(seed));
 		}
@@ -478,7 +477,7 @@ void GLWidget::Clear()
 {
     cluster.Clear();
 
-    lSurfels.clear();
+    Surfels.clear();
 }
 
 void GLWidget::paintGL()
@@ -499,15 +498,25 @@ void GLWidget::paintGL()
     int cont = 0;
     fps.nextFrame();
 
+    drawSelectionRectangle();
 
-    if ( lSurfels.size() != 0 )
+    if ( Surfels.size() != 0 )
     {
-    	for (int i = 0; i != result.size();++i)
-    		result[i].Draw(8,1.0);
     	if (mClusterLog.maskShow.Test(ClusterLog::Model))
     	{
-    		//drawKdTree(cont);
+    		glPushMatrix();
+    		glPointSize(2.0);
+    		glBegin(GL_POINTS);
+    		for (std::vector<Surfel>::iterator s = Surfels.begin(); s != Surfels.end();++s)
+    		{
+    			glVertex3fv( s->Center().ToRealPtr() );
+    		}
+    		glEnd();
+    		glPopMatrix();
     	}
+
+    	for (int i = 0; i != result.size();++i)
+    		result[i].DrawCenter(5.0);
 
     	if (mClusterLog.maskShow.Test(ClusterLog::Cluster))
     	{
@@ -599,9 +608,10 @@ void GLWidget::mousePressEvent(QMouseEvent *event)
     if (event->button() == Qt::RightButton)
     {
 
+    	rectangle = QRect(event->pos(), event->pos());
 		result.clear();
 		long hits;
-		int sz = int(lSurfels.size())*5;
+		int sz = int(Surfels.size())*5;
 		GLuint *selectBuf =new GLuint[sz];
 		glSelectBuffer(sz, selectBuf);
 		glRenderMode(GL_SELECT);
@@ -619,28 +629,30 @@ void GLWidget::mousePressEvent(QMouseEvent *event)
 		glPushMatrix();
 		glLoadIdentity();
 		//gluPickMatrix(x, viewport[3]-y, 4, 4, viewport);
-		gluPickMatrix(event->x(), event->y(), width(), height(), viewport);
+		gluPickMatrix(event->x(), height()-event->y(),4, 4, viewport);
 		glMultMatrixd(mp);
 
 		glMatrixMode(GL_MODELVIEW);
 		glPushMatrix();
 		int cnt=0;
 		std::vector<Celer::Surfel<float> >::iterator  ei;
-		for(ei=lSurfels.begin();ei!=lSurfels.end();++ei)
+		for(ei=Surfels.begin();ei!=Surfels.end();++ei)
 		{
-
 				glLoadName(cnt);
-				Celer::Surfel<float>::DrawSurfel((*ei));
+				ei->DrawCenter(3.0);
 				cnt++;
 		}
-
 		glPopMatrix();
 		glMatrixMode(GL_PROJECTION);
 		glPopMatrix();
 		glMatrixMode(GL_MODELVIEW);
 		hits = glRenderMode(GL_RENDER);
 
-		if (hits <= 0){}
+		if (hits <= 0){
+
+			std::cout << " Pow 0 " <<  std::endl;
+
+		}
 		else{
 			std::vector< std::pair<double,unsigned int> > H;
 			for(int ii=0;ii<hits;ii++){
@@ -650,16 +662,16 @@ void GLWidget::mousePressEvent(QMouseEvent *event)
 
 			result.resize(H.size());
 			for(int ii=0;ii<hits;ii++){
-				std::vector<Celer::Surfel<float> >::iterator ei=lSurfels.begin();
+				std::vector<Celer::Surfel<float> >::iterator ei=Surfels.begin();
 				std::advance(ei ,H[ii].second);
-				result[ii]=&*ei;
+				result[ii]=(*ei);
 			}
 			glPopAttrib();
 			delete [] selectBuf;
 
 		}
 
-    	std::cout << "é = esse " << result[0] << std::endl;
+    	std::cout << "é = esse " << result.size() << std::endl;
     }
 
     lastPos = event->pos();
@@ -673,9 +685,13 @@ void GLWidget::mouseReleaseEvent(QMouseEvent *event)
     if (event->button() == Qt::LeftButton)
     {
     	camera.lockMouse(false);
-    	update();
+
+    }else if(event->button() == Qt::RightButton)
+    {
+    	rectangle = rectangle.normalized();
     }
 
+    update();
 
     lastPos = event->pos();
 
@@ -712,14 +728,14 @@ void GLWidget::mouseMoveEvent(QMouseEvent *event)
         QCursor::setPos(mapToGlobal(QPoint(static_cast<int>(mCenterX),static_cast<int>(mCenterY))));
         update();
     }else if (event->buttons() & Qt::RightButton) {
-
+        rectangle.setBottomRight(event->pos());
 
     }else if (event->buttons() & Qt::MidButton)  {
 
     	//camera.OnRotationMove(event->x(), event->y());
     }
 
-
+    update();
 
     /*!
      *  event->pos() retorna coordenadas x e y relativa a widget que recebeu o evento.
@@ -732,4 +748,65 @@ void GLWidget::mouseMoveEvent(QMouseEvent *event)
 
 }
 
+void GLWidget::drawSelectionRectangle() const
+{
+
+  startScreenCoordinatesSystem();
+  glDisable(GL_LIGHTING);
+  glDisable(GL_DEPTH_TEST);
+  glEnable(GL_BLEND);
+  glBlendFunc(GL_ONE, GL_ONE);
+
+  glColor4f(0.0, 0.0, 0.3f, 0.3f);
+  glBegin(GL_QUADS);
+  glVertex2i(rectangle.left(),  rectangle.top());
+  glVertex2i(rectangle.right(), rectangle.top());
+  glVertex2i(rectangle.right(), rectangle.bottom());
+  glVertex2i(rectangle.left(),  rectangle.bottom());
+  glEnd();
+
+//  glLineWidth(2.0);
+//  glColor4f(0.4f, 0.4f, 0.5f, 0.5f);
+//  glBegin(GL_LINE_LOOP);
+//  glVertex2i(rectangle.left(),  rectangle.top());
+//  glVertex2i(rectangle.right(), rectangle.top());
+//  glVertex2i(rectangle.right(), rectangle.bottom());
+//  glVertex2i(rectangle.left(),  rectangle.bottom());
+//  glEnd();
+
+  glDisable(GL_BLEND);
+  glEnable(GL_DEPTH_TEST);
+  glEnable(GL_LIGHTING);
+  stopScreenCoordinatesSystem();
+}
+
+void GLWidget::startScreenCoordinatesSystem(bool upward) const
+{
+	glMatrixMode(GL_PROJECTION);
+	glPushMatrix();
+	glLoadIdentity();
+//	if (tileRegion_ != NULL)
+//	  if (upward)
+//	    glOrtho(tileRegion_->xMin, tileRegion_->xMax, tileRegion_->yMin, tileRegion_->yMax, 0.0, -1.0);
+//	  else
+//	    glOrtho(tileRegion_->xMin, tileRegion_->xMax, tileRegion_->yMax, tileRegion_->yMin, 0.0, -1.0);
+//	else
+	  if (upward)
+	    glOrtho(0, width(), 0, height(), 0.0, -1.0);
+	  else
+	    glOrtho(0, width(), height(), 0, 0.0, -1.0);
+
+	glMatrixMode(GL_MODELVIEW);
+	glPushMatrix();
+	glLoadIdentity();
+}
+
+void GLWidget::stopScreenCoordinatesSystem() const
+{
+	glMatrixMode(GL_PROJECTION);
+	glPopMatrix();
+
+	glMatrixMode(GL_MODELVIEW);
+	glPopMatrix();
+}
 

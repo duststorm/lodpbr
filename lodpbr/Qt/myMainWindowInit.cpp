@@ -111,6 +111,11 @@ void MyMainWindow::on_action_Full_Screen_triggered()
 
 }
 
+void MyMainWindow::on_action_Show_Points_toggled(bool checked)
+{
+	GLWIDGET()->setShowModel(checked);
+}
+
 //==== DockBuildCluster =======================================================
 
 void MyMainWindow::on_comboBoxCluster_BuildSurfelSimilarity_activated(const QString &s)
