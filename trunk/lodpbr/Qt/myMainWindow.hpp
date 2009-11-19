@@ -48,7 +48,7 @@ public slots:
 
  	void on_action_Open_File_triggered								();
  	void on_action_Full_Screen_triggered							();
-
+ 	void on_action_Show_Points_toggled							    (bool checked);
  	void on_pushButtonBuild_clicked									();
 
  	// Cluster Dock Widget Draw

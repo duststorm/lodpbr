@@ -242,6 +242,7 @@ class Surfel
 	 	 	glVertex3fv( s.Center().ToRealPtr());
 	 	 	glPopMatrix();
 	 }
+	 void 					    DrawCenter			(const GLfloat& size = 1.0);
 	 void 						Draw				( int p = 8 ,const Real& pRadius = 1.0);
 	 void 						DrawTriangleFan		( int p = 8 ,const Real& pRadius = 1.0);
 
@@ -815,16 +816,29 @@ typename Surfel<Real>::ListPoint3 Surfel<Real>::BoundariesSamples(unsigned int p
 }
 
 template<class Real>
+void Surfel<Real>::DrawCenter(const GLfloat& size)
+{
+	 	glPushMatrix();
+	 	glPointSize(size);
+	 	glBegin(GL_POINTS);
+			glVertex3fv( mCenter.ToRealPtr() );
+		glEnd();
+	 	glPopMatrix();
+}
+
+template<class Real>
 void Surfel<Real>::Draw(int p,const Real& pRadius)
 {
 
 		ListPoint3 lBoundaries = this->BoundariesSamples(p,pRadius);
 	 	glPushMatrix();
 	 	glPointSize(1.0);
+	 	glBegin(GL_POINTS);
 		for(ListPoint3Iterator it = lBoundaries.begin();it != lBoundaries.end();++it)
 		{
 			glVertex3fv( it->ToRealPtr());
 		}
+		glEnd();
 	 	glPopMatrix();
 }
 
@@ -840,7 +854,7 @@ void Surfel<Real>::DrawTriangleFan(int p,const Real& pRadius)
 
 	    glEnable(GL_POLYGON_OFFSET_FILL | GL_POLYGON_SMOOTH_HINT | GL_MULTISAMPLE);
 	    glPolygonOffset(1,1);
-	    //glColor4f(0.0,0.5,0.5,0.75);
+	    glColor4f(0.0,0.5,0.5,0.5);
 	 	glBegin (GL_POLYGON);
 	 		for(ListPoint3Iterator it = lBoundaries.begin();it != lBoundaries.end();++it)
 	 		{

@@ -26,8 +26,11 @@ class GLWidget : public QGLWidget
     Q_OBJECT
 
 public:
-    // From QGLWidget
 
+    typedef Celer::Surfel<float>  					Surfel;
+
+
+    // From QGLWidget
     explicit GLWidget		(QWidget* parent = 0, const QGLWidget* shareWidget = 0, Qt::WindowFlags f = 0);
     explicit GLWidget		(QGLContext* context, QWidget* parent = 0, const QGLWidget* shareWidget = 0, Qt::WindowFlags f = 0);
     explicit GLWidget		(const QGLFormat& format, QWidget* parent = 0, const QGLWidget* shareWidget = 0, Qt::WindowFlags f = 0);
@@ -39,6 +42,25 @@ public:
     void mouseReleaseEvent	(QMouseEvent *event);
     void wheelEvent			(QWheelEvent *e);
     void keyPressEvent 		(QKeyEvent * e);
+
+
+//    int selectedName() const { return selectedObjectId; };
+//    int selectBufferSize() const { return selectBufferSize; };
+//    GLuint* selectBuffer() { return selectBuffer; };
+//    virtual void select(const QMouseEvent* event);
+//    virtual void select(const QPoint& point);
+//    void setSelectBufferSize(int size);
+//    void setSelectedName(int id) { selectedObjectId=id; };
+//    int selectRegionWidth() const { return selectRegionWidth; };
+//    int selectRegionHeight() const { return selectRegionHeight; };
+//    void setSelectRegionWidth(int width) { selectRegionWidth = width; };
+//    void setSelectRegionHeight(int height) { selectRegionHeight = height; };
+//    virtual void beginSelection(const QPoint& point);
+//    virtual void drawWithNames() {};
+//    virtual void endSelection(const QPoint& point);
+//    virtual void postSelection(const QPoint& point) { Q_UNUSED(point); };
+
+
     void glInit();
 
     // From kglib
@@ -56,7 +78,7 @@ public:
 
     Cluster<float> 										cluster;
 
-    std::vector<Celer::Surfel<float> > 					lSurfels;
+    std::vector<Surfel> 								Surfels;
 
     Celer::BoundingBox3<float>   	   					mBox;
 
@@ -89,6 +111,10 @@ protected:
 private:
 
 	void init();
+	void drawSelectionRectangle() const;
+	void startScreenCoordinatesSystem(bool upward = 0) const;
+	void stopScreenCoordinatesSystem() const;
+
 	std::vector<Celer::Surfel<float> > result;
 
 //    void drawKdTree(int& cont);
@@ -120,6 +146,14 @@ private:
     bool mGLInitialized;
 
     //lodpbr
+
+	// S e l e c t i o n
+	int selectRegionWidth, selectRegionHeight;
+	int selectBufferSize;
+	GLuint* selectBuffer;
+	int selectedObjectId;
+
+    QRect rectangle;
 
 
 };
