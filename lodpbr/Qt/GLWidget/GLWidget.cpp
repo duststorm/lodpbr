@@ -680,70 +680,7 @@ void GLWidget::mousePressEvent(QMouseEvent *event)
     {
 
     	rectangle = QRect(event->pos(), event->pos());
-		result.clear();
-		long hits;
-		int sz = int(Surfels.size())*5;
-		GLuint *selectBuf =new GLuint[sz];
-		glSelectBuffer(sz, selectBuf);
-		glRenderMode(GL_SELECT);
-		glInitNames();
-
-		/* Because LoadName() won't work with no names on the stack */
-		glPushName(-1);
-		double mp[16];
-
-		GLint viewport[4];
-		glGetIntegerv(GL_VIEWPORT,viewport);
-		glPushAttrib(GL_TRANSFORM_BIT);
-		glMatrixMode(GL_PROJECTION);
-		glGetDoublev(GL_PROJECTION_MATRIX ,mp);
-		glPushMatrix();
-		glLoadIdentity();
-		//gluPickMatrix(x, viewport[3]-y, 4, 4, viewport);
-		gluPickMatrix(event->x(), height()-event->y(),4, 4, viewport);
-		glMultMatrixd(mp);
-
-		glMatrixMode(GL_MODELVIEW);
-		glPushMatrix();
-		int cnt=0;
-		std::vector<Celer::Surfel<float> >::iterator  ei;
-		for(ei=Surfels.begin();ei!=Surfels.end();++ei)
-		{
-				glLoadName(cnt);
-				ei->DrawCenter(3.0);
-				cnt++;
-		}
-		glPopMatrix();
-		glMatrixMode(GL_PROJECTION);
-		glPopMatrix();
-		glMatrixMode(GL_MODELVIEW);
-		hits = glRenderMode(GL_RENDER);
-
-		if (hits <= 0){
-
-			std::cout << " Pow 0 " <<  std::endl;
-
-		}
-		else{
-			std::vector< std::pair<double,unsigned int> > H;
-			for(int ii=0;ii<hits;ii++){
-				H.push_back( std::pair<double,unsigned int>(selectBuf[ii*4+1]/4294967295.0,selectBuf[ii*4+3]));
-			}
-			std::sort(H.begin(),H.end());
-
-			result.resize(H.size());
-			for(int ii=0;ii<hits;ii++){
-				std::vector<Celer::Surfel<float> >::iterator ei=Surfels.begin();
-				std::advance(ei ,H[ii].second);
-				result[ii]=(*ei);
-			}
-			glPopAttrib();
-			delete [] selectBuf;
-
-		}
-
-    	std::cout << "é = esse " << result.size() << std::endl;
-    }
+	}
 
     lastPos = event->pos();
 
@@ -760,6 +697,72 @@ void GLWidget::mouseReleaseEvent(QMouseEvent *event)
     }else if(event->button() == Qt::RightButton)
     {
     	rectangle = rectangle.normalized();
+    	result.clear();
+    		long hits;
+    		int sz = int(Surfels.size())*5;
+    		GLuint *selectBuf =new GLuint[sz];
+    		glSelectBuffer(sz, selectBuf);
+    		glRenderMode(GL_SELECT);
+    		glInitNames();
+
+    		/* Because LoadName() won't work with no names on the stack */
+    		glPushName(-1);
+    		double mp[16];
+
+    		GLint viewport[4];
+    		glGetIntegerv(GL_VIEWPORT,viewport);
+    		glPushAttrib(GL_TRANSFORM_BIT);
+    		glMatrixMode(GL_PROJECTION);
+    		glGetDoublev(GL_PROJECTION_MATRIX ,mp);
+    		glPushMatrix();
+    		glLoadIdentity();
+    		//gluPickMatrix(x, viewport[3]-y, 4, 4, viewport);
+    		gluPickMatrix(rectangle.center().x(), height()-rectangle.center().y(),rectangle.width(),rectangle.height(), viewport);
+    		glMultMatrixd(mp);
+
+    		glMatrixMode(GL_MODELVIEW);
+    		glPushMatrix();
+    		int cnt=0;
+    		std::vector<Celer::Surfel<float> >::iterator  ei;
+    		for(ei=Surfels.begin();ei!=Surfels.end();++ei)
+    		{
+    				glLoadName(cnt);
+    				ei->DrawCenter(3.0);
+    				cnt++;
+    		}
+    		glPopMatrix();
+    		glMatrixMode(GL_PROJECTION);
+    		glPopMatrix();
+    		glMatrixMode(GL_MODELVIEW);
+    		hits = glRenderMode(GL_RENDER);
+
+    		if (hits <= 0){
+
+    			std::cout << " Pow 0 " <<  std::endl;
+
+    		}
+    		else{
+    			std::vector< std::pair<double,unsigned int> > H;
+    			for(int ii=0;ii<hits;ii++){
+    				H.push_back( std::pair<double,unsigned int>(selectBuf[ii*4+1]/4294967295.0,selectBuf[ii*4+3]));
+    			}
+    			std::sort(H.begin(),H.end());
+
+    			result.resize(H.size());
+    			for(int ii=0;ii<hits;ii++){
+    				std::vector<Celer::Surfel<float> >::iterator ei=Surfels.begin();
+    				std::advance(ei ,H[ii].second);
+    				result[ii]=(*ei);
+    			}
+    			glPopAttrib();
+    			delete [] selectBuf;
+
+    		}
+
+        	std::cout << "é = esse " << result.size() << std::endl;
+
+
+
     }
 
     update();
