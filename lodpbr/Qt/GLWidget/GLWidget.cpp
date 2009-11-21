@@ -38,6 +38,31 @@ GLWidget::GLWidget(const QGLFormat& format, QWidget* parent, const QGLWidget* sh
     init();
 }
 
+void GLWidget::init()
+{
+    //setFormat(QGLFormat(QGL::DoubleBuffer | QGL::DepthBuffer));
+
+    setMinimumSize(400, 400);
+    setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
+    setFocus();
+
+    setMouseTracking(true);
+    setFocusPolicy(Qt::StrongFocus);
+
+    setAutoFillBackground(false);
+
+	CameraStep = 0.01;
+
+	mGLInitialized = false;
+
+	mNumber = 4;
+
+	mode = true;
+	settings.setBackgroundColor(QColor(75,75,75));
+
+}
+
+
 // Slots
 
 void GLWidget::setClusterBuiltType(const QString & text)
@@ -64,6 +89,7 @@ void GLWidget::setClusterBuiltSystem	(const QString & text)
 	{
 
 	}
+	update();
 }
 
 void GLWidget::setClusterRendererType	(const QString & text)
@@ -83,7 +109,7 @@ void GLWidget::setClusterRendererType	(const QString & text)
 	{
 
 	}
-	updateGL();
+	update();
 
 }
 
@@ -104,7 +130,7 @@ void GLWidget::setClusterRenderingMode	(const QString & text)
 	{
 
 	}
-	updateGL();
+	update();
 }
 
 
@@ -120,7 +146,7 @@ void GLWidget::setShowCluster(bool checked)
 		mClusterLog.maskShow.Clear(ClusterLog::Cluster);
 		std::cout << "No Cluster" << std::endl;
 	}
-	updateGL();
+	update();
 }
 
 void GLWidget::setShowSeed(bool checked)
@@ -134,7 +160,7 @@ void GLWidget::setShowSeed(bool checked)
 		mClusterLog.maskShow.Clear(ClusterLog::Seed);
 	}
 
-	updateGL();
+	update();
 }
 
 void GLWidget::setShowModel(bool checked)
@@ -147,7 +173,7 @@ void GLWidget::setShowModel(bool checked)
 	{
 		mClusterLog.maskShow.Clear(ClusterLog::Model);
 	}
-	updateGL();
+	update();
 }
 
 void GLWidget::setShowDrawClusterWithID	(bool checked)
@@ -169,51 +195,26 @@ void GLWidget::setShowDrawClusterWithRange	(bool checked)
 		std::cout << "Index ? : " << mClusterLog.maskRenderingClusterBy.Test(ClusterLog::Index) <<
 				    " Range  ?: " << mClusterLog.maskRenderingClusterBy.Test(ClusterLog::Range) << std::endl;
 	}
-	updateGL();
+	update();
 }
 
 void GLWidget::setDrawClusterWithID (int value)
 {
 	mClusterLog.setClusteIndex(value);
-	updateGL();
+	update();
 }
 
 
 void GLWidget::setDrawClusterWithRangeBegin	(int value)
 {
 	mClusterLog.setClusterRangeBegin(value);
-	updateGL();
+	update();
 }
 
 void GLWidget::setDrawClusterWithRangeEnd	(int value)
 {
 	mClusterLog.setClusterRangeEnd(value);
-	updateGL();
-}
-
-
-
-
-
-void GLWidget::init()
-{
-    //setFormat(QGLFormat(QGL::DoubleBuffer | QGL::DepthBuffer));
-
-    setMinimumSize(400, 400);
-    setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
-    setFocus();
-
-    setMouseTracking(true);
-    setFocusPolicy(Qt::StrongFocus);
-
-	CameraStep = 0.01;
-
-	mGLInitialized = false;
-
-	mNumber = 4;
-
-	mode = true;
-
+	update();
 }
 
 void GLWidget::SetMode(bool t)
@@ -394,9 +395,8 @@ void GLWidget::initializeGL()
 	//depth-buffering
 	//glEnable(GL_NORMALIZE);
 
-	setForegroundColor(QColor(180, 180, 180));
-	setBackgroundColor(QColor(75, 75, 75));
-
+	setForegroundColor(settings.getTextColor());
+	setBackgroundColor(settings.getBackgroundColor());
 
 	glBlendFunc(GL_ONE, GL_ONE);
 	glEnable(GL_LIGHT0);
@@ -434,15 +434,15 @@ void GLWidget::LoadModel(const char * filename,vcg::CallBackPos *cb=0 )
 	mClusterLog = ClusterLog();
 	mLSplatLog = LSplatLog();
 	Surfels.clear();
-	mBox = Celer::BoundingBox3<float>();
-	Celer::IOSurfels<float>::LoadMesh(filename,Surfels,mBox,cb);
+	Box = Celer::BoundingBox3<float>();
+	Celer::IOSurfels<float>::LoadMesh(filename,Surfels,Box,cb);
 	std::cout << Surfels.capacity();
 }
 
 void GLWidget::calLimits()
 {
 
-     cluster = Cluster<float>(Surfels,mBox);
+     cluster = Cluster<float>(Surfels,Box);
 
 //
 //
@@ -496,24 +496,25 @@ void GLWidget::Clear()
 
 
 
-void GLWidget::paintGL()
+void GLWidget::draw()
 {
 
 }
 
 void GLWidget::paintEvent(QPaintEvent *)
 {
-    draw();
+	paintGL();
 }
 
 
-void GLWidget::draw()
+void GLWidget::paintGL()
 {
     QPainter p(this); // used for text overlay
 
     // save the GL state set for QPainter
+
     saveGLState();
-    makeCurrent();
+    initializeGL();
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     glMatrixMode(GL_PROJECTION);
@@ -529,8 +530,10 @@ void GLWidget::draw()
 
     fps.nextFrame();
 
+
     if ( Surfels.size() != 0 )
     {
+
     	if (mClusterLog.maskShow.Test(ClusterLog::Model))
     	{
     		glPushMatrix();
@@ -562,10 +565,14 @@ void GLWidget::draw()
     			cluster.DrawClustersRange(mClusterLog.getClusterRangeBegin(),mClusterLog.getClusterRangeEnd(),(mClusterLog.maskShow.Test(ClusterLog::Seed)));
 
     			for(unsigned int i = mClusterLog.getClusterRangeBegin();i <= mClusterLog.getClusterRangeEnd();++i)
-    				cluster.DrawSurfels(i);
+    				cluster.DrawSurfels(i,8,0.2);
+    		}else
+    		{
+
     		}
 
     	}
+
     	DrawGroud();
     	drawSelectionRectangle();
 
@@ -586,7 +593,7 @@ void GLWidget::draw()
     p.setPen(QColor(197, 197, 197, 157));
     p.setBrush(QColor(197, 197, 197, 127));
     p.drawRect(QRect(0, 0, width(), 50));
-    p.setPen(Qt::black);
+    p.setPen(settings.getTextColor());
     p.setBrush(Qt::NoBrush);
     const QString str1(tr("A simple OpenGL pbuffer example."));
     const QString str2(tr("Use the mouse wheel to zoom, press buttons and move mouse to rotate, double-click to flip."));
@@ -624,18 +631,30 @@ void GLWidget::keyPressEvent(QKeyEvent * event)
 
 	}
 	else if (event->key() == Qt::Key_A){
-		camera.StrafeRight(CameraStep);
+		camera.StrafeRight(-CameraStep);
 		update();
 
 	}
 	else if (event->key() == Qt::Key_D){
-		camera.StrafeRight(-CameraStep);
+		camera.StrafeRight(CameraStep);
 		update();
 
 	}
 	else if (event->key() == Qt::Key_R){
 
 		camera.Reset();
+		update();
+	}
+	else if (event->key() == Qt::Key_Plus){
+
+		if (CameraStep < 2.0)
+			CameraStep += 0.01;
+		update();
+	}
+	else if (event->key() == Qt::Key_Minus){
+
+		if (CameraStep > 0.0)
+			CameraStep -= 0.01;
 		update();
 	}
 	else {}
@@ -652,6 +671,10 @@ void GLWidget::mousePressEvent(QMouseEvent *event)
         mCenterX = static_cast<float>(event->x());
         mCenterY = static_cast<float>(event->y());
         update();
+    }
+    if(event->button() == Qt::MidButton)
+    {
+    	camera.OnRotationBegin(event->x(), height()-event->y());
     }
     if (event->button() == Qt::RightButton)
     {
@@ -780,7 +803,7 @@ void GLWidget::mouseMoveEvent(QMouseEvent *event)
 
     }else if (event->buttons() & Qt::MidButton)  {
 
-    	//camera.OnRotationMove(event->x(), event->y());
+    	camera.OnRotationMove(event->x(),height()- event->y());
     }
 
     update();
@@ -810,17 +833,15 @@ void GLWidget::drawSelectionRectangle() const
   glVertex2i(rectangle.left(),  rectangle.bottom());
   glEnd();
 
-
-  Surfel s;
-
-  s.SetCenter(Celer::Point3<float>(lastPos.x(),lastPos.y(),0.0));
-  s.SetMajorAxis(std::make_pair(15.0,Celer::Vector3<float>(0.0,1.0,0.0)));
-  s.SetMinorAxis(std::make_pair(15.0,Celer::Vector3<float>(1.0,0.0,0.0)));
-
-  s.DrawTriangleFan(50,1.0);
+//  Surfel s;
+//  s.SetCenter(Celer::Point3<float>(lastPos.x(),lastPos.y(),0.0));
+//  s.SetMajorAxis(std::make_pair(15.0,Celer::Vector3<float>(0.0,1.0,0.0)));
+//  s.SetMinorAxis(std::make_pair(15.0,Celer::Vector3<float>(1.0,0.0,0.0)));
+//
+//  s.DrawTriangleFan(50,1.0);
 
   glLineWidth(2.0);
-  glColor4f(0.7f, 0.7f, 0.7f, 0.5f);
+  qglColor(settings.getTextColor());
   glBegin(GL_LINE_LOOP);
   glVertex2i(rectangle.left(),  rectangle.top());
   glVertex2i(rectangle.right(), rectangle.top());

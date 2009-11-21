@@ -47,7 +47,7 @@ HEADERS += Math/Math.hpp \
     Clustering/ClusterCriteria.hpp \
     Qt/Tools/FPSCounter.h\	
     Qt/Tools/BitMask.hpp\
-    Qt/Tools/Counted_Ptr.hpp\
+    Qt/Tools/Settings.hpp\
     Qt/GLWidget/GLWidget.hpp \
     Qt/GLWidget/WidgetProxy.hpp \
     Qt/GLWidget/Log/ClusterLog.hpp \
@@ -71,12 +71,13 @@ SOURCES += main.cpp \
     Scene/Camera.cpp \
     Scene/Trackball.cpp \
     Qt/Tools/FPSCounter.cpp\
+    Qt/Tools/Settings.cpp\
     Qt/GLWidget/GLWidget.cpp \
     Qt/GLWidget/WidgetProxy.cpp \
     Qt/GLWidget/Log/ClusterLog.cpp \
     Qt/GLWidget/Log/LSplatLog.cpp \
     Qt/myMainWindow.cpp \
-    Qt/myMainWindowInit.cpp \
+    Qt/myMainWindowRun.cpp \
     $$VCGDIR/wrap/ply/plylib.cpp
 
 QT += opengl

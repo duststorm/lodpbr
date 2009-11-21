@@ -39,8 +39,14 @@ template < class Real>	class Trackball
 	    const Celer::Quaternion<Real>& Orientation() { return mOrientation; }
 	    Celer::Matrix4x4<Real> To4x4RotationMatrix();
 	    void ToOpenGL();
+    Celer::Vector3<Real> getEndVector() const
+    {
+        return endVector;
+    }
 
-	};//End Interface
+
+
+};//End Interface
 
 
 	template < class Real>
