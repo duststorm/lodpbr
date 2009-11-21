@@ -36,6 +36,11 @@ public:
     explicit GLWidget		(const QGLFormat& format, QWidget* parent = 0, const QGLWidget* shareWidget = 0, Qt::WindowFlags f = 0);
     void initializeGL		();
     void resizeGL			(int width, int height);
+
+
+    void paintEvent			(QPaintEvent *);
+
+    void draw				();
     void paintGL			();
     void mousePressEvent	(QMouseEvent *event);
     void mouseMoveEvent		(QMouseEvent *event);
@@ -83,8 +88,28 @@ public:
     Celer::BoundingBox3<float>   	   					mBox;
 
 
+	void createcircle (int k, int r, int h) {
+
+	    glBegin(GL_LINES);
+	    for (int i = 0;i < 180;i++)
+	    {
+	    	float x  = r * cos(i) - h;
+	    	float y =  r * sin(i) + k;
+	    glVertex3f(x + k,y - h,0);
+
+	    x = r * cos(i + 0.1) - h;
+	    y = r * sin(i + 0.1) + k;
+	    glVertex3f(x + k,y - h,0);
+	    }
+	    glEnd();
+	}
+
 public slots:
 	void Clear();
+
+	void setBackgroundColor(const QColor& color) { backgroundColor=color; qglClearColor(color); };
+	void setForegroundColor(const QColor& color) { foregroundColor = color; };
+	//@}
 
 	void setClusterBuiltType	(const QString & text);
 	void setClusterBuiltSystem	(const QString & text);
@@ -114,6 +139,9 @@ private:
 	void drawSelectionRectangle() const;
 	void startScreenCoordinatesSystem(bool upward = 0) const;
 	void stopScreenCoordinatesSystem() const;
+
+	void saveGLState();
+	void restoreGLState();
 
 	std::vector<Celer::Surfel<float> > result;
 
@@ -154,6 +182,9 @@ private:
 	int selectedObjectId;
 
     QRect rectangle;
+	// C o l o r s
+	QColor backgroundColor, foregroundColor;
+
 
 
 };
