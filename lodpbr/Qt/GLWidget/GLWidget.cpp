@@ -17,6 +17,9 @@
 
 
 
+// Se quiser usar QPainter Ver exemplo no QT demo - Manda Qt em wave animation !!!
+
+
 GLWidget::GLWidget(QWidget* parent, const QGLWidget* shareWidget, Qt::WindowFlags f) :
         QGLWidget(parent, shareWidget, f)
 {
@@ -225,7 +228,7 @@ void GLWidget::DrawGroud()
 	glColor3f(0.2f, 0.2f, 0.2f);
 
 	// draw the lines
-
+	glEnable(GL_MULTISAMPLE);
 	glBegin(GL_LINES);
 
 
@@ -241,7 +244,7 @@ void GLWidget::DrawGroud()
 		glVertex3i(250, 0, z);
 	}
 	glEnd();
-
+	glDisable(GL_MULTISAMPLE);
 	glEnable(GL_LIGHTING);
 }
 
@@ -368,7 +371,7 @@ void GLWidget::initializeGL()
 
 	GLfloat light_position0[] = {0.0, 0.5, 10.0, 0.0};
 
-	glClearColor(1.0f, 1.0f, 1.0f, 1.0f);           //cor fundo
+	//glClearColor(1.0f, 1.0f, 1.0f, 0.0f);           //cor fundo
 	glShadeModel(GL_SMOOTH);                      	//gouraud
 	glMaterialfv(GL_FRONT_AND_BACK,GL_DIFFUSE, luzDifusa);//refletancia do material
 	glMaterialfv(GL_FRONT_AND_BACK,GL_SPECULAR, especularidade);//refletancia do material
@@ -382,13 +385,24 @@ void GLWidget::initializeGL()
 	glLightfv(GL_LIGHT0, GL_SPECULAR, light_position0 );
 
 
-	glEnable(GL_POINT_SMOOTH);
-	glEnable(GL_COLOR_MATERIAL);  //cor do material a partir da cor corrente
-	glEnable(GL_LIGHTING);        //uso de iluminacao
-	glEnable(GL_LIGHT0);          //luz  0
-	glEnable(GL_DEPTH_TEST);
+	//glEnable(GL_POINT_SMOOTH);
+//	glEnable(GL_COLOR_MATERIAL);  //cor do material a partir da cor corrente
+//	glEnable(GL_LIGHTING);        //uso de iluminacao
+//	glEnable(GL_LIGHT0);          //luz  0
+//	glEnable(GL_DEPTH_TEST);
+//	glBlendFunc(GL_ONE, GL_ONE);
 	//depth-buffering
-	glEnable(GL_NORMALIZE);
+	//glEnable(GL_NORMALIZE);
+
+	setForegroundColor(QColor(180, 180, 180));
+	setBackgroundColor(QColor(75, 75, 75));
+
+
+	glBlendFunc(GL_ONE, GL_ONE);
+	glEnable(GL_LIGHT0);
+	glEnable(GL_LIGHTING);
+	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_COLOR_MATERIAL);
 
 }
 
@@ -480,8 +494,26 @@ void GLWidget::Clear()
     Surfels.clear();
 }
 
+
+
 void GLWidget::paintGL()
 {
+
+}
+
+void GLWidget::paintEvent(QPaintEvent *)
+{
+    draw();
+}
+
+
+void GLWidget::draw()
+{
+    QPainter p(this); // used for text overlay
+
+    // save the GL state set for QPainter
+    saveGLState();
+    makeCurrent();
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     glMatrixMode(GL_PROJECTION);
@@ -495,10 +527,7 @@ void GLWidget::paintGL()
     camera.SetViewByMouse();
     glMultMatrixf((~camera.ViewMatrix()));
 
-    int cont = 0;
     fps.nextFrame();
-
-    drawSelectionRectangle();
 
     if ( Surfels.size() != 0 )
     {
@@ -515,7 +544,7 @@ void GLWidget::paintGL()
     		glPopMatrix();
     	}
 
-    	for (int i = 0; i != result.size();++i)
+    	for (size_t i = 0; i != result.size();++i)
     		result[i].DrawCenter(5.0);
 
     	if (mClusterLog.maskShow.Test(ClusterLog::Cluster))
@@ -537,14 +566,33 @@ void GLWidget::paintGL()
     		}
 
     	}
-
-    	glColor3f(0.5,0.5,0.5);
-
-    	renderText(10,5,QString("___________________________"));
-    	renderText(10,25,QString("Number of Points :"));renderText(145,25,fps.fpsString());
-    	renderText(10,30,QString("___________________________"));
     	DrawGroud();
+    	drawSelectionRectangle();
+
+
+//		qglColor(Qt::lightGray);
+//
+//    	renderText(10,5,QString	("___________________________"));
+//    	renderText(10,25,QString("Number of Points :"));renderText(145,25,fps.fpsString());
+//    	renderText(10,30,QString("___________________________"));
+
+
     }
+
+    restoreGLState();
+
+
+    // draw the overlayed text using QPainter
+    p.setPen(QColor(197, 197, 197, 157));
+    p.setBrush(QColor(197, 197, 197, 127));
+    p.drawRect(QRect(0, 0, width(), 50));
+    p.setPen(Qt::black);
+    p.setBrush(Qt::NoBrush);
+    const QString str1(tr("A simple OpenGL pbuffer example."));
+    const QString str2(tr("Use the mouse wheel to zoom, press buttons and move mouse to rotate, double-click to flip."));
+    QFontMetrics fm(p.font());
+    p.drawText(width()/2 - fm.width(str1)/2, 20, str1);
+    p.drawText(width()/2 - fm.width(str2)/2, 20 + fm.lineSpacing(), str2);
 
 
 }
@@ -753,11 +801,8 @@ void GLWidget::drawSelectionRectangle() const
 
   startScreenCoordinatesSystem();
   glDisable(GL_LIGHTING);
-  glDisable(GL_DEPTH_TEST);
   glEnable(GL_BLEND);
-  glBlendFunc(GL_ONE, GL_ONE);
-
-  glColor4f(0.0, 0.0, 0.3f, 0.3f);
+  glColor4f(0.0, 0.0, 0.7f, 0.3f);
   glBegin(GL_QUADS);
   glVertex2i(rectangle.left(),  rectangle.top());
   glVertex2i(rectangle.right(), rectangle.top());
@@ -765,17 +810,25 @@ void GLWidget::drawSelectionRectangle() const
   glVertex2i(rectangle.left(),  rectangle.bottom());
   glEnd();
 
-//  glLineWidth(2.0);
-//  glColor4f(0.4f, 0.4f, 0.5f, 0.5f);
-//  glBegin(GL_LINE_LOOP);
-//  glVertex2i(rectangle.left(),  rectangle.top());
-//  glVertex2i(rectangle.right(), rectangle.top());
-//  glVertex2i(rectangle.right(), rectangle.bottom());
-//  glVertex2i(rectangle.left(),  rectangle.bottom());
-//  glEnd();
+
+  Surfel s;
+
+  s.SetCenter(Celer::Point3<float>(lastPos.x(),lastPos.y(),0.0));
+  s.SetMajorAxis(std::make_pair(15.0,Celer::Vector3<float>(0.0,1.0,0.0)));
+  s.SetMinorAxis(std::make_pair(15.0,Celer::Vector3<float>(1.0,0.0,0.0)));
+
+  s.DrawTriangleFan(50,1.0);
+
+  glLineWidth(2.0);
+  glColor4f(0.7f, 0.7f, 0.7f, 0.5f);
+  glBegin(GL_LINE_LOOP);
+  glVertex2i(rectangle.left(),  rectangle.top());
+  glVertex2i(rectangle.right(), rectangle.top());
+  glVertex2i(rectangle.right(), rectangle.bottom());
+  glVertex2i(rectangle.left(),  rectangle.bottom());
+  glEnd();
 
   glDisable(GL_BLEND);
-  glEnable(GL_DEPTH_TEST);
   glEnable(GL_LIGHTING);
   stopScreenCoordinatesSystem();
 }
@@ -808,5 +861,24 @@ void GLWidget::stopScreenCoordinatesSystem() const
 
 	glMatrixMode(GL_MODELVIEW);
 	glPopMatrix();
+}
+
+
+void GLWidget::saveGLState()
+{
+    glPushAttrib(GL_ALL_ATTRIB_BITS);
+    glMatrixMode(GL_PROJECTION);
+    glPushMatrix();
+    glMatrixMode(GL_MODELVIEW);
+    glPushMatrix();
+}
+
+void GLWidget::restoreGLState()
+{
+    glMatrixMode(GL_PROJECTION);
+    glPopMatrix();
+    glMatrixMode(GL_MODELVIEW);
+    glPopMatrix();
+    glPopAttrib();
 }
 
