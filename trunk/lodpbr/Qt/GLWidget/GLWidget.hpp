@@ -16,7 +16,10 @@
 
 #include "Scene/Camera.hpp"
 
+
+
 #include "Qt/Tools/FPSCounter.h"
+#include "Qt/Tools/Settings.hpp"
 
 #include "Log/ClusterLog.hpp"
 #include "Log/LSplatLog.hpp"
@@ -85,24 +88,8 @@ public:
 
     std::vector<Surfel> 								Surfels;
 
-    Celer::BoundingBox3<float>   	   					mBox;
+    Celer::BoundingBox3<float>   	   					Box;
 
-
-	void createcircle (int k, int r, int h) {
-
-	    glBegin(GL_LINES);
-	    for (int i = 0;i < 180;i++)
-	    {
-	    	float x  = r * cos(i) - h;
-	    	float y =  r * sin(i) + k;
-	    glVertex3f(x + k,y - h,0);
-
-	    x = r * cos(i + 0.1) - h;
-	    y = r * sin(i + 0.1) + k;
-	    glVertex3f(x + k,y - h,0);
-	    }
-	    glEnd();
-	}
 
 public slots:
 	void Clear();
@@ -143,6 +130,7 @@ private:
 	void saveGLState();
 	void restoreGLState();
 
+
 	std::vector<Celer::Surfel<float> > result;
 
 //    void drawKdTree(int& cont);
@@ -170,6 +158,7 @@ private:
     bool mode;
 
     FPSCounter fps;
+    Settings   settings;
 
     bool mGLInitialized;
 

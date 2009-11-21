@@ -10,7 +10,7 @@
     <x>0</x>
     <y>0</y>
     <width>1014</width>
-    <height>648</height>
+    <height>782</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -34,10 +34,10 @@
       </property>
       <property name="background">
        <brush brushstyle="SolidPattern">
-        <color alpha="255">
-         <red>75</red>
-         <green>75</green>
-         <blue>75</blue>
+        <color alpha="125">
+         <red>125</red>
+         <green>125</green>
+         <blue>125</blue>
         </color>
        </brush>
       </property>
@@ -74,201 +74,6 @@
    <addaction name="menuView"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
-  <widget class="QDockWidget" name="dockWidgetClusterBuilder">
-   <property name="enabled">
-    <bool>true</bool>
-   </property>
-   <property name="sizePolicy">
-    <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-     <horstretch>0</horstretch>
-     <verstretch>0</verstretch>
-    </sizepolicy>
-   </property>
-   <property name="minimumSize">
-    <size>
-     <width>309</width>
-     <height>295</height>
-    </size>
-   </property>
-   <property name="maximumSize">
-    <size>
-     <width>16000</width>
-     <height>16000</height>
-    </size>
-   </property>
-   <property name="acceptDrops">
-    <bool>false</bool>
-   </property>
-   <property name="layoutDirection">
-    <enum>Qt::LeftToRight</enum>
-   </property>
-   <property name="floating">
-    <bool>false</bool>
-   </property>
-   <property name="features">
-    <set>QDockWidget::AllDockWidgetFeatures</set>
-   </property>
-   <property name="allowedAreas">
-    <set>Qt::AllDockWidgetAreas</set>
-   </property>
-   <property name="windowTitle">
-    <string>Cluster Build</string>
-   </property>
-   <attribute name="dockWidgetArea">
-    <number>1</number>
-   </attribute>
-   <widget class="QWidget" name="dockWidgetClusterContents">
-    <layout class="QVBoxLayout" name="verticalLayout">
-     <item>
-      <widget class="QFrame" name="frame">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Preferred" vsizetype="MinimumExpanding">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="minimumSize">
-        <size>
-         <width>0</width>
-         <height>0</height>
-        </size>
-       </property>
-       <property name="maximumSize">
-        <size>
-         <width>16000</width>
-         <height>16000</height>
-        </size>
-       </property>
-       <property name="frameShape">
-        <enum>QFrame::Box</enum>
-       </property>
-       <property name="frameShadow">
-        <enum>QFrame::Sunken</enum>
-       </property>
-       <layout class="QVBoxLayout" name="verticalLayout_2">
-        <item>
-         <widget class="QFrame" name="frameBuid">
-          <property name="frameShape">
-           <enum>QFrame::StyledPanel</enum>
-          </property>
-          <property name="frameShadow">
-           <enum>QFrame::Raised</enum>
-          </property>
-          <layout class="QGridLayout" name="gridLayout_2">
-           <item row="0" column="0">
-            <widget class="QGroupBox" name="groupBoxCluster_Build">
-             <property name="title">
-              <string>Build</string>
-             </property>
-             <property name="flat">
-              <bool>false</bool>
-             </property>
-             <layout class="QGridLayout" name="gridLayout">
-              <item row="0" column="0">
-               <widget class="QLabel" name="labelCluster_SurfelSimilarity">
-                <property name="text">
-                 <string>Surfel Similarity</string>
-                </property>
-               </widget>
-              </item>
-              <item row="0" column="1">
-               <widget class="QComboBox" name="comboBoxCluster_BuildSurfelSimilarity">
-                <item>
-                 <property name="text">
-                  <string>by Normal</string>
-                 </property>
-                </item>
-                <item>
-                 <property name="text">
-                  <string>by Geral</string>
-                 </property>
-                </item>
-               </widget>
-              </item>
-              <item row="1" column="0">
-               <widget class="QLabel" name="labelCluster_StopCriteria">
-                <property name="text">
-                 <string>Stop Criteria</string>
-                </property>
-               </widget>
-              </item>
-              <item row="1" column="1">
-               <widget class="QComboBox" name="comboBoxCluster_BuildStopCriteria">
-                <item>
-                 <property name="text">
-                  <string>by Size</string>
-                 </property>
-                </item>
-                <item>
-                 <property name="text">
-                  <string>by Curvatura</string>
-                 </property>
-                </item>
-               </widget>
-              </item>
-              <item row="2" column="0" colspan="2">
-               <widget class="QGroupBox" name="groupBoxCluster_BuildInteractive">
-                <property name="title">
-                 <string>Interactive</string>
-                </property>
-                <property name="flat">
-                 <bool>false</bool>
-                </property>
-                <property name="checkable">
-                 <bool>true</bool>
-                </property>
-                <layout class="QFormLayout" name="formLayout">
-                 <property name="fieldGrowthPolicy">
-                  <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
-                 </property>
-                 <item row="0" column="0">
-                  <widget class="QPushButton" name="pushButtonBuild">
-                   <property name="text">
-                    <string>Build</string>
-                   </property>
-                  </widget>
-                 </item>
-                </layout>
-               </widget>
-              </item>
-             </layout>
-            </widget>
-           </item>
-           <item row="0" column="1">
-            <spacer name="horizontalSpacer_2">
-             <property name="orientation">
-              <enum>Qt::Horizontal</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>40</width>
-               <height>20</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
-          </layout>
-         </widget>
-        </item>
-        <item>
-         <spacer name="verticalSpacer">
-          <property name="orientation">
-           <enum>Qt::Vertical</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>20</width>
-            <height>40</height>
-           </size>
-          </property>
-         </spacer>
-        </item>
-       </layout>
-      </widget>
-     </item>
-    </layout>
-   </widget>
-  </widget>
   <widget class="QDockWidget" name="dockWidgetDrawCluster">
    <property name="enabled">
     <bool>true</bool>
@@ -281,8 +86,8 @@
    </property>
    <property name="minimumSize">
     <size>
-     <width>309</width>
-     <height>373</height>
+     <width>331</width>
+     <height>705</height>
     </size>
    </property>
    <property name="features">
@@ -589,9 +394,204 @@
     <enum>TopToolBarArea</enum>
    </attribute>
    <attribute name="toolBarBreak">
-    <bool>true</bool>
+    <bool>false</bool>
    </attribute>
    <addaction name="action_Show_Points"/>
+  </widget>
+  <widget class="QDockWidget" name="dockWidgetClusterBuilder">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
+   <property name="sizePolicy">
+    <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+     <horstretch>0</horstretch>
+     <verstretch>0</verstretch>
+    </sizepolicy>
+   </property>
+   <property name="minimumSize">
+    <size>
+     <width>309</width>
+     <height>295</height>
+    </size>
+   </property>
+   <property name="maximumSize">
+    <size>
+     <width>16000</width>
+     <height>16000</height>
+    </size>
+   </property>
+   <property name="acceptDrops">
+    <bool>false</bool>
+   </property>
+   <property name="layoutDirection">
+    <enum>Qt::LeftToRight</enum>
+   </property>
+   <property name="floating">
+    <bool>false</bool>
+   </property>
+   <property name="features">
+    <set>QDockWidget::AllDockWidgetFeatures</set>
+   </property>
+   <property name="allowedAreas">
+    <set>Qt::AllDockWidgetAreas</set>
+   </property>
+   <property name="windowTitle">
+    <string>Cluster Build</string>
+   </property>
+   <attribute name="dockWidgetArea">
+    <number>1</number>
+   </attribute>
+   <widget class="QWidget" name="dockWidgetClusterContents">
+    <layout class="QVBoxLayout" name="verticalLayout">
+     <item>
+      <widget class="QFrame" name="frame">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Preferred" vsizetype="MinimumExpanding">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>0</width>
+         <height>0</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>16000</width>
+         <height>16000</height>
+        </size>
+       </property>
+       <property name="frameShape">
+        <enum>QFrame::Box</enum>
+       </property>
+       <property name="frameShadow">
+        <enum>QFrame::Sunken</enum>
+       </property>
+       <layout class="QVBoxLayout" name="verticalLayout_2">
+        <item>
+         <widget class="QFrame" name="frameBuid">
+          <property name="frameShape">
+           <enum>QFrame::StyledPanel</enum>
+          </property>
+          <property name="frameShadow">
+           <enum>QFrame::Raised</enum>
+          </property>
+          <layout class="QGridLayout" name="gridLayout_2">
+           <item row="0" column="0">
+            <widget class="QGroupBox" name="groupBoxCluster_Build">
+             <property name="title">
+              <string>Build</string>
+             </property>
+             <property name="flat">
+              <bool>false</bool>
+             </property>
+             <layout class="QGridLayout" name="gridLayout">
+              <item row="0" column="0">
+               <widget class="QLabel" name="labelCluster_SurfelSimilarity">
+                <property name="text">
+                 <string>Surfel Similarity</string>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="1">
+               <widget class="QComboBox" name="comboBoxCluster_BuildSurfelSimilarity">
+                <item>
+                 <property name="text">
+                  <string>by Normal</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>by Geral</string>
+                 </property>
+                </item>
+               </widget>
+              </item>
+              <item row="1" column="0">
+               <widget class="QLabel" name="labelCluster_StopCriteria">
+                <property name="text">
+                 <string>Stop Criteria</string>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="1">
+               <widget class="QComboBox" name="comboBoxCluster_BuildStopCriteria">
+                <item>
+                 <property name="text">
+                  <string>by Size</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>by Curvatura</string>
+                 </property>
+                </item>
+               </widget>
+              </item>
+              <item row="2" column="0" colspan="2">
+               <widget class="QGroupBox" name="groupBoxCluster_BuildInteractive">
+                <property name="title">
+                 <string>Interactive</string>
+                </property>
+                <property name="flat">
+                 <bool>false</bool>
+                </property>
+                <property name="checkable">
+                 <bool>true</bool>
+                </property>
+                <layout class="QFormLayout" name="formLayout">
+                 <property name="fieldGrowthPolicy">
+                  <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
+                 </property>
+                 <item row="0" column="0">
+                  <widget class="QPushButton" name="pushButtonBuild">
+                   <property name="text">
+                    <string>Build</string>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <spacer name="horizontalSpacer_2">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>40</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item>
+         <spacer name="verticalSpacer">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>40</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+       </layout>
+      </widget>
+     </item>
+    </layout>
+   </widget>
   </widget>
   <action name="action_Open_File">
    <property name="text">
@@ -654,230 +654,6 @@
  <resources/>
  <connections>
   <connection>
-   <sender>sliderCluster_DrawClusterWithID</sender>
-   <signal>valueChanged(int)</signal>
-   <receiver>spinBoxCluster_DrawClusterWithID</receiver>
-   <slot>setValue(int)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>805</x>
-     <y>220</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>924</x>
-     <y>234</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>sliderCluster_DrawClusterWithRangeBegin</sender>
-   <signal>valueChanged(int)</signal>
-   <receiver>spinBoxCluster_DrawClusterWithRangeBegin</receiver>
-   <slot>setValue(int)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>740</x>
-     <y>283</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>761</x>
-     <y>284</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>sliderCluster_DrawClusterWithRangeEnd</sender>
-   <signal>valueChanged(int)</signal>
-   <receiver>spinBoxCluster_DrawClusterWithRangeEnd</receiver>
-   <slot>setValue(int)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>902</x>
-     <y>284</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>885</x>
-     <y>289</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>spinBoxCluster_DrawClusterWithRangeBegin</sender>
-   <signal>valueChanged(int)</signal>
-   <receiver>sliderCluster_DrawClusterWithRangeBegin</receiver>
-   <slot>setValue(int)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>793</x>
-     <y>296</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>730</x>
-     <y>294</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>spinBoxCluster_DrawClusterWithRangeEnd</sender>
-   <signal>valueChanged(int)</signal>
-   <receiver>sliderCluster_DrawClusterWithRangeEnd</receiver>
-   <slot>setValue(int)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>881</x>
-     <y>278</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>925</x>
-     <y>276</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>radioButtonCluster_DrawIndex</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>sliderCluster_DrawClusterWithID</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>729</x>
-     <y>191</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>729</x>
-     <y>213</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>radioButtonCluster_DrawRange</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>sliderCluster_DrawClusterWithRangeBegin</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>743</x>
-     <y>261</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>697</x>
-     <y>288</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>radioButtonCluster_DrawRange</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>spinBoxCluster_DrawClusterWithRangeBegin</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>767</x>
-     <y>257</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>762</x>
-     <y>273</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>radioButtonCluster_DrawRange</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>spinBoxCluster_DrawClusterWithRangeEnd</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>864</x>
-     <y>253</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>866</x>
-     <y>273</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>radioButtonCluster_DrawRange</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>sliderCluster_DrawClusterWithRangeEnd</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>946</x>
-     <y>253</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>929</x>
-     <y>290</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>toolButtonDrawCluster</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>frameIndexRange</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>844</x>
-     <y>111</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>816</x>
-     <y>174</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>toolButtonDrawCluster</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>toolButtonClusterDrawSurfel</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>768</x>
-     <y>118</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>769</x>
-     <y>145</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>toolButtonDrawCluster</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>toolButtonClusterDrawNormal</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>706</x>
-     <y>116</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>706</x>
-     <y>145</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>toolButtonClusterDrawSurfel</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>horizontalSliderSurfelRadius</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>781</x>
-     <y>151</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>868</x>
-     <y>158</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
    <sender>action_Cluster_Draw</sender>
    <signal>toggled(bool)</signal>
    <receiver>dockWidgetDrawCluster</receiver>
@@ -890,6 +666,38 @@
     <hint type="destinationlabel">
      <x>819</x>
      <y>324</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>dockWidgetDrawCluster</sender>
+   <signal>visibilityChanged(bool)</signal>
+   <receiver>action_Cluster_Draw</receiver>
+   <slot>setChecked(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>819</x>
+     <y>324</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionQuit</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>close()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>506</x>
+     <y>323</y>
     </hint>
    </hints>
   </connection>
@@ -926,18 +734,242 @@
    </hints>
   </connection>
   <connection>
-   <sender>dockWidgetDrawCluster</sender>
-   <signal>visibilityChanged(bool)</signal>
-   <receiver>action_Cluster_Draw</receiver>
-   <slot>setChecked(bool)</slot>
+   <sender>spinBoxCluster_DrawClusterWithID</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>sliderCluster_DrawClusterWithID</receiver>
+   <slot>setValue(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>819</x>
-     <y>324</y>
+     <x>920</x>
+     <y>243</y>
     </hint>
     <hint type="destinationlabel">
-     <x>-1</x>
-     <y>-1</y>
+     <x>864</x>
+     <y>249</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>sliderCluster_DrawClusterWithID</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>spinBoxCluster_DrawClusterWithID</receiver>
+   <slot>setValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>903</x>
+     <y>261</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>964</x>
+     <y>264</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>sliderCluster_DrawClusterWithRangeBegin</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>spinBoxCluster_DrawClusterWithRangeBegin</receiver>
+   <slot>setValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>727</x>
+     <y>326</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>788</x>
+     <y>329</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>sliderCluster_DrawClusterWithRangeEnd</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>spinBoxCluster_DrawClusterWithRangeEnd</receiver>
+   <slot>setValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>964</x>
+     <y>326</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>868</x>
+     <y>329</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>spinBoxCluster_DrawClusterWithRangeBegin</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>sliderCluster_DrawClusterWithRangeBegin</receiver>
+   <slot>setValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>788</x>
+     <y>329</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>727</x>
+     <y>326</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>spinBoxCluster_DrawClusterWithRangeEnd</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>sliderCluster_DrawClusterWithRangeEnd</receiver>
+   <slot>setValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>868</x>
+     <y>329</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>964</x>
+     <y>326</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>radioButtonCluster_DrawIndex</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>sliderCluster_DrawClusterWithID</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>965</x>
+     <y>229</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>903</x>
+     <y>261</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>radioButtonCluster_DrawRange</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>sliderCluster_DrawClusterWithRangeBegin</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>965</x>
+     <y>294</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>727</x>
+     <y>326</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>radioButtonCluster_DrawRange</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>spinBoxCluster_DrawClusterWithRangeBegin</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>965</x>
+     <y>294</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>788</x>
+     <y>329</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>radioButtonCluster_DrawRange</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>sliderCluster_DrawClusterWithRangeEnd</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>965</x>
+     <y>294</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>964</x>
+     <y>326</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>radioButtonCluster_DrawRange</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>spinBoxCluster_DrawClusterWithRangeEnd</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>965</x>
+     <y>294</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>868</x>
+     <y>329</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>toolButtonDrawCluster</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>frameIndexRange</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>975</x>
+     <y>157</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>975</x>
+     <y>337</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>toolButtonDrawCluster</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>toolButtonClusterDrawSurfel</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>975</x>
+     <y>157</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>752</x>
+     <y>189</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>toolButtonDrawCluster</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>toolButtonClusterDrawNormal</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>975</x>
+     <y>157</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>687</x>
+     <y>189</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>toolButtonClusterDrawSurfel</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>horizontalSliderSurfelRadius</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>752</x>
+     <y>189</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>974</x>
+     <y>187</y>
     </hint>
    </hints>
   </connection>

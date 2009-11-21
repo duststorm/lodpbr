@@ -37,7 +37,8 @@ namespace Celer{
     	enum CameraBehavior
     	{
     		FIRST_PERSON,
-    		FLIGHT
+    		FLIGHT,
+    		REVOLVE_AROUND_MODE
     	};
 
         Camera()
@@ -190,7 +191,7 @@ namespace Celer{
 
         void StrafeRight ( float Distance )
         {
-        	mEyes  +=    ( (mEyes - mFocus)^mUp ) *Distance;
+        	mEyes  +=  ( (mFocus)^mUp ) * Distance;
         }
 
 
@@ -340,6 +341,7 @@ namespace Celer{
         void OnRotationMove(int x, int y)
         {
             mTrackball.Tracking(x,y);
+            //mEyes = mTrackball.getEndVector();
             mOrientation = ~mTrackball.Orientation();
         }
 

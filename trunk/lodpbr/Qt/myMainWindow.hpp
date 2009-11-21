@@ -21,6 +21,7 @@ public:
     void keyPressEvent(QKeyEvent *e);
     static bool QCallBack(const int pos, const char * str);
 
+    //from meshlab
     GLWidget *GLWIDGET() const
     {
     	if(mdiArea->currentSubWindow()==0)
@@ -44,17 +45,18 @@ public slots:
 
 	void updateMenus												();
 	void updateWindowMenu											();
+	// para cada janela opengl, atualizar a janela de atributos do cluster
 	void updateDockCluster											();
 
  	void on_action_Open_File_triggered								();
  	void on_action_Full_Screen_triggered							();
+ 	// tool bar -- atributos do modelo
  	void on_action_Show_Points_toggled							    (bool checked);
  	void on_pushButtonBuild_clicked									();
 
- 	// Cluster Dock Widget Draw
-
-
- 	void  on_toolButtonDrawCluster_toggled							(bool checked);
+ 	// --Cluster Dock Widget Draw--
+ 	//
+ 	void on_toolButtonDrawCluster_toggled							(bool checked);
 
  	void on_spinBoxCluster_DrawClusterWithRangeBegin_valueChanged	(int);
  	void on_sliderCluster_DrawClusterWithRangeBegin_valueChanged	(int);
@@ -73,8 +75,7 @@ public slots:
 	void on_sliderCluster_DrawClusterWithID_valueChanged			(int value);
 
 
-
-
+	// coisas da kglib
  	static void createToplevelGLWidget();
 
 signals:

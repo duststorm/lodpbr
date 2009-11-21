@@ -224,15 +224,15 @@ public:
 
 
 
-/* ---------------------------------------- Draw Functions ---------------------------------------- */
+/* ------------------------------- Draw Functions -------------------------- */
 
-        void DrawSurfels(unsigned int pNumber)
+        void DrawSurfels(unsigned int pNumber,unsigned int pSteps = 8,const Real& pRadius = 1.0 )
         {
         	itColor = colors.begin();
         	glPushAttrib(GL_ALL_ATTRIB_BITS);
         	glPushMatrix();
         	glColor3fv(Colors(true));
-        	Surfels[pNumber].DrawTriangleFan(64);
+        	Surfels[pNumber].DrawTriangleFan(pSteps,pRadius);
         	glPopMatrix();
         	glPopAttrib();
         }
