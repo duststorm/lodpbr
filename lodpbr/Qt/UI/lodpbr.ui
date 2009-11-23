@@ -86,7 +86,7 @@
    </property>
    <property name="minimumSize">
     <size>
-     <width>331</width>
+     <width>428</width>
      <height>705</height>
     </size>
    </property>
@@ -150,6 +150,19 @@
               <item>
                <layout class="QHBoxLayout" name="horizontalLayout_13">
                 <item>
+                 <widget class="QToolButton" name="toolButtonClusterDrawSeed">
+                  <property name="enabled">
+                   <bool>false</bool>
+                  </property>
+                  <property name="text">
+                   <string>  Seed  </string>
+                  </property>
+                  <property name="checkable">
+                   <bool>true</bool>
+                  </property>
+                 </widget>
+                </item>
+                <item>
                  <widget class="QToolButton" name="toolButtonClusterDrawNormal">
                   <property name="enabled">
                    <bool>false</bool>
@@ -178,14 +191,17 @@
                 <item>
                  <widget class="QLabel" name="label_3">
                   <property name="text">
-                   <string>Radius:</string>
+                   <string>Radius %</string>
                   </property>
                  </widget>
                 </item>
                 <item>
-                 <widget class="QSlider" name="horizontalSliderSurfelRadius">
+                 <widget class="QSlider" name="sliderClusterSurfelRadius">
                   <property name="enabled">
                    <bool>false</bool>
+                  </property>
+                  <property name="maximum">
+                   <number>100</number>
                   </property>
                   <property name="orientation">
                    <enum>Qt::Horizontal</enum>
@@ -195,6 +211,9 @@
                   </property>
                   <property name="invertedControls">
                    <bool>false</bool>
+                  </property>
+                  <property name="tickPosition">
+                   <enum>QSlider::NoTicks</enum>
                   </property>
                  </widget>
                 </item>
@@ -413,7 +432,7 @@
    <property name="minimumSize">
     <size>
      <width>309</width>
-     <height>295</height>
+     <height>363</height>
     </size>
    </property>
    <property name="maximumSize">
@@ -543,14 +562,25 @@
                 <property name="checkable">
                  <bool>true</bool>
                 </property>
-                <layout class="QFormLayout" name="formLayout">
-                 <property name="fieldGrowthPolicy">
-                  <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
-                 </property>
+                <layout class="QGridLayout" name="gridLayout_3">
                  <item row="0" column="0">
+                  <widget class="QPushButton" name="pushButton">
+                   <property name="text">
+                    <string>Seed</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="2" column="0">
                   <widget class="QPushButton" name="pushButtonBuild">
                    <property name="text">
                     <string>Build</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="0" column="1">
+                  <widget class="QPushButton" name="pushButton_2">
+                   <property name="text">
+                    <string>Neiborhoos</string>
                    </property>
                   </widget>
                  </item>
@@ -943,7 +973,7 @@
      <y>157</y>
     </hint>
     <hint type="destinationlabel">
-     <x>752</x>
+     <x>820</x>
      <y>189</y>
     </hint>
    </hints>
@@ -959,7 +989,7 @@
      <y>157</y>
     </hint>
     <hint type="destinationlabel">
-     <x>687</x>
+     <x>755</x>
      <y>189</y>
     </hint>
    </hints>
@@ -967,16 +997,32 @@
   <connection>
    <sender>toolButtonClusterDrawSurfel</sender>
    <signal>toggled(bool)</signal>
-   <receiver>horizontalSliderSurfelRadius</receiver>
+   <receiver>sliderClusterSurfelRadius</receiver>
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>752</x>
+     <x>820</x>
      <y>189</y>
     </hint>
     <hint type="destinationlabel">
      <x>974</x>
      <y>187</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>toolButtonDrawCluster</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>toolButtonClusterDrawSeed</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>672</x>
+     <y>145</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>672</x>
+     <y>177</y>
     </hint>
    </hints>
   </connection>

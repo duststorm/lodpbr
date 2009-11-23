@@ -17,34 +17,36 @@ public:
 	enum Show
 	{
 		Seed		= 1 << 1,
-		Cluster		= 1 << 2,
-		Model		= 1 << 3
+		Surfel		= 1 << 2,
+		Normal   	= 1 << 3,
+		Cluster		= 1 << 4,
+		Model		= 1 << 5
 	};
 
 	enum RenderingClusterBy
 	{
-		Range 			= 1 << 4,
-		Index 			= 1 << 5,
-		All				= 1 << 6
+		Range 			= 1 << 6,
+		Index 			= 1 << 7,
+		All				= 1 << 8
 	};
     enum RenderingClusterWith
     {
-		GLPoint 		= 1 << 7,
-		GLPointSmooth 	= 1 << 8,
-		PyramidSplat 	= 1 << 9,
-		EWASplat 		= 1 << 10
+		GLPoint 		= 1 << 9,
+		GLPointSmooth 	= 1 << 10,
+		PyramidSplat 	= 1 << 11,
+		EWASplat 		= 1 << 12
     };
     enum BuildClusterWith
     {
-    	NormalOnly 				= 1 << 11,
-    	AllPossibleCluster 		= 1 << 12,
-    	LimitedNumberOfCluster 	= 1 << 13
+    	NormalOnly 				= 1 << 13,
+    	AllPossibleCluster 		= 1 << 14,
+    	LimitedNumberOfCluster 	= 1 << 15
     };
 
     enum BuildClusterSystem
 	{
-    	Continuous    		 = 1 << 14,
-    	Interactive			 = 1 << 15
+    	Continuous    		 = 1 << 16,
+    	Interactive			 = 1 << 17
     };
 
     Bitmask<unsigned int,Show				 > 	maskShow;
@@ -56,6 +58,21 @@ public:
     ClusterLog();
 
     virtual ~ClusterLog();
+
+    unsigned int getRadius() const
+    {
+        return mRadius;
+    }
+
+    float getRadiusf() const
+    {
+        return static_cast<float>(mRadius*0.01);
+    }
+
+    void setRadius(unsigned int mRadius)
+    {
+        this->mRadius = mRadius;
+    }
 
     unsigned int getClusteIndex() const
     {
@@ -151,6 +168,8 @@ private:
 	unsigned int mClusteIndex;
 	unsigned int mClusterRangeBegin;
 	unsigned int mClusterRangeEnd;
+
+	unsigned int mRadius;
 };
 
 #endif /* CLUSTERRENDERLOG_H_ */

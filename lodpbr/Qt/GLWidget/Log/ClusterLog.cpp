@@ -12,13 +12,14 @@ ClusterLog::ClusterLog()
 	// TODO Auto-generated constructor stub
 
     mKNeighborsSize 	= 0;
-    mSeedIndex 			= 0;
-	mSeedRangeBegin 	= 0;
-	mSeedRangeEnd		= 0;
-	mNumberOfCluster    = 0;
-	mClusteIndex		= 0;
-	mClusterRangeBegin	= 0;
-	mClusterRangeEnd	= 0;
+    mSeedIndex 			= 1;
+	mSeedRangeBegin 	= 1;
+	mSeedRangeEnd		= 1;
+	mNumberOfCluster    = 1;
+	mClusteIndex		= 1;
+	mClusterRangeBegin	= 1;
+	mClusterRangeEnd	= 1;
+	mRadius				= 100;
 
 	maskRenderingClusterBy			= ClusterLog::Index;
 	maskRenderingClusterWith 		= ClusterLog::GLPointSmooth;

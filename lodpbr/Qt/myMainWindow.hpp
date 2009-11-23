@@ -58,6 +58,10 @@ public slots:
  	//
  	void on_toolButtonDrawCluster_toggled							(bool checked);
 
+ 	void on_toolButtonClusterDrawSurfel_toggled								(bool checked);
+ 	void on_toolButtonClusterDrawSeed_toggled								(bool checked);
+ 	void on_toolButtonClusterDrawNormal_toggled								(bool checked);
+
  	void on_spinBoxCluster_DrawClusterWithRangeBegin_valueChanged	(int);
  	void on_sliderCluster_DrawClusterWithRangeBegin_valueChanged	(int);
 
@@ -73,14 +77,16 @@ public slots:
 	void on_radioButtonCluster_DrawIndex_toggled					(bool checked);
 	void on_radioButtonCluster_DrawRange_toggled					(bool checked);
 	void on_sliderCluster_DrawClusterWithID_valueChanged			(int value);
-
+	void on_sliderClusterSurfelRadius_valueChanged					(int value);
 
 	// coisas da kglib
  	static void createToplevelGLWidget();
 
  	void on_actionAdd_triggered();
 
+
 signals:
+
 
 
 //

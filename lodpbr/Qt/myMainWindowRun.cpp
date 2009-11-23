@@ -31,6 +31,8 @@ MyMainWindow::MyMainWindow (QMainWindow *parent): QMainWindow(parent)
 	//.. as possiveis acoes - (Construir, Renderizar ...)
 	connect(mdiArea, SIGNAL(subWindowActivated(QMdiSubWindow *)),this, SLOT(updateDockCluster()));
 
+	connect(mdiArea, SIGNAL(subWindowActivated(QMdiSubWindow *)),this, SLOT(updateDockCluster()));
+
 	dockWidgetClusterContents->setEnabled(0);
 	dockWidgetDrawClusterContents->setEnabled(0);
 
@@ -56,7 +58,9 @@ MyMainWindow::MyMainWindow (QMainWindow *parent): QMainWindow(parent)
 //==== Slot SubWindow Activated ===============================================
 
 void MyMainWindow::updateMenus()
-{}
+{
+
+}
 
 void MyMainWindow::updateWindowMenu()
 {}
@@ -80,6 +84,7 @@ void MyMainWindow::updateDockCluster()
 		{
 			// Atualiza os limites de renderização
 			dockWidgetDrawClusterContents->setEnabled(1);
+
 			spinBoxCluster_DrawClusterWithID->setMaximum(GLWIDGET()->cluster.Clusters.size());
 
 			sliderCluster_DrawClusterWithID->setMaximum(GLWIDGET()->cluster.Clusters.size());
@@ -89,6 +94,22 @@ void MyMainWindow::updateDockCluster()
 
 			sliderCluster_DrawClusterWithRangeBegin->setMaximum(GLWIDGET()->cluster.Clusters.size());
 			sliderCluster_DrawClusterWithRangeEnd->setMaximum(GLWIDGET()->cluster.Clusters.size());
+
+			// Atualiza os valores corrente
+			toolButtonDrawCluster->setChecked(GLWIDGET()->getShowCluster());
+			toolButtonClusterDrawSeed->setChecked(GLWIDGET()->getShowSeed());
+			toolButtonClusterDrawSurfel->setChecked(GLWIDGET()->getShowSurfel());
+			toolButtonClusterDrawNormal->setChecked(GLWIDGET()->getShowNormal());
+
+//			bool getShowModel				() {return mClusterLog.Test(ClusterLog::Model);};
+
+			radioButtonCluster_DrawIndex->setChecked(GLWIDGET()->getShowDrawClusterWithID());
+			radioButtonCluster_DrawRange->setChecked(GLWIDGET()->getShowDrawClusterWithRange());
+
+			spinBoxCluster_DrawClusterWithID->setValue(GLWIDGET()->getDrawClusterWithID());
+			spinBoxCluster_DrawClusterWithRangeBegin->setValue(GLWIDGET()->getDrawClusterWithRangeBegin());
+			spinBoxCluster_DrawClusterWithRangeEnd->setValue(GLWIDGET()->getDrawClusterWithRangeEnd());
+
 		}
 		// Não tem clusters a serem renderizados
 		else
@@ -195,12 +216,28 @@ void MyMainWindow::on_sliderCluster_DrawClusterWithID_valueChanged(int value)
 {
 	GLWIDGET()->setDrawClusterWithID(value-1);
 }
-
-
-
 void MyMainWindow::on_toolButtonDrawCluster_toggled(bool checked)
 {
 	GLWIDGET()->setShowCluster(checked);
+}
+
+void MyMainWindow::on_toolButtonClusterDrawSurfel_toggled(bool checked)
+{
+	GLWIDGET()->setShowSurfel(checked);
+}
+
+void MyMainWindow::on_toolButtonClusterDrawSeed_toggled(bool checked)
+{
+	GLWIDGET()->setShowSeed(checked);
+}
+void MyMainWindow::on_toolButtonClusterDrawNormal_toggled(bool checked)
+{
+	GLWIDGET()->setShowNormal(checked);
+}
+
+void MyMainWindow::on_sliderClusterSurfelRadius_valueChanged (int value)
+{
+	GLWIDGET()->setRadius(value);
 }
 
 void MyMainWindow::on_radioButtonCluster_DrawIndex_toggled(bool checked)

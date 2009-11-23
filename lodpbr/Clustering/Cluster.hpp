@@ -81,13 +81,13 @@ public:
 
                 KDTree = KdTree<Real,SurfelPtr >(pWorld);
 
-                std::cout << "KD-Tree Start" << std::endl;
+                std::cout << "KD-Tree Start " << pSurfels.size() << std::endl;
                 for (SurfelVectorIterator it =  pSurfels.begin();it != pSurfels.end(); ++ it )
                 {
 						SurfelPtr s = new Surfel(*it);
                         KDTree.Insert (s);
                 }
-                std::cout << "KD-Tree End" << std::endl;
+                std::cout << "KD-Tree End " << KDTree.Count() <<std::endl;
 
         }
 
@@ -263,7 +263,8 @@ public:
         		{
         			glPushMatrix();
         			glPointSize(10.0);
-        			glColor3f(0.0,0.0,0.0);
+        			glEnable(GL_POINT_SMOOTH);
+        			glColor3f(1.0f,1.0f,1.0f);
         			glBegin(GL_POINTS);
         			{
         				glVertex3fv( Clusters[pNumber].begin()->Center() );
@@ -305,7 +306,7 @@ public:
         			glPushMatrix();
         			glPointSize(10.0);
         			glEnable(GL_POINT_SMOOTH);
-        			glColor3f(0.0,0.0,0.0);
+        			glColor3f(1.0f,1.0f,1.0f);
         			glBegin(GL_POINTS);
         			{
         				glVertex3fv( Clusters[i].begin()->Center() );

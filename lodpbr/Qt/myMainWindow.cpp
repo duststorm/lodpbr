@@ -104,6 +104,21 @@ void MyMainWindow::open(QString pFilename,bool who,WidgetProxy * p ) {
     	  gl->show();
     	  gl->LoadModel(filename.c_str(),QCallBack);
     	  gl->calLimits();
+
+			toolButtonDrawCluster->setChecked(gl->getShowCluster());
+			toolButtonClusterDrawSeed->setChecked(gl->getShowSeed());
+			toolButtonClusterDrawSurfel->setChecked(gl->getShowSurfel());
+			toolButtonClusterDrawNormal->setChecked(gl->getShowNormal());
+
+//			bool getShowModel				() {return mClusterLog.Test(ClusterLog::Model);};
+
+			radioButtonCluster_DrawIndex->setChecked(gl->getShowDrawClusterWithID());
+			radioButtonCluster_DrawRange->setChecked(gl->getShowDrawClusterWithRange());
+
+			spinBoxCluster_DrawClusterWithID->setValue(gl->getDrawClusterWithID());
+			spinBoxCluster_DrawClusterWithRangeBegin->setValue(gl->getDrawClusterWithRangeBegin());
+			spinBoxCluster_DrawClusterWithRangeEnd->setValue(gl->getDrawClusterWithRangeEnd());
+
     	  progress->reset();
 
       }
