@@ -61,6 +61,15 @@ void MyMainWindow::updateMenus()
 void MyMainWindow::updateWindowMenu()
 {}
 
+
+void MyMainWindow::on_actionAdd_triggered()
+{
+	if (GLWIDGET())
+	{
+		GLWIDGET()->setSelected(GLWidget::ADD_NEIBORHOO);
+	}
+}
+
 void MyMainWindow::updateDockCluster()
 {
 	if (GLWIDGET())

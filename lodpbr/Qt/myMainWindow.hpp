@@ -78,6 +78,8 @@ public slots:
 	// coisas da kglib
  	static void createToplevelGLWidget();
 
+ 	void on_actionAdd_triggered();
+
 signals:
 
 

@@ -66,6 +66,7 @@ void GLWidget::init()
 //    camera.SetProjectionMatrix(30.0,x,0.1,100000);
 
 
+	mSelectionMode = ADD_NEIBORHOO;
 	mSelectBuffer = 0;
 	setSelectBufferSize(4*1000);
 	setSelectRegionWidth(4);
@@ -607,7 +608,8 @@ void GLWidget::paintGL()
     	}
 
     	DrawGroud();
-    	drawSelectionRectangle();
+    	if ( (mSelectionMode == ADD_NEIBORHOO) || (mSelectionMode == DEL_NEIBORHOO))
+    		drawSelectionRectangle();
 
 
 //		qglColor(Qt::lightGray);
@@ -697,6 +699,8 @@ void GLWidget::keyPressEvent(QKeyEvent * event)
 void GLWidget::mousePressEvent(QMouseEvent *event)
 {
 	event->accept();
+	if( (mSelectionMode == ADD_NEIBORHOO) || (mSelectionMode == DEL_NEIBORHOO))
+		rectangle = QRect(event->pos(), event->pos());
 
     if (event->button() == Qt::LeftButton)
     {
@@ -711,9 +715,16 @@ void GLWidget::mousePressEvent(QMouseEvent *event)
     }
     if (event->button() == Qt::RightButton)
     {
-    	select(event->pos());
     	lastPos = event->pos();
 	}
+    if ((event->button() == Qt::RightButton) && (event->modifiers() == Qt::ShiftModifier))
+    {
+    	 mSelectionMode = ADD_NEIBORHOO;
+    }
+    else if ((event->button() == Qt::RightButton) && (event->modifiers() == Qt::AltModifier))
+    {
+    	 mSelectionMode = DEL_NEIBORHOO;
+    }
     update();
 
 
@@ -722,6 +733,22 @@ void GLWidget::mousePressEvent(QMouseEvent *event)
 void GLWidget::mouseReleaseEvent(QMouseEvent *event)
 {
 	event->accept();
+	if( (mSelectionMode == ADD_NEIBORHOO) || (mSelectionMode == DEL_NEIBORHOO))
+	{
+		rectangle = rectangle.normalized();
+		setSelectRegionHeight(rectangle.height());
+		setSelectRegionWidth(rectangle.width());
+        select(rectangle.center());
+
+	}else if (mSelectionMode == SEED)
+	{
+		setSelectRegionHeight(4);
+		setSelectRegionWidth(4);
+        select(event->pos());
+	}else
+	{
+
+	}
 
     if (event->button() == Qt::LeftButton)
     {
@@ -729,6 +756,7 @@ void GLWidget::mouseReleaseEvent(QMouseEvent *event)
 
     }else if(event->button() == Qt::RightButton)
     {
+
     }
 
     update();
@@ -746,6 +774,9 @@ void GLWidget::wheelEvent(QWheelEvent *event)
 
 void GLWidget::mouseMoveEvent(QMouseEvent *event)
 {
+
+	if( (mSelectionMode == ADD_NEIBORHOO) || (mSelectionMode == DEL_NEIBORHOO))
+		rectangle.setBottomRight(event->pos());
 
     if (event->buttons() & Qt::LeftButton)
     {
@@ -770,8 +801,12 @@ void GLWidget::mouseMoveEvent(QMouseEvent *event)
         update();
     }else if (event->buttons() & Qt::RightButton)
     {
-        rectangle.setBottomRight(event->pos());
-        update();
+
+    	update();
+
+    }else if ((event->button() == Qt::RightButton) && (event->modifiers() == Qt::ShiftModifier))
+    {
+
 
     }else if (event->buttons() & Qt::MidButton)
     {
@@ -849,7 +884,7 @@ void GLWidget::endSelection(const QPoint& point)
 		}
 		glPopAttrib();
 	}
-
+	mSelectionMode = NONE;
 //	std::cout << "é = esse " << result.size() << std::endl;
 
 }

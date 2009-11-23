@@ -398,6 +398,7 @@
    </attribute>
    <addaction name="action_Show_Points"/>
    <addaction name="separator"/>
+   <addaction name="actionAdd"/>
   </widget>
   <widget class="QDockWidget" name="dockWidgetClusterBuilder">
    <property name="enabled">
@@ -649,6 +650,11 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+M</string>
+   </property>
+  </action>
+  <action name="actionAdd">
+   <property name="text">
+    <string>add</string>
    </property>
   </action>
  </widget>

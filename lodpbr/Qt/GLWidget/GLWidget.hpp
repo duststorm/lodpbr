@@ -68,7 +68,7 @@ public:
 //    virtual void endSelection(const QPoint& point);
 //    virtual void postSelection(const QPoint& point) { Q_UNUSED(point); };
 
-
+    enum SelectionMode {NONE,SEED,ADD_NEIBORHOO,DEL_NEIBORHOO};
     void glInit();
 
     // From kglib
@@ -117,7 +117,7 @@ public slots:
 
 	void BuildCluster					 (void);
 
-
+	void setSelected(SelectionMode state) { mSelectionMode = state;};
 protected:
 
 private:
@@ -127,7 +127,6 @@ private:
 	enum StateMode {CRUDE,CLUSTER,LOD};
 	StateMode mStateMode;
 
-	enum SelectionMode {SEED,ADD_NEIBORHOO,DEL_NEIBORHOO};
 	SelectionMode mSelectionMode;
 
 	void drawSelectionRectangle() const;
