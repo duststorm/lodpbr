@@ -68,7 +68,6 @@ public:
 //    virtual void endSelection(const QPoint& point);
 //    virtual void postSelection(const QPoint& point) { Q_UNUSED(point); };
 
-    enum SelectionMode {NONE,SEED,ADD_NEIBORHOO,DEL_NEIBORHOO};
     void glInit();
 
     // From kglib
@@ -80,6 +79,10 @@ public:
     void DrawGroud();
     void SetMode(bool);
     void SetCluster(const int);
+
+    enum SelectionMode {NONE,SEED,ADD_NEIBORHOO,DEL_NEIBORHOO};
+
+    enum StateMode {CRUDE,CLUSTER,LOD};
 
     ClusterLog mClusterLog;
     LSplatLog  mLSplatLog;
@@ -104,44 +107,65 @@ public slots:
 	void setClusterRendererType	(const QString & text);
 	void setClusterRenderingMode(const QString & text);
 
+
+	// Dock Widget Cluster Draw
 	void setShowCluster				(bool checked);
 	void setShowSeed				(bool checked);
 	void setShowModel				(bool checked);
+	void setShowSurfel				(bool checked);
+	void setShowNormal				(bool checked);
 
 	void setShowDrawClusterWithID		(bool checked);
 	void setShowDrawClusterWithRange	(bool checked);
 
-	void setDrawClusterWithID 	 (int values);
+	void setDrawClusterWithID 	 		 (int value);
 	void setDrawClusterWithRangeBegin 	 (int value);
 	void setDrawClusterWithRangeEnd 	 (int value);
 
+	void setRadius						 (int value);
+
+	bool getShowCluster				() {return mClusterLog.maskShow.Test(ClusterLog::Cluster);};
+	bool getShowSeed				() {return mClusterLog.maskShow.Test(ClusterLog::Seed);};
+	bool getShowModel				() {return mClusterLog.maskShow.Test(ClusterLog::Model);};
+	bool getShowSurfel				() {return mClusterLog.maskShow.Test(ClusterLog::Surfel);};
+	bool getShowNormal				() {return mClusterLog.maskShow.Test(ClusterLog::Normal);};
+
+	bool getShowDrawClusterWithID	() {return mClusterLog.maskRenderingClusterBy.Test(ClusterLog::Index);};
+	bool getShowDrawClusterWithRange() {return mClusterLog.maskRenderingClusterBy.Test(ClusterLog::Range);};
+
+	int getDrawClusterWithID 	 		 () {return mClusterLog.getClusteIndex();};
+	int getDrawClusterWithRangeBegin 	 () {return mClusterLog.getClusterRangeBegin();};
+	int getDrawClusterWithRangeEnd 	     () {return mClusterLog.getClusterRangeEnd();};
+	int getRadius						 () {return mClusterLog.getRadius();};
+// --
 	void BuildCluster					 (void);
 
 	void setSelected(SelectionMode state) { mSelectionMode = state;};
+	void setState  (StateMode state) 	  { mStateMode = state;};
 protected:
 
 private:
 
 	void init();
 
-	enum StateMode {CRUDE,CLUSTER,LOD};
+
 	StateMode mStateMode;
 
 	SelectionMode mSelectionMode;
 
-	void drawSelectionRectangle() const;
-	void startScreenCoordinatesSystem(bool upward = 0) const;
-	void stopScreenCoordinatesSystem() const;
+	void drawSelectionRectangle				() const;
+	void startScreenCoordinatesSystem		(bool upward = 0) const;
+	void stopScreenCoordinatesSystem		() const;
 
-	int selectRegionWidth() const { return mSelectRegionWidth; };
-	int selectRegionHeight() const { return mSelectRegionHeight; };
+	int selectRegionWidth() const 			{ return mSelectRegionWidth; };
+	int selectRegionHeight() const 			{ return mSelectRegionHeight;};
 
-	void setSelectRegionWidth(int width) { mSelectRegionWidth = width; };
-	void setSelectRegionHeight(int height) { mSelectRegionHeight = height; };
+	void setSelectRegionWidth(int width) 	{ mSelectRegionWidth = width; 	};
+	void setSelectRegionHeight(int height) 	{ mSelectRegionHeight = height; };
 
-	GLuint* selectBuffer() { return mSelectBuffer; };
+	GLuint* selectBuffer() 					{ return mSelectBuffer; };
 	void setSelectBufferSize(int size);
-	int selectBufferSize() const { return mSelectBufferSize; };
+	int selectBufferSize() const			{ return mSelectBufferSize; };
 
 	void beginSelection(const QPoint& point);
 	void drawWithNames();
@@ -182,8 +206,6 @@ private:
     Settings   settings;
 
     bool mGLInitialized;
-
-    //lodpbr
 
 	// S e l e c t i o n
 	int mSelectRegionWidth, mSelectRegionHeight;

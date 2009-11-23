@@ -169,6 +169,22 @@ void GLWidget::setShowCluster(bool checked)
 	update();
 }
 
+
+
+void GLWidget::setShowSurfel(bool checked)
+{
+	if (checked == true)
+	{
+		mClusterLog.maskShow.Add(ClusterLog::Surfel);
+	}
+	else
+	{
+		mClusterLog.maskShow.Clear(ClusterLog::Surfel);
+	}
+
+	update();
+}
+
 void GLWidget::setShowSeed(bool checked)
 {
 	if (checked == true)
@@ -178,6 +194,21 @@ void GLWidget::setShowSeed(bool checked)
 	else
 	{
 		mClusterLog.maskShow.Clear(ClusterLog::Seed);
+	}
+
+	update();
+}
+
+
+void GLWidget::setShowNormal(bool checked)
+{
+	if (checked == true)
+	{
+		mClusterLog.maskShow.Add(ClusterLog::Normal);
+	}
+	else
+	{
+		mClusterLog.maskShow.Clear(ClusterLog::Normal);
 	}
 
 	update();
@@ -234,6 +265,12 @@ void GLWidget::setDrawClusterWithRangeBegin	(int value)
 void GLWidget::setDrawClusterWithRangeEnd	(int value)
 {
 	mClusterLog.setClusterRangeEnd(value);
+	update();
+}
+
+void GLWidget::setRadius(int value)
+{
+	mClusterLog.setRadius(value);
 	update();
 }
 
@@ -562,7 +599,6 @@ void GLWidget::paintGL()
 //
 
 
-
 //--
 
     if ( Surfels.size() != 0 )
@@ -589,17 +625,24 @@ void GLWidget::paintGL()
 
     		if 		(mClusterLog.maskRenderingClusterBy.Test(ClusterLog::Index))
     		{
+
     			cluster.DrawClustersIndex(mClusterLog.getClusteIndex(),(mClusterLog.maskShow.Test(ClusterLog::Seed)));
-    			cluster.DrawSurfels(mClusterLog.getClusteIndex());
+
+    			if (mClusterLog.maskShow.Test(ClusterLog::Surfel))
+    				cluster.DrawSurfels(mClusterLog.getClusteIndex(),64,mClusterLog.getRadiusf());
     		}
     		else if (mClusterLog.maskRenderingClusterBy.Test(ClusterLog::Range))
     		{
-    			std::cout << "Range : Being " << mClusterLog.getClusterRangeBegin() << " End : " << mClusterLog.getClusterRangeEnd() << std::endl;
-    			std::cout << "ClusterSize : " << cluster.Clusters.size() << std::endl;
+
     			cluster.DrawClustersRange(mClusterLog.getClusterRangeBegin(),mClusterLog.getClusterRangeEnd(),(mClusterLog.maskShow.Test(ClusterLog::Seed)));
 
-    			for(unsigned int i = mClusterLog.getClusterRangeBegin();i <= mClusterLog.getClusterRangeEnd();++i)
-    				cluster.DrawSurfels(i,8,0.2);
+    			if (mClusterLog.maskShow.Test(ClusterLog::Surfel))
+    			{
+        			std::cout << "Radiusf " << mClusterLog.getRadiusf() << std::endl;
+
+    				for(unsigned int i = mClusterLog.getClusterRangeBegin();i <= mClusterLog.getClusterRangeEnd();++i)
+    					cluster.DrawSurfels(i,8,mClusterLog.getRadiusf());
+    			}
     		}else
     		{
 

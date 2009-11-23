@@ -415,18 +415,18 @@ public:
   /// Returns the number of pointers to items inserted into this node
   /// @return Size of item list
   int Count () const {
-//	  int sum = 0;
+	  int sum = 0;
 //
-//	  if (son[0] == 0 && son[1] == 0)
-//		  return PtrList.size();
-//	  else
-//	  {
-//		  sum += son[0]->itemPtrCount();
-//		  sum += son[1]->itemPtrCount();
-//	  }
-//
-//	  return  sum + PtrList.size();
-	return mListPtr.size();
+	  if (son[0] == 0 && son[1] == 0)
+		  return mListPtr.size();
+	  else
+	  {
+		  sum += son[0]->Count();
+		  sum += son[1]->Count();
+	  }
+
+	  return  sum + mListPtr.size();
+
   }
 
   /// Returns the ith element of the item list
