@@ -397,6 +397,7 @@
     <bool>false</bool>
    </attribute>
    <addaction name="action_Show_Points"/>
+   <addaction name="separator"/>
   </widget>
   <widget class="QDockWidget" name="dockWidgetClusterBuilder">
    <property name="enabled">

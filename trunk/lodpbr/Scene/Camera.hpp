@@ -1,6 +1,7 @@
 #ifndef LAL_CAMERA_HPP_
 #define LAL_CAMERA_HPP_
 
+#include <GL/gl.h>
 
 #include "Math/Matrix4x4.hpp"
 #include "Math/Vector3.hpp"
@@ -76,6 +77,14 @@ namespace Celer{
 
         }
 
+
+        void getViewport(GLint viewport[4]) const
+        {
+          viewport[0] = 0;
+          viewport[1] = 0;
+          viewport[2] = mWidth;
+          viewport[3] = mHeight;
+        }
 
         Vector3 Focus()
         {
@@ -161,7 +170,7 @@ namespace Celer{
             mPespectiveProjectionMatrix = Matrix4x4::MakePespectiveProjectionMatrix(mFieldOfView*mZoomRadius, mAspectRatio, mNearPlane, mFarPlane);
         }
 
-        void SetProjectionMatrix()
+        void ComputeProjectionMatrix()
         {
             mPespectiveProjectionMatrix = Matrix4x4::MakePespectiveProjectionMatrix(mFieldOfView*mZoomRadius, mAspectRatio, mNearPlane, mFarPlane);
         }
@@ -177,6 +186,28 @@ namespace Celer{
             mFarPlane   = far;
 
             mOrthographicProjectionMatrix = Matrix4x4::MakeOrthographicProjectionMatrix(mLeft,mRight,mBottom,mTop,mNearPlane,mFarPlane);
+        }
+        // From libQGLViewer
+        void LoadProjectionMatrix(bool reset = 1)
+        {
+            glMatrixMode(GL_PROJECTION);
+
+            if (reset)
+              glLoadIdentity();
+
+            ComputeProjectionMatrix();
+            glMultMatrixf((~mPespectiveProjectionMatrix).ToRealPtr());
+        }
+        // From libQGLViewer
+        void LoadModelViewMatrix(bool reset = 1)
+        {
+          // WARNING: makeCurrent must be called by every calling method
+          glMatrixMode(GL_MODELVIEW);
+          ComputerModelViewMatrix();
+          if (reset)
+            glLoadMatrixf((~mViewMatrix).ToRealPtr());
+          else
+            glMultMatrixf((~mViewMatrix).ToRealPtr());
         }
 
         void MoveForward( float Distance )
@@ -210,6 +241,23 @@ namespace Celer{
           mouseLocked = value;
         }
 
+        void  ComputerModelViewMatrix()
+        {
+
+            mViewMatrix = mOrientation.To4x4Matrix();
+
+            xAxis.Set(mViewMatrix[0][0], mViewMatrix[0][1], mViewMatrix[0][2]);
+            yAxis.Set(mViewMatrix[1][0], mViewMatrix[1][1], mViewMatrix[1][2]);
+            zAxis.Set(mViewMatrix[2][0], mViewMatrix[2][1], mViewMatrix[2][2]);
+
+            mFocus = -zAxis;
+
+            mViewMatrix[0][3] = -(xAxis * mEyes);
+            mViewMatrix[1][3] = -(yAxis * mEyes);
+            mViewMatrix[2][3] = -(zAxis * mEyes);
+
+        }
+
         Matrix4x4 ViewMatrix()
         {
 
@@ -240,8 +288,10 @@ namespace Celer{
                 // Update the eye point based on a radius away from the lookAt position
                // mEyes = cameraRotation.Rotate(mEyes);
 
-
         }
+
+        // WARNING: makeCurrent must be called by every calling method
+
 
         void RotateView(float angle, float x, float y, float z)
         {
@@ -363,6 +413,8 @@ namespace Celer{
             case FLIGHT:
 
                 break;
+            default:
+            	break;
             }
 
 
