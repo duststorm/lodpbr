@@ -62,6 +62,23 @@ void GLWidget::init()
 	mode = true;
 	settings.setBackgroundColor(QColor(75,75,75));
 
+//    GLfloat x = GLfloat(width()) / height();
+//    camera.SetProjectionMatrix(30.0,x,0.1,100000);
+
+
+	mSelectBuffer = 0;
+	setSelectBufferSize(4*1000);
+	setSelectRegionWidth(4);
+	setSelectRegionHeight(4);
+
+}
+
+void GLWidget::setSelectBufferSize(int size)
+{
+	if (mSelectBuffer)
+		delete[] mSelectBuffer;
+	mSelectBufferSize = size;
+	mSelectBuffer = new GLuint[selectBufferSize()];
 }
 
 
@@ -522,86 +539,28 @@ void GLWidget::paintGL()
     initializeGL();
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-    camera.SetProjectionMatrix();
-    glMultMatrixf((~camera.PespectiveProjectionMatrix()).ToRealPtr());
+//    glMatrixMode(GL_PROJECTION);
+//    glLoadIdentity();
+//    camera.ComputeProjectionMatrix();
+//    glMultMatrixf((~camera.PespectiveProjectionMatrix()).ToRealPtr());
 
-    glMatrixMode(GL_MODELVIEW);
-    glLoadIdentity();
-
+    camera.LoadProjectionMatrix();
     camera.SetViewByMouse();
-    glMultMatrixf((~camera.ViewMatrix()));
+    camera.LoadModelViewMatrix();
+//    glMatrixMode(GL_MODELVIEW);
+//    glLoadIdentity();
+//
+//    camera.SetViewByMouse();
+//    glMultMatrixf((~camera.ViewMatrix()));
 
     fps.nextFrame();
 
 //--
 
+	//select(lastPos);
+//
 
 
-	result.clear();
-	long hits;
-	int sz = int(Surfels.size())*5;
-	GLuint *selectBuf =new GLuint[sz];
-	glSelectBuffer(sz, selectBuf);
-	glRenderMode(GL_SELECT);
-	glInitNames();
-
-	/* Because LoadName() won't work with no names on the stack */
-	glPushName(-1);
-	double mp[16];
-
-	GLint viewport[4];
-	glGetIntegerv(GL_VIEWPORT,viewport);
-	glPushAttrib(GL_TRANSFORM_BIT);
-	glMatrixMode(GL_PROJECTION);
-	glGetDoublev(GL_PROJECTION_MATRIX ,mp);
-	glPushMatrix();
-	glLoadIdentity();
-	//gluPickMatrix(x, viewport[3]-y, 4, 4, viewport);
-	gluPickMatrix(lastPos.x(), height()-lastPos.y(),4, 4, viewport);
-	glMultMatrixd(mp);
-
-	glMatrixMode(GL_MODELVIEW);
-	glPushMatrix();
-	int cnt=0;
-	std::vector<Celer::Surfel<float> >::iterator  ei;
-	for(ei=Surfels.begin();ei!=Surfels.end();++ei)
-	{
-			glLoadName(cnt);
-			ei->DrawCenter(3.0);
-			cnt++;
-	}
-	glPopMatrix();
-	glMatrixMode(GL_PROJECTION);
-	glPopMatrix();
-	glMatrixMode(GL_MODELVIEW);
-	hits = glRenderMode(GL_RENDER);
-
-	if (hits <= 0){
-
-		std::cout << " Pow 0 " <<  std::endl;
-
-	}
-	else{
-		std::vector< std::pair<double,unsigned int> > H;
-		for(int ii=0;ii<hits;ii++){
-			H.push_back( std::pair<double,unsigned int>(selectBuf[ii*4+1]/4294967295.0,selectBuf[ii*4+3]));
-		}
-		std::sort(H.begin(),H.end());
-
-		result.resize(H.size());
-		for(int ii=0;ii<hits;ii++){
-			std::vector<Celer::Surfel<float> >::iterator ei=Surfels.begin();
-			std::advance(ei ,H[ii].second);
-			result[ii]=(*ei);
-		}
-		glPopAttrib();
-		delete [] selectBuf;
-
-	}
-
-	std::cout << "é = esse " << result.size() << std::endl;
 
 //--
 
@@ -752,10 +711,11 @@ void GLWidget::mousePressEvent(QMouseEvent *event)
     }
     if (event->button() == Qt::RightButton)
     {
-
+    	select(event->pos());
+    	lastPos = event->pos();
 	}
     update();
-    lastPos = event->pos();
+
 
 }
 
@@ -769,15 +729,9 @@ void GLWidget::mouseReleaseEvent(QMouseEvent *event)
 
     }else if(event->button() == Qt::RightButton)
     {
-
-
-
-
     }
 
     update();
-
-    //lastPos = event->pos();
 
 }
 
@@ -796,41 +750,130 @@ void GLWidget::mouseMoveEvent(QMouseEvent *event)
     if (event->buttons() & Qt::LeftButton)
     {
     	//camera.SetMouseInfo(event->x(),event->y());
-        float heading = 0.0f;
-        float pitch = 0.0f;
-        float roll = 0.0f;
-
+        float heading 	= 0.0f;
+        float pitch 	= 0.0f;
+        float roll 		= 0.0f;
 
         pitch = -(static_cast<float>(event->x()) - mCenterX) * 0.2;
         heading = -(static_cast<float>(event->y()) - mCenterY) * 0.2;
 
+        camera.Rotate(pitch,heading,roll);
 
-        camera.Rotate(pitch,heading, 0.0f);
-
-        //mouse.moveToWindowCenter();
-
+        /*!
+         *  event->pos() retorna coordenadas x e y relativa a widget que recebeu o evento.
+         *  mapToGlobla mapei as coordenadas da widget para coordenada global da tela.
+         *  QCurso::setPos() posiciona o mouse em coordenada global.
+         *  tudo o que eu queria para implementar a First Person Camera !
+        */
         QCursor::setPos(mapToGlobal(QPoint(static_cast<int>(mCenterX),static_cast<int>(mCenterY))));
-        update();
-    }else if (event->buttons() & Qt::RightButton) {
-        rectangle.setBottomRight(event->pos());
 
-    }else if (event->buttons() & Qt::MidButton)  {
+        update();
+    }else if (event->buttons() & Qt::RightButton)
+    {
+        rectangle.setBottomRight(event->pos());
+        update();
+
+    }else if (event->buttons() & Qt::MidButton)
+    {
 
     	camera.OnRotationMove(event->x(),height()- event->y());
+    	update();
     }
 
-    update();
+}
 
-    /*!
-     *  event->pos() retorna coordenadas x e y relativa a widget que recebeu o evento.
-     *  mapToGlobla mapei as coordenadas da widget para coordenada global da tela.
-     *  QCurso::setPos() posiciona o mouse em coordenada global.
-     *  tudo o que eu queria para implementar a First Person Camera !
-    */
+void GLWidget::beginSelection(const QPoint& point)
+{
+	// Make OpenGL context current (may be needed with several viewers ?)
+	makeCurrent();
 
-    //lastPos = event->pos();
+	result.clear();
+
+	int bufferSize = int(Surfels.size())*5;
+
+	setSelectBufferSize(bufferSize);
+
+	glSelectBuffer(selectBufferSize(), selectBuffer());
+	glRenderMode(GL_SELECT);
+	glInitNames();
+
+	/* Because LoadName() won't work with no names on the stack */
+	glPushName(-1);
+	float mp[16];
+
+	GLint viewport[4];
+	camera.getViewport(viewport);
+	glPushAttrib(GL_TRANSFORM_BIT);
+	camera.LoadProjectionMatrix();
+	glGetFloatv(GL_PROJECTION_MATRIX ,mp);
+	glPushMatrix();
+	glLoadIdentity();
+	gluPickMatrix(point.x(), height()-point.y(),selectRegionWidth(),selectRegionHeight() , viewport);
+	glMultMatrixf(mp);
+	camera.LoadModelViewMatrix();
+	glPushMatrix();
+	drawWithNames();
+	glPopMatrix();
 
 }
+
+void GLWidget::endSelection(const QPoint& point)
+{
+
+	Q_UNUSED(point);
+
+	glMatrixMode(GL_PROJECTION);
+	glPopMatrix();
+	glMatrixMode(GL_MODELVIEW);
+
+	long hits = glRenderMode(GL_RENDER);
+
+	if (hits <= 0)
+	{
+		//nada
+	}
+	else
+	{
+		std::vector< std::pair<double,unsigned int> > Selected;
+		for(int i = 0; i < hits; i++)
+		{
+			Selected.push_back( std::pair<double,unsigned int>(mSelectBuffer[i*4+1]/4294967295.0,mSelectBuffer[i*4+3]));
+		}
+		std::sort(Selected.begin(),Selected.end());
+		result.resize(Selected.size());
+		for(int i = 0; i < hits; i++)
+		{
+			std::vector<Celer::Surfel<float> >::iterator elements=Surfels.begin();
+			std::advance(elements ,Selected[i].second);
+			result[i]=(*elements);
+		}
+		glPopAttrib();
+	}
+
+//	std::cout << "é = esse " << result.size() << std::endl;
+
+}
+
+void GLWidget::drawWithNames()
+{
+	std::vector<Celer::Surfel<float> >::iterator  surfel;
+	int cnt = 0;
+	for(surfel = Surfels.begin(); surfel != Surfels.end(); ++surfel)
+	{
+			glLoadName(cnt);
+			surfel->DrawCenter(3.0);
+			cnt++;
+	}
+
+}
+
+void GLWidget::select(const QPoint& point)
+{
+	beginSelection(point);
+	drawWithNames();
+	endSelection(point);
+}
+
 
 void GLWidget::drawSelectionRectangle() const
 {

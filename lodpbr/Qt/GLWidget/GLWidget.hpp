@@ -123,9 +123,31 @@ protected:
 private:
 
 	void init();
+
+	enum StateMode {CRUDE,CLUSTER,LOD};
+	StateMode mStateMode;
+
+	enum SelectionMode {SEED,ADD_NEIBORHOO,DEL_NEIBORHOO};
+	SelectionMode mSelectionMode;
+
 	void drawSelectionRectangle() const;
 	void startScreenCoordinatesSystem(bool upward = 0) const;
 	void stopScreenCoordinatesSystem() const;
+
+	int selectRegionWidth() const { return mSelectRegionWidth; };
+	int selectRegionHeight() const { return mSelectRegionHeight; };
+
+	void setSelectRegionWidth(int width) { mSelectRegionWidth = width; };
+	void setSelectRegionHeight(int height) { mSelectRegionHeight = height; };
+
+	GLuint* selectBuffer() { return mSelectBuffer; };
+	void setSelectBufferSize(int size);
+	int selectBufferSize() const { return mSelectBufferSize; };
+
+	void beginSelection(const QPoint& point);
+	void drawWithNames();
+	void endSelection(const QPoint& point);
+	void select(const QPoint& point);
 
 	void saveGLState();
 	void restoreGLState();
@@ -165,9 +187,9 @@ private:
     //lodpbr
 
 	// S e l e c t i o n
-	int selectRegionWidth, selectRegionHeight;
-	int selectBufferSize;
-	GLuint* selectBuffer;
+	int mSelectRegionWidth, mSelectRegionHeight;
+	int mSelectBufferSize;
+	GLuint* mSelectBuffer;
 	int selectedObjectId;
 
     QRect rectangle;
