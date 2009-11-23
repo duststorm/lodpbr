@@ -49,6 +49,8 @@ void GLWidget::init()
     setMouseTracking(true);
     setFocusPolicy(Qt::StrongFocus);
 
+    setAttribute(Qt::WA_NoSystemBackground);
+
     setAutoFillBackground(false);
 
 	CameraStep = 0.01;
@@ -362,6 +364,7 @@ void GLWidget::initializeGL()
 //	GPUKernel.vertex_source("simple.vert");
 //	GPUKernel.install(true);
 
+	makeCurrent();
 	mGLInitialized = true;
     GLfloat luzAmbiente[4]={0.2,0.2,0.2,1.0};
  	GLfloat luzDifusa[4]={1.0,1.0,0.0,1.0};         //cor
@@ -509,11 +512,13 @@ void GLWidget::paintEvent(QPaintEvent *)
 
 void GLWidget::paintGL()
 {
-    QPainter p(this); // used for text overlay
-
+    QPainter p; // used for text overlay
+    p.begin(this);
+    p.setRenderHint(QPainter::Antialiasing);
     // save the GL state set for QPainter
 
     saveGLState();
+	//makeCurrent();
     initializeGL();
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -530,6 +535,75 @@ void GLWidget::paintGL()
 
     fps.nextFrame();
 
+//--
+
+
+
+	result.clear();
+	long hits;
+	int sz = int(Surfels.size())*5;
+	GLuint *selectBuf =new GLuint[sz];
+	glSelectBuffer(sz, selectBuf);
+	glRenderMode(GL_SELECT);
+	glInitNames();
+
+	/* Because LoadName() won't work with no names on the stack */
+	glPushName(-1);
+	double mp[16];
+
+	GLint viewport[4];
+	glGetIntegerv(GL_VIEWPORT,viewport);
+	glPushAttrib(GL_TRANSFORM_BIT);
+	glMatrixMode(GL_PROJECTION);
+	glGetDoublev(GL_PROJECTION_MATRIX ,mp);
+	glPushMatrix();
+	glLoadIdentity();
+	//gluPickMatrix(x, viewport[3]-y, 4, 4, viewport);
+	gluPickMatrix(lastPos.x(), height()-lastPos.y(),4, 4, viewport);
+	glMultMatrixd(mp);
+
+	glMatrixMode(GL_MODELVIEW);
+	glPushMatrix();
+	int cnt=0;
+	std::vector<Celer::Surfel<float> >::iterator  ei;
+	for(ei=Surfels.begin();ei!=Surfels.end();++ei)
+	{
+			glLoadName(cnt);
+			ei->DrawCenter(3.0);
+			cnt++;
+	}
+	glPopMatrix();
+	glMatrixMode(GL_PROJECTION);
+	glPopMatrix();
+	glMatrixMode(GL_MODELVIEW);
+	hits = glRenderMode(GL_RENDER);
+
+	if (hits <= 0){
+
+		std::cout << " Pow 0 " <<  std::endl;
+
+	}
+	else{
+		std::vector< std::pair<double,unsigned int> > H;
+		for(int ii=0;ii<hits;ii++){
+			H.push_back( std::pair<double,unsigned int>(selectBuf[ii*4+1]/4294967295.0,selectBuf[ii*4+3]));
+		}
+		std::sort(H.begin(),H.end());
+
+		result.resize(H.size());
+		for(int ii=0;ii<hits;ii++){
+			std::vector<Celer::Surfel<float> >::iterator ei=Surfels.begin();
+			std::advance(ei ,H[ii].second);
+			result[ii]=(*ei);
+		}
+		glPopAttrib();
+		delete [] selectBuf;
+
+	}
+
+	std::cout << "é = esse " << result.size() << std::endl;
+
+//--
 
     if ( Surfels.size() != 0 )
     {
@@ -589,7 +663,7 @@ void GLWidget::paintGL()
     restoreGLState();
 
 
-    // draw the overlayed text using QPainter
+//    draw the overlayed text using QPainter
     p.setPen(QColor(197, 197, 197, 157));
     p.setBrush(QColor(197, 197, 197, 127));
     p.drawRect(QRect(0, 0, width(), 50));
@@ -600,7 +674,7 @@ void GLWidget::paintGL()
     QFontMetrics fm(p.font());
     p.drawText(width()/2 - fm.width(str1)/2, 20, str1);
     p.drawText(width()/2 - fm.width(str2)/2, 20 + fm.lineSpacing(), str2);
-
+    p.end();
 
 }
 
@@ -679,9 +753,8 @@ void GLWidget::mousePressEvent(QMouseEvent *event)
     if (event->button() == Qt::RightButton)
     {
 
-    	rectangle = QRect(event->pos(), event->pos());
 	}
-
+    update();
     lastPos = event->pos();
 
 }
@@ -696,70 +769,7 @@ void GLWidget::mouseReleaseEvent(QMouseEvent *event)
 
     }else if(event->button() == Qt::RightButton)
     {
-    	rectangle = rectangle.normalized();
-    	result.clear();
-    		long hits;
-    		int sz = int(Surfels.size())*5;
-    		GLuint *selectBuf =new GLuint[sz];
-    		glSelectBuffer(sz, selectBuf);
-    		glRenderMode(GL_SELECT);
-    		glInitNames();
 
-    		/* Because LoadName() won't work with no names on the stack */
-    		glPushName(-1);
-    		double mp[16];
-
-    		GLint viewport[4];
-    		glGetIntegerv(GL_VIEWPORT,viewport);
-    		glPushAttrib(GL_TRANSFORM_BIT);
-    		glMatrixMode(GL_PROJECTION);
-    		glGetDoublev(GL_PROJECTION_MATRIX ,mp);
-    		glPushMatrix();
-    		glLoadIdentity();
-    		//gluPickMatrix(x, viewport[3]-y, 4, 4, viewport);
-    		gluPickMatrix(rectangle.center().x(), height()-rectangle.center().y(),rectangle.width(),rectangle.height(), viewport);
-    		glMultMatrixd(mp);
-
-    		glMatrixMode(GL_MODELVIEW);
-    		glPushMatrix();
-    		int cnt=0;
-    		std::vector<Celer::Surfel<float> >::iterator  ei;
-    		for(ei=Surfels.begin();ei!=Surfels.end();++ei)
-    		{
-    				glLoadName(cnt);
-    				ei->DrawCenter(3.0);
-    				cnt++;
-    		}
-    		glPopMatrix();
-    		glMatrixMode(GL_PROJECTION);
-    		glPopMatrix();
-    		glMatrixMode(GL_MODELVIEW);
-    		hits = glRenderMode(GL_RENDER);
-
-    		if (hits <= 0){
-
-    			std::cout << " Pow 0 " <<  std::endl;
-
-    		}
-    		else{
-    			std::vector< std::pair<double,unsigned int> > H;
-    			for(int ii=0;ii<hits;ii++){
-    				H.push_back( std::pair<double,unsigned int>(selectBuf[ii*4+1]/4294967295.0,selectBuf[ii*4+3]));
-    			}
-    			std::sort(H.begin(),H.end());
-
-    			result.resize(H.size());
-    			for(int ii=0;ii<hits;ii++){
-    				std::vector<Celer::Surfel<float> >::iterator ei=Surfels.begin();
-    				std::advance(ei ,H[ii].second);
-    				result[ii]=(*ei);
-    			}
-    			glPopAttrib();
-    			delete [] selectBuf;
-
-    		}
-
-        	std::cout << "é = esse " << result.size() << std::endl;
 
 
 
@@ -767,7 +777,7 @@ void GLWidget::mouseReleaseEvent(QMouseEvent *event)
 
     update();
 
-    lastPos = event->pos();
+    //lastPos = event->pos();
 
 }
 
@@ -818,7 +828,7 @@ void GLWidget::mouseMoveEvent(QMouseEvent *event)
      *  tudo o que eu queria para implementar a First Person Camera !
     */
 
-    lastPos = event->pos();
+    //lastPos = event->pos();
 
 }
 
