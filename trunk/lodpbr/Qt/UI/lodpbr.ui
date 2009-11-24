@@ -86,7 +86,7 @@
    </property>
    <property name="minimumSize">
     <size>
-     <width>428</width>
+     <width>444</width>
      <height>705</height>
     </size>
    </property>
@@ -150,6 +150,19 @@
               <item>
                <layout class="QHBoxLayout" name="horizontalLayout_13">
                 <item>
+                 <widget class="QToolButton" name="toolButtonClusterDraw">
+                  <property name="enabled">
+                   <bool>false</bool>
+                  </property>
+                  <property name="text">
+                   <string>Cluster</string>
+                  </property>
+                  <property name="checkable">
+                   <bool>true</bool>
+                  </property>
+                 </widget>
+                </item>
+                <item>
                  <widget class="QToolButton" name="toolButtonClusterDrawSeed">
                   <property name="enabled">
                    <bool>false</bool>
@@ -189,16 +202,12 @@
                  </widget>
                 </item>
                 <item>
-                 <widget class="QLabel" name="label_3">
-                  <property name="text">
-                   <string>Radius %</string>
-                  </property>
-                 </widget>
-                </item>
-                <item>
                  <widget class="QSlider" name="sliderClusterSurfelRadius">
                   <property name="enabled">
                    <bool>false</bool>
+                  </property>
+                  <property name="toolTip">
+                   <string>Radius in %</string>
                   </property>
                   <property name="maximum">
                    <number>100</number>
@@ -809,11 +818,11 @@
    <slot>setValue(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>727</x>
+     <x>720</x>
      <y>326</y>
     </hint>
     <hint type="destinationlabel">
-     <x>788</x>
+     <x>783</x>
      <y>329</y>
     </hint>
    </hints>
@@ -829,7 +838,7 @@
      <y>326</y>
     </hint>
     <hint type="destinationlabel">
-     <x>868</x>
+     <x>863</x>
      <y>329</y>
     </hint>
    </hints>
@@ -841,11 +850,11 @@
    <slot>setValue(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>788</x>
+     <x>783</x>
      <y>329</y>
     </hint>
     <hint type="destinationlabel">
-     <x>727</x>
+     <x>720</x>
      <y>326</y>
     </hint>
    </hints>
@@ -857,7 +866,7 @@
    <slot>setValue(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>868</x>
+     <x>863</x>
      <y>329</y>
     </hint>
     <hint type="destinationlabel">
@@ -893,7 +902,7 @@
      <y>294</y>
     </hint>
     <hint type="destinationlabel">
-     <x>727</x>
+     <x>720</x>
      <y>326</y>
     </hint>
    </hints>
@@ -909,7 +918,7 @@
      <y>294</y>
     </hint>
     <hint type="destinationlabel">
-     <x>788</x>
+     <x>783</x>
      <y>329</y>
     </hint>
    </hints>
@@ -941,56 +950,8 @@
      <y>294</y>
     </hint>
     <hint type="destinationlabel">
-     <x>868</x>
+     <x>863</x>
      <y>329</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>toolButtonDrawCluster</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>frameIndexRange</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>975</x>
-     <y>157</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>975</x>
-     <y>337</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>toolButtonDrawCluster</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>toolButtonClusterDrawSurfel</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>975</x>
-     <y>157</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>820</x>
-     <y>189</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>toolButtonDrawCluster</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>toolButtonClusterDrawNormal</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>975</x>
-     <y>157</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>755</x>
-     <y>189</y>
     </hint>
    </hints>
   </connection>
@@ -1001,7 +962,7 @@
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>820</x>
+     <x>813</x>
      <y>189</y>
     </hint>
     <hint type="destinationlabel">
@@ -1021,8 +982,72 @@
      <y>145</y>
     </hint>
     <hint type="destinationlabel">
-     <x>672</x>
+     <x>733</x>
      <y>177</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>toolButtonDrawCluster</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>toolButtonClusterDrawNormal</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>711</x>
+     <y>144</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>769</x>
+     <y>178</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>toolButtonDrawCluster</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>toolButtonClusterDrawSurfel</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>779</x>
+     <y>154</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>832</x>
+     <y>178</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>toolButtonDrawCluster</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>frameIndexRange</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>745</x>
+     <y>148</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>652</x>
+     <y>202</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>toolButtonDrawCluster</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>toolButtonClusterDraw</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>637</x>
+     <y>144</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>637</x>
+     <y>169</y>
     </hint>
    </hints>
   </connection>

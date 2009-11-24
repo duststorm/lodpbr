@@ -109,6 +109,7 @@ public slots:
 
 
 	// Dock Widget Cluster Draw
+	void setShowClusters			(bool checked);
 	void setShowCluster				(bool checked);
 	void setShowSeed				(bool checked);
 	void setShowModel				(bool checked);

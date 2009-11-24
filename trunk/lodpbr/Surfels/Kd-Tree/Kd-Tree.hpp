@@ -71,18 +71,26 @@ public:
   /// Main Constructor
   KdTree (const Box3& theWorld)
   {
+	if (root)
+		delete root;
+	root = 0;
     root = new KdTreeNode <Real,SurfelPtr, Refine> (theWorld);
   }
 
   bool Clear()
   {
-	  return root->Clear();
+	  if (root)
+		  delete root;
+	  root = 0;
+	  return 1;
   }
 
   /// destructor
   virtual ~KdTree()
   {
-
+//	  if (root)
+//		  delete root;
+//	  root = 0;
   }
 
   /// Inserts a pointer to an object in this kd-tree

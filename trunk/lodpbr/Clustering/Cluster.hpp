@@ -98,10 +98,10 @@ public:
                 colors.push_back(Celer::Vector4<float>(1.0,1.0,0.0,0.5));
                 colors.push_back(Celer::Vector4<float>(0.0,1.0,0.0,0.5));
                 colors.push_back(Celer::Vector4<float>(0.0,1.0,1.0,0.5));
-                colors.push_back(Celer::Vector4<float>(0.5,0.5,5.0,0.5));
+                colors.push_back(Celer::Vector4<float>(0.5,0.5,0.5,0.5));
                 colors.push_back(Celer::Vector4<float>(0.5,0.0,0.5,0.5));
                 colors.push_back(Celer::Vector4<float>(0.25,0.5,0.25,0.5));
-                colors.push_back(Celer::Vector4<float>(0.25,0.0,0.75,0.5));
+                colors.push_back(Celer::Vector4<float>(0.25,0.0,1.0,0.5));
                 colors.push_back(Celer::Vector4<float>(0.0,0.0,1.0,0.5));
                 colors.push_back(Celer::Vector4<float>(0.1,0.1,0.5,0.5));
                 colors.push_back(Celer::Vector4<float>(1.0,0.1,0.5,0.5));
@@ -155,9 +155,7 @@ public:
         		return;
         	}
 
-
         	lOpen.push_back(pSeed);
-
         	// Para cada semente , gera seus vizinhos e depois escolhe uma semenete que nao esteje na intersecao
         	// de sua vizinhanca
         	while ( (lOpen.size() != 0) )
@@ -173,12 +171,12 @@ public:
         		lSurfel->SetExpansionMarked     (1);
         		lSurfel->SetClusterID           (cont);
 
-        		lNeighbors  = KDTree.KNearestNeighbors(lSurfel ,100 , KNearestSearchComps);
+        		lNeighbors  = KDTree.KNearestNeighbors(lSurfel ,250 , KNearestSearchComps);
 
         		for(SurfelPtrVectorReverseIterator it = lNeighbors.rbegin(); it != lNeighbors.rend(); ++it)
         		{
 
-        			if( lClose.size() >= 50)
+        			if( lClose.size() >= 200)
         			{
         				if ((*it)->ExpansionMarked()== 0)
         					lOpen.push_back((*it));
@@ -209,7 +207,7 @@ public:
         		}
         		++cont;
         		//lClose.pop_front();
-        		//lClose.push_front(lSurfel);
+        		lClose.push_front(lSurfel);
         		Clusters.push_back(lClose);
         		MergeEllipses<Real> me = MergeEllipses<Real>(lClose);
         		Surfels.push_back(me.NewSurfel());
@@ -231,7 +229,7 @@ public:
         	itColor = colors.begin();
         	glPushAttrib(GL_ALL_ATTRIB_BITS);
         	glPushMatrix();
-        	glColor3fv(Colors(true));
+        	glColor3fv(Colors());
         	Surfels[pNumber].DrawTriangleFan(pSteps,pRadius);
         	glPopMatrix();
         	glPopAttrib();
@@ -250,7 +248,7 @@ public:
 
         		glPushMatrix();
         		glPointSize(5.0);
-        		glColor3fv(Colors(false));
+        		glColor3fv(Colors());
         		glBegin(GL_POINTS);
         		for ( SurfelListIterator j = Clusters[pNumber].begin() ; j != Clusters[pNumber].end(); ++j )
         		{
@@ -288,18 +286,15 @@ public:
         	for(unsigned int i = Begin; i <= End ; ++i )
         	{
         		glPushMatrix();
-        		glEnable(GL_POINT_SMOOTH);
         		glPointSize(5.0);
-        		glColor3fv(Colors(false));
+        		glColor3fv(Colors());
         		glBegin(GL_POINTS);
         		for ( SurfelListIterator j = Clusters[i].begin() ; j != Clusters[i].end(); ++j )
         		{
         			glVertex3fv( j->Center() );
-
         		}
         		glEnd();
         		glPopMatrix();
-
 
         		if (pShowSeed == true)
         		{
@@ -341,19 +336,20 @@ public:
         }
 private:
 
-        Celer::Vector4<float> Colors(bool change)
+        Celer::Vector4<float> Colors()
         {
 
-                if(itColor == colors.end())
-                {
-                        itColor = colors.begin();
-                }
-                if (change == false)
-                {
-                        ++itColor;
-                }
-
+        	if((++itColor) != colors.end())
+        	{
                 return (*itColor);
+        	}
+        	else
+        	{
+        		itColor = colors.begin();
+        		return (*itColor);
+        	}
+
+
         }
 
         std::vector<Celer::Vector4<float> >::iterator itColor;
