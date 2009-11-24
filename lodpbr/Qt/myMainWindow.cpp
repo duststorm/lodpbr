@@ -11,60 +11,7 @@
 using namespace std;
 
 
-
-//void MyMainWindow::on_doubleSpinBoxThreshold_valueChanged(double d)
-//{
-//
-//	glFrame->SetThreshold(d);
-//	glFrame->updateGL();
-//}
-//
-//void MyMainWindow::on_doubleSpinBoxCameraStep_valueChanged(double d)
-//{
-//
-//	glFrame->SetCameraStep(d);
-//	glFrame->updateGL();
-//}
-//
-//void MyMainWindow::on_SpinBoxNumber_valueChanged(int d)
-//{
-//	glFrame->SetNumber(d);
-//	glFrame->updateGL();
-//}
-//
-//
-//void MyMainWindow::on_action_NewSurfel_triggered()
-//{
-//	action_NewSurfel->setChecked(1);
-//	action_OldSurfels->setChecked(0);
-//	glFrame->SetMode(true);
-//}
-//
-//void MyMainWindow::on_action_OldSurfels_triggered()
-//{
-//	action_OldSurfels->setChecked(1);
-//	action_NewSurfel->setChecked(0);
-//	glFrame->SetMode(false);
-//}
-//
-//void MyMainWindow::on_action_Model_triggered()
-//{
-//	glFrame->updateGL();
-//}
-//
-//void MyMainWindow::on_action_Next_triggered()
-//{
-//	glFrame->updateGL();
-//}
-//
-//void MyMainWindow::on_action_Previous_triggered()
-//{
-//	glFrame->updateGL();
-//}
-//
-//
-
-//form Meshlab
+//  --- From Meshlab ---
 bool MyMainWindow::QCallBack(const int pos, const char * str)
 {
 	int static lastPos=-1;
@@ -82,7 +29,6 @@ bool MyMainWindow::QCallBack(const int pos, const char * str)
 	qApp->processEvents();
 	return true;
 }
-
 
 void MyMainWindow::open(QString pFilename,bool who,WidgetProxy * p ) {
 
@@ -105,22 +51,20 @@ void MyMainWindow::open(QString pFilename,bool who,WidgetProxy * p ) {
     	  gl->LoadModel(filename.c_str(),QCallBack);
     	  gl->calLimits();
 
-			toolButtonDrawCluster->setChecked(gl->getShowCluster());
-			toolButtonClusterDrawSeed->setChecked(gl->getShowSeed());
-			toolButtonClusterDrawSurfel->setChecked(gl->getShowSurfel());
-			toolButtonClusterDrawNormal->setChecked(gl->getShowNormal());
+    	  // Dock Widget ----
+    	  toolButtonDrawCluster->setChecked(gl->getShowCluster());
+    	  toolButtonClusterDrawSeed->setChecked(gl->getShowSeed());
+    	  toolButtonClusterDrawSurfel->setChecked(gl->getShowSurfel());
+    	  toolButtonClusterDrawNormal->setChecked(gl->getShowNormal());
 
-//			bool getShowModel				() {return mClusterLog.Test(ClusterLog::Model);};
+    	  radioButtonCluster_DrawIndex->setChecked(gl->getShowDrawClusterWithID());
+    	  radioButtonCluster_DrawRange->setChecked(gl->getShowDrawClusterWithRange());
 
-			radioButtonCluster_DrawIndex->setChecked(gl->getShowDrawClusterWithID());
-			radioButtonCluster_DrawRange->setChecked(gl->getShowDrawClusterWithRange());
-
-			spinBoxCluster_DrawClusterWithID->setValue(gl->getDrawClusterWithID());
-			spinBoxCluster_DrawClusterWithRangeBegin->setValue(gl->getDrawClusterWithRangeBegin());
-			spinBoxCluster_DrawClusterWithRangeEnd->setValue(gl->getDrawClusterWithRangeEnd());
+    	  spinBoxCluster_DrawClusterWithID->setValue(gl->getDrawClusterWithID());
+    	  spinBoxCluster_DrawClusterWithRangeBegin->setValue(gl->getDrawClusterWithRangeBegin());
+    	  spinBoxCluster_DrawClusterWithRangeEnd->setValue(gl->getDrawClusterWithRangeEnd());
 
     	  progress->reset();
-
       }
 
       this->setWindowTitle("");
@@ -150,6 +94,7 @@ void MyMainWindow::createToplevelGLWidget()
 void MyMainWindow::on_action_Open_File_triggered()
 {
     // Asks for a file name to open.
+
 
 
 //	if(mdiArea->subWindowList().size() == 0)

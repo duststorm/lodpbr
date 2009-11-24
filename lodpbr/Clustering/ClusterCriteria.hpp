@@ -15,24 +15,23 @@
 *@version 1.0.
 *\nosubgrouping */
 
-template <class Real,class Item>
+template <class Real,class SurfelPtr>
 class JoinCriteria
 {
-  typedef  Item*														ItemPtr;
+
   /// Decides whether or not add the item to the clustering start by seed
-  static bool Join ( ItemPtr seed,ItemPtr surfel, ItemPtr  item)
+  static bool Join ( SurfelPtr seed,SurfelPtr surfel, SurfelPtr  item)
   {
     return 0;
   }
 
 };
 
-template <class Real,class Item>
+template <class Real,class SurfelPtr>
 class MergeCriteria
 {
-  typedef  Item*														ItemPtr;
   /// Decides whether or not add the item to the clustering start by seed
-  static bool Merge ( ItemPtr seed, std::vector<ItemPtr>  item)
+  static bool Merge ( SurfelPtr seed, std::vector<SurfelPtr>  item)
   {
     return 0;
   }
@@ -42,50 +41,48 @@ class MergeCriteria
 /*@class ClusterRefine.
  *@brief Agglomerative criteria for  Clustering.
  * A node is ...*/
-template <class Real,class Item>
-class JoinByNormal : public JoinCriteria <Real,Item>
+template <class Real,class SurfelPtr>
+class JoinByNormal : public JoinCriteria <Real,SurfelPtr>
 {
-	typedef  Item*														ItemPtr;
-        /// Add an item to the clustering if the angle between the seed
-        /// and the item is over the NORMAL
+
+
 public:
-        static bool Join ( ItemPtr seed, ItemPtr surfel, ItemPtr  item)
-        {
+	static bool Join ( SurfelPtr seed, SurfelPtr surfel, SurfelPtr  item)
+	{
 
-                 if (  (seed->Normal() * item->Normal()) > 0.0  )
-                 {
-                         Real lim = 0.3;
-                         Real alfa = 3;
-                         Real dist               = alfa*surfel->Center().EuclideanDistance(item->Center());
-                         Real Normaldist = ( (1 - (surfel->Normal() * item->Normal()) )*surfel->Cost()) * (1/lim) ;
-                         Real cost = (dist+Normaldist+surfel->Cost());
-                         //std::cout << "cost " << Normaldist << std::endl;
-                         if (cost < lim)
-                         {
+		if (  (seed->Normal() * item->Normal()) > 0.0  )
+		{
+			Real lim = 0.3;
+			Real alfa = 3;
+			Real dist               = alfa*surfel->Center().EuclideanDistance(item->Center());
+			Real Normaldist = ( (1 - (surfel->Normal() * item->Normal()) )*surfel->Cost()) * (1/lim) ;
+			Real cost = (dist+Normaldist+surfel->Cost());
+			//std::cout << "cost " << Normaldist << std::endl;
+			if (cost < lim)
+			{
 
-                                 if( item->Cost() > cost )
-                                 {
-                                         item->SetCost(cost);
-                                         return 1;
-                                 }else
-                                 {
-                                         return 0;
-                                 }
+				if( item->Cost() > cost )
+				{
+					item->SetCost(cost);
+					return 1;
+				}else
+				{
+					return 0;
+				}
 
-                         }else
-                         {
+			}else
+			{
 
-                         }
-
-
-                 }else
-                 {
-                         return 0;
-                 }
+			}
 
 
+		}else
+		{
+			return 0;
+		}
 
-        }
+		return 0;
+	}
 };
 
 
@@ -93,14 +90,13 @@ public:
  *@brief Agglomerative criteria for  Clustering.
  * A node is ...*/
 
-template <class Real,class Item>
-class MergeBySize : public MergeCriteria <Real,Item>
+template <class Real,class SurfelPtr>
+class MergeBySize : public MergeCriteria <Real,SurfelPtr>
 {
-	typedef  Item*														ItemPtr;
 	/// Add an item to the clustering if the angle between the seed
 	/// and the item is over the NORMAL
 public:
-	static bool Merge ( ItemPtr seed, std::vector<ItemPtr>  item)
+	static bool Merge ( SurfelPtr surfel, std::vector<SurfelPtr>  item)
 	{
 		return 1;
 	}

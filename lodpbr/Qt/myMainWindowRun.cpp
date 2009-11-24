@@ -95,17 +95,20 @@ void MyMainWindow::updateDockCluster()
 			sliderCluster_DrawClusterWithRangeBegin->setMaximum(GLWIDGET()->cluster.Clusters.size());
 			sliderCluster_DrawClusterWithRangeEnd->setMaximum(GLWIDGET()->cluster.Clusters.size());
 
-			// Atualiza os valores corrente
+			// -- Atualiza os valores corrente
+			// botao cluster esta ativado ?
 			toolButtonDrawCluster->setChecked(GLWIDGET()->getShowCluster());
+			// botao Draw Seed esta ativado ?
 			toolButtonClusterDrawSeed->setChecked(GLWIDGET()->getShowSeed());
+			// botao Draw Srufel esta ativado ?
 			toolButtonClusterDrawSurfel->setChecked(GLWIDGET()->getShowSurfel());
+			// botao Draw Normal esta ativado ?
 			toolButtonClusterDrawNormal->setChecked(GLWIDGET()->getShowNormal());
-
-//			bool getShowModel				() {return mClusterLog.Test(ClusterLog::Model);};
 
 			radioButtonCluster_DrawIndex->setChecked(GLWIDGET()->getShowDrawClusterWithID());
 			radioButtonCluster_DrawRange->setChecked(GLWIDGET()->getShowDrawClusterWithRange());
 
+			// Atualiza os valoes dos spinBox que automaticamente atualiza os valos dos sliders
 			spinBoxCluster_DrawClusterWithID->setValue(GLWIDGET()->getDrawClusterWithID());
 			spinBoxCluster_DrawClusterWithRangeBegin->setValue(GLWIDGET()->getDrawClusterWithRangeBegin());
 			spinBoxCluster_DrawClusterWithRangeEnd->setValue(GLWIDGET()->getDrawClusterWithRangeEnd());
@@ -160,7 +163,9 @@ void MyMainWindow::on_pushButtonBuild_clicked()
 	if(GLWIDGET()->cluster.Clusters.size() > 0)
 	{
 		dockWidgetClusterContents->setEnabled(1);
+		// Abilita Dock Draw Cluster
 		dockWidgetDrawClusterContents->setEnabled(1);
+		// Atualiza os limites de renderização
 		spinBoxCluster_DrawClusterWithID->setMaximum(GLWIDGET()->cluster.Clusters.size());
 
 		sliderCluster_DrawClusterWithID->setMaximum(GLWIDGET()->cluster.Clusters.size());
@@ -203,7 +208,6 @@ void MyMainWindow::on_sliderCluster_DrawClusterWithRangeBegin_valueChanged(int v
 void MyMainWindow::on_sliderCluster_DrawClusterWithRangeEnd_valueChanged(int value)
 {
 	GLWIDGET()->setDrawClusterWithRangeEnd(value-1);
-
 }
 
 void MyMainWindow::on_spinBoxCluster_DrawClusterWithRangeEnd_valueChanged(int value)
@@ -218,9 +222,12 @@ void MyMainWindow::on_sliderCluster_DrawClusterWithID_valueChanged(int value)
 }
 void MyMainWindow::on_toolButtonDrawCluster_toggled(bool checked)
 {
+	GLWIDGET()->setShowClusters(checked);
+}
+void MyMainWindow::on_toolButtonClusterDraw_toggled(bool checked)
+{
 	GLWIDGET()->setShowCluster(checked);
 }
-
 void MyMainWindow::on_toolButtonClusterDrawSurfel_toggled(bool checked)
 {
 	GLWIDGET()->setShowSurfel(checked);

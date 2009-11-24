@@ -60,13 +60,13 @@ void GLWidget::init()
 	mNumber = 4;
 
 	mode = true;
-	settings.setBackgroundColor(QColor(75,75,75));
+	settings.setBackgroundColor(QColor(55,55,55));
 
 //    GLfloat x = GLfloat(width()) / height();
 //    camera.SetProjectionMatrix(30.0,x,0.1,100000);
 
 
-	mSelectionMode = ADD_NEIBORHOO;
+	mSelectionMode = NONE;
 	mSelectBuffer = 0;
 	setSelectBufferSize(4*1000);
 	setSelectRegionWidth(4);
@@ -165,6 +165,21 @@ void GLWidget::setShowCluster(bool checked)
 	{
 		mClusterLog.maskShow.Clear(ClusterLog::Cluster);
 		std::cout << "No Cluster" << std::endl;
+	}
+	update();
+}
+
+void GLWidget::setShowClusters(bool checked)
+{
+	if (checked == true)
+	{
+		mClusterLog.maskShow.Add(ClusterLog::Clusters);
+
+	}
+	else
+	{
+		mClusterLog.maskShow.Clear(ClusterLog::Clusters);
+
 	}
 	update();
 }
@@ -538,6 +553,7 @@ void GLWidget::BuildCluster()
 	{
 		if (mClusterLog.maskBuildClusterWith.Test(ClusterLog::NormalOnly))
 		{
+
 			Celer::Surfel<float>* seed = new Celer::Surfel<float>(Surfels[0]);
 			cluster.Build<JoinByNormal<float,Celer::Surfel<float>* >,
 						  MergeBySize <float,Celer::Surfel<float>* > >(1000,200,(seed));
@@ -620,13 +636,13 @@ void GLWidget::paintGL()
     	for (size_t i = 0; i != result.size();++i)
     		result[i].DrawCenter(5.0);
 
-    	if (mClusterLog.maskShow.Test(ClusterLog::Cluster))
+    	if (mClusterLog.maskShow.Test(ClusterLog::Clusters))
     	{
 
-    		if 		(mClusterLog.maskRenderingClusterBy.Test(ClusterLog::Index))
+    		if 	   (mClusterLog.maskRenderingClusterBy.Test(ClusterLog::Index))
     		{
-
-    			cluster.DrawClustersIndex(mClusterLog.getClusteIndex(),(mClusterLog.maskShow.Test(ClusterLog::Seed)));
+    			if (mClusterLog.maskShow.Test(ClusterLog::Cluster))
+    				cluster.DrawClustersIndex(mClusterLog.getClusteIndex(),(mClusterLog.maskShow.Test(ClusterLog::Seed)));
 
     			if (mClusterLog.maskShow.Test(ClusterLog::Surfel))
     				cluster.DrawSurfels(mClusterLog.getClusteIndex(),64,mClusterLog.getRadiusf());
@@ -634,7 +650,8 @@ void GLWidget::paintGL()
     		else if (mClusterLog.maskRenderingClusterBy.Test(ClusterLog::Range))
     		{
 
-    			cluster.DrawClustersRange(mClusterLog.getClusterRangeBegin(),mClusterLog.getClusterRangeEnd(),(mClusterLog.maskShow.Test(ClusterLog::Seed)));
+    			if (mClusterLog.maskShow.Test(ClusterLog::Cluster))
+    				cluster.DrawClustersRange(mClusterLog.getClusterRangeBegin(),mClusterLog.getClusterRangeEnd(),(mClusterLog.maskShow.Test(ClusterLog::Seed)));
 
     			if (mClusterLog.maskShow.Test(ClusterLog::Surfel))
     			{
@@ -643,6 +660,7 @@ void GLWidget::paintGL()
     				for(unsigned int i = mClusterLog.getClusterRangeBegin();i <= mClusterLog.getClusterRangeEnd();++i)
     					cluster.DrawSurfels(i,8,mClusterLog.getRadiusf());
     			}
+
     		}else
     		{
 

@@ -20,33 +20,34 @@ public:
 		Surfel		= 1 << 2,
 		Normal   	= 1 << 3,
 		Cluster		= 1 << 4,
-		Model		= 1 << 5
+		Clusters    = 1 << 5,
+		Model		= 1 << 6
 	};
 
 	enum RenderingClusterBy
 	{
-		Range 			= 1 << 6,
-		Index 			= 1 << 7,
-		All				= 1 << 8
+		Range 			= 1 << 7,
+		Index 			= 1 << 8,
+		All				= 1 << 9
 	};
     enum RenderingClusterWith
     {
-		GLPoint 		= 1 << 9,
-		GLPointSmooth 	= 1 << 10,
-		PyramidSplat 	= 1 << 11,
-		EWASplat 		= 1 << 12
+		GLPoint 		= 1 << 10,
+		GLPointSmooth 	= 1 << 11,
+		PyramidSplat 	= 1 << 12,
+		EWASplat 		= 1 << 13
     };
     enum BuildClusterWith
     {
-    	NormalOnly 				= 1 << 13,
-    	AllPossibleCluster 		= 1 << 14,
-    	LimitedNumberOfCluster 	= 1 << 15
+    	NormalOnly 				= 1 << 14,
+    	AllPossibleCluster 		= 1 << 15,
+    	LimitedNumberOfCluster 	= 1 << 16
     };
 
     enum BuildClusterSystem
 	{
-    	Continuous    		 = 1 << 16,
-    	Interactive			 = 1 << 17
+    	Continuous    		 = 1 << 17,
+    	Interactive			 = 1 << 18
     };
 
     Bitmask<unsigned int,Show				 > 	maskShow;

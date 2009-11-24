@@ -57,10 +57,10 @@ public slots:
  	// --Cluster Dock Widget Draw--
  	//
  	void on_toolButtonDrawCluster_toggled							(bool checked);
-
- 	void on_toolButtonClusterDrawSurfel_toggled								(bool checked);
- 	void on_toolButtonClusterDrawSeed_toggled								(bool checked);
- 	void on_toolButtonClusterDrawNormal_toggled								(bool checked);
+ 	void on_toolButtonClusterDraw_toggled							(bool checked);
+ 	void on_toolButtonClusterDrawSurfel_toggled						(bool checked);
+ 	void on_toolButtonClusterDrawSeed_toggled						(bool checked);
+ 	void on_toolButtonClusterDrawNormal_toggled						(bool checked);
 
  	void on_spinBoxCluster_DrawClusterWithRangeBegin_valueChanged	(int);
  	void on_sliderCluster_DrawClusterWithRangeBegin_valueChanged	(int);
