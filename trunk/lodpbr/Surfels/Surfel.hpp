@@ -685,7 +685,7 @@ void Surfel<Real>::SetMinError (const Real& pMinError) const
 };
 
 template<class Real>
-void Surfel<Real>::SetCost ( const Real& pSimilarity )
+void Surfel<Real>::SetSimilarity ( const Real& pSimilarity )
 {
 	 this->mSimilarity = pSimilarity;
 }
@@ -856,8 +856,8 @@ void Surfel<Real>::DrawTriangleFan(int p,const Real& pRadius)
 	 	glBegin (GL_POLYGON);
 	 		for(ListPoint3Iterator it = lBoundaries.begin();it != lBoundaries.end();++it)
 	 		{
-	 			glNormal3fv (this->mNormal.ToRealPtr());
-	 			glVertex3fv( it->ToRealPtr() );
+	 			glNormal3fv (this->mNormal);
+	 			glVertex3fv( *it );
 	 		}
 		glEnd();
 		glDisable(GL_POLYGON_OFFSET_FILL | GL_POLYGON_SMOOTH_HINT |  GL_MULTISAMPLE) ;
@@ -867,16 +867,19 @@ void Surfel<Real>::DrawTriangleFan(int p,const Real& pRadius)
 	    glDisable (GL_LIGHTING);
 		glColor3f(0.0,0.0,0.0);
 		glEnable(GL_MULTISAMPLE) ;
-//			glBegin(GL_LINES);
-//	 			for(ListPoint3Iterator it = lBoundaries.begin();it != lBoundaries.end();++it)
-//	 			{
-//	 				glVertex3fv( it->ToRealPtr() );
-//	 				glVertex3fv( this->mCenter.ToRealPtr());
-//	 			}
-//			glEnd();
 
-		glBegin(GL_POINTS);
+		glBegin(GL_LINES);
+		for(ListPoint3Iterator it = lBoundaries.begin();it != lBoundaries.end();++it)
+		{
+			glVertex3fv( it->ToRealPtr() );
 			glVertex3fv( this->mCenter.ToRealPtr());
+		}
+		glEnd();
+
+		glColor3f(1.0,1.0,1.0);
+		glBegin(GL_LINES);
+			glVertex3fv(mCenter);
+			glVertex3fv((mCenter + (mNormal * 0.02f)));
 		glEnd();
 
 		glDisable(GL_MULTISAMPLE) ;
