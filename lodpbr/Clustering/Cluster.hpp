@@ -171,12 +171,12 @@ public:
         		lSurfel->SetExpansionMarked     (1);
         		lSurfel->SetClusterID           (cont);
 
-        		lNeighbors  = KDTree.KNearestNeighbors(lSurfel ,250 , KNearestSearchComps);
+        		lNeighbors  = KDTree.KNearestNeighbors(lSurfel ,200 , KNearestSearchComps);
 
         		for(SurfelPtrVectorReverseIterator it = lNeighbors.rbegin(); it != lNeighbors.rend(); ++it)
         		{
 
-        			if( lClose.size() >= 200)
+        			if( lClose.size() >= 100)
         			{
         				if ((*it)->ExpansionMarked()== 0)
         					lOpen.push_back((*it));
@@ -190,8 +190,12 @@ public:
 
         			}else
         			{
-							(*it)->SetExpansionMarked(1);
-        					lClose.push_back((*(*it)));
+//							if ((*it)->ExpansionMarked() == 0)
+//							{
+								(*it)->SetExpansionMarked(1);
+								lClose.push_back((*(*it)));
+//							}
+
         			}
 //        			else
 //        			{
@@ -252,6 +256,7 @@ public:
         		glBegin(GL_POINTS);
         		for ( SurfelListIterator j = Clusters[pNumber].begin() ; j != Clusters[pNumber].end(); ++j )
         		{
+    	 			glNormal3fv (j->Normal());
         			glVertex3fv( j->Center() );
         		}
         		glEnd();
@@ -265,7 +270,8 @@ public:
         			glColor3f(1.0f,1.0f,1.0f);
         			glBegin(GL_POINTS);
         			{
-        				glVertex3fv( Clusters[pNumber].begin()->Center() );
+        				glNormal3fv (Clusters[pNumber].begin()->Normal());
+        				glVertex3fv( Clusters[pNumber].begin()->Center());
         			}
         			glEnd();
         			glPopMatrix();
@@ -291,6 +297,7 @@ public:
         		glBegin(GL_POINTS);
         		for ( SurfelListIterator j = Clusters[i].begin() ; j != Clusters[i].end(); ++j )
         		{
+        			glNormal3fv (j->Normal());
         			glVertex3fv( j->Center() );
         		}
         		glEnd();
@@ -304,6 +311,7 @@ public:
         			glColor3f(1.0f,1.0f,1.0f);
         			glBegin(GL_POINTS);
         			{
+        				glNormal3fv (Clusters[i].begin()->Normal());
         				glVertex3fv( Clusters[i].begin()->Center() );
         			}
         			glEnd();
