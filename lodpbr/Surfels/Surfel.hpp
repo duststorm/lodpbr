@@ -7,6 +7,8 @@
  *
  * Data created: 08-01-2008
  *
+ * TODO : Still Under Construction. Take care =)
+ *
  **/
 
 #include <vector>
@@ -227,8 +229,8 @@ class Surfel
 	 void 						SetMaxError			( const Real& pMaxError ) const;
 	 Real 						MinError 			(  ) const;
    	 void 						SetMinError 		( const Real& pMinError ) const;
-	 Real 						Cost 				(  ) const;
-	 void 						SetCost 			( const Real& pCost );
+	 Real 						Similarity 			(  ) const;
+	 void 						SetSimilarity 		( const Real& pSimilarity );
 
 	 Real 						Area				(  ) const;
 
@@ -282,7 +284,7 @@ class Surfel
 	  bool mExpansionMarked;
 	  bool mSeedMarked;
 
-	  Real mCost;
+	  Real mSimilarity;
 
 	  unsigned  int mClusterID;
 
@@ -301,7 +303,7 @@ Surfel<Real>::Surfel ()
 	 mMarked = 0;
 	 mExpansionMarked = 0;
 	 mSeedMarked = 0;
-	 mCost 		= 9999;
+	 mSimilarity 		= 9999;
 	 mClusterID = 0;
 }
 
@@ -319,7 +321,7 @@ Surfel<Real>::Surfel (const Surfel<Real>& pSurfel) :  mCenter(pSurfel.mCenter),
   										 mMarked(pSurfel.mMarked),
   									     mExpansionMarked(pSurfel.mExpansionMarked),
   									     mSeedMarked(pSurfel.mSeedMarked),
-  									     mCost(pSurfel.mCost),
+  									     mSimilarity(pSurfel.mSimilarity),
   										 mClusterID(pSurfel.mClusterID)
 {
 
@@ -339,7 +341,7 @@ Surfel<Real>::Surfel (const Surfel<Real>* pSurfel) :  mCenter(pSurfel->mCenter),
   										 mMarked(pSurfel->mMarked),
   									     mExpansionMarked(pSurfel->mExpansionMarked),
   									     mSeedMarked(pSurfel->mSeedMarked),
-  									     mCost(pSurfel->mCost),
+  									     mSimilarity(pSurfel->mSimilarity),
   										 mClusterID(pSurfel->mClusterID)
 {
 
@@ -365,7 +367,7 @@ Surfel<Real>::Surfel (const LoadPlySurfel& pSurfel) : mCenter(pSurfel.cx,pSurfel
   										 mMarked(0),
   									     mExpansionMarked(0),
   									     mSeedMarked(0),
-  									     mCost(9999),
+  									     mSimilarity(9999),
   										 mClusterID(0)
 {
 
@@ -384,7 +386,7 @@ Surfel<Real>::Surfel (const Point3& 	center,
 							   mMarked(0),
 							   mExpansionMarked(0),
 							   mSeedMarked(0),
-							   mCost(9999),
+							   mSimilarity(9999),
 							   mClusterID(0)
 	  {
 	 	mColor = Color(1.0,0.0,0.0);
@@ -406,7 +408,7 @@ Surfel<Real>::Surfel (const Point3& 	position,
 								   mMarked(0),
 								   mExpansionMarked(0),
 								   mSeedMarked(0),
-								   mCost(9999),
+								   mSimilarity(9999),
 								   mClusterID(0)
 	  {
 	 	mColor = Color(0.0,0.0,0.0);
@@ -435,7 +437,7 @@ Surfel<Real>::Surfel (const Point3& 	position,
 		 						mMarked(0),
 								mExpansionMarked(0),
 								mSeedMarked(0),
-								mCost(9999),
+								mSimilarity(9999),
 		 						mClusterID(0)
 
 
@@ -463,7 +465,7 @@ Surfel<Real>::Surfel (const Point3& 	position,
 		 						mMarked(0),
 								mExpansionMarked(0),
 								mSeedMarked(0),
-								mCost(9999),
+								mSimilarity(9999),
 		 						mClusterID(0)
 	  {
 	 	mColor = Color(0.0,0.0,0.0);
@@ -491,7 +493,7 @@ inline const Surfel<Real>& Surfel<Real>::operator= ( const Surfel<Real>& pSurfel
 	 this->mMarked    		= pSurfel.Marked();
 	 this->mExpansionMarked = pSurfel.ExpansionMarked();
 	 this->mSeedMarked		= pSurfel.SeedMarked();
-	 this->mCost			= pSurfel.Cost();
+	 this->mSimilarity			= pSurfel.Similarity();
 	 this->mClusterID 		= pSurfel.ClusterID();
 
 	  	return ( *this );
@@ -683,15 +685,15 @@ void Surfel<Real>::SetMinError (const Real& pMinError) const
 };
 
 template<class Real>
-void Surfel<Real>::SetCost ( const Real& pCost )
+void Surfel<Real>::SetCost ( const Real& pSimilarity )
 {
-	 this->mCost = pCost;
+	 this->mSimilarity = pSimilarity;
 }
 
 template<class Real>
-Real Surfel<Real>::Cost ( ) const
+Real Surfel<Real>::Similarity ( ) const
 {
-	 return this->mCost;
+	 return this->mSimilarity;
 }
 
 /// I/O operator - output
@@ -708,9 +710,6 @@ inline  std::ostream& operator << (std::ostream& out, const Surfel<Real> &s)
 			 <<	"MinError " << s.MinError() << "\n"
 			 <<	"ID       " << s.ID() << "\n";
 
-
-
-
    return out;
 };
 
@@ -719,7 +718,6 @@ Real Surfel<Real>::Area() const
 {
 	 return (  (Celer::Math::kPi * mMinorAxis.first) * (Celer::Math::kPi * mMajorAxis.first) );
 }
-
 
 template<class Real>
 Vector3<Real> Surfel<Real>::Perpendicular( const Vector3& pVector)
@@ -885,9 +883,7 @@ void Surfel<Real>::DrawTriangleFan(int p,const Real& pRadius)
 		glEnable (GL_LIGHTING);
 		glPopMatrix();
 
-
 }
-
 
 }
 
