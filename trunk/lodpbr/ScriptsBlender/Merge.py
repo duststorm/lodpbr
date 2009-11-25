@@ -54,10 +54,10 @@ class Error:
             result = 9999999
             for ellipse in self.ListEllipse:
                 q  = p - ( (ellipse.Normal() * (p - ellipse.Center() )) *ellipse.Normal())
-                print "Q --- ",q
-                print "P --- ",p
-                print "ellipse --- ",[ellipse.EixoA(),ellipse.EixoB()]
-                print "Ellipse --- ",[self.Ellipse.EixoA(),self.Ellipse.EixoB()]
+#                print "Q --- ",q
+#                print "P --- ",p
+#                print "ellipse --- ",[ellipse.EixoA(),ellipse.EixoB()]
+#                print "Ellipse --- ",[self.Ellipse.EixoA(),self.Ellipse.EixoB()]
                 r = q - ellipse.Center()
                 s = p - q
                 A = (r * ellipse.EixoA())/(ellipse.A())
@@ -65,8 +65,8 @@ class Error:
                 if (A*A + B*B) > 1:
                     BA = B/A
                     Aline = sqrt(1.0/(1.0+(BA*BA)))
-                    print "Aline --- ",Aline
-                    print "A --- ",A
+#                    print "Aline --- ",Aline
+#                    print "A --- ",A
                     Dist = (1-(Aline/abs(A))) * sqrt( r*r ) + sqrt(s*s)
                 else:
                     Dist = sqrt(s*s)

@@ -141,8 +141,8 @@ void SeedExpansion(Ellipse seed,int idCluster,std::list<Ellipse> ListSeed)
 		} //if Aggregarion == True
 
 
-		/// Cost = dist(ellipse,mKNeighbor[i]) * w_1 +  (1-(ellipse.mNormal*mKNeighbor[i].mNormal)²) * w_2
-		///	<Cost,Ellipse>
+		/// Similarity = dist(ellipse,mKNeighbor[i]) * w_1 +  (1-(ellipse.mNormal*mKNeighbor[i].mNormal)ï¿½) * w_2
+		///	<Similarity,Ellipse>
 		std::map<float,Ellipse> mKNeighbor;
 
 
@@ -150,7 +150,7 @@ void SeedExpansion(Ellipse seed,int idCluster,std::list<Ellipse> ListSeed)
 
 		for (int i = 0; i < mKNeighbor.size() ; ++i)
 		{
-			// Se não estiver em um cluster ou seu costo do novo caminho desde a semente é melhor
+			// Se nï¿½o estiver em um cluster ou seu costo do novo caminho desde a semente ï¿½ melhor
 			if( (mKNeighbor[i].second.mLastClusterID != idCluster) || (mKNeighbor[i].first < mKNeighbor[i].second.mLastClusterCost) )
 			{
 				// Se custo for melhor que um Threshold , poe na lista aberto para futura expanssao
