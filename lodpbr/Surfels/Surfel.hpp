@@ -219,7 +219,8 @@ class Surfel
 
 	 unsigned  int 				ClusterID 			( void ) const;
 	 void 						SetClusterID 		( unsigned int pClusterID );
-	 Real 						PerpendicularError  ( ) const;
+	 Real 						Curvature			( ) const;
+	 Real						SetCurvature 		( const Real c);
 	 void 						SetMinorAxis		( const std::pair<Real,Vector3>& pMinorAxis );
 	 void 						SetMajorAxis		( const std::pair<Real,Vector3>& pMajorAxis );
 	 std::pair<Real,Vector3> 	MinorAxis			(  ) const;
@@ -274,7 +275,7 @@ class Surfel
 	  Real mMinError;
 
 	  /// Perpendicular error
-	  Real mPerpendicularError;
+	  Real mCurvature;
 
 	  /// An identification number for the surfel
 	  unsigned int mID;
@@ -316,7 +317,7 @@ Surfel<Real>::Surfel (const Surfel<Real>& pSurfel) :  mCenter(pSurfel.mCenter),
   										 mMajorAxis(pSurfel.mMajorAxis),
   		   								 mMaxError(pSurfel.mMaxError),
   		   								 mMinError(pSurfel.mMinError),
-  										 mPerpendicularError(pSurfel.mPerpendicularError),
+  										 mCurvature(pSurfel.mCurvature),
   										 mID(pSurfel.mID),
   										 mMarked(pSurfel.mMarked),
   									     mExpansionMarked(pSurfel.mExpansionMarked),
@@ -336,7 +337,7 @@ Surfel<Real>::Surfel (const Surfel<Real>* pSurfel) :  mCenter(pSurfel->mCenter),
   										 mMajorAxis(pSurfel->mMajorAxis),
   		   								 mMaxError(pSurfel->mMaxError),
   		   								 mMinError(pSurfel->mMinError),
-  										 mPerpendicularError(pSurfel->mPerpendicularError),
+  										 mCurvature(pSurfel->mCurvature),
   										 mID(pSurfel->mID),
   										 mMarked(pSurfel->mMarked),
   									     mExpansionMarked(pSurfel->mExpansionMarked),
@@ -362,7 +363,7 @@ Surfel<Real>::Surfel (const LoadPlySurfel& pSurfel) : mCenter(pSurfel.cx,pSurfel
   												               		  pSurfel.minor_axisz))),
   										 mMaxError(pSurfel.max_error),
   										 mMinError(pSurfel.min_error),
-  										 mPerpendicularError(0),
+  										 mCurvature(0),
   										 mID(0),
   										 mMarked(0),
   									     mExpansionMarked(0),
@@ -392,7 +393,8 @@ Surfel<Real>::Surfel (const Point3& 	center,
 	 	mColor = Color(1.0,0.0,0.0);
 		mMaxError = 0;
 		mMinError = 0;
-
+		mCurvature = 0;
+		mSplatRadius = 0;
 	  };
 
 template<class Real>
@@ -403,7 +405,7 @@ Surfel<Real>::Surfel (const Point3& 	position,
 		 const Real& 	pError ) : mCenter(position),
 								   mNormal(normal),
 								   mSplatRadius(radius),
-								   mPerpendicularError(pError),
+								   mCurvature(pError),
 								   mID(id),
 								   mMarked(0),
 								   mExpansionMarked(0),
@@ -432,7 +434,7 @@ Surfel<Real>::Surfel (const Point3& 	position,
 		 						mNormal(normal),
 		 						mColor(color),
 		 						mSplatRadius(radius),
-		 						mPerpendicularError(0),
+		 						mCurvature(0),
 		 						mID(id),
 		 						mMarked(0),
 								mExpansionMarked(0),
@@ -460,7 +462,7 @@ Surfel<Real>::Surfel (const Point3& 	position,
 		 unsigned int 	id ) : 	mCenter(position),
 		 						mNormal(normal),
 		 						mSplatRadius(radius),
-		 						mPerpendicularError(0),
+		 						mCurvature(0),
 		 						mID(id),
 		 						mMarked(0),
 								mExpansionMarked(0),
@@ -489,11 +491,12 @@ inline const Surfel<Real>& Surfel<Real>::operator= ( const Surfel<Real>& pSurfel
 	 this->mMajorAxis 		= pSurfel.MajorAxis();
 	 this->mMaxError 		= pSurfel.MaxError();
 	 this->mMinError 		= pSurfel.MinError();
+	 this->mCurvature		= pSurfel.Curvature();
 	 this->mColor     		= pSurfel.ColorRGB();
 	 this->mMarked    		= pSurfel.Marked();
 	 this->mExpansionMarked = pSurfel.ExpansionMarked();
 	 this->mSeedMarked		= pSurfel.SeedMarked();
-	 this->mSimilarity			= pSurfel.Similarity();
+	 this->mSimilarity		= pSurfel.Similarity();
 	 this->mClusterID 		= pSurfel.ClusterID();
 
 	  	return ( *this );
@@ -631,9 +634,15 @@ void Surfel<Real>::SetClusterID ( unsigned int pClusterID)
 };
 
 template<class Real>
-Real Surfel<Real>::PerpendicularError () const
+Real Surfel<Real>::Curvature () const
 {
-	 return ( this->mPerpendicularError );
+	 return ( this->mCurvature );
+};
+
+template<class Real>
+Real Surfel<Real>::SetCurvature ( const Real c)
+{
+	 this->mCurvature = c;
 };
 
 template<class Real>
@@ -852,7 +861,7 @@ void Surfel<Real>::DrawTriangleFan(int p,const Real& pRadius)
 
 	    glEnable(GL_POLYGON_OFFSET_FILL | GL_POLYGON_SMOOTH_HINT | GL_MULTISAMPLE);
 	    glPolygonOffset(1,1);
-	    glColor4f(0.0,0.5,0.5,0.5);
+//	    glColor4f(0.0,0.5,0.5,0.5);
 	 	glBegin (GL_POLYGON);
 	 		for(ListPoint3Iterator it = lBoundaries.begin();it != lBoundaries.end();++it)
 	 		{
@@ -868,19 +877,19 @@ void Surfel<Real>::DrawTriangleFan(int p,const Real& pRadius)
 		glColor3f(0.0,0.0,0.0);
 		glEnable(GL_MULTISAMPLE) ;
 
-		glBegin(GL_LINES);
-		for(ListPoint3Iterator it = lBoundaries.begin();it != lBoundaries.end();++it)
-		{
-			glVertex3fv( it->ToRealPtr() );
-			glVertex3fv( this->mCenter.ToRealPtr());
-		}
-		glEnd();
+//		glBegin(GL_LINES);
+//		for(ListPoint3Iterator it = lBoundaries.begin();it != lBoundaries.end();++it)
+//		{
+//			glVertex3fv( it->ToRealPtr() );
+//			glVertex3fv( this->mCenter.ToRealPtr());
+//		}
+//		glEnd();
 
-		glColor3f(1.0,1.0,1.0);
-		glBegin(GL_LINES);
-			glVertex3fv(mCenter);
-			glVertex3fv((mCenter + (mNormal * 0.02f)));
-		glEnd();
+//		glColor3f(1.0,1.0,1.0);
+//		glBegin(GL_LINES);
+//			glVertex3fv(mCenter);
+//			glVertex3fv((mCenter + (mNormal * 0.02f)));
+//		glEnd();
 
 		glDisable(GL_MULTISAMPLE) ;
 		glEnable (GL_LIGHTING);
