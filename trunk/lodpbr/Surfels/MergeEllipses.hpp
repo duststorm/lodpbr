@@ -128,7 +128,6 @@ public:
 		mProjectedPoint = lPoints;
 	}
 
-
 	void NewAxis()
 	{
 

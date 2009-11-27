@@ -627,14 +627,26 @@ void GLWidget::paintGL()
     		glBegin(GL_POINTS);
     		for (std::vector<Surfel>::iterator s = Surfels.begin(); s != Surfels.end();++s)
     		{
+    			if( (s->Curvature() >= 0.0) && (s->Curvature() < 0.25) )
+    				glColor3f(0.0f,0.0f,1.0f);
+    			else if ( (s->Curvature() > 0.25) && (s->Curvature() < 0.50) )
+    				glColor3f(0.0,1.0f,1.0f);
+    			else if ( (s->Curvature() > 0.5) && (s->Curvature() < 0.75) )
+    				glColor3f(1.0f,1.0f,0.0f);
+    			else if ( (s->Curvature() > 0.75) && (s->Curvature() <= 1.0) )
+    				glColor3f(1.0f,0.0f,0.0);
     			glVertex3fv( s->Center().ToRealPtr() );
+//    			s->DrawTriangleFan(64,0.5);
     		}
     		glEnd();
     		glPopMatrix();
     	}
 
     	for (size_t i = 0; i != result.size();++i)
-    		result[i].DrawCenter(5.0);
+    	{
+    		result[i].Center(5.0);
+    		std::cout << "CURVATURA " << result[i].Curvature() << std::endl;
+    	}
 
     	if (mClusterLog.maskShow.Test(ClusterLog::Clusters))
     	{

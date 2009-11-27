@@ -17,7 +17,8 @@ namespace Celer {
 *@email fmc@cos.ufrj.br
 *@version 1.0.
 *@date 25-Feb-2008.
-*@todo OpenGL interface and a C style array.
+*@ TODO OpenGL interface and a C style array.
+*@ TODO FriendShip wit Points
 */
 
 	template <class Real>	class Vector3

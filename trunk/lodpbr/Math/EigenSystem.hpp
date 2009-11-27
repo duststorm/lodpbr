@@ -54,6 +54,7 @@ namespace Celer
 		{
 			CovarianceMatrix (pPoint3List,pMean);
 			EigenDecomposition();
+			mCurvature = mEigenvalue[0] / (mEigenvalue[0]+mEigenvalue[1]+mEigenvalue[2]);
 		}
 		//@}
 		/*! @name Constructors */
@@ -72,6 +73,11 @@ namespace Celer
 		std::pair<Real,Vector3> Normal()
 		{
 			return (this->mNormal);
+		}
+
+		Real Curvature () const
+		{
+			return (mCurvature);
 		}
 
 		void CovarianceMatrix (ListPoint3& pPoint3List, const Point3& pMean)
@@ -426,6 +432,7 @@ namespace Celer
 		std::pair<Real, Vector3> mMinorAxis;
 		std::pair<Real, Vector3> mMajorAxis;
 		std::pair<Real, Vector3> mNormal;
+		Real 					mCurvature;
 
 
 	};

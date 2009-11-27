@@ -28,6 +28,7 @@
 #include "Surfels/Surfel.hpp"
 
 #include "Math/BoundingBox3.hpp"
+#include "Math/EigenSystem.hpp"
 #include "Math/Vector4.hpp"
 
 #include "ClusterCriteria.hpp"
@@ -88,7 +89,28 @@ public:
                         KDTree.Insert (s);
                 }
                 std::cout << "KD-Tree End " << KDTree.Count() <<std::endl;
+	        	Real maxC = -1;
+		        Real minC = 1;
 
+                for (SurfelVectorIterator it =  pSurfels.begin();it != pSurfels.end(); ++ it )
+                 {
+ 						 SurfelPtr s = new Surfel(*it);
+
+ 						Curvature(s,400);
+
+ 						it->SetCurvature(s->Curvature());
+ 						if (maxC <  s->Curvature())
+ 						{
+ 							maxC = s->Curvature();
+ 						}
+ 						if (minC > s->Curvature())
+ 						{
+ 							minC = s->Curvature();
+ 						}
+
+                 }
+
+	    		std::cout <<  " minC " << minC <<  ": maxC " << maxC << std::endl;
         }
 
         void Init()
@@ -125,6 +147,35 @@ public:
         }
 
 
+        void Curvature( SurfelPtr pSurfel, int pNeighbourhoodSize )
+        {
+        	/// How many comparisons the Kd-Tree do to finding an element
+        	int KNearestSearchComps = 0;
+
+        	SurfelPtrVector lNeighbors;
+        	std::list<Celer::Point3<Real> >	lSurfels;
+        	lNeighbors = KDTree.KNearestNeighbors(pSurfel ,pNeighbourhoodSize , KNearestSearchComps);
+        	Real signal = 0;
+
+        	for(SurfelPtrVectorReverseIterator it = lNeighbors.rbegin(); it != lNeighbors.rend(); ++it)
+        	{
+        		//signal =  ((*it)->Center()-pSurfel->Center())*(*it)->Normal();
+        		lSurfels.push_back( (*it)->Center() );
+        	}
+
+//        	if (signal > 0)
+//        		signal = 1;
+//        	else
+//        		signal = (-1);
+
+        	Celer::Point3<Real> lSurfel (pSurfel->Center());
+
+        	Celer::EigenSystem<Real> lEigen(lSurfels,lSurfel);
+
+    		pSurfel->SetCurvature((lEigen.Curvature())*3);
+
+        }
+
         /// Build a set of Clusters by the Similarities and Aggregations.
         /// @details ...
         /// conditions pass by template parameter.
@@ -136,7 +187,7 @@ public:
         {
     		Clusters.clear();
     		Surfels.clear();
-    		KDTree.ResetMarkedClustering();
+
         	/// How many comparisons the Kd-Tree do to finding an element
         	int                                  KNearestSearchComps = 0;
         	///
@@ -219,6 +270,7 @@ public:
         		lNeighbors.clear();
         	}
 
+    		KDTree.ResetMarkedClustering();
         }
 
 
