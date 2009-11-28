@@ -18,7 +18,7 @@
 *@version 1.0.
 *@todo OpenGL interface and a C style array, Why MakeView ans MakeProjection dont need The Transpose?
 *@todo Não deu certo integrar por que minha nova 3x3 e 4x4 matrix estavam colum major , por isso dava dando bugs ...
-* por que eu tava armazenando em 16 variáveis e não mais nuam [][] like , e tava ido direto para colum major
+* por que eu tava armazenando em 16 variáveis e não mais nuam [][]  , e tava ido direto para colum major
 *@ resolvi o reverso depois de por assim (worldAhead * mZoomRadius) - mWorldLookAt ;
 */
 

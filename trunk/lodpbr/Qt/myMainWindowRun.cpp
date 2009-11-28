@@ -158,7 +158,7 @@ void MyMainWindow::on_comboBoxCluster_BuildSurfelSimilarity_activated(const QStr
 
 void MyMainWindow::on_pushButtonBuild_clicked()
 {
-	GLWIDGET()->BuildCluster();
+	GLWIDGET()->BuildCluster(QCallBack);
 
 	if(GLWIDGET()->cluster.Clusters.size() > 0)
 	{

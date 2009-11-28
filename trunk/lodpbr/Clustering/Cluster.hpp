@@ -58,8 +58,8 @@ public:
 	typedef typename  SurfelPtrList::iterator			SurfelPtrListIterator;
 	typedef typename  SurfelPtrList::reverse_iterator	SurfelPtrListReverseIterator;
 
-	typedef 		 std::vector<SurfelList>   			ClusterContainer;
-	typedef typename std::vector<SurfelList>::iterator  ClusterIterator;
+	typedef 		 std::vector<std::pair<int,SurfelList> >  			ClusterContainer;
+	typedef typename std::vector<std::pair<int,SurfelList> >::iterator  ClusterIterator;
 	/// public attributes
 
 	ClusterContainer					   Clusters;
@@ -85,30 +85,29 @@ public:
                 std::cout << "KD-Tree Start " << pSurfels.size() << std::endl;
                 for (SurfelVectorIterator it =  pSurfels.begin();it != pSurfels.end(); ++ it )
                 {
-						SurfelPtr s = new Surfel(*it);
-                        KDTree.Insert (s);
+                        KDTree.Insert ( &(*it) );
                 }
                 std::cout << "KD-Tree End " << KDTree.Count() <<std::endl;
 	        	Real maxC = -1;
 		        Real minC = 1;
 
-                for (SurfelVectorIterator it =  pSurfels.begin();it != pSurfels.end(); ++ it )
-                 {
- 						 SurfelPtr s = new Surfel(*it);
-
- 						Curvature(s,400);
-
- 						it->SetCurvature(s->Curvature());
- 						if (maxC <  s->Curvature())
- 						{
- 							maxC = s->Curvature();
- 						}
- 						if (minC > s->Curvature())
- 						{
- 							minC = s->Curvature();
- 						}
-
-                 }
+//                for (SurfelVectorIterator it =  pSurfels.begin();it != pSurfels.end(); ++ it )
+//                 {
+// 						 SurfelPtr s = new Surfel(*it);
+//
+// 						Curvature(s,400);
+//
+// 						it->SetCurvature(s->Curvature());
+// 						if (maxC <  s->Curvature())
+// 						{
+// 							maxC = s->Curvature();
+// 						}
+// 						if (minC > s->Curvature())
+// 						{
+// 							minC = s->Curvature();
+// 						}
+//
+//                 }
 
 	    		std::cout <<  " minC " << minC <<  ": maxC " << maxC << std::endl;
         }
@@ -116,6 +115,7 @@ public:
         void Init()
         {
 				//Clear();
+				colors.clear();
                 colors.push_back(Celer::Vector4<float>(1.0,0.0,0.0,0.5));
                 colors.push_back(Celer::Vector4<float>(1.0,1.0,0.0,0.5));
                 colors.push_back(Celer::Vector4<float>(0.0,1.0,0.0,0.5));
@@ -183,11 +183,13 @@ public:
         /// @param pCont pKNeighborsSize. The size of the Neighbor.
         /// @param pSeed pKNeighborsSize. Initial Seed.
         template <class Similarity ,class Aggregation>
-        void Build(int pCont,int pKNeighborsSize ,const SurfelPtr& pSeed)
+        void Build(int pCont,int pKNeighborsSize ,const SurfelPtr& pSeed,vcg::CallBackPos *cb=0 )
         {
     		Clusters.clear();
     		Surfels.clear();
 
+    		int progress = 0;
+    		int kd_tree_size = KDTree.Count();
         	/// How many comparisons the Kd-Tree do to finding an element
         	int                                  KNearestSearchComps = 0;
         	///
@@ -211,6 +213,7 @@ public:
         	// de sua vizinhanca
         	while ( (lOpen.size() != 0) )
         	{
+
         		lSurfel                 = lOpen.front();
         		lOpen.pop_front();
         		if(lSurfel->ExpansionMarked() == 1)
@@ -263,11 +266,13 @@ public:
         		++cont;
         		//lClose.pop_front();
         		lClose.push_front(lSurfel);
-        		Clusters.push_back(lClose);
+        		progress += lClose.size();
+        		Clusters.push_back(std::make_pair<int,SurfelList>(0,lClose));
         		MergeEllipses<Real> me = MergeEllipses<Real>(lClose);
         		Surfels.push_back(me.NewSurfel());
         		lClose.clear();
         		lNeighbors.clear();
+        		if(cb && (progress%100)==0) cb(progress*50/kd_tree_size,"Cluster Building");
         	}
 
     		KDTree.ResetMarkedClustering();
@@ -306,7 +311,7 @@ public:
         		glPointSize(5.0);
         		glColor3fv(Colors());
         		glBegin(GL_POINTS);
-        		for ( SurfelListIterator j = Clusters[pNumber].begin() ; j != Clusters[pNumber].end(); ++j )
+        		for ( SurfelListIterator j = Clusters[pNumber].second.begin() ; j != Clusters[pNumber].second.end(); ++j )
         		{
     	 			glNormal3fv (j->Normal());
         			glVertex3fv( j->Center() );
@@ -322,8 +327,8 @@ public:
         			glColor3f(1.0f,1.0f,1.0f);
         			glBegin(GL_POINTS);
         			{
-        				glNormal3fv (Clusters[pNumber].begin()->Normal());
-        				glVertex3fv( Clusters[pNumber].begin()->Center());
+        				glNormal3fv (Clusters[pNumber].second.begin()->Normal());
+        				glVertex3fv( Clusters[pNumber].second.begin()->Center());
         			}
         			glEnd();
         			glPopMatrix();
@@ -347,7 +352,7 @@ public:
         		glPointSize(5.0);
         		glColor3fv(Colors());
         		glBegin(GL_POINTS);
-        		for ( SurfelListIterator j = Clusters[i].begin() ; j != Clusters[i].end(); ++j )
+        		for ( SurfelListIterator j = Clusters[i].second.begin() ; j != Clusters[i].second.end(); ++j )
         		{
         			glNormal3fv (j->Normal());
         			glVertex3fv( j->Center() );
@@ -363,8 +368,8 @@ public:
         			glColor3f(1.0f,1.0f,1.0f);
         			glBegin(GL_POINTS);
         			{
-        				glNormal3fv (Clusters[i].begin()->Normal());
-        				glVertex3fv( Clusters[i].begin()->Center() );
+        				glNormal3fv (Clusters[i].second.begin()->Normal());
+        				glVertex3fv( Clusters[i].second.begin()->Center() );
         			}
         			glEnd();
         			glPopMatrix();
