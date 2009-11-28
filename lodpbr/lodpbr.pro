@@ -85,7 +85,7 @@ FORMS += Qt/UI/lodpbr.ui
 
 # LIBRARIES
 unix{
-	LIBS = -lboost_filesystem
+	LIBS = 
 }
 
 # Output

@@ -139,7 +139,7 @@ public slots:
 	int getDrawClusterWithRangeEnd 	     () {return mClusterLog.getClusterRangeEnd();};
 	int getRadius						 () {return mClusterLog.getRadius();};
 // --
-	void BuildCluster					 (void);
+	void BuildCluster					 (vcg::CallBackPos *cb );
 
 	void setSelected(SelectionMode state) { mSelectionMode = state;};
 	void setState  (StateMode state) 	  { mStateMode = state;};

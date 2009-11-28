@@ -60,6 +60,7 @@ void GLWidget::init()
 	mNumber = 4;
 
 	mode = true;
+
 	settings.setBackgroundColor(QColor(55,55,55));
 
 //    GLfloat x = GLfloat(width()) / height();
@@ -547,7 +548,7 @@ void GLWidget::calLimits()
 
 }
 
-void GLWidget::BuildCluster()
+void GLWidget::BuildCluster(vcg::CallBackPos *cb=0 )
 {
 	if (Surfels.size() > 0)
 	{
@@ -556,7 +557,7 @@ void GLWidget::BuildCluster()
 
 			Celer::Surfel<float>* seed = new Celer::Surfel<float>(Surfels[0]);
 			cluster.Build<JoinByNormal<float,Celer::Surfel<float>* >,
-						  MergeBySize <float,Celer::Surfel<float>* > >(1000,200,(seed));
+						  MergeBySize <float,Celer::Surfel<float>* > >(1000,200,(seed),cb );
 		}
 	}
 }
@@ -583,10 +584,6 @@ void GLWidget::paintEvent(QPaintEvent *)
 
 void GLWidget::paintGL()
 {
-    QPainter p; // used for text overlay
-    p.begin(this);
-    p.setRenderHint(QPainter::Antialiasing);
-    // save the GL state set for QPainter
 
     saveGLState();
 	//makeCurrent();
@@ -695,12 +692,20 @@ void GLWidget::paintGL()
     }
 
     restoreGLState();
-
-
-//    draw the overlayed text using QPainter
+    QPainter p; // used for text overlay
+    p.begin(this);
+    p.setRenderHint(QPainter::Antialiasing);
+    // save the GL state set for QPainter
+    //draw the overlayed text using QPainter
     p.setPen(QColor(197, 197, 197, 157));
     p.setBrush(QColor(197, 197, 197, 127));
     p.drawRect(QRect(0, 0, width(), 50));
+    p.setBrush(QColor(197, 0, 0, 127));
+
+    p.drawRect(10 ,(height()-90) ,100,10);
+
+    p.drawRect(10 ,(height()-70) ,100,10);
+    //p.drawRect(QRect(10 , height()-(2*(height()*0.01)),100,height()-((height()*0.01)) ));
     p.setPen(settings.getTextColor());
     p.setBrush(Qt::NoBrush);
     const QString str1(tr("A simple OpenGL pbuffer example."));
@@ -708,7 +713,9 @@ void GLWidget::paintGL()
     QFontMetrics fm(p.font());
     p.drawText(width()/2 - fm.width(str1)/2, 20, str1);
     p.drawText(width()/2 - fm.width(str2)/2, 20 + fm.lineSpacing(), str2);
+    p.setPen(QColor(197, 197, 197, 157));
     p.end();
+
 
 }
 

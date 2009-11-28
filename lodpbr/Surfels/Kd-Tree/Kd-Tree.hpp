@@ -86,11 +86,8 @@ public:
   }
 
   /// destructor
-  virtual ~KdTree()
+  ~KdTree()
   {
-//	  if (root)
-//		  delete root;
-//	  root = 0;
   }
 
   /// Inserts a pointer to an object in this kd-tree

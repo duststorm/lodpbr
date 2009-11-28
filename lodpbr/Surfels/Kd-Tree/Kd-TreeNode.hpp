@@ -81,12 +81,6 @@ public:
   virtual ~KdTreeNode ()
   {
 
-	  for(SurfelPtrVectorIterator it = mListPtr.begin(); it != mListPtr.end();++it)
-	  {
-		  if ( (*it) != 0 )
-			  delete [] (*it);
-		  (*it) = 0;
-	  }
 
 	  if (son[0] != 0)
 	  {
