@@ -83,9 +83,12 @@ SOURCES += main.cpp \
 QT += opengl
 FORMS += Qt/UI/lodpbr.ui
 
+
+
 # LIBRARIES
 unix{
 	LIBS = 
+	QMAKE_CXXFLAGS += -fpermissive
 }
 
 # Output

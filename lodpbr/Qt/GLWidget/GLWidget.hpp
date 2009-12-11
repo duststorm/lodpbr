@@ -75,6 +75,8 @@ public:
 
     // From lodpbr
     void LoadModel(const char * filename,vcg::CallBackPos *cb);
+    void SaveLOD(const char * filename,vcg::CallBackPos *cb);
+    void LoadLOD(const char * filename,vcg::CallBackPos *cb);
     void calLimits();
     void DrawGroud();
     void SetMode(bool);
@@ -140,6 +142,7 @@ public slots:
 	int getRadius						 () {return mClusterLog.getRadius();};
 // --
 	void BuildCluster					 (vcg::CallBackPos *cb );
+	void getKNearestNeighbors			 (void);
 
 	void setSelected(SelectionMode state) { mSelectionMode = state;};
 	void setState  (StateMode state) 	  { mStateMode = state;};
@@ -177,7 +180,8 @@ private:
 	void restoreGLState();
 
 
-	std::vector<Celer::Surfel<float> > result;
+	std::vector<Celer::Surfel<float>  > result;
+	std::vector<Celer::Surfel<float>* > Knn;
 
 //    void drawKdTree(int& cont);
 //    void drawKdNodeRecursively(const KdTree3DNode* n,int& cont);

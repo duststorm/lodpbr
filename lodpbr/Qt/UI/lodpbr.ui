@@ -59,6 +59,9 @@
      <string>File</string>
     </property>
     <addaction name="action_Open_File"/>
+    <addaction name="action_Open_LOD"/>
+    <addaction name="separator"/>
+    <addaction name="action_Save_As_LOD"/>
     <addaction name="separator"/>
     <addaction name="actionQuit"/>
    </widget>
@@ -694,6 +697,16 @@
   <action name="actionAdd">
    <property name="text">
     <string>add</string>
+   </property>
+  </action>
+  <action name="action_Save_As_LOD">
+   <property name="text">
+    <string>Save As LOD</string>
+   </property>
+  </action>
+  <action name="action_Open_LOD">
+   <property name="text">
+    <string>Open LOD</string>
    </property>
   </action>
  </widget>

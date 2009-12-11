@@ -30,6 +30,46 @@ bool MyMainWindow::QCallBack(const int pos, const char * str)
 	return true;
 }
 
+
+void MyMainWindow::on_action_Open_LOD_triggered		()
+{
+	if (GLWIDGET())
+	{
+	    QString fileName = QFileDialog::getOpenFileName (
+	                      this,
+	                      tr("Open File"),
+	                      ".",
+	                      tr("Surfels Model (*.Surfels)"));
+
+		if (fileName != "")
+		{
+			std::string filename =  QFile::encodeName(fileName).constData ();
+			GLWIDGET()->LoadLOD(filename.c_str(),QCallBack);
+		}
+
+	}
+
+}
+void MyMainWindow::on_action_Save_As_LOD_triggered	()
+{
+	if (GLWIDGET())
+	{
+		QString fileName = QFileDialog::getSaveFileName(this, tr("Save File"),
+                ".",
+                tr("Surfels Model (*.Surfels )"));
+
+		if (fileName != "")
+		{
+			if (fileName.contains(".Surfels",Qt::CaseInsensitive) == 0)
+				fileName.append(".Surfels");
+
+			std::string filename =  QFile::encodeName(fileName).constData ();
+			GLWIDGET()->SaveLOD(filename.c_str(),QCallBack);
+		}
+
+	}
+}
+
 void MyMainWindow::open(QString pFilename,bool who,WidgetProxy * p ) {
 
    if (pFilename != "") {
@@ -120,9 +160,9 @@ void MyMainWindow::on_action_Open_File_triggered()
 
     QString filename = QFileDialog::getOpenFileName (
                       this,
-                      tr("Choose a mesh file"),
+                      tr("Choose a ply file"),
                       ".",
-                      tr("Off meshes (*.ply)"));
+                      tr("ply model (*.ply)"));
 
     // Tries to load file if filename not empty.
     if (filename != "") {

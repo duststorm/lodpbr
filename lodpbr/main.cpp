@@ -11,6 +11,7 @@
 int main(int argc, char *argv[])
 {
 
+	std::cout <<" size of "<<sizeof(Celer::Surfel<float>::Vector3) << std::endl;
     QApplication app(argc, argv);
 //    if (!QGLFormat::hasOpenGL()) {
 //        std::cerr << "This system has no OpenGL support" << std::endl;

@@ -17,6 +17,8 @@
 
 #include <GL/gl.h>
 #include <GL/glu.h>
+#include <GL/glext.h>
+
 
 #include <list>
 #include <vector>
@@ -63,8 +65,9 @@ public:
 	/// public attributes
 
 	ClusterContainer					   Clusters;
-	SurfelVector					       Surfels;
 	KdTree<Real,SurfelPtr>	 			   KDTree;
+	SurfelVector						   NewSurfels;
+	SurfelVector					       Surfels;
 
 
 
@@ -75,15 +78,12 @@ public:
         /// Constructor
         /// Initialize the KD-Tree member with list of surfels
         /// @param Refernce to a list of surfels
-        Cluster(SurfelVector& pSurfels,Celer::BoundingBox3<Real> pWorld)
-
+        void Initialize(Celer::BoundingBox3<Real> pWorld)
         {
-                Init();
-
                 KDTree = KdTree<Real,SurfelPtr >(pWorld);
 
-                std::cout << "KD-Tree Start " << pSurfels.size() << std::endl;
-                for (SurfelVectorIterator it =  pSurfels.begin();it != pSurfels.end(); ++ it )
+                std::cout << "KD-Tree Start " << Surfels.size() << std::endl;
+                for (SurfelVectorIterator it =  Surfels.begin();it != Surfels.end(); ++ it )
                 {
                         KDTree.Insert ( &(*it) );
                 }
@@ -91,11 +91,11 @@ public:
 	        	Real maxC = -1;
 		        Real minC = 1;
 
-//                for (SurfelVectorIterator it =  pSurfels.begin();it != pSurfels.end(); ++ it )
+//                for (SurfelVectorIterator it =  Surfels.begin();it != Surfels.end(); ++ it )
 //                 {
-// 						 SurfelPtr s = new Surfel(*it);
+// 						SurfelPtr s = new Surfel(*it);
 //
-// 						Curvature(s,400);
+// 						Curvature(s,100);
 //
 // 						it->SetCurvature(s->Curvature());
 // 						if (maxC <  s->Curvature())
@@ -129,6 +129,7 @@ public:
                 colors.push_back(Celer::Vector4<float>(1.0,0.1,0.5,0.5));
                 colors.push_back(Celer::Vector4<float>(0.1,0.1,0.5,0.5));
                 colors.push_back(Celer::Vector4<float>(1.0,1.0,0.5,0.5));
+
         }
 
         SurfelPtrVector GetNotMarked( SurfelPtrVector& plNeighbors )
@@ -186,7 +187,7 @@ public:
         void Build(int pCont,int pKNeighborsSize ,const SurfelPtr& pSeed,vcg::CallBackPos *cb=0 )
         {
     		Clusters.clear();
-    		Surfels.clear();
+    		NewSurfels.clear();
 
     		int progress = 0;
     		int kd_tree_size = KDTree.Count();
@@ -269,7 +270,7 @@ public:
         		progress += lClose.size();
         		Clusters.push_back(std::make_pair<int,SurfelList>(0,lClose));
         		MergeEllipses<Real> me = MergeEllipses<Real>(lClose);
-        		Surfels.push_back(me.NewSurfel());
+        		NewSurfels.push_back(me.NewSurfel());
         		lClose.clear();
         		lNeighbors.clear();
         		if(cb && (progress%100)==0) cb(progress*50/kd_tree_size,"Cluster Building");
@@ -291,7 +292,7 @@ public:
         	glPushAttrib(GL_ALL_ATTRIB_BITS);
         	glPushMatrix();
         	glColor3fv(Colors());
-        	Surfels[pNumber].DrawTriangleFan(pSteps,pRadius);
+        	NewSurfels[pNumber].DrawTriangleFan(pSteps,pRadius);
         	glPopMatrix();
         	glPopAttrib();
         }
@@ -388,10 +389,10 @@ public:
     	{
 
     		Clusters.clear();
-    		Surfels.clear();
+    		NewSurfels.clear();
     		KDTree.Clear();
 
-    		std::cout << Clusters.size() << " sizes " << Surfels.size() << std::endl;
+    		std::cout << Clusters.size() << " sizes " << NewSurfels.size() << std::endl;
     	}
 
         /// destructor
@@ -417,9 +418,17 @@ private:
 
         }
 
-        std::vector<Celer::Vector4<float> >::iterator itColor;
+        static const int BufferSize = 2;
+        static const GLuint BufferNames[BufferSize];
 
-    std::vector<Celer::Vector4<float> > colors;
+        enum
+        {
+            VERTEX = 0,
+            NORMAL = 1
+        };
+
+        std::vector<Celer::Vector4<float> >::iterator itColor;
+        std::vector<Celer::Vector4<float> > colors;
 };
 
 
