@@ -65,6 +65,9 @@ class Surfel
 	typedef std::list<Point3>       				ListPoint3;
 	typedef typename ListPoint3::iterator  			ListPoint3Iterator;
 
+	typedef std::vector<Point3>       				VectorPoint3;
+	typedef typename VectorPoint3::iterator  		VectorPoint3Iterator;
+
 	typedef ::vcg::ply::PropDescriptor PropDescriptor ;
 
 /* IO PLY */
@@ -237,17 +240,13 @@ class Surfel
 
 	 Vector3 					Perpendicular		( const Vector3& pVector );
 	 ListPoint3 				BoundariesSamples	( unsigned int pSteps,const Real& pRadius = 1.0 ) const;
-
-	 static void 				DrawSurfel			(Surfel<Real>& s)
-	 {
-	 	 	glPushMatrix();
-	 	 	glPointSize(1.0);
-	 	 	glVertex3fv( s.Center().ToRealPtr());
-	 	 	glPopMatrix();
-	 }
-	 void 					    DrawCenter			(const GLfloat& size = 1.0);
-	 void 						Draw				( int p = 8 ,const Real& pRadius = 1.0);
-	 void 						DrawTriangleFan		( int p = 8 ,const Real& pRadius = 1.0);
+	 VectorPoint3		 		Ring				( unsigned int pSteps, const Real& pRadius = 1.0, const Real& pRing = 0.0 ) const;
+	 // Draw Fuctions
+	 void						DrawEllpsoid		( int lats = 10,int longs = 10 ,const Real& pRadius = 1.0 );
+	 void						DrawBox				( const Real& pRadius = 1.0 );
+	 void 					    DrawCenter			( const GLfloat& size = 1.0 );
+	 void 						Draw				( int p = 8 ,const Real& pRadius = 1.0 );
+	 void 						DrawTriangleFan		( int p = 8 ,const Real& pRadius = 1.0 );
 
 	 template <class T>
 	 inline friend std::ostream& operator << 		( std::ostream& out, const Surfel<T> &s );
@@ -309,27 +308,29 @@ Surfel<Real>::Surfel ()
 }
 
 template<class Real>
-Surfel<Real>::Surfel (const Surfel<Real>& pSurfel) :  mCenter(pSurfel.mCenter),
-  										 mNormal(pSurfel.mNormal),
-  									 	 mColor(pSurfel.mColor),
-  									 	 mSplatRadius(pSurfel.mSplatRadius),
-  										 mMinorAxis(pSurfel.mMinorAxis),
-  										 mMajorAxis(pSurfel.mMajorAxis),
-  		   								 mMaxError(pSurfel.mMaxError),
-  		   								 mMinError(pSurfel.mMinError),
-  										 mCurvature(pSurfel.mCurvature),
-  										 mID(pSurfel.mID),
-  										 mMarked(pSurfel.mMarked),
+Surfel<Real>::Surfel (const Surfel<Real>& pSurfel) :
+										 mCenter		 (pSurfel.mCenter),
+  										 mNormal		 (pSurfel.mNormal),
+  									 	 mColor			 (pSurfel.mColor),
+  									 	 mSplatRadius	 (pSurfel.mSplatRadius),
+  										 mMinorAxis		 (pSurfel.mMinorAxis),
+  										 mMajorAxis		 (pSurfel.mMajorAxis),
+  		   								 mMaxError		 (pSurfel.mMaxError),
+  		   								 mMinError		 (pSurfel.mMinError),
+  										 mCurvature		 (pSurfel.mCurvature),
+  										 mID			 (pSurfel.mID),
+  										 mMarked		 (pSurfel.mMarked),
   									     mExpansionMarked(pSurfel.mExpansionMarked),
-  									     mSeedMarked(pSurfel.mSeedMarked),
-  									     mSimilarity(pSurfel.mSimilarity),
-  										 mClusterID(pSurfel.mClusterID)
+  									     mSeedMarked	 (pSurfel.mSeedMarked),
+  									     mSimilarity	 (pSurfel.mSimilarity),
+  										 mClusterID		 (pSurfel.mClusterID)
 {
 
 };
 
 template<class Real>
-Surfel<Real>::Surfel (const Surfel<Real>* pSurfel) :  mCenter(pSurfel->mCenter),
+Surfel<Real>::Surfel (const Surfel<Real>* pSurfel) :
+										 mCenter(pSurfel->mCenter),
   										 mNormal(pSurfel->mNormal),
   									 	 mColor(pSurfel->mColor),
   									 	 mSplatRadius(pSurfel->mSplatRadius),
@@ -769,7 +770,9 @@ Vector3<Real> Surfel<Real>::Perpendicular( const Vector3& pVector)
 }
 
 template<class Real>
-typename Surfel<Real>::ListPoint3 Surfel<Real>::BoundariesSamples(unsigned int pSteps,const Real& pRadius) const
+typename Surfel<Real>::ListPoint3 Surfel<Real>::BoundariesSamples
+																(unsigned int pSteps,
+																 const Real& pRadius) const
 {
 
 	 if (pSteps == 0)
@@ -790,6 +793,7 @@ typename Surfel<Real>::ListPoint3 Surfel<Real>::BoundariesSamples(unsigned int p
 	 Real lCos				= 0.0;
 	 Real lSin				= 0.0;
 	 Vector3 lDirection     = Vector3();
+	 Point3  lRingDirection	= Point3();
 
 	 Real i = 0;
 
@@ -819,6 +823,142 @@ typename Surfel<Real>::ListPoint3 Surfel<Real>::BoundariesSamples(unsigned int p
 	 }
 
 	 return lPoints;
+
+}
+/**
+ * Cria um Anel em volta do centro da elipse com relação as eixos principais
+ *
+ * @param pSteps  quantos segmentos tera o anel
+ * @param pRadius Fator de scalar do anel
+ * @param Ring	  Quantos aneis tera o elipsoid
+ *
+ **/
+template<class Real>
+typename Surfel<Real>::VectorPoint3 Surfel<Real>::Ring		(unsigned int pSteps,
+															 const Real& pRadius,
+															 const Real& pRing   ) const
+{
+
+	 if (pSteps == 0)
+	 {
+		 pSteps = 4;
+	 }
+
+	 VectorPoint3			 lPoints;
+
+	 Real lAlpha 			= 0.0;
+	 Real lSinAlpha 		= 0.0;
+	 Real lCosAlpha 		= 0.0;
+
+	 Real lX 				= 0.0;
+	 Real lY 				= 0.0;
+	 Real lFactor 			= 0.0;
+
+	 Real lCos				= 0.0;
+	 Real lSin				= 0.0;
+	 Vector3 lDirection     = Vector3();
+	 Point3  lRingDirection	= Point3();
+
+	 Real i = 0;
+
+	 while (i < 360)
+	 {
+
+		 lAlpha = ( i / 180 ) * Celer::Math::kPi;
+		 lSinAlpha =  sin( lAlpha );
+		 lCosAlpha =  cos( lAlpha );
+
+
+		 lX = pRadius * mMinorAxis.first * lCosAlpha;
+
+		 lY = pRadius * mMajorAxis.first * lSinAlpha;
+
+		 lFactor = sqrt( lX*lX + lY*lY );
+
+		 lCos = lX / lFactor;
+		 lSin = lY / lFactor;
+
+		 lDirection = (mMinorAxis.second * lCos) + (mMajorAxis.second * lSin);
+
+		 lRingDirection = Point3( (mCenter + (mNormal * (mMinorAxis.first*pRing))) );
+
+		 lPoints.push_back( Point3( (lRingDirection + (lDirection * lFactor )) ) );
+
+		 i = i + (360.0 / pSteps);
+
+	 }
+
+	 return lPoints;
+
+}
+
+// ============================ Draw Functions ============================= //
+
+template<class Real>
+void Surfel<Real>::DrawEllpsoid	( int pSegments,int pRings ,const Real& pRadius )
+{
+
+	typedef std::vector<Point3> ring;
+	// Quantos aneis sao ?
+	size_t slices = (pRings-1)*2+1;
+	// Aneis
+	std::vector<ring> 	rings;
+
+	rings.resize(slices);
+
+	// Comeca com os aneis de baixo
+	Real step	 = (pRadius/pRings);
+	Real lring   = step - 1.0;
+	Real lfactor = -step;
+
+	for( size_t i = 0; i < slices ;++i)
+	{
+		if (Celer::Math::CloseEnough(lfactor,-1.0))
+		{
+			rings[i]  = this->Ring(pSegments,1.0,0.0);
+			lfactor = 1.0;
+			lring   = 0.0;
+			std::cout << "lring ! " << lfactor << std::endl;
+		}else
+		{
+			rings[i]  = this->Ring(pSegments,std::abs(lfactor),lring);
+		}
+
+		std::cout << "lring ! " << lfactor << std::endl;
+
+		lfactor -= step;
+		lring   += step;
+	}
+
+ 	glPushMatrix();
+// 	glEnable (GL_BLEND);
+// 	glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+//
+////
+////    glEnable(GL_POLYGON_OFFSET_FILL | GL_POLYGON_SMOOTH_HINT | GL_MULTISAMPLE);
+////    glPolygonOffset(1,1);
+//	    glColor4f(0.0,0.5,0.5,0.5);
+ 	glPointSize(1.0);
+ 	glBegin (GL_POINTS);
+	for( size_t i = 0; i < slices ;++i)
+	{
+		for(VectorPoint3Iterator it = rings[i].begin();it != rings[i].end();++it)
+		{
+			//std::cout << "Rings " <<  *it << std::endl;
+			glVertex3fv( it->ToRealPtr());
+		}
+	}
+
+	glEnd();
+	glDisable(GL_POLYGON_OFFSET_FILL | GL_POLYGON_SMOOTH_HINT |  GL_MULTISAMPLE) ;
+	glDisable (GL_BLEND);
+	glPopMatrix();
+
+
+}
+template<class Real>
+void Surfel<Real>::DrawBox				( const Real& pRadius )
+{
 
 }
 

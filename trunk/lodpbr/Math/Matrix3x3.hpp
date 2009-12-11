@@ -155,7 +155,6 @@ namespace Celer {
 	{
 		return m[ rowIndex ];
 	}
-
 	template <class Real>
 	Real Matrix3x3<Real>::operator()( int i, int j ) const
 	{

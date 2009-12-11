@@ -180,12 +180,13 @@ public:
 		        ++pos;
 
 		  }
+		std::cout << "Surfel " << pSurfel.size() << std::endl;
 		if (cb != NULL)	(*cb)(99, "Done");
 		mesh.Clear();
 		return 0;
 	}
 
-	static int LoadSurfels (const char * filename,std::vector<Surfel<Real> >& pSurfel)
+	static int LoadSurfels (const char * filename,std::vector<Surfel<Real> >& pSurfel,vcg::CallBackPos *cb)
 	{
 		vcg::ply::PlyFile pf;
 		vcg::tri::io::PlyInfo pi;
@@ -246,7 +247,7 @@ public:
 	}
 
 
-	static int SaveSurfels(std::vector<Surfel<Real> >& pSurfel,  const char * filename, bool binary)	// V1.0
+	static int SaveSurfels(std::vector<Surfel<Real> >& pSurfel,  const char * filename,vcg::CallBackPos *cb, bool binary=0)	// V1.0
 	{
 		FILE * fpout;
 
@@ -306,26 +307,26 @@ public:
 
 			for(std::size_t i = 0; i < pSurfel.size(); ++i)
 			{
-				v = pSurfel;
-				t[ 0] = (float)v[i].cx;
-				t[ 1] = (float)v[i].cy;
-				t[ 2] = (float)v[i].cz;
-				t[ 3] = (float)v[i].nx;
-				t[ 4] = (float)v[i].ny;
-				t[ 5] = (float)v[i].nz;
-				t[ 6] = (float)v[i].major_axisx;
-				t[ 7] = (float)v[i].major_axisy;
-				t[ 8] = (float)v[i].major_axisz;
-				t[ 9] = (float)v[i].major_axis_size;
-				t[10] = (float)v[i].minor_axisx;
-				t[11] = (float)v[i].minor_axisy;
-				t[12] = (float)v[i].minor_axisz;
-				t[13] = (float)v[i].minor_axis_size;
-				t[14] = (float)v[i].r;
-				t[15] = (float)v[i].g;
-				t[16] = (float)v[i].b;
-				t[17] = (float)v[i].max_error;
-				t[18] = (float)v[i].min_error;
+				v = pSurfel[i];
+				t[ 0] = (float)v.cx;
+				t[ 1] = (float)v.cy;
+				t[ 2] = (float)v.cz;
+				t[ 3] = (float)v.nx;
+				t[ 4] = (float)v.ny;
+				t[ 5] = (float)v.nz;
+				t[ 6] = (float)v.major_axisx;
+				t[ 7] = (float)v.major_axisy;
+				t[ 8] = (float)v.major_axisz;
+				t[ 9] = (float)v.major_axis_size;
+				t[10] = (float)v.minor_axisx;
+				t[11] = (float)v.minor_axisy;
+				t[12] = (float)v.minor_axisz;
+				t[13] = (float)v.minor_axis_size;
+				t[14] = (float)v.r;
+				t[15] = (float)v.g;
+				t[16] = (float)v.b;
+				t[17] = (float)v.max_error;
+				t[18] = (float)v.min_error;
 				fwrite(t,sizeof(float),19,fpout);
 
 			}
@@ -335,27 +336,27 @@ public:
 
 			for(std::size_t i = 0; i < pSurfel.size(); ++i)
 			{
-				v = pSurfel;
+				v = pSurfel[i];
 				fprintf(fpout,"%g %g %g %g %g %g %g %g %g %g %g %g %g %g %g %g %g %g %g \n",
-						v[i].cx,
-						v[i].cy,
-						v[i].cz,
-						v[i].nx,
-						v[i].ny,
-						v[i].nz,
-						v[i].major_axisx,
-						v[i].major_axisy,
-						v[i].major_axisz,
-						v[i].major_axis_size,
-						v[i].minor_axisx,
-						v[i].minor_axisy,
-						v[i].minor_axisz,
-						v[i].minor_axis_size,
-						v[i].r,
-						v[i].g,
-						v[i].b,
-						v[i].max_error,
-						v[i].min_error
+						v.cx,
+						v.cy,
+						v.cz,
+						v.nx,
+						v.ny,
+						v.nz,
+						v.major_axisx,
+						v.major_axisy,
+						v.major_axisz,
+						v.major_axis_size,
+						v.minor_axisx,
+						v.minor_axisy,
+						v.minor_axisz,
+						v.minor_axis_size,
+						v.r,
+						v.g,
+						v.b,
+						v.max_error,
+						v.min_error
 				);
 			}
 		}

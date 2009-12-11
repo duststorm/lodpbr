@@ -295,7 +295,21 @@ void GLWidget::SetMode(bool t)
 	mode = t;
 
 }
+// =================================== KD-Tree ================================//
+void GLWidget::getKNearestNeighbors(void)
+{
+	if (cluster.KDTree.root != 0)
+	{
+		if (result.size() != 0)
+		{
+			int x = 0;
+			Knn.clear();
+			Knn = cluster.KDTree.KNearestNeighbors(&result[0],10,x);
+		}
 
+	}
+}
+// ============================================================================//
 void GLWidget::DrawGroud()
 {
 	glDisable(GL_LIGHTING);
@@ -501,22 +515,32 @@ void GLWidget::resizeGL(int width, int height)
 
 }
 
-
 void GLWidget::LoadModel(const char * filename,vcg::CallBackPos *cb=0 )
 {
 
 	mClusterLog = ClusterLog();
 	mLSplatLog = LSplatLog();
-	Surfels.clear();
+	cluster.Surfels.clear();
 	Box = Celer::BoundingBox3<float>();
-	Celer::IOSurfels<float>::LoadMesh(filename,Surfels,Box,cb);
-	std::cout << Surfels.capacity();
+	Celer::IOSurfels<float>::LoadMesh(filename,cluster.Surfels,Box,cb);
+	std::cout << cluster.Surfels.capacity();
+}
+
+void GLWidget::SaveLOD(const char * filename,vcg::CallBackPos *cb)
+{
+	if(cluster.NewSurfels.size() > 0)
+		Celer::IOSurfels<float>::SaveSurfels(cluster.NewSurfels,filename,cb);
+}
+void GLWidget::LoadLOD(const char * filename,vcg::CallBackPos *cb)
+{
+	if(cluster.NewSurfels.size() == 0)
+		Celer::IOSurfels<float>::LoadSurfels(filename,cluster.NewSurfels,cb);
 }
 
 void GLWidget::calLimits()
 {
 
-     cluster = Cluster<float>(Surfels,Box);
+     cluster.Initialize(Box);
 
 //
 //
@@ -550,12 +574,12 @@ void GLWidget::calLimits()
 
 void GLWidget::BuildCluster(vcg::CallBackPos *cb=0 )
 {
-	if (Surfels.size() > 0)
+	if (cluster.Surfels.size() > 0)
 	{
 		if (mClusterLog.maskBuildClusterWith.Test(ClusterLog::NormalOnly))
 		{
 
-			Celer::Surfel<float>* seed = new Celer::Surfel<float>(Surfels[0]);
+			Celer::Surfel<float>* seed = new Celer::Surfel<float>(cluster.Surfels[0]);
 			cluster.Build<JoinByNormal<float,Celer::Surfel<float>* >,
 						  MergeBySize <float,Celer::Surfel<float>* > >(1000,200,(seed),cb );
 		}
@@ -565,8 +589,6 @@ void GLWidget::BuildCluster(vcg::CallBackPos *cb=0 )
 void GLWidget::Clear()
 {
     cluster.Clear();
-
-    Surfels.clear();
 }
 
 
@@ -614,7 +636,7 @@ void GLWidget::paintGL()
 
 //--
 
-    if ( Surfels.size() != 0 )
+    if (  cluster.Surfels.size() != 0 )
     {
 
     	if (mClusterLog.maskShow.Test(ClusterLog::Model))
@@ -622,10 +644,10 @@ void GLWidget::paintGL()
     		glPushMatrix();
     		glPointSize(2.0);
     		glBegin(GL_POINTS);
-    		for (std::vector<Surfel>::iterator s = Surfels.begin(); s != Surfels.end();++s)
+    		for (std::vector<Surfel>::iterator s = cluster.Surfels.begin(); s != cluster.Surfels.end();++s)
     		{
     			if( (s->Curvature() >= 0.0) && (s->Curvature() < 0.25) )
-    				glColor3f(0.0f,0.0f,1.0f);
+    				glColor3f(1.0f,1.0f,1.0f);
     			else if ( (s->Curvature() > 0.25) && (s->Curvature() < 0.50) )
     				glColor3f(0.0,1.0f,1.0f);
     			else if ( (s->Curvature() > 0.5) && (s->Curvature() < 0.75) )
@@ -633,16 +655,16 @@ void GLWidget::paintGL()
     			else if ( (s->Curvature() > 0.75) && (s->Curvature() <= 1.0) )
     				glColor3f(1.0f,0.0f,0.0);
     			glVertex3fv( s->Center().ToRealPtr() );
+    			//s->DrawEllpsoid(64,2,1.0);
 //    			s->DrawTriangleFan(64,0.5);
     		}
     		glEnd();
     		glPopMatrix();
     	}
 
-    	for (size_t i = 0; i != result.size();++i)
+    	for (size_t i = 0; i != Knn.size();++i)
     	{
-    		result[i].Center(5.0);
-    		std::cout << "CURVATURA " << result[i].Curvature() << std::endl;
+    		Knn[0]->DrawEllpsoid(64,16,1.0);//DrawTriangleFan(64,0.5);
     	}
 
     	if (mClusterLog.maskShow.Test(ClusterLog::Clusters))
@@ -904,7 +926,7 @@ void GLWidget::beginSelection(const QPoint& point)
 
 	result.clear();
 
-	int bufferSize = int(Surfels.size())*5;
+	int bufferSize = int(cluster.Surfels.size())*5;
 
 	setSelectBufferSize(bufferSize);
 
@@ -958,14 +980,16 @@ void GLWidget::endSelection(const QPoint& point)
 		result.resize(Selected.size());
 		for(int i = 0; i < hits; i++)
 		{
-			std::vector<Celer::Surfel<float> >::iterator elements=Surfels.begin();
+			std::vector<Celer::Surfel<float> >::iterator elements=cluster.Surfels.begin();
 			std::advance(elements ,Selected[i].second);
 			result[i]=(*elements);
 		}
 		glPopAttrib();
 	}
 	mSelectionMode = NONE;
-//	std::cout << "é = esse " << result.size() << std::endl;
+	getKNearestNeighbors();
+	if (result.size()>0)
+		std::cout << "é = esse " << result[0].Curvature() << std::endl;
 
 }
 
@@ -973,7 +997,7 @@ void GLWidget::drawWithNames()
 {
 	std::vector<Celer::Surfel<float> >::iterator  surfel;
 	int cnt = 0;
-	for(surfel = Surfels.begin(); surfel != Surfels.end(); ++surfel)
+	for(surfel = cluster.Surfels.begin(); surfel != cluster.Surfels.end(); ++surfel)
 	{
 			glLoadName(cnt);
 			surfel->DrawCenter(3.0);
