@@ -664,7 +664,8 @@ void GLWidget::paintGL()
 
     	for (size_t i = 0; i != Knn.size();++i)
     	{
-    		Knn[0]->DrawEllpsoid(64,16,1.0);//DrawTriangleFan(64,0.5);
+    		result[0].DrawTriangleFan(64,0.5);
+    		result[0].DrawEllpsoid(16,16,1.0);//DrawTriangleFan(64,0.5);
     	}
 
     	if (mClusterLog.maskShow.Test(ClusterLog::Clusters))
