@@ -54,7 +54,7 @@ class CVertexO  : public vcg::VertexSimp2< CVertexO, CEdge, CFaceO,
   >{
 };
 
-
+//
 class CEdge : public vcg::EdgeSimp2<CVertexO,CEdge,CFaceO, vcg::edge::EVAdj> {
 public:
 	inline CEdge(){};

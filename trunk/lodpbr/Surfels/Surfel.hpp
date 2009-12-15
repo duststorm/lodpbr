@@ -26,6 +26,7 @@
 #include "Math/Vector3.hpp"
 #include "Math/Color.hpp"
 #include "Math/Math.hpp"
+#include "Math/BoundingBox3.hpp"
 
 /**
  * Surfel class.
@@ -68,13 +69,23 @@ class Surfel
 	typedef std::vector<Point3>       				VectorPoint3;
 	typedef typename VectorPoint3::iterator  		VectorPoint3Iterator;
 
+	// Each vector of Ellisoid is a Ring define by the function GeneratRings;
+	typedef std::vector<std::vector<Point3> >       Ellipsoid;
+	typedef typename Ellipsoid::iterator 			EllipsoidIterator;
+
 	typedef ::vcg::ply::PropDescriptor PropDescriptor ;
 
 /* IO PLY */
 
-	enum
+	enum IO_SURFEL
 	{
 		IOM_SURFEL = 0x10002
+	};
+
+	enum STATE
+	{
+		UPDATED_ELLIPSOID = 0x0001,
+		OUTDATED_ELLIPSOID = 0x0002
 	};
 
 	struct LoadPlySurfel
@@ -239,11 +250,11 @@ class Surfel
 	 Real 						Area				(  ) const;
 
 	 Vector3 					Perpendicular		( const Vector3& pVector );
-	 ListPoint3 				BoundariesSamples	( unsigned int pSteps,const Real& pRadius = 1.0 ) const;
-	 VectorPoint3		 		Ring				( unsigned int pSteps, const Real& pRadius = 1.0, const Real& pRing = 0.0 ) const;
+	 ListPoint3 				BoundariesSamples	( unsigned int pSteps = 4,const Real& pRadius = 1.0 ) const;
+	 Ellipsoid 		 			GenerateRing		( unsigned int pSteps = 4, const int pRings = 0 ,const Real& pRadius = 1.0,const Real& pHeight = 0.0) const;
 	 // Draw Fuctions
-	 void						DrawEllpsoid		( int lats = 10,int longs = 10 ,const Real& pRadius = 1.0 );
-	 void						DrawBox				( const Real& pRadius = 1.0 );
+	 void						DrawEllpsoid		( int lats = 10,int longs = 10 ,const Real& pRadius = 1.0,const Real& pHeight = 0.01 );
+	 void						DrawBox				( const Real& pHeight = 0.01);
 	 void 					    DrawCenter			( const GLfloat& size = 1.0 );
 	 void 						Draw				( int p = 8 ,const Real& pRadius = 1.0 );
 	 void 						DrawTriangleFan		( int p = 8 ,const Real& pRadius = 1.0 );
@@ -834,9 +845,10 @@ typename Surfel<Real>::ListPoint3 Surfel<Real>::BoundariesSamples
  *
  **/
 template<class Real>
-typename Surfel<Real>::VectorPoint3 Surfel<Real>::Ring		(unsigned int pSteps,
-															 const Real& pRadius,
-															 const Real& pRing   ) const
+typename Surfel<Real>::Ellipsoid 	Surfel<Real>::GenerateRing	(unsigned int pSteps,
+														         const int    pRings,
+														         const Real& pRadius,
+														         const Real& pHeight) const
 {
 
 	 if (pSteps == 0)
@@ -844,7 +856,8 @@ typename Surfel<Real>::VectorPoint3 Surfel<Real>::Ring		(unsigned int pSteps,
 		 pSteps = 4;
 	 }
 
-	 VectorPoint3			 lPoints;
+	 VectorPoint3			lPoints;
+	 Ellipsoid				lEllipsoid;
 
 	 Real lAlpha 			= 0.0;
 	 Real lSinAlpha 		= 0.0;
@@ -857,108 +870,188 @@ typename Surfel<Real>::VectorPoint3 Surfel<Real>::Ring		(unsigned int pSteps,
 	 Real lCos				= 0.0;
 	 Real lSin				= 0.0;
 	 Vector3 lDirection     = Vector3();
-	 Point3  lRingDirection	= Point3();
+	 Point3  lRingDirection	= Point3 ();
 
-	 Real i = 0;
+	 int lRings = (-pRings);
+	 Real cosTeta = static_cast<Real>(1.0/pRings);
+	 Real sinTeta = 0.0;
 
-	 while (i < 360)
+	 while(lRings <= (pRings))
 	 {
+		 lPoints.clear();
+		 Real i = 0;
+		 while (i < 360)
+		 	 {
 
-		 lAlpha = ( i / 180 ) * Celer::Math::kPi;
-		 lSinAlpha =  sin( lAlpha );
-		 lCosAlpha =  cos( lAlpha );
+		 		 lAlpha = ( i / 180 ) * Celer::Math::kPi;
+		 		 lSinAlpha =  sin( lAlpha );
+		 		 lCosAlpha =  cos( lAlpha );
+
+		 		 sinTeta = sqrt( 1.0 - (lRings*cosTeta) * (lRings*cosTeta) );
+
+		 		 lX = pRadius * mMinorAxis.first * lCosAlpha;
+
+		 		 lY = pRadius * mMajorAxis.first * lSinAlpha;
+
+		 		 lFactor = sqrt( lX*lX + lY*lY );
+
+		 		 lCos = lX / lFactor;
+		 		 lSin = lY / lFactor;
+
+		 		 lDirection = (mMinorAxis.second * lCos) + (mMajorAxis.second * lSin);
+
+		 		 Real lHeight = mMinorAxis.first * pHeight;
+
+		 		 lRingDirection = Point3( (mCenter + (mNormal * (lHeight*(lRings*cosTeta)))) );
+
+		 		 lPoints.push_back( Point3( (lRingDirection + (lDirection * lFactor*sinTeta )) ) );
+
+		 		 i = i + (360.0 / pSteps);
 
 
-		 lX = pRadius * mMinorAxis.first * lCosAlpha;
-
-		 lY = pRadius * mMajorAxis.first * lSinAlpha;
-
-		 lFactor = sqrt( lX*lX + lY*lY );
-
-		 lCos = lX / lFactor;
-		 lSin = lY / lFactor;
-
-		 lDirection = (mMinorAxis.second * lCos) + (mMajorAxis.second * lSin);
-
-		 lRingDirection = Point3( (mCenter + (mNormal * (mMinorAxis.first*pRing))) );
-
-		 lPoints.push_back( Point3( (lRingDirection + (lDirection * lFactor )) ) );
-
-		 i = i + (360.0 / pSteps);
-
+		 	 }
+		 lRings = lRings + 1;
+		 lEllipsoid.push_back(lPoints);
 	 }
 
-	 return lPoints;
+	 return lEllipsoid;
 
 }
 
 // ============================ Draw Functions ============================= //
 
 template<class Real>
-void Surfel<Real>::DrawEllpsoid	( int pSegments,int pRings ,const Real& pRadius )
+void Surfel<Real>::DrawEllpsoid	( int pSegments,int pRings ,const Real& pRadius ,const Real& pHeight)
 {
+	Celer::BoundingBox3<Real> BBox;
 
-	typedef std::vector<Point3> ring;
-	// Quantos aneis sao ?
-	size_t slices = (pRings-1)*2+1;
-	// Aneis
-	std::vector<ring> 	rings;
+	Ellipsoid  lEllipsoid = GenerateRing(pSegments,pRings,pRadius,pHeight);
 
-	rings.resize(slices);
-
-	// Comeca com os aneis de baixo
-	Real step	 = (pRadius/pRings);
-	Real lring   = step - 1.0;
-	Real lfactor = -step;
-
-	for( size_t i = 0; i < slices ;++i)
-	{
-		if (Celer::Math::CloseEnough(lfactor,-1.0))
-		{
-			rings[i]  = this->Ring(pSegments,1.0,0.0);
-			lfactor = 1.0;
-			lring   = 0.0;
-			std::cout << "lring ! " << lfactor << std::endl;
-		}else
-		{
-			rings[i]  = this->Ring(pSegments,std::abs(lfactor),lring);
-		}
-
-		std::cout << "lring ! " << lfactor << std::endl;
-
-		lfactor -= step;
-		lring   += step;
-	}
+	std::cout << "Rings " <<  lEllipsoid.size() << std::endl;
 
  	glPushMatrix();
-// 	glEnable (GL_BLEND);
-// 	glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+ 	glEnable (GL_BLEND);
+ 	glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 //
 ////
-////    glEnable(GL_POLYGON_OFFSET_FILL | GL_POLYGON_SMOOTH_HINT | GL_MULTISAMPLE);
-////    glPolygonOffset(1,1);
-//	    glColor4f(0.0,0.5,0.5,0.5);
- 	glPointSize(1.0);
- 	glBegin (GL_POINTS);
-	for( size_t i = 0; i < slices ;++i)
+    glColor4f(1.0,0.5,0.5,0.5);
+// 	glPointSize(1.0);
+//    glBegin(GL_LINES);
+//	for( unsigned int i = 0  ; i <  lEllipsoid.size()-1; i++)
+//	{
+//		for(unsigned int j = 0 ; j < lEllipsoid[i].size(); j++ )
+//		{
+//			glVertex3fv( lEllipsoid[i][j].ToRealPtr());
+//			glVertex3fv( lEllipsoid[i+1][j].ToRealPtr());
+//
+//			glVertex3fv( lEllipsoid[i][(j)%lEllipsoid[i].size()].ToRealPtr());
+//			glVertex3fv( lEllipsoid[i][(j+1)%lEllipsoid[i].size()].ToRealPtr());
+//
+//		}
+//
+//
+//	}
+    glEnd();
+    glColor4f(0.0,0.5,0.5,0.5);
+ 	glBegin (GL_QUADS);
+	for( unsigned int i = 0  ; i <  lEllipsoid.size()-1; i++)
 	{
-		for(VectorPoint3Iterator it = rings[i].begin();it != rings[i].end();++it)
+		for(unsigned int j = 0 ; j < lEllipsoid[i].size(); j++ )
 		{
-			//std::cout << "Rings " <<  *it << std::endl;
-			glVertex3fv( it->ToRealPtr());
+			glVertex3fv( lEllipsoid[i][j].ToRealPtr());
+			glVertex3fv( lEllipsoid[i+1][j].ToRealPtr());
+
+			glVertex3fv( lEllipsoid[i+1][(j+1)%lEllipsoid[i].size()].ToRealPtr());
+			glVertex3fv( lEllipsoid[i][(j+1)%lEllipsoid[i].size()].ToRealPtr());
 		}
 	}
-
 	glEnd();
-	glDisable(GL_POLYGON_OFFSET_FILL | GL_POLYGON_SMOOTH_HINT |  GL_MULTISAMPLE) ;
 	glDisable (GL_BLEND);
 	glPopMatrix();
+
+	DrawBox();
 
 
 }
 template<class Real>
-void Surfel<Real>::DrawBox				( const Real& pRadius )
+void Surfel<Real>::DrawBox				( const Real& pHeight  )
 {
+
+	VectorPoint3 lVertices;
+
+
+
+	 lVertices.push_back(	Point3 ( (mCenter +((mMinorAxis.second*(-mMinorAxis.first))
+									   + (mMajorAxis.second*(-mMajorAxis.first))
+									   + (mNormal		   *(-mMinorAxis.first*pHeight)) ))));
+
+	 lVertices.push_back(	Point3 ( (mCenter +((mMinorAxis.second*(-mMinorAxis.first))
+									   + (mMajorAxis.second*(-mMajorAxis.first))
+									   + (mNormal		   *(pHeight*mMinorAxis.first)) ))));
+
+	 lVertices.push_back(	Point3 ( (mCenter +((mMinorAxis.second*(-mMinorAxis.first))
+									   + (mMajorAxis.second*(mMajorAxis.first))
+									   + (mNormal		   *(pHeight*mMinorAxis.first)) ))));
+
+	 lVertices.push_back(	Point3 ( (mCenter +((mMinorAxis.second*(-mMinorAxis.first))
+									   + (mMajorAxis.second*(mMajorAxis.first))
+									   + (mNormal		   *(-mMinorAxis.first*pHeight)) ))));
+	 // ops
+	 lVertices.push_back(	Point3 ( (mCenter +((mMinorAxis.second*(mMinorAxis.first))
+									   + (mMajorAxis.second*(-mMajorAxis.first))
+									   + (mNormal		   *(-mMinorAxis.first*pHeight)) ))));
+
+	 lVertices.push_back(	Point3 ( (mCenter +((mMinorAxis.second*(mMinorAxis.first))
+									   + (mMajorAxis.second*(-mMajorAxis.first))
+									   + (mNormal		   *(mMinorAxis.first*pHeight)) ))));
+
+	 lVertices.push_back(	Point3 ( (mCenter +((mMinorAxis.second*(mMinorAxis.first))
+									   + (mMajorAxis.second*(mMajorAxis.first))
+									   + (mNormal		   *(mMinorAxis.first*pHeight)) ))));
+
+	 lVertices.push_back(	Point3 ( (mCenter +((mMinorAxis.second*(mMinorAxis.first))
+									   + (mMajorAxis.second*(mMajorAxis.first))
+									   + (mNormal		   *(-mMinorAxis.first*pHeight)) ))));
+
+
+	glPushMatrix();
+ 	glEnable (GL_BLEND);
+ 	glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+ 	glColor4f(1.0,0.5,0.5,0.5);
+	glBegin(GL_QUADS);
+	glVertex3fv(lVertices[0]);
+	glVertex3fv(lVertices[1]);
+	glVertex3fv(lVertices[2]);
+	glVertex3fv(lVertices[3]);
+
+	glVertex3fv(lVertices[4]);
+	glVertex3fv(lVertices[5]);
+	glVertex3fv(lVertices[6]);
+	glVertex3fv(lVertices[7]);
+
+	glVertex3fv(lVertices[1]);
+	glVertex3fv(lVertices[0]);
+	glVertex3fv(lVertices[4]);
+	glVertex3fv(lVertices[5]);
+
+	glVertex3fv(lVertices[3]);
+	glVertex3fv(lVertices[2]);
+	glVertex3fv(lVertices[6]);
+	glVertex3fv(lVertices[7]);
+
+	glVertex3fv(lVertices[2]);
+	glVertex3fv(lVertices[1]);
+	glVertex3fv(lVertices[5]);
+	glVertex3fv(lVertices[6]);
+
+	glVertex3fv(lVertices[3]);
+	glVertex3fv(lVertices[0]);
+	glVertex3fv(lVertices[4]);
+	glVertex3fv(lVertices[7]);
+
+	glEnd();
+	glDisable (GL_BLEND);
+	glPopMatrix();
 
 }
 
@@ -1001,7 +1094,15 @@ void Surfel<Real>::DrawTriangleFan(int p,const Real& pRadius)
 
 	    glEnable(GL_POLYGON_OFFSET_FILL | GL_POLYGON_SMOOTH_HINT | GL_MULTISAMPLE);
 	    glPolygonOffset(1,1);
-//	    glColor4f(0.0,0.5,0.5,0.5);
+	    glColor3f(1.0,1.0,1.0);
+	    glBegin(GL_LINES);
+	    glVertex3fv(mCenter);
+	    glVertex3fv(mCenter+(mMajorAxis.second*mMajorAxis.first*pRadius));
+	    glVertex3fv(mCenter);
+	    glVertex3fv(mCenter+(mMinorAxis.second*mMinorAxis.first*pRadius));
+	    glVertex3fv(mCenter);
+	    glVertex3fv(mCenter+(mNormal*mMinorAxis.first*pRadius));
+	    glEnd();
 	 	glBegin (GL_POLYGON);
 	 		for(ListPoint3Iterator it = lBoundaries.begin();it != lBoundaries.end();++it)
 	 		{
