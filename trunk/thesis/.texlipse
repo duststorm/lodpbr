@@ -1,5 +1,5 @@
 #TeXlipse project settings
-#Thu Sep 17 20:07:10 BRT 2009
+#Wed Dec 16 20:54:57 BRST 2009
 builderNum=2
 outputDir=
 makeIndSty=
@@ -8,6 +8,6 @@ outputFormat=pdf
 tempDir=tmp
 mainTexFile=thesis.tex
 outputFile=thesis.pdf
-langSpell=en
+langSpell=pt_BR
 markDer=true
 srcDir=
