@@ -1,14 +1,5 @@
 \chapter{Trabalhos Relacionados}
 
-\section{QSplat}
-\section{SPT}
-\section{Efficiente Point Based Rendering}
-\section{Trabalhos relacionados a Simplicação}
-\section{Discussao}
-
-
-
-
 Neste capítulo iremos apresentar alguns trabalhos que inspiraram esta
 dissertação, com ênfase em dois deles em particular.
 O primeiro é \textit{QSplat} \cite{Rusinkiewicz2000}, um sistema para
@@ -250,11 +241,11 @@ esta hierarquia de pontos não se adapta apenas a distância do observador $r$,
 mas também para propriedades da superfície. Grandes áreas planas são detecta-das
 com pequenos erro geométrico $\tilde{e}_g$ e podem ser renderizados com splats
 grandes.
-\subsection{Rearranjamento}
+\subsection{Arranjamento}
 O procedimento de renderização da seção anterior é recursivo e não se adapta ao
-processamento to rápido e sequêncial da GPU. Assim, há um rearranjamento da
+processamento rápido e sequêncial da GPU. Assim, há um arranjamento da
 estrutura em árvore para um estrutura em lista e o teste recursivo é
-substituído por um percorrimento sequêncial sobre a lista de pontos.
+substituído por um percurso sequêncial sobre a lista de pontos.
 
 Para isso, o erro simplificado $\tilde{e}_g$ é substituído por um que sejam
 mais intuitivo. Assume-se que $\epsilon$ é constante. O teste
@@ -298,8 +289,7 @@ lista é selecionada enquanto outras são descartadas.
 \begin{figure}[ht]
 \centering
 \includegraphics[width=15.0cm]{img/cap02/SequentialList} 
-\caption{Erro tangencial, mede o quão aproximado é o disco pai em relação ao
-filho no plano tangente (Retirada de \cite{Dachsbacher2003}) .}
+\caption{(Retirada de \cite{Dachsbacher2003}) .}
 \label{fig:SequentialList}
 \end{figure}
 
