@@ -142,6 +142,8 @@ public slots:
 	int getRadius						 () {return mClusterLog.getRadius();};
 // --
 	void BuildCluster					 (vcg::CallBackPos *cb );
+	void BuildInteractive				 ();
+	void GetSeed						 ();
 	void getKNearestNeighbors			 (void);
 
 	void setSelected(SelectionMode state) { mSelectionMode = state;};
@@ -183,6 +185,8 @@ private:
 	std::vector<Celer::Surfel<float>  > result;
 	std::vector<Celer::Surfel<float>* > Knn;
 
+	Celer::Surfel<float> mSeed;
+	float mHeight;
 //    void drawKdTree(int& cont);
 //    void drawKdNodeRecursively(const KdTree3DNode* n,int& cont);
 //    bool drawKdNode(const KdTree3DNode* n,int& cont);

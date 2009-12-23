@@ -572,6 +572,22 @@ void GLWidget::calLimits()
 
 }
 
+void GLWidget::BuildInteractive()
+{
+	Celer::Surfel<float>* seed = new Celer::Surfel<float>(mSeed);
+	cluster.BuildInteractive<JoinByNormal<float,Celer::Surfel<float>* >,
+							 MergeBySize <float,Celer::Surfel<float>* > >(300,seed);
+	result[0] = cluster.GetCurrentEllipse();
+	mHeight = result[0].PerpendicularError();
+	mHeight*=100.0;
+
+}
+
+void GLWidget::GetSeed()
+{
+	mSeed = result[0];
+}
+
 void GLWidget::BuildCluster(vcg::CallBackPos *cb=0 )
 {
 	if (cluster.Surfels.size() > 0)
@@ -665,7 +681,7 @@ void GLWidget::paintGL()
     	for (size_t i = 0; i != Knn.size();++i)
     	{
     		result[0].DrawTriangleFan(64,0.5);
-    		result[0].DrawEllpsoid(16,16,1.0);//DrawTriangleFan(64,0.5);
+    		result[0].DrawEllpsoid(16,16,1.0,mHeight);//DrawTriangleFan(64,0.5);
     	}
 
     	if (mClusterLog.maskShow.Test(ClusterLog::Clusters))

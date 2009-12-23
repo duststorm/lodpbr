@@ -308,8 +308,9 @@ def buttonevents(evt):
         me.verts.extend(listEllipse[-1].Center())
         
         
-        me.verts.extend(listEllipse[-1].Center() + (listEllipse[-1].A()*listEllipse[-1].EixoA()))
-        me.verts.extend(listEllipse[-1].Center() + (listEllipse[-1].A()*listEllipse[-1].EixoB()))        
+       
+        me.verts.extend(listEllipse[-1].Center() + (Blender.Mathutils.Vector(listEllipse[-1].A()*listEllipse[-1].EixoA())))
+        me.verts.extend(listEllipse[-1].Center() + (Blender.Mathutils.Vector(listEllipse[-1].A()*listEllipse[-1].EixoB())))        
 #        w = merge.EigenVectors()[0]
 #        #w.normalize()
 #
@@ -327,33 +328,33 @@ def buttonevents(evt):
         me.edges.extend(me.verts[-4],me.verts[-2])
         me.edges.extend(me.verts[-4],me.verts[-3])
 
-        print 'center' ,listEllipse[0].Center()
-        print 'normal' ,listEllipse[0].Normal()
-        print 'EixoA ' ,listEllipse[0].EixoA()
-        print 'A ' ,listEllipse[0].A()
-        print 'EixoB ' ,listEllipse[0].EixoB()
-        print 'B ' ,listEllipse[0].B()
-
-        print 'center' ,listEllipse[1].Center()        
-        print 'normal' ,listEllipse[1].Normal()
-        print 'EixoA ' ,listEllipse[1].EixoA()
-        print 'A ' ,listEllipse[1].A()
-        print 'EixoB ' ,listEllipse[1].EixoB()
-        print 'B ' ,listEllipse[1].B()
-        
-        print 'center TOTAL' ,listEllipse[-1].Center()        
-        print 'normal TOTAL' ,listEllipse[-1].Normal()
-        print 'EixoA TOTAL' ,listEllipse[-1].EixoA()
-        print 'A TOTAL' ,listEllipse[-1].A()
-        print 'EixoB TOTAL' ,listEllipse[-1].EixoB()
-        print 'B TOTAL' ,listEllipse[-1].B()
-        
-        #print 'Pontos Projetados',merge.PontosProjetados()
-        
-        
-        print "Eigen values [0] ", merge.EigenValues()[0], "EigenVectors()[0] ", merge.EigenVectors()[0]
-        print "Eigen values [1] ", merge.EigenValues()[1], "EigenVectors()[1] ", merge.EigenVectors()[1]
-        print "Eigen values [2] ", merge.EigenValues()[2], "EignVectors()[2] ", merge.EigenVectors()[2]
+#        print 'center' ,listEllipse[0].Center()
+#        print 'normal' ,listEllipse[0].Normal()
+#        print 'EixoA ' ,listEllipse[0].EixoA()
+#        print 'A ' ,listEllipse[0].A()
+#        print 'EixoB ' ,listEllipse[0].EixoB()
+#        print 'B ' ,listEllipse[0].B()
+#
+#        print 'center' ,listEllipse[1].Center()        
+#        print 'normal' ,listEllipse[1].Normal()
+#        print 'EixoA ' ,listEllipse[1].EixoA()
+#        print 'A ' ,listEllipse[1].A()
+#        print 'EixoB ' ,listEllipse[1].EixoB()
+#        print 'B ' ,listEllipse[1].B()
+#        
+#        print 'center TOTAL' ,listEllipse[-1].Center()        
+#        print 'normal TOTAL' ,listEllipse[-1].Normal()
+#        print 'EixoA TOTAL' ,listEllipse[-1].EixoA()
+#        print 'A TOTAL' ,listEllipse[-1].A()
+#        print 'EixoB TOTAL' ,listEllipse[-1].EixoB()
+#        print 'B TOTAL' ,listEllipse[-1].B()
+#        
+#        #print 'Pontos Projetados',merge.PontosProjetados()
+#        
+#        
+#        print "Eigen values [0] ", merge.EigenValues()[0], "EigenVectors()[0] ", merge.EigenVectors()[0]
+#        print "Eigen values [1] ", merge.EigenValues()[1], "EigenVectors()[1] ", merge.EigenVectors()[1]
+#        print "Eigen values [2] ", merge.EigenValues()[2], "EignVectors()[2] ", merge.EigenVectors()[2]
         #print listEllipse[-1].CalculateBoundaries(8,[merge.listEllipse[0].EixoA(),listEllipse[0].EixoB()])
         
         

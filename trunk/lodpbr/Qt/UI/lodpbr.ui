@@ -443,8 +443,8 @@
    </property>
    <property name="minimumSize">
     <size>
-     <width>309</width>
-     <height>363</height>
+     <width>390</width>
+     <height>365</height>
     </size>
    </property>
    <property name="maximumSize">
@@ -576,7 +576,7 @@
                 </property>
                 <layout class="QGridLayout" name="gridLayout_3">
                  <item row="0" column="0">
-                  <widget class="QPushButton" name="pushButton">
+                  <widget class="QPushButton" name="pushButtonSeed">
                    <property name="text">
                     <string>Seed</string>
                    </property>
@@ -589,10 +589,10 @@
                    </property>
                   </widget>
                  </item>
-                 <item row="0" column="1">
-                  <widget class="QPushButton" name="pushButton_2">
+                 <item row="2" column="1">
+                  <widget class="QPushButton" name="pushButtonInteractive">
                    <property name="text">
-                    <string>Neiborhoos</string>
+                    <string>Interactive</string>
                    </property>
                   </widget>
                  </item>

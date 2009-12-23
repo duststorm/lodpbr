@@ -70,7 +70,6 @@ public:
 	SurfelVector					       Surfels;
 
 
-
         Cluster()
         {
                 Init();
@@ -175,6 +174,59 @@ public:
 
     		pSurfel->SetCurvature((lEigen.Curvature())*3);
 
+        }
+
+
+        Surfel GetCurrentEllipse() const
+        {
+        	return mCurrentEllipse;
+        }
+
+        template <class Similarity ,class Aggregation>
+        void BuildInteractive(int pKNeighborsSize ,const SurfelPtr& pSeed )
+        {
+        	SurfelList  lClose;
+        	SurfelPtrList  lOpen;
+        	SurfelPtrVector                 lNeighbors;
+        	SurfelPtr        		        lSurfel    = 0;
+        	int                             KNearestSearchComps = 0;
+
+        	if(pSeed == 0)
+        	{
+        		return;
+        	}
+
+        	lSurfel                 = pSeed;
+        	lSurfel->SetMarked              (1);
+        	lSurfel->SetExpansionMarked     (1);
+
+        	lNeighbors  = KDTree.KNearestNeighbors(lSurfel ,pKNeighborsSize , KNearestSearchComps);
+
+        	lSurfel->SetPerpendicularError(2.0*(lSurfel->Center().EuclideanDistance(lNeighbors.back()->Center())));
+        	std::cout << "Height  surfel" << lSurfel->PerpendicularError() << std::endl;
+
+        	for(SurfelPtrVectorReverseIterator it = lNeighbors.rbegin(); it != lNeighbors.rend(); ++it)
+        	{
+        		if( ((lSurfel->Center() - (*it)->Center())*lSurfel->Normal()) > lSurfel->PerpendicularError())
+        		{
+        			continue;
+
+        		}else
+        		{
+        			std::cout << "Altura " << ((lSurfel->Center() - (*it)->Center())*lSurfel->Normal()) << std::endl;
+        			//							{
+        			(*it)->SetExpansionMarked(1);
+        			lClose.push_back((*(*it)));
+        		}
+        	}
+        	lClose.push_front(lSurfel);
+
+        	MergeEllipses<Real> me = MergeEllipses<Real>(lClose);
+        	mCurrentEllipse = me.NewSurfel();
+        	mCurrentEllipse.SetPerpendicularError(lSurfel->PerpendicularError());
+        	lClose.clear();
+        	lNeighbors.clear();
+        	KDTree.ResetMarkedClustering();
         }
 
         /// Build a set of Clusters by the Similarities and Aggregations.
@@ -418,8 +470,14 @@ private:
 
         }
 
-        static const int BufferSize = 2;
-        static const GLuint BufferNames[BufferSize];
+    	// Interactive Building
+    	Surfel mSeed;
+    	Surfel mNeighbors;
+    	Surfel mNextElement;
+
+    	Surfel mNextEllipse;
+    	Surfel mCurrentEllipse;
+    	Surfel mLastEllipse;
 
         enum
         {
