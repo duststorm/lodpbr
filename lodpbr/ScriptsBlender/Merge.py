@@ -1,7 +1,7 @@
 import Blender
 import math
-import multiarray
-import LinearAlgebra as la
+import numpy.core.multiarray
+#import LinearAlgebra as la
 import Ellipse
 import numpy.linalg as nu
 #import scipy.linalg as sc
@@ -16,8 +16,8 @@ from numpy import *
 #from scipy import *
 
 from math           import *
-from LinearAlgebra  import *
-from multiarray     import *
+#from LinearAlgebra  import *
+from numpy.core.multiarray     import *
 from Ellipse        import Ellipse
 
 EPSILON = 0.001
@@ -67,10 +67,10 @@ class Error:
                     Aline = sqrt(1.0/(1.0+(BA*BA)))
 #                    print "Aline --- ",Aline
 #                    print "A --- ",A
-                    Dist = (1-(Aline/abs(A))) * sqrt( r*r ) + sqrt(s*s)
+                    Dist = (1-(Aline/abs(A))) * sqrt(r*r)  + sqrt(s*s)
                 else:
                     Dist = sqrt(s*s)
-                if result > Dist:
+                if result < Dist:
                     result = Dist
             if result > dis_max:
                  dis_max = result     
@@ -92,20 +92,22 @@ class Error:
     def newPerpendicularError(self):
         dist_max = 0.0
         for ellipse in self.ListEllipse:
-            if self.Ellipse.Normal()*ellipse.EixoA() != 0 :
-                factor = (self.Ellipse.Normal()*ellipse.EixoA()*ellipse.B()) / (self.Ellipse.Normal()*ellipse.EixoB()*ellipse.A())
+            if fabs(self.Ellipse.Normal()*ellipse.EixoB()) > 1e-6 :
+                factor = (self.Ellipse.Normal()*ellipse.EixoA()*ellipse.A()) / (self.Ellipse.Normal()*ellipse.EixoB()*ellipse.B())
                 factor2 = factor*factor
                 alfa = sqrt(1.0/(1.0+factor2))
                 beta = factor*alfa
-                ray = ellipse.EixoB()*alfa + ellipse.EixoA()*beta
+                ray = ellipse.EixoB()*alfa*ellipse.B() + ellipse.EixoA()*beta*ellipse.A()
             else:
-                 ray = ellipse.EixoB()
-            if (   (ellipse.Center()-self.Ellipse.Center())*self.Ellipse.Normal()  ) * (ray * self.Ellipse.Normal()) < 0:
-                ray = -ray
-            dist = ((ellipse.Center()+ray)-self.Ellipse.Center()) * self.Ellipse.Normal()
+                 ray = ellipse.EixoA()*ellipse.A()
+#            if (   (ellipse.Center()-self.Ellipse.Center())*self.Ellipse.Normal()  ) * (ray * self.Ellipse.Normal()) < 0:
+#                ray = -ray
+            dist = fabs( (ellipse.Center()-self.Ellipse.Center()) * self.Ellipse.Normal() )+ fabs( ray* self.Ellipse.Normal() ) 
             if (dist > dist_max ):
-                dist_max = dist     
-
+                dist_max = dist
+            print "ray",ray     
+            print "new per: Center EixoA,EixoB,normal,erro,",ellipse.Center(),ellipse.EixoA(),ellipse.EixoB(),ellipse.Normal(),dist
+            print "center,normal", self.Ellipse.Center(),self.Ellipse.Normal()        
         return dist_max
         
 
@@ -240,17 +242,17 @@ class Merge:
        
        #print cov, "MATRIX"
              
-       eigenvec = la.eigenvectors(cov)
-       #eigenvec = nu.eig(cov)
+       #eigenvec = la.eigenvectors(cov)
+       eigenvalue,eigenvec = nu.eig(cov)
        
        #print 'LA',eigenvec
-       print 'NUMPY',eigenvec
+       print 'NUMPY',eigenvalue,eigenvec
        
        #print len(eigenvec[0]) ,' PRIMEIRO ',eigenvec[0]
                                    
-       self.mEigenVector = [Blender.Mathutils.Vector(eigenvec[1][0]),Blender.Mathutils.Vector(eigenvec[1][1]),Blender.Mathutils.Vector(eigenvec[1][2])]
+       self.mEigenVector = [Blender.Mathutils.Vector(eigenvec[:,0]),Blender.Mathutils.Vector(eigenvec[:,1]),Blender.Mathutils.Vector(eigenvec[:,2])]
              
-       self.mEigenValues = [eigenvec[0][0],eigenvec[0][1],eigenvec[0][2]]
+       self.mEigenValues = [eigenvalue[0],eigenvalue[1],eigenvalue[2]]
        
        for i in range(len(self.mEigenValues)-1):
            for j  in range(1,len(self.mEigenValues)):

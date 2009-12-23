@@ -55,6 +55,8 @@ public slots:
  	// tool bar -- atributos do modelo
  	void on_action_Show_Points_toggled							    (bool checked);
  	void on_pushButtonBuild_clicked									();
+ 	void on_pushButtonInteractive_clicked							();
+ 	void on_pushButtonSeed_clicked									();
 
  	// --Cluster Dock Widget Draw--
  	//

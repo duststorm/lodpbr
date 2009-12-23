@@ -156,6 +156,17 @@ void MyMainWindow::on_comboBoxCluster_BuildSurfelSimilarity_activated(const QStr
 	GLWIDGET()->setClusterBuiltType(s);
 }
 
+void MyMainWindow::on_pushButtonInteractive_clicked()
+{
+
+	GLWIDGET()->BuildInteractive();
+}
+
+void MyMainWindow::on_pushButtonSeed_clicked ()
+{
+	GLWIDGET()->GetSeed();
+}
+
 void MyMainWindow::on_pushButtonBuild_clicked()
 {
 	GLWIDGET()->BuildCluster(QCallBack);

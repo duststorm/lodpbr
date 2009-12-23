@@ -64,17 +64,54 @@ public:
 		ProjectPoints();
 		NewAxis();
 
+
 	};
 
 	Surfel NewSurfel()
 	{
-		return ( Surfel(mNewCenter,mNewNormal,mNewMinorAxis,mNewMajorAxis,1) );
+		Surfel s = Surfel(mNewCenter,mNewNormal,mNewMinorAxis,mNewMajorAxis,1);
+		s.SetPerpendicularError(mNewPerpendicularError);
+		return ( s );
 	}
 
 	Surfel*  NewPtrSurfel()
 	{
+		Surfel* s = new Surfel(mNewCenter,mNewNormal,mNewMinorAxis,mNewMajorAxis,1);
+		s.SetPerpendicularError(mNewPerpendicularError);
+		return (s );
+	}
 
-		return ( new Surfel(mNewCenter,mNewNormal,mNewMinorAxis,mNewMajorAxis,1) );
+	void PerpendicularError()
+	{
+		Real factor   = 0.0;
+		Real alfa	  = 0.0;
+		Real beta 	  = 0.0;
+	    Real maxError = 0.0;
+	    Real error 	  = 0.0;
+		Vector3 ray;
+		for (SurfelListIterator itEllipse = mEllipses.begin(); itEllipse != mEllipses.end(); ++itEllipse)
+		{
+			if(  std::fabs((mNewNormal* itEllipse->MajorAxis.second)) > 1e-6f )
+			{
+				factor = ((mNewNormal*itEllipse->MajorAxis.second)* itEllipse->MajorAxis.first) / ((mNewNormal*itEllipse->MinorAxis.second)* itEllipse->MinorAxis.first);
+				alfa = std::sqrt(1.0/(1.0+factor*factor));
+                beta = factor*alfa;
+		        ray = (itEllipse->MajorAxis.second*(alfa*itEllipse->MajorAxis.first)) + (itEllipse->MinorAxis.second*(beta*itEllipse->MinorAxis.first));
+
+			}else
+			{
+				ray = itEllipse->MinorAxis.second;
+			}
+
+            error = std::fabs( (itEllipse->Center()-mNewCenter) * mNewNormal ) + std::fabs( ray* mNewNormal );
+
+            if (error > maxError )
+            {
+                maxError = error;
+            }
+
+		}
+		mNewPerpendicularError = maxError;
 	}
 
 	// functions
@@ -232,6 +269,8 @@ private:
 	Real 						mNewMinorValue;
 
 	Real 						mNewMajorValue;
+
+	Real 						mNewPerpendicularError;
 
 
 };
