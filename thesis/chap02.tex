@@ -1,6 +1,42 @@
-\chapter{Simplificação de Superficies}
-\section{Introdução}
-\section{Clustering}
-\subsection{Clusterização Aglomerativa}
-\subsection{Clusterização Hierarquica}
-\section{Trabalho Relacionados}
+\chapter{Superfícies Baseada em Pontos}
+Superfícies baseada em pontos recentetimente tem ganhado atenção da comunidade
+de computação gráfica [sites]. Comumente são obtidos de $3D$
+\textit{scanner} [sites], o resultado é uma nuvem de pontos $P$, que recobre a
+superfície do objeto. Operações de processamento e filtragem são definidos para
+reduzir o ruído e preencher regiões com buracos [cites]. Nessa dissertação
+iremos assumir que o conjunto de pontos $P$ é livre de ruiídos e pois amostras
+adquadamente distribuídas na superfície.
+Neste capítulo, iremos mostrar uma definição de superficie de pontos,
+\textit{splats}. \textit{Splats} são uma extensão das superfícies puramente
+baseadas em pontos assossiando normal e um extensão aos pontos, formando-se
+assim, um disco orientado.
+\section{\textit{Splat}}
+Nessa sessão discutiremos \textit{Splats}, que são extensão da representação
+pura de pontos assossiandos-se uma extensão (circular ou elíptica) e uma
+normal aos pontos. Na sessão \ref{splat:normal} discutiremos como computar a
+normal para superfície de baseada em pontos, na sessão \ref{splat:elliptico}
+difiniremos \textit{splats} elípticos. Concluimos a capítulo com discurssão sobre
+algorítmos de renderização de superfícies baseadas em \textit{splats}.
+\subsection{Normal}
+\label{splat:normal}
+Assume-se o conjuntos de pontos como uma coleção de posições $P = {x_i}$ no
+$R^{3}$, $i \in \{1,\ldots,N\}$ . Usaremos os $k$ vizinhos mais próximos para
+definir a normal na superfície. O $k$ vizinhos mais próximos de um ponto é
+definido como um subconjunto de $k$ pontos com menor distância Euclidiana para
+o ponto dado. No capítulo \ref{chapter:3} será apresentada uma estrutura
+eficiente para obter os $k$ vizinhos de uma nuvem de pontos.
+Dado os $k$ vizinhos $N_p^{k} = \{x_1,\ldots,x_k\}$ de um ponto
+$x_i$, a normal na superficie pode ser obtida usando a análise da matriz de covariância. A
+matriz de covariância é definida como:
+
+\begin{equation}
+ C =  \displaystyle\sum_j^k{(x_j - x)(x_j - x)^T} 
+\label{eq1}
+\end{equation}
+\noindent com $x = \frac{1}{k}\sum_i^k{x_j}$ a média de todos os vizinhos. A
+matriz $3 x 3$ é semi-definida positiva e simétrica, possuindo todos os seus
+auto-valores reais. O auto-vetor correspondente ao menor auto-valor é uma
+estimativa da direção da normal na superfície no ponto $x_i$.
+\subsection{\textit{Splat} Ellíptico}
+\label{splat:elliptico}
+\section{\textit{Surface Splatting}}
