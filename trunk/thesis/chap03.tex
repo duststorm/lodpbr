@@ -1,307 +1,90 @@
-\chapter{Trabalhos Relacionados}
+\chapter{Processamento de Modelos Baseado em Pontos}
+\label{chapter:3}
+\section{Estrutura de Multiresolução}
+\section{Octrees}
+Octree é uma das estruturas de partição espacial mais usadas para tratar grandes
+modelos de pontos em especial, quando se quer renderizá-los de forma interativa [cites].
+ A estrutura é usada para particionar a caixa envolvente $3D$ que
+engloba todas as amostras no espaço. Cada célula  que contenha amostras é
+recursivamente subdivida em oito octantes.A recursão termina quando em uma
+célula há um valor mínimo de amostras que passa a ser um contêiner de amostras
+desta célula (seriam as folhas de uma estrutura em árvore).
 
-Neste capítulo iremos apresentar alguns trabalhos que inspiraram esta
-dissertação, com ênfase em dois deles em particular.
-O primeiro é \textit{QSplat} \cite{Rusinkiewicz2000}, um sistema para
-renderização de pontos baseado em uma hierarquia de esferas envolventes. O
-Segundo é o \textit{Sequential Point Tress} (SPT) \cite{Dachsbacher2003}% 
-\abbrev{SPT}{\textit{Sequential Point Trees}}, uma estrutura de dados
-que permite-nos renderizar em Nível de Detalhe e diretamente na GPU
-modelos de pontos. E por último serão apresentados outro trabalhos que 
-seguem esta mesma linha mas de forma
-resumida e com suas principais contribuições.
+Octree sobre um conjuntos $P$ de  $n$ pontos $p_{1 \ldots n}$ é construída de
+forma eficiente com complexidade de $O(n\log{n})$
+\section{kd-Tree}
+Uma \textit{kd-tree} é em geral , um árvore multidimensional de busca em $k$
+dimensões. Para dados em $3D$, a árvore correspondente é geralmente chamada de \textit{kd-tree}
+tridimensional ao invés de \textit{$3d$-tree}. Elas são um caso especial de
+arvores partição binária espacial \abbrev{PBE}{\textit{partição
+binária espacial}} . \textit{Kd-tree} usa planos de cortes que são perpendicular
+a um dos eixos coordenados ( também chamado hiperplanos), que é uma
+especialização de uma $PBE$, em que planos de cortes arbitrários podem ser
+usados. Um conjunto de pontos em uma \textit{kd-tree} é subdividido em caixas
+alinhas aos eixos e que não se interceptam. O algoritmo de construção é
+descrito como o exemplificado:
 
-\section{\textit{QSplat}}
-Nesta seção iremos descrever o \textit{QSplat}, um sistema para representação e
-renderização progressiva, de modelos grandes com amostras de $100$ milhões há
-$1$ bilhões de pontos como os produzidos no Projeto Michelangelo Digital \cite{Levoy2000}.
-\textit{QSplat} combina uma hierarquia de esfera envolventes com renderização
-baseado em pontos. Os nós internos da hierarquia armazenam atributos (posição, normal, cor) que são
-estimados pelos seus nós filhos. O algoritmo de renderização percorre a
-hierarquia até que o tamanho da projeção da esfera envolvente seja menor que um
-valor pré-determinado (geralmente um \textit{pixel}). Então o nó é renderizado
-e seus filhos podem ser descartados. O sistema será descrito com mais detalhes nas seções seguintes.
-\subsection{\textit{QSplat} Estrutura de Dados}
-\textit{QSplat} usa uma hierarquia de esfera envolventes que também é usada
-para controle de nível de detalhe, \textit{view frustum cullling} e
-\textit{back facing culling} \cite{Rusinkiewicz2000}. Cada nó da hierarquia
-contem o centro e o raio da esfera envolvente, uma normal, o ângulo do cone
-de normais e uma cor (opcional). A hierarquia é criada em um pré-processamento
-e guardada em disco. Na Figura \ref{fig:schematicQSplat} temos uma esquema de como seria a hierarquia.
-
-\begin{figure}[ht]
-\centering
-\includegraphics[width=8.0cm]{img/cap02/schematicQSplat} 
-\caption{Figura esquemática da hierarquia de esferas de
-\textit{QSplat} (Retirada de \cite{Wand2004})}
-\label{fig:schematicQSplat}
-\end{figure}
-
-A estrutura de cada nó na hierarquia de esferas é mostrada na Figura
-\ref{fig:NodeQSplat}. Um nó contem a posição e o tamanho da esfera  relativa a
-seus parentes, normal, cone de normais e uma cor (opcional) e poucos
-\textit{bits} que representam a estrutura da árvore.
+Na raiz, o conjunto de pontos é dividido em dos subconjuntos com o mesmo
+tamanho por um hiperplano perpendicular ao eixo dos $x$. Os filhos da raiz
+(profundidade $1$), a partição é baseada na coordenada $y$ e o nó de
+profundidade $2$, no próximo level, na coordenada $z$. Então o algoritmo começa
+ordenando o conjunto de pontos na coordenada $x$. A recursão para quando um
+determinada quantidade de pontos em um nó é alcançada (no caso um ponto, veja
+\ref{fig:Kdtree}), o qual é armazenados nas folhas.
 
 \begin{figure}[ht]
 \centering
-\includegraphics[width=12.0cm]{img/cap02/NodeQuantization} 
-\caption{Estrutura de um Nó}
-\label{fig:NodeQSplat}
+\includegraphics[width=10.0cm]{img/cap02/Kd-tree} 
+\caption{Kd-Tree}
+\label{fig:Kdtree}
 \end{figure}
-
-\begin{description}
-\item[Posição e Raio:]{ A posição e o raio de cada esfera é codificada
-relativamente aos seus parentes na hierarquia de esferas envolventes. A fim de  
-economizar memória, seus valores são quantizados em $13$ valores. Então o
-raio de um esfera varia de $113$ a $1313$ do raio de seus
-parentes e seu centro relativo ao centro de seus parentes (em cada um dos suas
-coordenadas $X$, $Y$ e $Z$) é algum múltiplo de $113$. Para garantir
-que a processo de quantização não introduza nenhum buraco durante a
-renderização, todos ou valores são arredondados para o maior valor que englobe
-seus parentes}
-\item[Normal]{A normal é codificada em $14$ \textit{bits}. Sua quantização
-usa um grade de $52$$x$$52$ em cada uma das $6$ faces do cubo. Um tabela é
-usada para decodificar a normal representada. Na prática são usados
-$52\cdot52\cdot6 = 16224$  diferentes valores de normal}
-\item[Color]{O anglo do cone de normais é codificado em apenas $2$
-\textit{bits}. Os quatros valores possíveis que representam o metade do
-anglo de abertura do cone são $116$, $416$, $916$ e
-$1616$ }
-\item[Cor]{Dúvida \ldots}
-\end{description}
-\subsection{Renderização}
-O processo de renderização é simples, como mostrado na Figura
-\ref{fig:percorrimento}. Os estágios do algoritmo serão mostrados a seguir.
-
-\begin{description}
-\item[\textit{Visible Culling}]{Como é usado um hierarquia de esferas
-envolventes, nós que não são visíveis são eliminados durante o percurso.
-\textit{Frustum Culling} é feito, testando cada esfera contra os planos do
-tronco de pirâmide que representa o campo de visão. Se a esfera está fora, ela
-e sua sub-árvore são eliminados. Se ela está dentro do
-campo de visão, ela e seus filhos estão visíveis e não precisam mais passar
-pelo teste. \textit{Backface Culling} também é realizados durante o processo de
-renderização, usando o ângulo do cone de normais.}
-\item[Heurística de Renderização]{A heurística usando é o tamanho da imagem
-projetada na tela, ou seja, área da esfera projetada na tela exceder
-um determinado valor (geralmente um \textit{pixel}).}
-\item[Renderizando um \textit{Splat}] Quando se atinge um nó desejado, de
-acordo com os critérios mencionados anteriormente, o \textit{splat} é
-renderizado representando a esfera corrente. O tamanho do \textit{splat} é
-baseado no diâmetro da projeção da esfera corrente, e sua cor é obtida usando
-cálculo de iluminação baseada na normal e cor da mesma.
-
-\end{description}
-
-\begin{figure}[tcb]
-  \centering \mbox{} \hfill
-  \begin{minipage}[b]{0.45\linewidth}
- \centering
-  \includegraphics[width=1.25\linewidth]{img/cap02/ovoRender}\\[0cm](a)
-  \end{minipage}
-  \hfill
-  \begin{minipage}[b]{0.45\linewidth}
-    \centering
-    \includegraphics[width=1.25\linewidth]{img/cap02/CoelhoRender}\\[0cm](b)
-  \end{minipage}
-  \hfill \mbox{}
-  \caption{\label{fig:percorrimento}Esquema do algoritmo de renderização:  
-  \emph{(a)} Tamanho da imagem projetada do nó é maior que um \textit{pixel}.
-  Continua o percurso nas sub-árvores; \emph{(b)} Tamanho da imagem
-  projetada do nó é menor que um \textit{pixel}. Renderiza o \textit{splat}.}
-\end{figure}
-
-\subsection{Discussão}
-\textit{QSplat} possui um processo bem simples, mas infelizmente ele não usa
-todo o potencial gráfico que as GPUs oferecem. Dada
-granularidade na sua determinação de nível de detalhes, um modelo chega e ser
-renderizado ponto por ponto. Como consequência, esse ``modo imediato'' de
-renderizar torna a GPU pouco utilizada, pois está sempre esperando
-por novos dados para renderizar. Levando em conta que não é apenas a coordenada
-de um ponto que está sendo utilizada, mas todos os seus outros atributos, como
-cor e normal.
-
-No entanto, está simplicidade torna o \textit{Qsplat} um algoritmo que pode ser
-usado em outras aplicações. Sua hierarquia de esfera é uma boa estrutura para
-\textit{Ray Tracing}. Outra são aplicações em rede como a do \textit{Stream
-QSplat}\cite{Rusinkiewicz2001} que permite visualizar modelos $3D$ de forma
-progressiva e remotamente.
+\section{Hierarquia de Volumes Envolventes}
+Hierarquia de Volumes Envolventes (BVH) tem sido usado para renderização desde
+Clark and Rubin and Whitted [cite], uso-as como suporte para consultas como \textit{visibilty culling} 
+e intersecção de raio-objeto. Enquanto método de partição de dados para
+indexação no espaço, como \textit{Octrees} e \textit{Kd-Trees} descritas
+anteriormente, BVH não precisam ser uma partição do espaço. Sendo assim, BVH
+remove qualquer restrição em relação a partição do espaço e permite a
+construção de uma hierarquia espacial mais genérica. De fato, ela permite
+qualquer hierarquia que agrupe os elementos, sem entretanto provê uma seleção
+espacial que é de fundamental importância para qualquer esquema de indexação
+espacial. O único requisito em uma BVH é que cada nó o volume envolvente (i.e.,
+uma caixa ou esfera) engloba todos os elementos da sua subárvore. Obviamente
+que uma estrutura de partição espacial pode ser estendida para uma BVH, gerando
+o volume envolvente atribuído a cada nó como mostrado anteriormente.
 
 
-\section{\textit{Sequential Point Trees}}
-\textit{QSplat} possui um processamento de dados muito simples e de fácil
-implementação, mas infelizmente sua estrutura hierárquica recursiva é difícil de
-ser implementada em GPU. Os pontos renderizados não são armazenados de forma
-contínua, portanto não são processados sequencialmente.A \textit{CPU}
-(\textit{Central Processor Unit})%
-\abbrev{CPU}{\textit{Central Processor Unit}} percorre a
-árvore e faz chamadas independentes para renderizar cada nó. Isso causa um
-``gargalo'' entra a CPU e a GPU, sendo que esta última fica muito tempo ociosa
-esperando por dados da CPU.
-\textit{Sequential Point Trees} propõe o uso da estrutura de \textit{QSplat},
-só que de uma forma sequencial que é facilmente tratada em GPU. Sendo assim,
-transferindo mais trabalho para GPU e diminuindo este ``gargalo''.
-Nas seções que seguem , SPT será apresentado com mais detalhes. 
-\subsection{Hierarquia de Pontos}
-Inicialmente SPT possui um hierarquia de pontos representada por um
-\textit{Octree} \cite{Samet05}. Cada nó da hierarquia representa parte do
-objeto. Ela armazena um centro \textbf{c} e uma estimativa da normal
-\textbf{n}. Um nó armazena também um diâmetro \textbf{d} da esfera envolvente
-centrada em \textbf{c}. O nó interior representa
-a união de seus nós filhos, então o diâmetro cresce a medida que sobe na
-hierarquia. Os nós folhas possuem pontos que são distribuídos uniformemente no
-objeto, então possuem diâmetro aproximadamente iguais.
+%\section{Clusterização}
+%Métodos de clusterização tem sido usados em computação gráfica para reduzir a
+%complexidade de modelos 3D. Por Exemplo Rossignac and Borrel em seu trabalho
+%pioneiro \cite{Rossignac1992}, usaram clusterização de vértices para obter
+%uma multi-resolução aproximada de modelos poligonais complexos para torna 
+%renderização mais eficiente\cite{Rossignac1992}. As abordagens de construção 
+%de clusters são categorizadas em incremental (\textit{bottom-up}) e o
+%hierárquico (\textit{top-down}). O modo incremental os clusters são criado
+%juntando-se uma ou mais amostras em um cluster apropriado. Enquanto o modo
+%hierárquico incia com um cluster de todas as amostras e recursivamente
+%separa-os em clusters menores apropriados.
+%Os dois grandes desafios da clusterização são estabelecer a medida de
+%similaridade (caso incremental) ou dissimilaridade (caso hierarquico)
+%empregada e definir o número final de clusters.
+%Abaixo serão aprenstados métodos de clusterização que foram usados tanto em
+%simplificação como para multi-resolução em modelos baseados em pontos.
+%A estratégia usada por Rossignac and Borrel
+%\cite{Rossignac1992} foi envolver o modelo em uma grade regular (veja
+%\ref{2:gradeRegular}) e sub-dividi-lá. A resolução da grade regular
+%determinava a qualidade da simplificação. Essa abordagem volumétrica possui
+%uma desvantagem. Usando-se uma grade com células de tamanho fixo, esse método
+%não se adapta bem a modelos que não apresentam um distribuição espacial
+%uniforme. Para evitar essa (  ), um clusterização baseada na superfície pode
+%se usada onde os clusters são construídos pela seleção de amostras na sua
+%vizinhança. Estas técnicas serão apresentadas a seguir.
+%\subsection{Clusterização Hierárquica}
+%Para construir um multiresolução de modelos baseados em pontos, muitos autores
+%[vários] tem adotado alguma estratégia de partição do espaço com o intuito de 
+%visualização de modelos complexos eficientemente. Nesta seção discutiremos as
+%estrutura de partição espacial Octree, BSP Tree e Hierarquia de Esferas
+%Envolventes.
+%Para mais detalhes de
+%comparação ver \cite{Samet2005}
 
-\subsection{Métricas de Erro}
-
-Cada nó na hierarquia pode ser aproximada por um disco com o mesmo centro,
-normal e diâmetro do nó. O erro dessa aproximação é descrito por dois valores
-: o erro perpendicular $e_p$ e o erro tangencial $e_t$.
- 
-\noindent \textbf{Erro Perpendicular:}
-O erro perpendicular $e_p$ é a distância mínima entre dois planos
-paralelo ao disco que engloba todos os filhos. Este erro mede variância e pode ser
-calculado como:
-
-\begin{figure}[tcb]
-  \centering \mbox{} \hfill
-  \begin{minipage}[b]{0.40\linewidth}
- \centering
- 
-  \includegraphics[width=1.0\linewidth]{img/cap02/PosterSquential}
-  \end{minipage}
-  \hfill
-  \begin{minipage}[b]{0.40\linewidth}
-    \centering
-    \includegraphics[width=1.0\linewidth]{img/cap02/di}
-  \end{minipage}
-  \hfill \mbox{}
-  \caption{\label{fig:perpendicular}Como erro perpendicular, usa-se a
-  distância entre dois plano paralelo ao disco que engloba todos os filhos
-  (Retirada de \cite{Dachsbacher2003}).}
-\end{figure}
-
-\begin{eqnarray}
- e_p & = & max\{((c_i-c)\cdot n)+d_i\} - min\{((c_i-c)\cdot n )-d_i\} \\
-     &   &\textnormal{with}\hspace{0.5cm}  d_i = r_i \sqrt{1-(n_i\cdot n)^2}
-  \label{perpendicular}
-\end{eqnarray}
-
-Durante a renderização, o erro perpendicular é projetado na imagem, resultando
-em um erro $\tilde{e}_p$. $\tilde{e}_p$ é proporcional ao seno do ângulo entre
-o vetor de visão $v$ e a normal do disco $n$ e diminui com $\cfrac{1}{r}$ e $r =
-|v|\cdot\tilde{e}_p$ captura erros ao longo das silhuetas:
- 
- \begin{equation}
-  \tilde{e}_p  = e_p \frac{\sin{(\alpha)}}{r} \quad \text{sendo} \quad \alpha =
-  \angle(n,v)
-   \label{tangencial}
- \end{equation}
-
-\noindent \textbf{Erro Tangencial:}
-O erro tangencial $e_t$, analisa a projeção dos discos dos filhos no
-disco do pai como mostrado na Figura \ref{fig:Tangencial}. $e_t$ mede se o
-disco pai cobre um grande área desnecessária. O erro é medido usando várias
-retas ao redor dos filhos projetados. $e_t$ é portanto o menor diâmetro do
-disco pai menos o tamanho do menor intervalo entre retas. (dúvida em relação a
-escrita). $e_t$ negativos são setados em zero. $e_t$ é projetado no espaço de
-imagem como:
-
-\begin{equation}
- \tilde{e}_t = e_t \frac{\cos{(\alpha)}}{r} 
-  \label{tangencial}
-\end{equation}
-
-\noindent \textbf{Erro Geométrico:}
-O erro perpendicular e tangencial podem ser combinados em um único erro
-geométrico:
-Agora o erro no espaço de imagem $\tilde{e}_g$ depende apenas de $r$, e não mais
-do ângulo do visão: $ \tilde{e}_g = \cfrac{e_g}{r}$
- 
- \begin{equation}
- \tilde{e}_g  = \max\{e_p\sin{\alpha} + e_t\cos{\alpha}\} = \sqrt{e^2_p + e^2_t} 
-  \label{tangencial}
-\end{equation}
-
-\begin{figure}[ht]
-\centering
-\includegraphics[width=15.0cm]{img/cap02/tangencial} 
-\caption{Erro tangencial, mede o quão aproximado é o disco pai em relação ao
-filho no plano tangente (Retirada de \cite{Dachsbacher2003}) .}
-\label{fig:Tangencial}
-\end{figure}
-
-\subsection{Renderização Recursiva}
-Um objeto é renderizado na hierarquia de pontos usando um percurso em
-profundidade. Para cada nó um erro de imagem $\tilde{e}_g$ é calculado. Se
-$\tilde{e}_g$ está abaixo de um limite de erro estabelecido $\epsilon$ e o nó
-não é uma nó folha , seus filhos são percorridos recursivamente. Por outro lado,
-um \textit{splat} de tamanho $\tilde{d} =  d/r$ é renderizado. Note que
-esta hierarquia de pontos não se adapta apenas a distância do observador $r$,
-mas também para propriedades da superfície. Grandes áreas planas são detecta-das
-com pequenos erro geométrico $\tilde{e}_g$ e podem ser renderizados com splats
-grandes.
-\subsection{Arranjamento}
-O procedimento de renderização da seção anterior é recursivo e não se adapta ao
-processamento rápido e sequêncial da GPU. Assim, há um arranjamento da
-estrutura em árvore para um estrutura em lista e o teste recursivo é
-substituído por um percurso sequêncial sobre a lista de pontos.
-
-Para isso, o erro simplificado $\tilde{e}_g$ é substituído por um que sejam
-mais intuitivo. Assume-se que $\epsilon$ é constante. O teste
-recursivo é $\tilde{e}_g = {e}_g/r < \epsilon $ e ao invés de $e_g$, é
-armazenado um distância mínima $r_{\min} = e_g/ \epsilon$ que simplifica o
-teste recursivo para $r > r_{\min}$. Entretanto, quando os nós da árvore são
-processados seqüencialmente sem informação hierárquica, há necessidade de um
-teste não recursivo. Para esse fim, é adicionado um parâmetro $r_{\max}$, que é
-simplesmente um $r_{\min}$ do seu nó pai, em cada nó e usa-se $r \in
-[r_{\min},r_{\max}]$ como um teste não recursivo. Desta maneira pode-se guiar o
-algoritmo de renderização com esse teste \textit{intercalar} para cada nó.
-
-\begin{figure}[tcb]
-  \centering \mbox{} \hfill
-  \begin{minipage}[b]{0.40\linewidth}
- \centering
-  \includegraphics[width=1.0\linewidth]{img/cap02/SequentialTree}\\[0cm](a)
-  \end{minipage}
-  \hfill
-  \begin{minipage}[b]{0.40\linewidth}
-    \centering
-    \includegraphics[width=1.2\linewidth]{img/cap02/SequentialDamx}\\[0cm](b)
-  \end{minipage}
-  \hfill \mbox{}
-  \caption{\label{fig:list}Como erro perpendicular, usa-se a
-  distância entre dois planos paralelos ao disco que engloba todos os filhos
-  (adaptada de \cite{Dachsbacher2003}).}
-\end{figure}
-
-
-Depois de substituir o teste recursivo por um simples teste intervalar, a
-hierarquia de pontos e transformada em um lista, que é processada
-sequencialmente. Neste estágio, $[r_{\min},r_{\max}]$ é usada para ordenar a
-lista de forma decrescente a partir de $r_{\max}]$ como ilustrado na
-Figura \ref{fig:list}.
-
-Um exemplo de como o algoritmo de renderização funciona é mostrado na Figura
-\cite{fig:SequentialList}. Onde para diferentes valores de $r$ um porção da
-lista é selecionada enquanto outras são descartadas.
-
-\begin{figure}[ht]
-\centering
-\includegraphics[width=15.0cm]{img/cap02/SequentialList} 
-\caption{(Retirada de \cite{Dachsbacher2003}) .}
-\label{fig:SequentialList}
-\end{figure}
-
-\subsection{Discussão}
-
-SPT é simples, de fácil implementação e provê um renderização continua usando
-nível de detalhes.
-
-O autor da ênfase no fato de que grande parte do trabalho é movido para GPU,
-deixando a CPU livre para outras tarefas. No entanto, SPT só é eficiente se o modelo 
-estiver na memória de vídeo, o que nem sempre é possível.
-
-SPT renderiza pontos em baixa qualidade, já que a GPU não suporta renderizar
-\textit{splat} com qualidade em tempo satisfatório. Outra desvantagem é que SPT
-não realiza \textit{frustum culling}, perdendo o pouco em eficiência.
