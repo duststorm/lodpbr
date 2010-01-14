@@ -7,10 +7,11 @@
 \BOOKMARK [1][-]{section.1.2}{Objetivo}{chapter.1}
 \BOOKMARK [1][-]{section.1.3}{Organiza\347\343o da Disserta\347\343o}{chapter.1}
 \BOOKMARK [0][-]{chapter.2}{Superf\355cies Baseada em Pontos}{}
-\BOOKMARK [1][-]{section.2.1}{Splat}{chapter.2}
-\BOOKMARK [2][-]{subsection.2.1.1}{Normal}{section.2.1}
-\BOOKMARK [2][-]{subsection.2.1.2}{Splat Ell\355ptico}{section.2.1}
-\BOOKMARK [1][-]{section.2.2}{Surface Splatting}{chapter.2}
+\BOOKMARK [1][-]{section.2.1}{Malhas Poligonais vs Superf\355cies Baseadas em Pontos}{chapter.2}
+\BOOKMARK [1][-]{section.2.2}{Splat}{chapter.2}
+\BOOKMARK [2][-]{subsection.2.2.1}{Normal}{section.2.2}
+\BOOKMARK [2][-]{subsection.2.2.2}{Splat Ell\355ptico}{section.2.2}
+\BOOKMARK [1][-]{section.2.3}{Surface Splatting}{chapter.2}
 \BOOKMARK [0][-]{chapter.3}{Processamento de Modelos Baseado em Pontos}{}
 \BOOKMARK [1][-]{section.3.1}{Estrutura de Multiresolu\347\343o}{chapter.3}
 \BOOKMARK [1][-]{section.3.2}{Octrees}{chapter.3}
