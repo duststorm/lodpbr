@@ -1,7 +1,25 @@
 \chapter{Processamento de Modelos Baseado em Pontos}
 \label{chapter:3}
 \section{Estrutura de Multiresolução}
+Esquemas de partição do espaço são comuns(?) em computação gráfica, em
+particular quando se deseja processar geometria adquirida é essêncial:
+simplificação, reconstrução, compressão, visibilidade, e muita outras
+operações são beseadas em nesse tipo de estrutura. Sua simplicidade a tornou
+muito popular: o espaço inicial, frequentimente uma caixa envolvente do modelo,
+é recursivamente subdividida até que uma celula satisfaça um dado critério. As
+estutras de partição de espaço mais populares são, \textit{octree} e 
+\textit{kD-Trees} (um caso especial de  \textit{BSP-Tree}). Primeiramente,
+\textit{octree} será discutida na sessão \ref{section:Octree}, que é obtida
+particionando recursivamente a caixa envolvente do modelo em oito octantes.
+Na proxima sessão \ref{section:KDtree} apresentaremos \textit{K-d Tree} que
+também particona o espaço, mas dividindo o modelo em cada nó de acordo com uma
+dimensão. \textit{K-d Tree} será usada como estrutura eficente de busca dos $k$
+vizinhos de um dado ponto no modelo. Finalmente, hieraruia de
+esferas envolventes será discutida (\ref{section:BVH}).
+
+
 \section{Octrees}
+\label{section:Octree}
 Octree é uma das estruturas de partição espacial mais usadas para tratar grandes
 modelos de pontos em especial, quando se quer renderizá-los de forma interativa [cites].
  A estrutura é usada para particionar a caixa envolvente $3D$ que
@@ -13,6 +31,7 @@ desta célula (seriam as folhas de uma estrutura em árvore).
 Octree sobre um conjuntos $P$ de  $n$ pontos $p_{1 \ldots n}$ é construída de
 forma eficiente com complexidade de $O(n\log{n})$
 \section{kd-Tree}
+\label{section:KDtree}
 Uma \textit{kd-tree} é em geral , um árvore multidimensional de busca em $k$
 dimensões. Para dados em $3D$, a árvore correspondente é geralmente chamada de \textit{kd-tree}
 tridimensional ao invés de \textit{$3d$-tree}. Elas são um caso especial de
@@ -39,6 +58,7 @@ determinada quantidade de pontos em um nó é alcançada (no caso um ponto, veja
 \label{fig:Kdtree}
 \end{figure}
 \section{Hierarquia de Volumes Envolventes}
+\label{section:BVH}
 Hierarquia de Volumes Envolventes (BVH) tem sido usado para renderização desde
 Clark and Rubin and Whitted [cite], uso-as como suporte para consultas como \textit{visibilty culling} 
 e intersecção de raio-objeto. Enquanto método de partição de dados para
