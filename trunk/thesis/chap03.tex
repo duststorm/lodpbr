@@ -17,8 +17,7 @@ dimensão. \textit{K-d Tree} será usada como estrutura eficente de busca dos $k$
 vizinhos de um dado ponto no modelo. Finalmente, hieraruia de
 esferas envolventes será discutida (\ref{section:BVH}).
 
-
-\section{Octrees}
+\subsection{Octrees}
 \label{section:Octree}
 Octree é uma das estruturas de partição espacial mais usadas para tratar grandes
 modelos de pontos em especial, quando se quer renderizá-los de forma interativa [cites].
@@ -30,7 +29,8 @@ desta célula (seriam as folhas de uma estrutura em árvore).
 
 Octree sobre um conjuntos $P$ de  $n$ pontos $p_{1 \ldots n}$ é construída de
 forma eficiente com complexidade de $O(n\log{n})$
-\section{kd-Tree}
+
+\subsection{kd-Tree}
 \label{section:KDtree}
 Uma \textit{kd-tree} é em geral , um árvore multidimensional de busca em $k$
 dimensões. Para dados em $3D$, a árvore correspondente é geralmente chamada de \textit{kd-tree}
@@ -57,7 +57,8 @@ determinada quantidade de pontos em um nó é alcançada (no caso um ponto, veja
 \caption{Kd-Tree}
 \label{fig:Kdtree}
 \end{figure}
-\section{Hierarquia de Volumes Envolventes}
+
+\subsection{Hierarquia de Volumes Envolventes}
 \label{section:BVH}
 Hierarquia de Volumes Envolventes (BVH) tem sido usado para renderização desde
 Clark and Rubin and Whitted [cite], uso-as como suporte para consultas como \textit{visibilty culling} 
