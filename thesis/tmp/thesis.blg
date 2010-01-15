@@ -1,0 +1,60 @@
+This is BibTeX, Version 0.99c (Web2C 7.5.6)
+The top-level auxiliary file: thesis.aux
+A level-1 auxiliary file: dedic.aux
+A level-1 auxiliary file: thanks.aux
+A level-1 auxiliary file: resumo.aux
+A level-1 auxiliary file: abstract.aux
+A level-1 auxiliary file: chap01.aux
+A level-1 auxiliary file: chap02.aux
+A level-1 auxiliary file: chap03.aux
+A level-1 auxiliary file: chap04.aux
+A level-1 auxiliary file: chap06.aux
+The style file: coppe-unsrt.bst
+A level-1 auxiliary file: appenA.aux
+Database file #1: thesis.bib
+Warning--I didn't find a database entry for "Samet05"
+Warning--I didn't find a database entry for "fig:SequentialList"
+Warning--empty pages in Correa02towardspoint-based
+Warning--empty pages in marroquim07
+You've used 12 entries,
+            2438 wiz_defined-function locations,
+            698 strings with 7576 characters,
+and the built_in function-call counts, 3151 in all, are:
+= -- 264
+> -- 81
+< -- 8
++ -- 40
+- -- 28
+* -- 278
+:= -- 419
+add.period$ -- 30
+call.type$ -- 12
+change.case$ -- 0
+chr.to.int$ -- 0
+cite$ -- 14
+duplicate$ -- 194
+empty$ -- 350
+format.name$ -- 28
+if$ -- 712
+int.to.chr$ -- 0
+int.to.str$ -- 12
+missing$ -- 12
+newline$ -- 48
+num.names$ -- 12
+pop$ -- 58
+preamble$ -- 1
+purify$ -- 0
+quote$ -- 0
+skip$ -- 82
+stack$ -- 0
+substring$ -- 211
+swap$ -- 81
+text.length$ -- 8
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 0
+warning$ -- 2
+while$ -- 31
+width$ -- 14
+write$ -- 121
+(There were 4 warnings)
