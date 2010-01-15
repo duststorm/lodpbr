@@ -1,0 +1,19 @@
+\select@language {brazil}
+\select@language {english}
+\select@language {brazil}
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {1.1}{\ignorespaces Lucy figure}}{1}{figure.1.1}
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {3.1}{\ignorespaces Kd-Tree}}{7}{figure.3.1}
+\contentsline {figure}{\numberline {3.2}{\ignorespaces Figura esquem\'atica da hierarquia de esferas de \textit {QSplat} (Retirada de \cite {Wand2004})}}{9}{figure.3.2}
+\contentsline {figure}{\numberline {3.3}{\ignorespaces Estrutura de um N\'o}}{10}{figure.3.3}
+\contentsline {figure}{\numberline {3.4}{\ignorespaces Esquema do algoritmo de renderiza\c c\~ao: \emph {(a)} Tamanho da imagem projetada do n\'o \'e maior que um \textit {pixel}. Continua o percurso nas sub-\'arvores; \emph {(b)} Tamanho da imagem projetada do n\'o \'e menor que um \textit {pixel}. Renderiza o \textit {splat}.}}{11}{figure.3.4}
+\contentsline {figure}{\numberline {3.5}{\ignorespaces Como erro perpendicular, usa-se a dist\^ancia entre dois plano paralelo ao disco que engloba todos os filhos (Retirada de \cite {Dachsbacher2003}).}}{12}{figure.3.5}
+\contentsline {figure}{\numberline {3.6}{\ignorespaces Erro tangencial, mede o qu\~ao aproximado \'e o disco pai em rela\c c\~ao ao filho no plano tangente (Retirada de \cite {Dachsbacher2003}) .}}{13}{figure.3.6}
+\contentsline {figure}{\numberline {3.7}{\ignorespaces Como erro perpendicular, usa-se a dist\^ancia entre dois planos paralelos ao disco que engloba todos os filhos (adaptada de \cite {Dachsbacher2003}).}}{14}{figure.3.7}
+\contentsline {figure}{\numberline {3.8}{\ignorespaces (Retirada de \cite {Dachsbacher2003}) .}}{15}{figure.3.8}
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\addvspace {10\p@ }
