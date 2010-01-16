@@ -1,11 +1,11 @@
 #TeXlipse project settings
-#Fri Jan 15 15:34:06 BRST 2010
+#Sat Jan 16 13:37:14 BRST 2010
 builderNum=2
 outputDir=
-makeIndSty=
+makeIndSty=coppe.ist
 bibrefDir=
 outputFormat=pdf
-tempDir=tmp
+tempDir=
 mainTexFile=thesis.tex
 outputFile=thesis.pdf
 langSpell=pt_BR
