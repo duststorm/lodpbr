@@ -1,49 +1,58 @@
 \chapter{Estruturas de Dados para Pontos}
 \label{chapter:3}
 \section{Estrutura de Partição do Espaço}
-O objetivo de um estrutura de partição do espaço é criar uma indexação do
-espaço, ou seja, decompo-ló em células e provê uma relação entre estas células
-e o espaço ocupado por um objeto \cite{Samet2005}.
-\subsection{Estruturas Hieraquicas}
-Esquemas de partição do espaço são comuns(?) em computação gráfica, em
-particular quando se deseja processar geometria adquirida é essêncial:
-simplificação, reconstrução, compressão, visibilidade, e muita outras
-operações são beseadas em nesse tipo de estrutura. Sua simplicidade a tornou
-muito popular: o espaço inicial, frequentimente uma caixa envolvente do modelo,
-é recursivamente subdividida até que uma celula satisfaça um dado critério. As
-estutras de partição de espaço mais populares são, \textit{octree} e 
-\textit{kD-Trees} (um caso especial de  \textit{BSP-Tree}). Primeiramente,
-\textit{octree} será discutida na sessão \ref{section:Octree}, que é obtida
-particionando recursivamente a caixa envolvente do modelo em oito octantes.
-Na proxima sessão \ref{section:KDtree} apresentaremos \textit{K-d Tree} que
-também particona o espaço, mas dividindo o modelo em cada nó de acordo com uma
-dimensão. \textit{K-d Tree} será usada como estrutura eficente de busca dos $k$
-vizinhos de um dado ponto no modelo. Finalmente, hieraruia de
-esferas envolventes será discutida (\ref{section:BVH}).
+Estruturas de Partição do Espaço (EPE) são comuns em computação gráfica, em
+particular quando se deseja processar modelos como os gerados por
+\textit{scanners 3D}\cite{Levoy2000}. 
+Métodos de simplificação, reconstrução,compressão, visibilidade, e outros
+são beseados nesse tipo de estrutura. O objetivo de um estrutura de partição do
+espaço é criar uma indexação do espaço, ou seja, dividi-lo em células e provê uma relação entre estas 
+e o espaço ocupado por um objeto \cite{Samet2005}. Há vários algoritímos
+disponpíveis para estruturar nuvem de pontos, baseado em representações
+hierarquicas e não hierarquicas ou em cluster de pontos. Nesta sessão as
+estruturas mais comuns serão introduzidas: \textit{Octree} (sessão
+\ref{section:Octree}), \textit{K-d Tree} (sessão \ref{section:KDtree}) e
+Hierarquia de Volumes Envolventes (Bounding Volume Hierarchies - BVH) (sessão \ref{section:BVH}).
 
-\subsubsection{Octrees}
+%Esquemas de partição do espaço são comuns(?) em computação gráfica, em
+%particular quando se deseja processar geometria adquirida é essêncial:
+%simplificação, reconstrução, compressão, visibilidade, e muita outras
+%operações são beseadas em nesse tipo de estrutura. Sua simplicidade a tornou
+%muito popular: o espaço inicial, frequentimente uma caixa envolvente do modelo,
+%é recursivamente subdividida até que uma celula satisfaça um dado critério. As
+%estutras de partição de espaço mais populares são, \textit{octree} e 
+%\textit{kD-Tree} (um caso especial de  \textit{BSP-Tree}). Primeiramente,
+%\textit{octree} será discutida na sessão \ref{section:Octree}, que é obtida
+%particionando recursivamente a caixa envolvente do modelo em oito octantes.
+%Na proxima sessão \ref{section:KDtree} apresentaremos \textit{K-d Tree} que
+%também particona o espaço, mas dividindo o modelo em cada nó de acordo com uma
+%dimensão. \textit{K-d Tree} será usada como estrutura eficente de busca dos $k$
+%vizinhos de um dado ponto no modelo. Finalmente, hieraruia de
+%esferas envolventes será discutida (\ref{section:BVH}).
+
+\subsection{Octrees}
 \label{section:Octree}
 \textit{Octree} é uma das estruturas de partição espacial mais usadas para
-tratar grandes modelos de pontos em especial, quando se quer renderizá-los de forma interativa [cites].
- A estrutura é usada para particionar a caixa envolvente $3D$ que
-engloba todas as amostras no espaço. Cada célula  que contenha amostras é
-recursivamente subdivida em oito octantes.A recursão termina quando em uma
+tratar grandes modelos de pontos em especial, quando se quer renderizá-los de
+forma interativa
+\cite{BotschW2002,PajPRT2004,EfficenteLOD2003,PajConfetti2004}. A estrutura
+é usada para particionar a caixa envolvente $3D$ que engloba todas as amostras no espaço. Cada célula  que contenha amostras é recursivamente subdivida em oito octantes.A recursão termina quando em uma
 célula há um valor mínimo de amostras que passa a ser um contêiner de amostras
 desta célula (seriam as folhas de uma estrutura em árvore).
 
 Octree sobre um conjuntos $P$ de  $n$ pontos $p_{1 \ldots n}$ é construída de
 forma eficiente com complexidade de $O(n\log{n})$
 
-\subsubsection{kd-Tree}
+\subsection{K-d Tree}
 \label{section:KDtree}
-Uma \textit{kd-tree} é em geral , um árvore multidimensional de busca em $k$
-dimensões. Para dados em $3D$, a árvore correspondente é geralmente chamada de \textit{kd-tree}
-tridimensional ao invés de \textit{$3d$-tree}. Elas são um caso especial de
-arvores partição binária espacial \abbrev{PBE}{\textit{partição
-binária espacial}} . \textit{Kd-tree} usa planos de cortes que são perpendicular
-a um dos eixos coordenados ( também chamado hiperplanos), que é uma
+Uma \textit{K-d Tree} é em geral , um árvore multidimensional de busca em $k$
+dimensões. Para dados em $3D$ a árvore correspondente é geralmente chamada de
+\textit{K-d Tree} tridimensional ao invés de \textit{$3-d$ Tree}. Elas são um
+caso especial de arvores partição espacial binária (BSP Tree - Binary Space Partitioning Tree)
+\abbrev{BSP Tree}{\textit{Binary Space Partitioning Tree}} . \textit{K-d
+Tree} usa planos de cortes que são perpendicular a um dos eixos coordenados ( também chamado hiperplanos), que é uma
 especialização de uma $PBE$, em que planos de cortes arbitrários podem ser
-usados. Um conjunto de pontos em uma \textit{kd-tree} é subdividido em caixas
+usados. Um conjunto de pontos em uma \textit{K-d Tree} é subdividido em caixas
 alinhas aos eixos e que não se interceptam. O algoritmo de construção é
 descrito como o exemplificado:
 
@@ -62,12 +71,12 @@ determinada quantidade de pontos em um nó é alcançada (no caso um ponto, veja
 \label{fig:Kdtree}
 \end{figure}
 
-\subsubsection{Hierarquia de Volumes Envolventes}
+\subsection{Hierarquia de Volumes Envolventes}
 \label{section:BVH}
 Hierarquia de Volumes Envolventes (BVH) tem sido usado para renderização desde
 Clark and Rubin and Whitted [cite], uso-as como suporte para consultas como \textit{visibilty culling} 
 e intersecção de raio-objeto. Enquanto método de partição de dados para
-indexação no espaço, como \textit{Octrees} e \textit{Kd-Trees} descritas
+indexação no espaço, como \textit{Octrees} e \textit{K-d Trees} descritas
 anteriormente, BVH não precisam ser uma partição do espaço. Sendo assim, BVH
 remove qualquer restrição em relação a partição do espaço e permite a
 construção de uma hierarquia espacial mais genérica. De fato, ela permite
