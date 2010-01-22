@@ -73,7 +73,7 @@ para este de tipo de busca é a \textit{K-d Tree}, apresentada a seguir.
 Direita: \textit{K-d Tree} em $2D$. Na \textit{K-d Tree} a subdivisão é realizada alterando os dois eixos coordenados de acordo com o ponto médio. Se o conjunto de pontos é par, 
 a linha divisória é a média dos pontos medianos. Caso contrário o ponto
 mediano é alocado para o filho de baixo ou da esquerda. Na figura, a subdivisão
-foi realizada até que os nós folhas armaze $1$ ponto. A estrutura em árvore
+foi realizada até que os nós folhas armazene $1$ ponto. A estrutura em árvore
 correspondente é ilustrada a direita.}
 \label{fig:KdOtree}
 \end{figure}
@@ -109,9 +109,9 @@ Um \textit{K-d Tree} será usada nesta dissertação como um estrutura de busca dos
 $k$ vizinhos mais próximos de um ponto $x$. A busca em uma \textit{K-d Tree}
 requer achar a célula que contenha $x$ e computar todos as células que
 interceptam um esfera de raio $r$ centrada no ponto (veja \ref{fig:kdSphere}). As células
-de interesse são computadas subindo na hierarquiae e depois testando todos os
+de interesse são computadas subindo na hierarquia e depois testando todos os
 filhos destas células contra a esfera. Pontos que estão alocados nestas células
-são candidatos ao teste de interseção com a esfera de busca. Os pontos que estão
+são candidatos ao teste de intersecção com a esfera de busca. Os pontos que estão
 dentro da esfera são retornados como vizinhos do ponto. Para mais detalhes
 ver \cite{Samet2005}.
 
@@ -130,7 +130,7 @@ Hierarquia de Volumes Envolventes (BVHs) são estruturas muito populares em
 modelagem e  renderização de modelos baseados em pontos. BHV de esferas foi
 usado, por exemplo, no \textit{QSplat} \cite{Rusinkiewicz2000} para renderização
 progressiva. O \textit{QSplat} será descrito com mais detalhes na sessão
-\ref{sec:qspalt}. Diferentimente de métodos de partição de dados para indexação
+\ref{sec:qspalt}. Diferentemente de métodos de partição de dados para indexação
 no espaço, como as \textit{Octrees} e \textit{K-d Trees} descritas anteriormente,
 as BVHs não são obrigatoriamente uma partição do espaço. Sendo assim, algumas
 restrições são removidas permitindo a construção de uma
@@ -146,9 +146,9 @@ envolventes usada no \textit{QSplat} é ilustrada. Dado todos os pontos do
 modelo, uma esfera é calculada usando um algoritmo como o proposto por
 \cite{Gartner1999}. Passando a ser a raíz da hierarquia. A seguir,
 os pontos são separados em dois subconjuntos de acordo com um dos planos
-pararelos aos eixos coordenados. Este plano é determinado como o plano que
+paralelos aos eixos coordenados. Este plano é determinado como o plano que
 divide a caixa envolvente ao longo da sua maior extensão como
-ilustado na Figura \ref{fig:BVH}. Para cada subconjunto uma esfera é computada,
+ilustrado na Figura \ref{fig:BVH}. Para cada subconjunto uma esfera é computada,
 gerando os filhos esquerdo e direito do nó raiz. 
 Esta subdivisão é realizada até que cada esfera contenha um
 valor mínimo de pontos ou que um dado nível de profundidade seja alcançado.
@@ -418,7 +418,7 @@ pequenos erro geométrico $\mathbf{\tilde{e}}_g$ e podem ser renderizados com spl
 
 \subsection{Arranjamento Sequencial}
 O procedimento de renderização da seção anterior é recursivo e não se adapta ao
-processamento rápido não hierarquico da GPU. Assim, há um conversão da estrutura
+processamento rápido não hierárquico da GPU. Assim, há um conversão da estrutura
 em árvore para uma estrutura em lista e o teste recursivo é substituído por um
 percurso sequencial sobre a lista de pontos.
 
