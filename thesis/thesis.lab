@@ -1,6 +1,9 @@
 
 \begin{theglossary}
   \makeatletter
-  \item [SPT] \textit{Graphic Processor Unit}, p. \hyperpage{3}
-  \item [SPT] \textit{Sequential Point Trees}, p. \hyperpage{3}
+  \item [BSP Tree] \textit{Binary Space Partitioning Tree}, p. 
+		\hyperpage{6}
+  \item [CPU] \textit{Central Processor Unit}, p. \hyperpage{11}
+  \item [GPU] \textit{Graphic Processor Unit}, p. \hyperpage{1}
+  \item [SPT] \textit{Sequential Point Trees}, p. \hyperpage{7}
   \end{theglossary}

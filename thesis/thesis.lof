@@ -1,0 +1,26 @@
+\select@language {brazil}
+\select@language {english}
+\select@language {brazil}
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {1.1}{\ignorespaces Lucy figure}}{1}{figure.1.1}
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {2.1}{\ignorespaces Renderiza\c c\~ao Baseada em Pontos proposta por Levoy e Whitted ( Retirada de \cite {LevoyW1985}). $(a)$ Ponto como primitiva universal de renderiza\c c\~ao. $(b)$ \textit {z-buffer} com toler\^ancia. \textbf {$(a)$} }}{4}{figure.2.1}
+\contentsline {figure}{\numberline {2.2}{\ignorespaces Um modelo $3D$ usando representa\c c\~ao de \textit {splats}. \textbf {Centro} Vis\~ao ampliada da superf\IeC {\'\i }cie, com \textit {splats} renderizados com metade do seu raio. Um \textit {splat} el\IeC {\'\i }ptico \'e definido por uma posi\c c\~ao $\mathbf {x}_i$ e dois eixos tangentes $\mathbf {t}_i^1$ e $\mathbf {t}_i^2$. }}{6}{figure.2.2}
+\contentsline {figure}{\numberline {2.3}{\ignorespaces }}{7}{figure.2.3}
+\contentsline {figure}{\numberline {2.4}{\ignorespaces }}{8}{figure.2.4}
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {3.1}{\ignorespaces Esquerda: \textit {Quadtree} equivalente a uma \textit {Octree} em $2D$. Direita: \textit {K-d Tree} em $2D$. Na \textit {K-d Tree} a subdivis\~ao \'e realizada alterando os dois eixos coordenados de acordo com o ponto m\'edio. Se o conjunto de pontos \'e par, a linha divis\'oria \'e a m\'edia dos pontos medianos. Caso contr\'ario o ponto mediano \'e alocado para o filho de baixo ou da esquerda. Na figura, a subdivis\~ao foi realizada at\'e que os n\'os folhas armaze $1$ ponto. A estrutura em \'arvore correspondente \'e ilustrada a direita.}}{11}{figure.3.1}
+\contentsline {figure}{\numberline {3.2}{\ignorespaces Kd-Tree}}{12}{figure.3.2}
+\contentsline {figure}{\numberline {3.3}{\ignorespaces C\IeC {\'\i }rculo de busca em uma \textit {K-d Tree} $2D$. C\'elulas em destaque tem seus pontos testados contra o c\IeC {\'\i }rculo de busca.}}{13}{figure.3.3}
+\contentsline {figure}{\numberline {3.4}{\ignorespaces \textbf {Esquerda}: Esfera envolvente do conjunto de pontos iniciais. \textbf {Centro}: divis\~ao \'e realizada ao longo da maior extens\~ao da caixa envolvente dos pontos. \textbf {Direta}: n\'os no pr\'oximo n\IeC {\'\i }vel.}}{14}{figure.3.4}
+\contentsline {figure}{\numberline {3.5}{\ignorespaces Figura esquem\'atica da hierarquia de esferas de \textit {QSplat} (Retirada de \cite {Wand2004})}}{16}{figure.3.5}
+\contentsline {figure}{\numberline {3.6}{\ignorespaces Estrutura de um N\'o}}{17}{figure.3.6}
+\contentsline {figure}{\numberline {3.7}{\ignorespaces Esquema do algoritmo de renderiza\c c\~ao. \emph {(a)} Tamanho da imagem projetada do n\'o \'e maior que um \textit {pixel}: continua o percurso nas sub\'arvores. \emph {(b)} Tamanho da imagem projetada do n\'o \'e menor que um \textit {pixel}: Renderiza o \textit {splat}.}}{18}{figure.3.7}
+\contentsline {figure}{\numberline {3.8}{\ignorespaces Como erro perpendicular, usa-se a dist\^ancia entre dois plano paralelo ao disco que engloba todos os filhos (Retirada de \cite {Dachsbacher2003}).}}{19}{figure.3.8}
+\contentsline {figure}{\numberline {3.9}{\ignorespaces Erro tangencial, mede o qu\~ao aproximado \'e o disco pai em rela\c c\~ao aos filhos no plano tangente (Retirada de \cite {Dachsbacher2003}) .}}{21}{figure.3.9}
+\contentsline {figure}{\numberline {3.10}{\ignorespaces Convers\~ao da hierarquia de pontos em um lista. \textbf {Direita:} Hierarquia de pontos dos n\'os $\mathbf {A-M}$ com seus respectivos $\mathbf {[r_{\qopname \relax m{min}},r_{\qopname \relax m{max}}]}$. \textbf {Esquerda:} Representa\c c\~ao em lista da mesma hierarquia de pontos ordenada por $\mathbf {r_\qopname \relax m{max}}$.(Retirada de \cite {Dachsbacher2003}) .}}{21}{figure.3.10}
+\contentsline {figure}{\numberline {3.11}{\ignorespaces \textbf {No topo:} Corte na \'arvore por diferentes pontos de vista. \textbf {Em baixo:} O mesmo corte da \'arvore de cima, mas agora na lista de pontos (Retirada de \cite {Dachsbacher2003}) .}}{22}{figure.3.11}
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\addvspace {10\p@ }

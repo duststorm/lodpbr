@@ -1,4 +1,7 @@
 \indexentry{[GPU] \textit{Graphic Processor Unit}|hyperpage}{1}
-\indexentry{[PBE] \textit{parti\c c\~ao bin\'aria espacial}|hyperpage}{6}
-\indexentry{[SPT] \textit{Sequential Point Trees}|hyperpage}{7}
-\indexentry{[CPU] \textit{Central Processor Unit}|hyperpage}{11}
+\indexentry{[EWA] Elliptical Weighted Average|hyperpage}{6}
+\indexentry{[EPE] Estrutura de Parti\c c\~ao Espacial|hyperpage}{10}
+\indexentry{[BVH] \textit{Bounding Volume Hierarchies}|hyperpage}{10}
+\indexentry{[\textit{BSP Tree}] \textit{Binary Space Partitioning Tree}|hyperpage}{12}
+\indexentry{[SPT] \textit{Sequential Point Trees}|hyperpage}{14}
+\indexentry{[CPU] \textit{Central Processor Unit}|hyperpage}{18}

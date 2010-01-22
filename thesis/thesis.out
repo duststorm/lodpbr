@@ -1,0 +1,38 @@
+\BOOKMARK [0][-]{chapter*.3}{Lista de Algor\355thmos}{}
+\BOOKMARK [0][-]{chapter*.4}{Lista de Figuras}{}
+\BOOKMARK [0][-]{chapter*.5}{Lista de Tabelas}{}
+\BOOKMARK [0][-]{chapter*.6}{Lista de Abreviaturas}{}
+\BOOKMARK [0][-]{chapter.1}{Introdu\347\343o}{}
+\BOOKMARK [1][-]{section.1.1}{Motiva\347\343o}{chapter.1}
+\BOOKMARK [1][-]{section.1.2}{Objetivo}{chapter.1}
+\BOOKMARK [1][-]{section.1.3}{Organiza\347\343o da Disserta\347\343o}{chapter.1}
+\BOOKMARK [0][-]{chapter.2}{Superf\355cies Baseada em Pontos}{}
+\BOOKMARK [1][-]{section.2.1}{Pontos como Primitiva Universal de Visualiza\347\343o}{chapter.2}
+\BOOKMARK [1][-]{section.2.2}{Pontos Puros}{chapter.2}
+\BOOKMARK [1][-]{section.2.3}{Pontos Orientados}{chapter.2}
+\BOOKMARK [1][-]{section.2.4}{Splat}{chapter.2}
+\BOOKMARK [2][-]{subsection.2.4.1}{Splat El\355ptico}{section.2.4}
+\BOOKMARK [2][-]{subsection.2.4.2}{Surface Splatting}{section.2.4}
+\BOOKMARK [0][-]{chapter.3}{Estruturas de Dados para Pontos}{}
+\BOOKMARK [1][-]{section.3.1}{Estrutura de Parti\347\343o do Espa\347o}{chapter.3}
+\BOOKMARK [2][-]{subsection.3.1.1}{Octrees}{section.3.1}
+\BOOKMARK [2][-]{subsection.3.1.2}{K-d Tree}{section.3.1}
+\BOOKMARK [2][-]{subsection.3.1.3}{Hierarquia de Volumes Envolventes}{section.3.1}
+\BOOKMARK [1][-]{section.3.2}{Multiresolu\347\343o e N\355vel de Detalhe}{chapter.3}
+\BOOKMARK [1][-]{section.3.3}{QSplat}{chapter.3}
+\BOOKMARK [2][-]{subsection.3.3.1}{QSplat Estrutura de Dados}{section.3.3}
+\BOOKMARK [2][-]{subsection.3.3.2}{Renderiza\347\343o}{section.3.3}
+\BOOKMARK [2][-]{subsection.3.3.3}{Discuss\343o}{section.3.3}
+\BOOKMARK [1][-]{section.3.4}{Sequential Point Trees}{chapter.3}
+\BOOKMARK [2][-]{subsection.3.4.1}{Hierarquia de Pontos}{section.3.4}
+\BOOKMARK [2][-]{subsection.3.4.2}{M\351tricas de Erro}{section.3.4}
+\BOOKMARK [2][-]{subsection.3.4.3}{Renderiza\347\343o Recursiva}{section.3.4}
+\BOOKMARK [2][-]{subsection.3.4.4}{Arranjamento Sequencial}{section.3.4}
+\BOOKMARK [2][-]{subsection.3.4.5}{Discuss\343o}{section.3.4}
+\BOOKMARK [0][-]{chapter.4}{Simplifica\347\343o de Superf\355cies de Pontos}{}
+\BOOKMARK [1][-]{section.4.1}{Pontos}{chapter.4}
+\BOOKMARK [1][-]{section.4.2}{Splat}{chapter.4}
+\BOOKMARK [0][-]{chapter.5}{Conclus\343o e Trabalhos Futuros}{}
+\BOOKMARK [0][-]{chapter*.15}{Refer\352ncias Bibliogr\341ficas}{}
+\BOOKMARK [0][-]{appendix.A}{An\341lise das Componentes Principais}{}
+\BOOKMARK [0][-]{appendix.B}{Visibilty Culling}{}
