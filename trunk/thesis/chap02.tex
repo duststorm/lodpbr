@@ -1,8 +1,8 @@
 \chapter{Superfícies Baseada em Pontos}
-Superfícies baseada em pontos ganharam recentemente a  atenção da
+Superfícies baseada em pontos ganharam recentemente a atenção da
 comunidade de computação gráfica \cite{PBGBook2007}. Geralmente são provenientes
-de $3D$ \textit{scanner}, na forma de uma nuvem de pontos $P$ que amostra a
-superfície do objeto. Operações de filtragem
+de $3D$ \textit{scanner} que amostram a 
+superfície do objeto gerando uma nuvem de pontos $P$. Operações de filtragem
 \cite{Alexa2004} são definidas para reduzir o ruído e preencher regiões com
 buracos. Nesta dissertação iremos assumir que o conjunto de pontos $P$ é livre
 de ruídos com amostras adequadamente distribuídas na superfície.
@@ -10,31 +10,25 @@ de ruídos com amostras adequadamente distribuídas na superfície.
 Neste capítulo, discutiremos as origens e definições de pontos como
 primitiva geométrica de renderização. Na seção \ref{sec:origens} será
 apresentado um breve histórico, enquanto que nas seções \ref{sec:puro} e
-\ref{sec:orientado} discutiremos a primitiva em si . E por último (\ref{sec:splat}) discutiremos 
-\textit{Splats}, que são uma extensão da representação 
-pura por pontos associando-se uma normal e um raio sendo representado
-geometricamente por um disco um disco orientado.
+\ref{sec:orientado} será apresentada a primitiva em si . Por último discutiremos 
+os \textit{Splats} na seção \ref{sec:splat}, que são uma extensão da representação 
+pura por pontos.
 \section{Pontos como Primitiva Universal de Visualização}
 \label{sec:origens}
 
-Visualização e modelagem de modelos representados como um coleção de pontos não é
-uma idéia recente. Na década de $70$, os primeiros vídeo games já
-representavam a explosão de naves espaciais usando pontos luminosos.
-De fato não foi a primeira vez foram utilizadas partículas para modelar
-superfícies. Pois existem situações onde a superfície não está definida tornando
-complicado o uso das representações clássica. Uma partícula pode ser vista como
-ponto em $3D$ mais alguns atributos, como tamanho , densidade, velocidade, 
-etc. Em $1979$ Charles Csuri e outros usaram partículas estáticas para renderizar fumaça \cite{Csuri79}. Em $1982$ Jim Blinn uso partículas para
-representar nuvens e poeira \cite{Blinn82}. No mesmo período, Reeves apresentou
+Visualização e modelagem de modelos representados como uma coleção de pontos não é
+uma ideia recente, na década de $70$ por exemplo, os primeiros vídeo games já
+representavam explosões de naves espaciais usando pontos luminosos.
+Pontos também foram uma representação popular para trabalhos de simulações baseadas em
+partículas, especialmente por existirem situações onde as representações clássicas encontram dificuldades em definir a superfície. Uma partícula pode ser vista como um
+ponto em $3D$ mais alguns atributos, como tamanho, densidade, velocidade, entre outros. Em $1979$ Charles Csuri et al.~\cite{Csuri79} usaram partículas estáticas para renderizar fumaça; em $1982$ Jim Blinn~\cite{Blinn82} usou partículas para
+representar nuvens e poeira; no mesmo período, Reeves~\cite{Reeves83} apresentou
 seu famoso sistemas de partículas, mais genérico que os
-anteriores, e que permitia simular fogo, explosões, etc \cite{Reeves83}.
-Em $1985$, Levoy e Whitteds foram os primeiros a considerar o
-uso de pontos como primitiva universal de modelagem e renderização
-\cite{LevoyW1985}. Eles propuseram usar superfícies de qualquer tipo de
-objeto como um conjunto de pontos $3D$ suficientemente denso, de modo a
-possibilitar a representação da superfície fechada durante a visualização. Na
-proposta, um ponto possui uma posição, uma normal, uma cor e um coeficiente de
-transparência\ldots
+anteriores, e que permitia simular fogo, explosões, etc..
+
+Em $1985$, Levoy e Whitted~\cite{LevoyW1985} foram os primeiros a considerar o
+uso de pontos como primitiva universal de modelagem e renderização. Eles propuseram representar superfícies genéricas como um conjunto de pontos $3D$ suficientemente denso, de modo a
+possibilitar a renderização da superfície contínua. De fato a proposta era um pouco ambiciosa no sentido de que colocava os pontos como uma meta-primitiva, ou seja, todas representações deveriam ser convertidas para pontos em um certo momento permitindo a unificação dos algoritmos de visualização. É utilizado um valor que estima a densidade local, permitindo que o ponto projetado possua uma área de cobertura maior do que a de um pixel, reconstruindo desta forma uma superfície contínua para visualização (Figura \ref{fig:levoyWhitted}). Ainda mais, na proposta, um ponto possui uma posição, uma normal, uma cor e um coeficiente de transparência. 
 %Superfícies baseada em pontos
 %recentetimente tem ganhado atenção da comunidade
 %de computação gráfica [sites]. Comumente são obtidos de $3D$
@@ -49,100 +43,93 @@ transparência\ldots
 %assim, um disco orientado.
 
 
-
 \begin{figure}[ht]
 \centering
 \includegraphics[width=15.0cm]{img/cap02/gaelwittenAndLevoy} 
 \caption{Renderização Baseada em Pontos proposta por Levoy e Whitted (
 Retirada de \cite{LevoyW1985}). $(a)$ Ponto como primitiva universal de
-renderização. $(b)$ \textit{z-buffer} com tolerância.
+renderização. $(b)$ \textit{z-buffer} com tolerância para reconstruir uma superfície contínua.
 \textbf{$(a)$} }
 \label{fig:levoyWhitted}
 \end{figure}
 
 \section{Pontos Puros}
 \label{sec:puro}
-Inicialmente consideramos uma nuvem de pontos onde não há nenhuma informação
-de topologia ou densidade da superfície. Na prática, essa representação
-dificilmente é usada diretamente, sem no mínimo uma informação de
-normal, não é viável reconstruir a superfície em tempo de visualização. Uma
-técnica de renderização de nuvem de pontos sem informação de normal foi apresentada por \cite{Xu2004}. A seguir, um método de computo da normal será
-descrito.
+Inicialmente consideramos uma nuvem de pontos onde não haja nenhuma informação
+de topologia ou densidade da superfície. Na prática, esta representação
+dificilmente é utilizada diretamente, pois sem no mínimo uma informação de
+normal não é viável reconstruir a superfície interativamente para efeitos de visualização. 
+Xu et al. apresentaram uma técnica de renderização sem informação de normal, porém tratavam apenas das silhuetas e não da superfície completa.
 \section{Pontos Orientados}
 \label{sec:orientado}
-Com uma nuvem de pontos suficientemente densa, é possível estimar a normal
-de um ponto analisando sua vizinhança local. Assume-se o conjuntos de pontos como
-uma coleção de posições $\mathbf{P} = {x_i}$ no $\Re^{3}$, $i \in
+Com uma nuvem de pontos suficientemente densa, é possível estimar as normais
+da superfície em cada ponto analisando sua vizinhança local. Assume-se o conjunto de pontos como uma coleção de posições $\mathbf{P} = {x_i}$ no $\Re^{3}$, $i \in
 \{1,\ldots,N\}$. Como não há informação de conectividade assumimos a utilização
-de algum método que nos forneça os $k$ vizinhos mais próximos do ponto,definidos
-como um subconjunto de $k$ pontos com menor distância Euclidiana ao ponto dado. 
+de algum método que nos forneça os $k$ vizinhos mais próximos do ponto, definidos
+como um subconjunto de $k$ pontos com menor distância Euclidiana ao ponto dado.
 No capítulo \ref{chapter:3} será apresentada uma estrutura eficiente para obter os 
 $k$ vizinhos de uma nuvem de pontos. Dados os $k$ vizinhos $N_p^{k} =
-\{x_1,\ldots,x_k\}$ de um ponto $x_i$, a normal no ponto pode ser obtida usando a análise da matriz de
-covariância, definida como:
+\{x_1,\ldots,x_k\}$ de um ponto $x_i$, a normal no ponto pode ser obtida pela análise da matriz de covariância, definida como:
 \begin{equation}
- \mathbf{C} =  \displaystyle\sum_{j = 1}^k{(x_j - x)(x_j - x)^T} 
+ \mathbf{C} =  \displaystyle\sum_{j = 1}^k{(x_j - x)(x_j - x)^T},
 \label{eq1}
 \end{equation}
 \noindent onde $x = \frac{1}{k}\displaystyle\sum_{j = 1}^k{x_j}$ é a média de
-todos os vizinhos. A matriz $3 \times 3$ é semi-definida positiva e simétrica, possuindo todos os seus
-auto-valores reais. O auto-vetor correspondente ao menor auto-valor é uma
-estimativa da direção da normal na superfície no ponto $x_i$.
+todos os vizinhos. Como a matriz $3 \times 3$ é semi-definida positiva e simétrica, ela possui todos os seus auto-valores reais. Desta forma pode-se tomar o auto-vetor correspondente ao menor auto-valor como uma estimativa da direção da normal na superfície no ponto $x_i$.
 
 Entretanto, a informação de normal geralmente não é suficiente para gerar uma
-visualização ``sem buracos'' da superfície, sendo necessário estimar o espaço
-entre pontos vizinhos, ou seja, uma valor local  de densidade. Esta informação
-pode ser gerada implicitamente em superfícies regulares, porém muitas vezes
-requer uma nuvem de pontos muito densa, já que áreas planares são consideradas
-com a mesma resolução do que áreas de alta curvatura. Desta maneira ,
-\textit{splats} (seção a seguir) constituem uma maneira simples de representar
-nuvens de pontos adaptativamente.
+visualização contínua da superfície, sendo necessário estimar o espaço
+entre pontos vizinhos, ou seja, uma valor local de densidade. Esta informação
+pode ser gerada implicitamente em superfícies amostradas de forma regular, 
+porém muitas vezes gera uma nuvem de pontos muito densa, já que áreas planares são consideradas
+com a mesma resolução do que áreas de alta curvatura. Desta maneira,
+\textit{splats} (seção a seguir) constituem uma maneira simples de representar adaptativamente
+nuvens de pontos.
 
 \begin{figure}[ht]
 \centering
 \includegraphics[width=15.0cm]{img/cap02/bartEllpse} 
-\caption{Um modelo $3D$ usando representação de \textit{splats}. \textbf{Centro}
-Visão ampliada da superfície, com \textit{splats} renderizados com
-metade do seu raio. Um \textit{splat} elíptico é definido por uma posição
-$\mathbf{x}_i$ e dois eixos tangentes $\mathbf{t}_i^1$ e $\mathbf{t}_i^2$. }
+\caption{\textbf{Esquerda:} um modelo $3D$ representado por \textit{splats}. \textbf{Centro:}
+visão ampliada da superfície com \textit{splats} renderizados com
+metade dos valores dos raios originais. \textbf{Direita:} um \textit{splat} elíptico é definido por uma posição $\mathbf{x}_i$ e dois eixos tangentes $\mathbf{t}_i^1$ e $\mathbf{t}_i^2$. }
 \label{fig:bartellipse}
 \end{figure}
+
 \section{\textit{Splat}}
+\label{sec:splat}
 Superfície baseada em \textit{splats} foi proposta primeiramente por Pfister et
-al.\cite{Pfister2000} que introduziram a idéia de ``\textit{surfel}'' e
-interpolação local dos pontos projetados. Este trabalho
-extendindo por Zwicker et al \cite{Zwicker2001} em 2001 introduzindo o conceito
-de \textit{splatting}, uma das técnicas de renderização de superfícies baseadas
-em pontos mais utilizadas. Neste trabalho foi proposto o uso do filtro EWA
+al.\cite{Pfister2000} que introduziram a ideia de ``\textit{surfel}'' e
+interpolação local dos pontos projetados. Este trabalho foi
+estendido por Zwicker et al \cite{Zwicker2001} em 2001, introduzindo o conceito
+de \textit{Surface Splatting}, uma das técnicas de renderização de superfícies baseadas
+em pontos mais populares até hoje. Neste trabalho foi proposto o uso do filtro EWA
 (Elliptical Weighted Average\abbrev{EWA}{Elliptical Weighted Average}) para
 reconstruir a superfície em espaço de imagem utilizando os \textit{splats}
 projetados.
 
-Um \textit{splat} pode ser definido como circular ou elíptico como discutido em \cite{Kobbelt2004}. 
-Nessa dissertação usaremos \textit{splats} elípticos, sendo assim, futuras
-referencias, serão sempre assumidas como à aqueles elípticos.
-\label{sec:splat}
+Um \textit{splat} pode ser definido como circular ou elíptico como discutido em \cite{Kobbelt2004}. Nesta dissertação usaremos \textit{splats} elípticos, sendo assim, a partir deste momento entende-se como uma referência a \textit{splat} no texto como àquele elíptico.
+
 \subsection{\textit{Splat} Elíptico}
 \textit{Splats} são definidos como pequenas elipses onde o centro é definido
-pela posição do ponto e sua normal como a normal da superfície. Logo,
+pela posição do ponto e sua normal como a normal da superfície no ponto. Desta forma,
 cada \textit{splat} pode ser definido unicamente por uma posição $3D$
 $\mathbf{x}_i$ e dois vetores $\mathbf{t}_i^1$ e $\mathbf{t}_i^2$ ortogonais e
 tangentes à superfície (veja Figura \ref{fig:bartellipse}), onde as extensões
 dos vetores definem a área da elipse. O tamanho da elipse é escolhido a fim de
-evitar buracos na superfície.
+que haja uma cobertura sem buracos da superfície.
 
-Existem vários algoritmos para converter superfícies de pontos pura em
+Existem alguns algoritmos para converter superfícies de pontos pura em
 representações baseada em \textit{splats} \cite{WuK04,ProgressiveSplat2005}.
-A partir dos vetores a normal por ser facilmente computada  usando os eixos
+A partir dos vetores a normal por ser facilmente computada usando os eixos
 principais:
 \begin{equation}
 \mathbf{n}_i = \frac{\mathbf{t}_i^1 \times \mathbf{t}_i^2}
 					{\| \mathbf{t}_i^1\times \mathbf{t}_i^2 \|}.
 \label{eq1}
 \end{equation}
-Um ponto $\mathbf{x}$, que está no interior do plano expandido, definido por
-$\mathbf{x}_i$, $\mathbf{t}_i^1$ e $\mathbf{t}_i^2$ , também estará no interior
-do \textit{splat} se a condição abaixo for satisfeita:
+Um ponto $\mathbf{x}$ sobre o plano definido por
+$\mathbf{x}_i$, $\mathbf{t}_i^1$ e $\mathbf{t}_i^2$, também estará no interior
+do \textit{splat} se a seguinte condição for satisfeita:
 
 \begin{equation}
  t_1^2 + t_2^2 = \frac{({ \mathbf{t}_i^1}^T (\mathbf{x} - \mathbf{x}_i))^2  }
@@ -179,10 +166,10 @@ normal $\mathbf{n}_i$ é definido como:
 \label{eq1}
 \end{equation}
 
-Como discutido por Kobbelt e Botsch em \cite{Kobbelt2004}, representar
+Como exposto por Kobbelt e Botsch~\cite{Kobbelt2004}, representar
 uma superfície como um conjunto de \textit{splats} provê uma aproximação da
 mesma ordem das malhas poligonais. Ainda mais, como \textit{splats} não
-possuem informação de conectividade,herdam a mesma flexibilidade das primitivas
+possuem informação de conectividade, herdam a flexibilidade das primitivas
 de pontos.
 
 \label{splat:elliptico}
@@ -191,55 +178,32 @@ de pontos.
 \begin{figure}[ht]
 \centering
 \includegraphics[width=15.0cm]{img/cap02/phongsplat} 
-\caption{}
+\caption{\textbf{Esquerda:} splats renderizados com metade dos valores dos raios para efeitos de ilustração. \textbf{Centro-esquerda:} splats renderizados sem interpolação. \textbf{Centro-direita:} interpolação das cores; \textbf{direita:} interpolação das normais.}
 \label{fig:manequim}
 \end{figure}
 
-A ideia de associar \textit{splats} a pontos foi originada dos primeiros
-algoritmos de renderização baseados em pontos \cite{Pfister2000,Zwicker2001}. O
-objetivo era criar um algoritmo de renderização de  superfícies 
-similar à rasterização de malhas poligonais. Entretanto, projetar um ponto em um único \textit{pixel} no
+A ideia de associar \textit{splats} a pontos foi originada nos primeiros
+algoritmos de renderização baseada em pontos~\cite{Pfister2000,Zwicker2001}. O
+objetivo era criar um algoritmo de renderização de superfícies 
+similar à rasterização de malhas poligonais. Entretanto, ao menos que a amostragem seja extremamente densa, a projeção simples de pontos no
 espaço de imagem resultará em buracos na imagem final (ver
-\ref{fig:manequim} esquerda). Para evitar este problema, \textit{splats} foram 
-associados aos pontos e a renderização é realizada através rasterização das
-elipses, onde a dimensão dos \textit{splats} é calculada de forma a evitar
-buracos na imagem. (ver Figura \ref{fig:ssplat}).
-
-Um algoritmo básico para renderização baseada em pontos é rasterizar
-elipses que correspondentes aos pontos do modelo. Entretanto, esse procedimento 
-resulta em imagens de baixa qualidade pois não gera descontinuidade entre
-elipses (ver figura \ref{fig:manequim} centro). A fim de obter um imagem de alta
-qualidade usando este algoritmo ingênuo, seria necessário um quantidade muito
-grande de amostras, para torna a descontinuidade imperceptível.
+\ref{fig:ssplat} esquerda). Para evitar este problema, os \textit{splats} são projetados em e a renderização é realizada através da rasterização das elipses (ver Figura \ref{fig:ssplat}).
+Entretanto, esse procedimento resulta em imagens de baixa qualidade pois gera descontinuidades entre as elipses (ver figura \ref{fig:manequim} centro-esquerda). A fim de obter um imagem de alta qualidade usando este algoritmo ingênuo, seria necessário um quantidade muito
+grande de amostras, de modo que a descontinuidade torna-se imperceptível.
  
 \begin{figure}[ht]
 \centering
 \includegraphics[width=15.0cm]{img/cap02/Surfacesplats} 
-\caption{}
+\caption{\textbf{Esquerda:} projeção de pontos com cobertura de um pixel. \textbf{Direita:} splats com área de cobertura são interpolados para gerar uma superfície contínua em espaço de imagem.}
 \label{fig:ssplat}
 \end{figure}
 
 Uma maneira de melhorar este algoritmo é tratar as regiões de
-intersecção das elipses (veja Figura
-\ref{fig:manequim} à direita). Implementar esse procedimento requer
-acesso aos nos valores de profundidade armazenados(\textit{z-buffer}). 
-Na GPU, estes valores de profundidade não são acessíveis, requerindo um
-algoritmo mais elaborados \cite{}. 
+interseção entre as elipses (Figura
+\ref{fig:manequim} centro-direita e direita). Porém, implementar este procedimento diretamente no \textit{pipeline} gráfico requer acesso aos valores de profundidade armazenados(\textit{z-buffer}) para testar se duas elipses que se intersetam em espaço de imagem pertencem de fato à mesma superfície do objeto. Infelizmente, na GPU, estes valores de profundidade não são acessíveis em tempo de rasterização, requerendo estratégias mais elaboradas que tratem o problema em duas passadas: na primeira as elipses são projetadas e rasterizadas normalmente preenchendo o buffer de profundidade; na segunda as elipses são interpoladas utilizando o z-buffer da primeria passada como referência.
 
-% Algoritmo de duas passada .. .. 
+Para realizar a interpolação é feita uma média ponderada de todas as elipses que cobrem um dado pixel. Geralmente são utilizados filtros Gaussianos para atribuir um peso a cada elipse dependendo da distância ao seu centro de projeção.
 
-Essa interpolação pode ser realizada de duas
-formas. Uma delas é renderizar cada elipse e interpolar as cores resultantes ( que é análogo a interpolação
-\textit{Gouraud}), e a outra é projetar o centro e a normal e em outra
-passo calcular as cores de cada um dos \textit{pixels} em espaço de imagem
-usando interpolação de posição e normal ( que análogo a interpolação
-\texit{Phong}). Este último produz imagens melhores sendo o método mais usado
-\cite{phong}. Um peso é dado para cada \textit{pixel} dependendo do seu
-parâmetro $\mathbf{t}_1$ e $\mathbf{t}_2$ na elipse: uma função muito
-usada é o filtro Guassiano , dado por $e^{-(t_1^2+t_2^2)/\sigma^2}$, com
-$\sigma$ um parâmetro escalar. A interpolação é obtida computando a média
-ponderada pelos pesos dos atributos por \textit{pixel}.
-\ldots
-%Finalmente, a fim de evitar \textit{aliasing}, Zwicker et al propuseram uso do
-%filtro \textit{EWA} para superfícies baseada em \textit{splats}. Que é um
-%filtro Guassiano de reconstrução no espaço do objeto (citado anteriormente).
+Ainda mais, a interpolação pode ser realizada de duas
+formas distintas: interpolando as cores dos splats ou as normais. 
+Na primeira o computo de iluminação é realizado uma vez por elipse e as cores interpoladas por pixel (análogo a tonalização \textit{Gouraud}), enquanto na segunda as normais são interpoladas pelas médias ponderadas e o cálculo de iluminação realizado por pixel da imagem, uma técnica conhecida como \textit{deffered shading}, ou \textit{per-pixel shading}.

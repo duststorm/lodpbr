@@ -1,21 +1,6 @@
 \begin{thebibliography}{10}
 \newcommand{\enquote}[1]{``#1''}
 
-\bibitem{LevoyW1985}
-\MakeUppercase{ Levoy, M., Whitted, T.}, {\em The Use of Points as a Display
-  Primitive\/}, Tech. Rep. 85-022, Department of Computer Science,University of
-  North Carolina at Chapel Hill, 1985.
-
-\bibitem{Wand2004}
-\MakeUppercase{ Wand, M.}, {\em Point-Based Multi-Resolution Rendering\/},
-  Ph.D. Thesis, Department of computer science and cognitive science,
-  University of T{\"u}bingen, 2004.
-
-\bibitem{Dachsbacher2003}
-\MakeUppercase{ Dachsbacher, C., Vogelgsang, C., Stamminger, M.},
-  \enquote{Sequential point trees}, {\em ACM Trans. Graph.\/}, v.~22, n.~3,
-  pp.~657--662, 2003.
-
 \bibitem{Levoy2000}
 \MakeUppercase{ Levoy, M., Pulli, K., Curless, S., \MakeLowercase{et~al.}},
   \enquote{The digital Michelangelo project: 3D scanning of large statues}.
@@ -78,6 +63,11 @@
 \MakeUppercase{ Reeves, W.~T.}, \enquote{Particle Systems---a Technique for
   Modeling a Class of Fuzzy Objects}, {\em ACM Trans. Graph.\/}, v.~2, n.~2,
   pp.~91--108, 1983.
+
+\bibitem{LevoyW1985}
+\MakeUppercase{ Levoy, M., Whitted, T.}, {\em The Use of Points as a Display
+  Primitive\/}, Tech. Rep. 85-022, Department of Computer Science,University of
+  North Carolina at Chapel Hill, 1985.
 
 \bibitem{Xu2004}
 \MakeUppercase{ Xu, H., Nguyen, M.~X., Yuan, X., \MakeLowercase{et~al.}},
@@ -161,6 +151,16 @@
   Balls}.
 \newblock In: {\em ESA '99: Proceedings of the 7th Annual European Symposium on
   Algorithms\/}, pp. 325--338, London, UK, Springer-Verlag, 1999.
+
+\bibitem{Dachsbacher2003}
+\MakeUppercase{ Dachsbacher, C., Vogelgsang, C., Stamminger, M.},
+  \enquote{Sequential point trees}, {\em ACM Trans. Graph.\/}, v.~22, n.~3,
+  pp.~657--662, 2003.
+
+\bibitem{Wand2004}
+\MakeUppercase{ Wand, M.}, {\em Point-Based Multi-Resolution Rendering\/},
+  Ph.D. Thesis, Department of computer science and cognitive science,
+  University of T{\"u}bingen, 2004.
 
 \bibitem{Rusinkiewicz2001}
 \MakeUppercase{ Rusinkiewicz, S., Levoy, M.}, \enquote{Streaming QSplat: a
