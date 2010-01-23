@@ -205,5 +205,5 @@ interseção entre as elipses (Figura
 Para realizar a interpolação é feita uma média ponderada de todas as elipses que cobrem um dado pixel. Geralmente são utilizados filtros Gaussianos para atribuir um peso a cada elipse dependendo da distância ao seu centro de projeção.
 
 Ainda mais, a interpolação pode ser realizada de duas
-formas distintas: interpolando as cores dos splats ou as normais. 
+formas distintas: interpolando as cores dos splats (Figura \ref{fig:manequim} centro-direita) ou as normais (Figura \ref{fig:manequim} direita). 
 Na primeira o computo de iluminação é realizado uma vez por elipse e as cores interpoladas por pixel (análogo a tonalização \textit{Gouraud}), enquanto na segunda as normais são interpoladas pelas médias ponderadas e o cálculo de iluminação realizado por pixel da imagem, uma técnica conhecida como \textit{deffered shading}, ou \textit{per-pixel shading}.
