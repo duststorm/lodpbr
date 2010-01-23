@@ -250,9 +250,11 @@ public:
         	/// @detail
         	SurfelList  lClose;
 
-        	SurfelPtrList  lOpen;
-        	SurfelPtrVector                 lNeighbors;
-        	SurfelPtr                  lSurfel    = 0;
+        	SurfelPtrList  	lOpen;
+        	SurfelPtrVector lNeighbors;
+        	SurfelPtr       lSurfel    = 0;
+
+        	Real mHeightMax	= 0.0;
 
         	int cont = 0;
 
@@ -278,12 +280,20 @@ public:
         		lSurfel->SetExpansionMarked     (1);
         		lSurfel->SetClusterID           (cont);
 
-        		lNeighbors  = KDTree.KNearestNeighbors(lSurfel ,200 , KNearestSearchComps);
+        		lNeighbors  = KDTree.KNearestNeighbors(lSurfel ,30 , KNearestSearchComps);
+
+        		mHeightMax = std::fabs(lSurfel->Normal()*( lNeighbors.back()->Center() - lSurfel->Center() ));
+
+        		mHeightMax *= 2.0;
 
         		for(SurfelPtrVectorReverseIterator it = lNeighbors.rbegin(); it != lNeighbors.rend(); ++it)
         		{
 
-        			if( lClose.size() >= 100)
+        			Real Dist = std::fabs(lSurfel->Normal()*( (*it)->Center() - lSurfel->Center() )) ;
+
+        			//std::cout << "Height " << mHeightMax << "Dist " << Dist << std::endl;
+
+        			if( Dist >=  mHeightMax)
         			{
         				if ((*it)->ExpansionMarked()== 0)
         					lOpen.push_back((*it));

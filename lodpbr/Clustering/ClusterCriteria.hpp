@@ -55,15 +55,15 @@ public:
 			Real lim = 0.3;
 			Real alfa = 3;
 			Real dist               = alfa*surfel->Center().EuclideanDistance(item->Center());
-			Real Normaldist = ( (1 - (surfel->Normal() * item->Normal()) )*surfel->Cost()) * (1/lim) ;
-			Real cost = (dist+Normaldist+surfel->Cost());
-			//std::cout << "cost " << Normaldist << std::endl;
-			if (cost < lim)
+			Real Normaldist = ( (1 - (surfel->Normal() * item->Normal()) ));
+			Real Similarity = (dist+Normaldist+surfel->Similarity());
+			std::cout << "cost " << Similarity << "Normaldist " << Normaldist <<  "dist " << dist<< std::endl;
+			if (Similarity < lim)
 			{
 
-				if( item->Cost() > cost )
+				if( item->Similarity() > Similarity )
 				{
-					item->SetCost(cost);
+					item->SetSimilarity(Similarity);
 					return 1;
 				}else
 				{
