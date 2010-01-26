@@ -15,7 +15,6 @@ A level-1 auxiliary file: appenB.aux
 Database file #1: thesis.bib
 A bad cross reference---entry "PhongSplat2004"
 refers to entry "SPBG'04: Proceeding of the Symposium on Point-Based Graphics 2004", which doesn't exist
-Warning--I didn't find a database entry for "phong"
 Warning--empty pages in Correa02towardspoint-based
 Warning--empty pages in marroquim07
 Warning--empty journal in Alexa2004
@@ -24,7 +23,7 @@ Warning--empty booktitle in PhongSplat2004
 Warning--empty year in PhongSplat2004
 You've used 32 entries,
             2438 wiz_defined-function locations,
-            830 strings with 11179 characters,
+            829 strings with 11174 characters,
 and the built_in function-call counts, 8772 in all, are:
 = -- 750
 > -- 231
