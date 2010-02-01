@@ -1,13 +1,14 @@
 \chapter{Estruturas de Dados para Pontos}
 \label{chapter:3}
 \section{Estrutura de Partição do Espaço}
-Estruturas de Partição Espacial (EPE\abbrev{EPE}{Estrutura de Partição
-Espacial}) são comuns em computação gráfica, em particular quando se deseja
-processar modelos grandes. Diversos métodos de simplificação,
+Estruturas de Partição Espacial são comuns em computação gráfica, em particular 
+quando se deseja processar modelos grandes. Diversos métodos de simplificação,
 reconstrução, compressão, visibilidade entre outros, são baseados neste tipo de estrutura. O
 objetivo é criar uma indexação do espaço, ou seja, dividi-lo em células e prover
 uma relação entre estas e o espaço ocupado pelo objeto \cite{Samet2005}.
-No caso específico de nuvens de pontos, exitem algumas classes de algoritmos disponíveis: baseados em representações hierárquicas, não hierárquicas ou em cluster de pontos. Nesta seção as estruturas mais comuns serão introduzidas: \textit{Octree} (seção
+No caso específico de nuvens de pontos, exitem algumas classes de algoritmos disponíveis: 
+baseados em representações hierárquicas, não hierárquicas ou em cluster de pontos. Nesta seção
+ as estruturas mais comuns serão introduzidas: \textit{Octree} (seção
 \ref{section:Octree}), \textit{K-d Tree} (seção \ref{section:KDtree}) e
 Hierarquia de Volumes Envolventes (BVH - \textit{Bounding Volume Hierarchies})
 \abbrev{BVH}{\textit{Bounding Volume Hierarchies}}
@@ -49,15 +50,15 @@ $P$ gerando um conjunto de clusters $C$ definido pelos nós filhos. Um modelo
 simplificado $P'$ é obtido substituindo cada cluster $C_i$ por um ponto
 representativo, tipicamente com coordenadas definidas por:
  \begin{equation}
-      \bar{p_i}  = \frac{1}{|C_i|}\sum{p_j.}
+      \bar{\mathbf{p}_i}  = \frac{1}{|C_i|}\sum{\mathbf{p}_j.}
  \end{equation}
 No entanto, quando as células estão próximas à superfície, e esta não está
-alinhada com os eixos da \textit{Octree}, os cluster tendem 
+alinhada com os eixos da \textit{octree}, os cluster tendem 
 a ficar desbalanceados. Para aliviar essa deficiência uma versão modificada de
-\textit{Octree} foi proposta em \cite{BHGS06} com o nome de \textit{Volume Surface Tree}.
+\textit{octree} foi proposta em \cite{BHGS06} com o nome de \textit{Volume Surface Tree}.
 
 Uma outra aplicação é a determinação de vizinhança de um dado
-ponto do modelo. Uma \textit{Octree} possui $26$ direções possíveis de
+ponto do modelo. Uma \textit{octree} possui $26$ direções possíveis de
 vizinhança: $6$ ao longo das faces, $12$ ao longo as arestas e $8$ nas direções
 dos vértices. Como o computo dos vizinho não se limita apenas a um nó, a
 determinação da vizinhança pode ser custosa. Uma estrutura mais adquada 
@@ -97,7 +98,7 @@ alcançada (Figura \ref{fig:Kdtree}).
 
 \begin{figure}[ht]
 \centering
-\includegraphics[width=10.0cm]{img/cap02/Kd-tree} 
+\includegraphics[width=10.0cm]{img/cap03/Kd-tree} 
 \caption{Esquema de subdivisão de uma kd-tree alternando os hiperplanos. Para cada nó filho o a mediana dos subconjuntos é encontrada de acordo com o hiperplano de corte.}
 \label{fig:Kdtree}
 \end{figure}
@@ -114,9 +115,11 @@ ver \cite{Samet2005}.
 
 \begin{figure}[ht]
 \centering
-\includegraphics[width=15.0cm]{img/cap03/Kdsphere}
-\caption{ Círculo de busca em uma \textit{kd-tree} $2D$. Células em destaque
-tem seus pontos testados contra o círculo de busca.}
+\includegraphics[width=15.0cm]{img/cap03/KDOctreeOctreeBusca}
+\caption{ Círculo de busca em uma \textit{quadtree} (esquerda) e
+\textit{kd-tree} (direita) em $2D$. Células em destaque tem seus pontos testados
+contra o círculo de busca. Note que na \textit{kd-tree} a busca é mais
+eficiente.}
 \label{fig:kdSphere}
 \end{figure}
 
@@ -137,7 +140,7 @@ agrupe os elementos, sem estar necessariamente baseada em seleção espacial. O
 elementos da sua subárvore. Geralmente uma estrutura de partição espacial
 pode ser estendida para uma BVH, gerando o volume envolvente atribuído a cada nó.
 As BVHs podem ser construidas de maneira \textit{top down}, ou seja, de cima
-para baixo, similiar a uma \textit{Octree} ou \textit{kd-tree}.
+para baixo, similiar a uma \textit{octree} ou \textit{kd-tree}.
 
 No exemplo da Figura \ref{fig:BVH}, a construção de uma BVH de esferas
 envolventes usada no \textit{QSplat} é ilustrada. Dado todos os pontos do
@@ -195,7 +198,7 @@ desta hierarquia.
 
 \begin{figure}[ht]
 \centering
-\includegraphics[width=8.0cm]{img/cap02/schematicQSplat} 
+\includegraphics[width=8.0cm]{img/cap03/schematicQSplat} 
 \caption{Figura esquemática da hierarquia de esferas de
 \textit{QSplat} (Retirada de \cite{Wand2004})}
 \label{fig:schematicQSplat}
@@ -203,7 +206,7 @@ desta hierarquia.
 
 \begin{figure}[ht]
 \centering
-\includegraphics[width=12.0cm]{img/cap02/NodeQuantization} 
+\includegraphics[width=12.0cm]{img/cap03/NodeQuantization} 
 \caption{Estrutura de um Nó}
 \label{fig:NodeQSplat}
 \end{figure}
@@ -270,12 +273,12 @@ um cálculo de iluminação baseada na normal e cor da mesma.
   \centering \mbox{} \hfill
   \begin{minipage}[b]{0.45\linewidth}
  \centering
-  \includegraphics[width=1.25\linewidth]{img/cap02/ovoRender}\\[0cm](a)
+  \includegraphics[width=1.25\linewidth]{img/cap03/ovoRender}\\[0cm](a)
   \end{minipage}
   \hfill
   \begin{minipage}[b]{0.45\linewidth}
     \centering
-    \includegraphics[width=1.25\linewidth]{img/cap02/CoelhoRender}\\[0cm](b)
+    \includegraphics[width=1.25\linewidth]{img/cap03/CoelhoRender}\\[0cm](b)
   \end{minipage}
   \hfill \mbox{}
   \caption{\label{fig:percorrimento}Esquema do algoritmo de renderização.  
@@ -314,7 +317,7 @@ mais detalhes.
 
 \subsection{Hierarquia de Pontos}
 Inicialmente o SPT utiliza uma hierarquia de pontos representada por uma
-\textit{Octree} (ver \ref{section:Octree}), onde cada nó da hierarquia
+\textit{octree} (ver \ref{section:Octree}), onde cada nó da hierarquia
 representa parte do objeto. Cada nó armazena um centro $\mathbf{c}$ e uma
 estimativa da normal $\mathbf{n}$. Um nó armazena também um diâmetro $\mathbf{d}$ da esfera
 envolvente centrada em $\mathbf{c}$. Um nó interno representa
@@ -340,12 +343,12 @@ de variância e pode ser calculado como:
   \begin{minipage}[b]{0.40\linewidth}
  \centering
  
-  \includegraphics[width=1.0\linewidth]{img/cap02/PosterSquential}
+  \includegraphics[width=1.0\linewidth]{img/cap03/PosterSquential}
   \end{minipage}
   \hfill
   \begin{minipage}[b]{0.40\linewidth}
     \centering
-    \includegraphics[width=1.0\linewidth]{img/cap02/di}
+    \includegraphics[width=1.0\linewidth]{img/cap03/di}
   \end{minipage}
   \hfill \mbox{}
   \caption{\label{fig:perpendicular}Como erro perpendicular, usa-se a
@@ -388,7 +391,7 @@ geométrico $\mathbf{e}_g$, onde o erro no espaço de imagem
 $\mathbf{\tilde{e}}_g$ depende apenas de $r$, e não mais do ângulo do visão: 
  \begin{equation}
 \mathbf{\tilde{e}}_g =
- {}^{\mathbf{e}_g}/{}_{\mathbf{r}},
+ \frac{\mathbf{e}_g}{\mathbf{r}},
 \end{equation}
 
  onde 
@@ -401,7 +404,7 @@ $\mathbf{\tilde{e}}_g$ depende apenas de $r$, e não mais do ângulo do visão:
 
 \begin{figure}[ht]
 \centering
-\includegraphics[width=15.0cm]{img/cap02/tangencial} 
+\includegraphics[width=15.0cm]{img/cap03/tangencial} 
 \caption{Erro tangencial, mede a cobertura do disco pai em relação aos
 filhos no plano tangente (Retirada de \cite{Dachsbacher2003}) .}
 \label{fig:Tangencial}

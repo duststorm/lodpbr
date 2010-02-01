@@ -8,58 +8,56 @@ A level-1 auxiliary file: chap01.aux
 A level-1 auxiliary file: chap02.aux
 A level-1 auxiliary file: chap03.aux
 A level-1 auxiliary file: chap04.aux
+A level-1 auxiliary file: chap05.aux
 A level-1 auxiliary file: chap06.aux
 The style file: coppe-unsrt.bst
 A level-1 auxiliary file: appenA.aux
 A level-1 auxiliary file: appenB.aux
 Database file #1: thesis.bib
-A bad cross reference---entry "PhongSplat2004"
-refers to entry "SPBG'04: Proceeding of the Symposium on Point-Based Graphics 2004", which doesn't exist
+Warning--I didn't find a database entry for "Tuk"
 Warning--empty pages in Correa02towardspoint-based
 Warning--empty pages in marroquim07
 Warning--empty journal in Alexa2004
 Warning--empty pages in EfficenteLOD2003
-Warning--empty booktitle in PhongSplat2004
-Warning--empty year in PhongSplat2004
-You've used 32 entries,
+You've used 45 entries,
             2438 wiz_defined-function locations,
-            829 strings with 11174 characters,
-and the built_in function-call counts, 8772 in all, are:
-= -- 750
-> -- 231
-< -- 24
-+ -- 112
-- -- 80
-* -- 802
-:= -- 1158
-add.period$ -- 78
-call.type$ -- 32
+            918 strings with 13579 characters,
+and the built_in function-call counts, 12448 in all, are:
+= -- 1084
+> -- 315
+< -- 35
++ -- 153
+- -- 108
+* -- 1119
+:= -- 1632
+add.period$ -- 108
+call.type$ -- 45
 change.case$ -- 0
 chr.to.int$ -- 0
-cite$ -- 38
-duplicate$ -- 508
-empty$ -- 961
-format.name$ -- 80
-if$ -- 1980
+cite$ -- 49
+duplicate$ -- 729
+empty$ -- 1353
+format.name$ -- 108
+if$ -- 2828
 int.to.chr$ -- 0
-int.to.str$ -- 32
-missing$ -- 32
-newline$ -- 118
-num.names$ -- 32
-pop$ -- 139
+int.to.str$ -- 45
+missing$ -- 42
+newline$ -- 164
+num.names$ -- 45
+pop$ -- 185
 preamble$ -- 1
 purify$ -- 0
 quote$ -- 0
-skip$ -- 223
+skip$ -- 338
 stack$ -- 0
-substring$ -- 680
-swap$ -- 217
-text.length$ -- 24
+substring$ -- 980
+swap$ -- 322
+text.length$ -- 35
 text.prefix$ -- 0
 top$ -- 0
 type$ -- 0
-warning$ -- 6
-while$ -- 88
-width$ -- 34
-write$ -- 312
-(There was 1 error message)
+warning$ -- 4
+while$ -- 127
+width$ -- 47
+write$ -- 447
+(There were 5 warnings)

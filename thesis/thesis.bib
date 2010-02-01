@@ -1,4 +1,5 @@
 % Stanford Digital Michelangelo %
+
 @InProceedings{Rusinkiewicz2000,
  author = {Szymon Rusinkiewicz and Marc Levoy},
  title = {QSplat: a multiresolution point rendering system for large meshes},
@@ -37,7 +38,7 @@
  }
  
  
-% Sequential Point Tress %
+%Sequential Point Tress %
 @Article{Dachsbacher2003,
  author = {Carsten Dachsbacher and Christian Vogelgsang and Marc Stamminger},
  title = {Sequential point trees},
@@ -52,16 +53,7 @@
  address = {New York, NY, USA},
  }
 
- @PHDTHESIS{Wand2004,
-   AUTHOR = {Michael Wand},
-   TITLE = {Point-Based Multi-Resolution Rendering},
-   SCHOOL = {Department of computer science and cognitive science, University of T{\"u}bingen},
-   INSTITUTION = {Wilhelm Schickard Institute for Computer Science, Graphical-Interactive Systems (WSI/GRIS), University of T{\"u}bingen},
-   YEAR = {2004},
-   KEYWORDS = {GRIS},
-}
-
-% Books%
+ % Books%
 
 @book{Samet2005,
  author = {Samet, Hanan},
@@ -83,8 +75,112 @@
  }
  
  
-% 
+% Simplificação
 
+@article{Song2009,
+  title = {A progressive point cloud simplification algorithm with preserved sharp edge data},
+  author = {Hao Song and Hsi-Yung Feng},
+  journal = {The International Journal of Advanced Manufacturing Technology},
+  publisher = {Springer London},
+  issn = {0268-3768 (Print) 1433-3015 (Online)},
+  url = {http://www.springerlink.com/content/2r086737x5858818/},
+  abstract = {Due to recent advances in high-speed 3D laser-scanning technologies, the set of dense points collected from the external boundary surface of a physical object, often referred to as the point cloud data, is emerging as a new representation format of 3D shapes. A typical point cloud data set contains millions of coordinate data points, and this leads to significant computational challenges for the subsequent data processing tasks in practical applications. This paper presents a new point cloud simplification algorithm to reduce the number of data points scanned from a mechanical part, in which the boundary surfaces often contain sharp edges. Because of the distinct feature represented by data points located on or near the sharp edges (edge points), these points should always be retained by the simplification process. The proposed algorithm thus identifies these edge points first and then progressively removes the least important data point until the specified data reduction ratio is reached. The quantification of a points importance is based on points in its neighborhood and corresponds to the points contribution to the representation of local surface geometry. The effectiveness of the proposed algorithm is demonstrated through the simplification results of several practical point cloud data sets.},
+  number = {5-6},
+  pages = {583--592},
+  volume = {45},
+  doi = {10.1007/s00170-009-1980-4},
+  year = {2009},
+  keywords = {Point cloud data - 3D laser scanning - Data reduction - Edge points - Local geometry representation},
+  month = {November},
+  subject_collection = {Engineering},
+}
+
+
+@article{Kalaiah2003,
+ author = {Kalaiah, Aravind and Varshney, Amitabh},
+ title = {Modeling and Rendering of Points with Local Geometry},
+ journal = {IEEE Transactions on Visualization and Computer Graphics},
+ volume = {9},
+ number = {1},
+ year = {2003},
+ issn = {1077-2626},
+ pages = {30--42},
+ doi = {http://dx.doi.org/10.1109/TVCG.2003.1175095},
+ publisher = {IEEE Educational Activities Department},
+ address = {Piscataway, NJ, USA},
+ }
+
+
+@inproceedings{Alexa2001,
+ author = {Alexa, Marc and Behr, Johannes and Cohen-Or, Daniel and Fleishman, Shachar and Levin, David and Silva, Claudio T.},
+ title = {Point set surfaces},
+ booktitle = {VIS '01: Proceedings of the conference on Visualization '01},
+ year = {2001},
+ isbn = {0-7803-7200-X},
+ pages = {21--28},
+ location = {San Diego, California},
+ publisher = {IEEE Computer Society},
+ address = {Washington, DC, USA},
+ }
+
+
+@inproceedings{Garland1997,
+ author = {Garland, Michael and Heckbert, Paul S.},
+ title = {Surface simplification using quadric error metrics},
+ booktitle = {SIGGRAPH '97: Proceedings of the 24th annual conference on Computer graphics and interactive techniques},
+ year = {1997},
+ isbn = {0-89791-896-7},
+ pages = {209--216},
+ doi = {http://doi.acm.org/10.1145/258734.258849},
+ publisher = {ACM Press/Addison-Wesley Publishing Co.},
+ address = {New York, NY, USA},
+ }
+
+@inproceedings{Hoppe1996,
+ author = {Hoppe, Hugues},
+ title = {Progressive meshes},
+ booktitle = {SIGGRAPH '96: Proceedings of the 23rd annual conference on Computer graphics and interactive techniques},
+ year = {1996},
+ isbn = {0-89791-746-4},
+ pages = {99--108},
+ doi = {http://doi.acm.org/10.1145/237170.237216},
+ publisher = {ACM},
+ address = {New York, NY, USA},
+ }
+
+
+@INPROCEEDINGS{Moenning03,
+    author = {Carsten Moenning and Neil A. Dodgson},
+    title = {A New Point Cloud Simplification Algorithm},
+    booktitle = {In Proceedings 3rd IASTED Conference on Visualization, Imaging and Image Processing},
+    year = {2003},
+    pages = {1027--1033}
+}
+
+@inproceedings{Pauly2002,
+ author = {Pauly, Mark and Gross, Markus and Kobbelt, Leif P.},
+ title = {Efficient simplification of point-sampled surfaces},
+ booktitle = {VIS '02: Proceedings of the conference on Visualization '02},
+ year = {2002},
+ isbn = {0-7803-7498-3},
+ pages = {163--170},
+ location = {Boston, Massachusetts},
+ publisher = {IEEE Computer Society},
+ address = {Washington, DC, USA},
+ }
+
+@inproceedings{PaulyGross2001,
+ author = {Pauly, Mark and Gross, Markus},
+ title = {Spectral processing of point-sampled geometry},
+ booktitle = {SIGGRAPH '01: Proceedings of the 28th annual conference on Computer graphics and interactive techniques},
+ year = {2001},
+ isbn = {1-58113-374-X},
+ pages = {379--386},
+ doi = {http://doi.acm.org/10.1145/383259.383301},
+ publisher = {ACM},
+ address = {New York, NY, USA},
+ }
+ 
 @INPROCEEDINGS{Correa02towardspoint-based,
     author = {Wagner T. Corrêa and Shachar Fleishman and Cláudio T. Silva},
     title = {Towards Point-Based Acquisition and Rendering of Large Real-World Environments},
@@ -148,7 +244,7 @@ publisher = {the Eurographics Association},
  
  @article{Reeves83,
  author = {Reeves, W. T.},
- title = {Particle Systems---a Technique for Modeling a Class of Fuzzy Objects},
+ title = {Particle Systems --- a Technique for Modeling a Class of Fuzzy Objects},
  journal = {ACM Trans. Graph.},
  volume = {2},
  number = {2},
@@ -161,6 +257,33 @@ publisher = {the Eurographics Association},
  }
  
 % basis
+
+@inproceedings{Cohen2004,
+ author = {Cohen-Steiner, David and Alliez, Pierre and Desbrun, Mathieu},
+ title = {Variational shape approximation},
+ booktitle = {SIGGRAPH '04: ACM SIGGRAPH 2004 Papers},
+ year = {2004},
+ pages = {905--914},
+ location = {Los Angeles, California},
+ doi = {http://doi.acm.org/10.1145/1186562.1015817},
+ publisher = {ACM},
+ address = {New York, NY, USA},
+ }
+
+
+@ARTICLE{Eldar1997,
+title={The farthest point strategy for progressive image sampling},
+author={Eldar, Y. and Lindenbaum, M. and Porat, M. and Zeevi, Y.Y.},
+journal={Image Processing, IEEE Transactions on},
+year={1997},
+month={Sep},
+volume={6},
+number={9},
+pages={1305-1315},
+keywords={adaptive signal processing, image sampling, minimax techniquesPoisson disk, algorithm, antialiasing properties, deterministic min-max uniformity, farthest point strategy, image approximation, image dependent adaptive sampling, progressive image acquisition, progressive image sampling, sampling points, sparse image display, sparse image sampling, stochastic approaches, uniformity criterion},
+doi={10.1109/83.623193},
+ISSN={1057-7149}, }
+
 
 @inproceedings{Pfister2000,
  author = {Pfister, Hanspeter and Zwicker, Matthias and van Baar, Jeroen and Gross, Markus},
@@ -200,9 +323,10 @@ publisher = {the Eurographics Association},
 }
 
 @inproceedings{PhongSplat2004,
-crossref = {SPBG'04: Proceeding of the Symposium on Point-Based Graphics 2004},
 author = {Mario Botsch and Michael Spernat and Leif Kobbelt},
 title = {{Phong Splatting }},
+booktitle = {SPBG'04: Proceeding of the Symposium on Point-Based Graphics 2004},
+ year = {2004},
 pages = {25-32},
 URL = {http://www.eg.org/EG/DL/WS/SPBG/SPBG04/025-032.pdf},
 }
@@ -297,7 +421,6 @@ URL = {http://www.eg.org/EG/DL/WS/SPBG/SPBG04/025-032.pdf},
   url          = "http://iparla.labri.fr/publications/2006/BHGS06"
 }
 
-
 @InProceedings{marroquim07,
   author = 	 {Ricardo Marroquim and Martin Kraus and Paulo Roma Cavalcanti},
   title = 	 {Efficient Point-Based Rendering Using Image Reconstruction},
@@ -332,6 +455,15 @@ address = {Los Alamitos, CA, USA},
  publisher = {Pergamon Press, Inc.},
  address = {Elmsford, NY, USA},
  }
+ 
+ @TechReport{Linsen2001,
+  author = 	 { Lars Linsen},
+  title = 	 {Point Cloud Representation},
+  institution =  {Fakultät für Informatik, Universität Karlsruhe},
+  year = 	 {2001},
+  NUMBER = {03},
+}
+
  
  @TechReport{LevoyW1985,
   author = 	 { Marc Levoy and Turner Whitted},
@@ -368,7 +500,7 @@ address = {Los Alamitos, CA, USA},
 }
 
 
-% LOD usando Poligonos
+%LOD usando Poligonos
 
 @inproceedings{Rossignac1992,
  author = {Rossignac, J and Borrel},
@@ -381,15 +513,47 @@ address = {Los Alamitos, CA, USA},
  }
  
 % Scanning
-
+%Pega bibtex correto
 @article{Alexa2004,
 	location = {http://www.scientificcommons.org/42227315},
 	title = {Post-processing of Scanned 3D Surface Data},
 	author = {M. Alexa and S. Rusinkiewicz (editors and T. Weyrich and M. Pauly and R. Keiser and S. Heinzle and S. Sc and M. Gross},
 	year = {2007},
 	keywords = {and Object Modeling},
-	abstract = {3D shape acquisition has become a major tool for creating digital 3D surface data in a variety of application fields. Despite the steady increase in accuracy, most available scanning techniques cause severe scanning artifacts such as noise, outliers, holes, or ghost geometry. To apply sophisticated modeling operations on these data sets, substantial post-processing is usually required. In this paper, we address a variety of scanning artifacts that are created by common optical scanners and provide a comprehensive set of user-guided tools to process corrupted data sets. These include an eraser tool, low-pass filters for noise removal, a set of outlier detection methods, and various up-sampling and hole-filling tools. These techniques can be applied early in the content creation pipeline. Therefore, all our tools are implemented to operate directly on the acquired point cloud. We also emphasize the need for extensive user control and an efficient visual feedback loop. The effectiveness of our scan cleaning tools is demonstrated on various models acquired with commercial laser-range scanners and low-cost structured light scanners.},
 	url = {http://citeseerx.ist.psu.edu/viewdoc/summary?doi=?doi=10.1.1.10.7807},
 	institution = {CiteSeerX - Scientific Literature Digital Library and Search Engine [http://citeseerx.ist.psu.edu/oai2] (United States)},
 }
  
+%Thesis
+
+@phdthesis{Garland1999,
+ author = {Garland, Michael},
+ note = {Chair-Heckbert, Paul},
+ school = {Department of Computer Science , Carnegie Mellon University.},
+ title = {Quadric-based polygonal surface simplification},
+ year = {1999},
+ isbn = {0-599-51990-8},
+ order_no = {AAI9950005},
+ publisher = {Carnegie Mellon University},
+ address = {Pittsburgh, PA, USA},
+ }
+ 
+@PHDTHESIS{Wand2004,
+   AUTHOR = {Michael Wand},
+   TITLE = {Point-Based Multi-Resolution Rendering},
+   SCHOOL = {Department of computer science and cognitive science, University of T{\"u}bingen},
+   INSTITUTION = {Wilhelm Schickard Institute for Computer Science, Graphical-Interactive Systems (WSI/GRIS), University of T{\"u}bingen},
+   YEAR = {2004},
+   KEYWORDS = {GRIS},
+}
+
+@phdthesis{Bart2006,
+  author = {Adams, Bart},
+  title = {Point-{B}ased {M}odeling, {A}nimation and {R}endering of {D}ynamic {O}bjects ({P}untgebaseerde modellering, animatie en visualisatie van dynamische objecten)},
+  school = {Department of Computer Science, K.U.Leuven, Leuven, Belgium},
+  month = {May},
+  year = {2006},
+  note = {Dutr{\'e}, Philip (supervisor), Willems, Yves (cosupervisor)},
+  url = {https://lirias.kuleuven.be/handle/123456789/241848},
+}
+
