@@ -29,10 +29,15 @@
 \BOOKMARK [2][-]{subsection.3.4.3}{Renderiza\347\343o Recursiva}{section.3.4}
 \BOOKMARK [2][-]{subsection.3.4.4}{Arranjamento Sequencial}{section.3.4}
 \BOOKMARK [2][-]{subsection.3.4.5}{Discuss\343o}{section.3.4}
-\BOOKMARK [0][-]{chapter.4}{Simplifica\347\343o de Superf\355cies de Pontos}{}
-\BOOKMARK [1][-]{section.4.1}{Pontos}{chapter.4}
-\BOOKMARK [1][-]{section.4.2}{Splat}{chapter.4}
-\BOOKMARK [0][-]{chapter.5}{Conclus\343o e Trabalhos Futuros}{}
-\BOOKMARK [0][-]{chapter*.15}{Refer\352ncias Bibliogr\341ficas}{}
+\BOOKMARK [0][-]{chapter.4}{Simplifica\347\343o de Superf\355cies}{}
+\BOOKMARK [1][-]{section.4.1}{Simplifica\347\343o Baseada em Pontos Puros}{chapter.4}
+\BOOKMARK [1][-]{section.4.2}{Simplifica\347\343o Baseada em Splats}{chapter.4}
+\BOOKMARK [1][-]{section.4.3}{Discuss\343o}{chapter.4}
+\BOOKMARK [0][-]{chapter.5}{Multiresolu\347\343o Sequencial}{}
+\BOOKMARK [1][-]{section.5.1}{Erro Perpendicular}{chapter.5}
+\BOOKMARK [1][-]{section.5.2}{Erro Tangencial}{chapter.5}
+\BOOKMARK [1][-]{section.5.3}{Resultados}{chapter.5}
+\BOOKMARK [0][-]{chapter.6}{Conclus\343o e Trabalhos Futuros}{}
+\BOOKMARK [0][-]{chapter*.17}{Refer\352ncias Bibliogr\341ficas}{}
 \BOOKMARK [0][-]{appendix.A}{An\341lise das Componentes Principais}{}
 \BOOKMARK [0][-]{appendix.B}{Visibilty Culling}{}
