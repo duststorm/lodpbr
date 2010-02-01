@@ -6,6 +6,19 @@
   Primitive\/}, Tech. Rep. 85-022, Department of Computer Science,University of
   North Carolina at Chapel Hill, 1985.
 
+\bibitem{Bart2006}
+\MakeUppercase{ Adams, B.}, {\em Point-{B}ased {M}odeling, {A}nimation and
+  {R}endering of {D}ynamic {O}bjects ({P}untgebaseerde modellering, animatie en
+  visualisatie van dynamische objecten)\/}, Ph.D. Thesis, Department of
+  Computer Science, K.U.Leuven, Leuven, Belgium, May 2006, Dutr{\'e}, Philip
+  (supervisor), Willems, Yves (cosupervisor).
+
+\bibitem{PhongSplat2004}
+\MakeUppercase{ Botsch, M., Spernat, M., Kobbelt, L.}, \enquote{{Phong
+  Splatting }}.
+\newblock In: {\em SPBG'04: Proceeding of the Symposium on Point-Based Graphics
+  2004\/}, pp. 25--32, 2004.
+
 \bibitem{Wand2004}
 \MakeUppercase{ Wand, M.}, {\em Point-Based Multi-Resolution Rendering\/},
   Ph.D. Thesis, Department of computer science and cognitive science,
@@ -15,6 +28,18 @@
 \MakeUppercase{ Dachsbacher, C., Vogelgsang, C., Stamminger, M.},
   \enquote{Sequential point trees}, {\em ACM Trans. Graph.\/}, v.~22, n.~3,
   pp.~657--662, 2003.
+
+\bibitem{Song2009}
+\MakeUppercase{ Song, H., Feng, H.-Y.}, \enquote{A progressive point cloud
+  simplification algorithm with preserved sharp edge data}, {\em The
+  International Journal of Advanced Manufacturing Technology\/}, v.~45, n. 5-6,
+  pp.~583--592, November 2009.
+
+\bibitem{Pauly2002}
+\MakeUppercase{ Pauly, M., Gross, M., Kobbelt, L.~P.}, \enquote{Efficient
+  simplification of point-sampled surfaces}.
+\newblock In: {\em VIS '02: Proceedings of the conference on Visualization
+  '02\/}, pp. 163--170, Washington, DC, USA, IEEE Computer Society, 2002.
 
 \bibitem{Levoy2000}
 \MakeUppercase{ Levoy, M., Pulli, K., Curless, S., \MakeLowercase{et~al.}},
@@ -75,7 +100,7 @@
   v.~16, n.~3, pp.~21--29, 1982.
 
 \bibitem{Reeves83}
-\MakeUppercase{ Reeves, W.~T.}, \enquote{Particle Systems---a Technique for
+\MakeUppercase{ Reeves, W.~T.}, \enquote{Particle Systems --- a Technique for
   Modeling a Class of Fuzzy Objects}, {\em ACM Trans. Graph.\/}, v.~2, n.~2,
   pp.~91--108, 1983.
 
@@ -168,10 +193,58 @@
 \newblock In: {\em I3D '01: Proceedings of the 2001 symposium on Interactive 3D
   graphics\/}, pp. 63--68, New York, NY, USA, ACM, 2001.
 
-\bibitem{PhongSplat2004}
-\MakeUppercase{ Botsch, M., Spernat, M., Kobbelt, L.}, \enquote{{Phong
-  Splatting }}.
-\newblock pp. 25--32.
+\bibitem{Linsen2001}
+\MakeUppercase{ Linsen, L.}, {\em Point Cloud Representation\/}, Tech. Rep.~03,
+  Fakultät für Informatik, Universität Karlsruhe, 2001.
+
+\bibitem{Alexa2001}
+\MakeUppercase{ Alexa, M., Behr, J., Cohen-Or, D., \MakeLowercase{et~al.}},
+  \enquote{Point set surfaces}.
+\newblock In: {\em VIS '01: Proceedings of the conference on Visualization
+  '01\/}, pp. 21--28, Washington, DC, USA, IEEE Computer Society, 2001.
+
+\bibitem{Kalaiah2003}
+\MakeUppercase{ Kalaiah, A., Varshney, A.}, \enquote{Modeling and Rendering of
+  Points with Local Geometry}, {\em IEEE Transactions on Visualization and
+  Computer Graphics\/}, v.~9, n.~1, pp.~30--42, 2003.
+
+\bibitem{Garland1997}
+\MakeUppercase{ Garland, M., Heckbert, P.~S.}, \enquote{Surface simplification
+  using quadric error metrics}.
+\newblock In: {\em SIGGRAPH '97: Proceedings of the 24th annual conference on
+  Computer graphics and interactive techniques\/}, pp. 209--216, New York, NY,
+  USA, ACM Press/Addison-Wesley Publishing Co., 1997.
+
+\bibitem{Hoppe1996}
+\MakeUppercase{ Hoppe, H.}, \enquote{Progressive meshes}.
+\newblock In: {\em SIGGRAPH '96: Proceedings of the 23rd annual conference on
+  Computer graphics and interactive techniques\/}, pp. 99--108, New York, NY,
+  USA, ACM, 1996.
+
+\bibitem{Cohen2004}
+\MakeUppercase{ Cohen-Steiner, D., Alliez, P., Desbrun, M.},
+  \enquote{Variational shape approximation}.
+\newblock In: {\em SIGGRAPH '04: ACM SIGGRAPH 2004 Papers\/}, pp. 905--914, New
+  York, NY, USA, ACM, 2004.
+
+\bibitem{Moenning03}
+\MakeUppercase{ Moenning, C., Dodgson, N.~A.}, \enquote{A New Point Cloud
+  Simplification Algorithm}.
+\newblock In: {\em In Proceedings 3rd IASTED Conference on Visualization,
+  Imaging and Image Processing\/}, pp. 1027--1033, 2003.
+
+\bibitem{PaulyGross2001}
+\MakeUppercase{ Pauly, M., Gross, M.}, \enquote{Spectral processing of
+  point-sampled geometry}.
+\newblock In: {\em SIGGRAPH '01: Proceedings of the 28th annual conference on
+  Computer graphics and interactive techniques\/}, pp. 379--386, New York, NY,
+  USA, ACM, 2001.
+
+\bibitem{Eldar1997}
+\MakeUppercase{ Eldar, Y., Lindenbaum, M., Porat, M., \MakeLowercase{et~al.}},
+  \enquote{The farthest point strategy for progressive image sampling}, {\em
+  Image Processing, IEEE Transactions on\/}, v.~6, n.~9, pp.~1305--1315, Sep
+  1997.
 
 \bibitem{Coconu2002}
 \MakeUppercase{ Coconu, L., Hege, H.-C.}, \enquote{Hardware-accelerated
@@ -185,5 +258,10 @@
   Approximations for Rendering Complex Scenes}.
 \newblock In: {\em Modeling in Computer Graphics: Methods and Applications\/},
   pp. 455--465, New York, NY, USA, Springer-Verlag, 1993.
+
+\bibitem{Garland1999}
+\MakeUppercase{ Garland, M.}, {\em Quadric-based polygonal surface
+  simplification\/}, Ph.D. Thesis, Department of Computer Science , Carnegie
+  Mellon University., Pittsburgh, PA, USA, 1999, Chair-Heckbert, Paul.
 
 \end{thebibliography}

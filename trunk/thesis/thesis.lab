@@ -1,9 +1,12 @@
 
 \begin{theglossary}
   \makeatletter
-  \item [BSP Tree] \textit{Binary Space Partitioning Tree}, p. 
-		\hyperpage{6}
-  \item [CPU] \textit{Central Processor Unit}, p. \hyperpage{11}
+  \item [BVH] \textit{Bounding Volume Hierarchies}, p. \hyperpage{10}
+  \item [CPU] \textit{Central Processor Unit}, p. \hyperpage{18}
+  \item [EPE] Estrutura de Parti\c c\~ao Espacial, p. \hyperpage{10}
+  \item [EWA] Elliptical Weighted Average, p. \hyperpage{6}
   \item [GPU] \textit{Graphic Processor Unit}, p. \hyperpage{1}
-  \item [SPT] \textit{Sequential Point Trees}, p. \hyperpage{7}
+  \item [MLS] Moving Least Squares, p. \hyperpage{25}
+  \item [SPT] \textit{Sequential Point Trees}, p. \hyperpage{14}
+  \item [\textit{BSP Tree}] \textit{Binary Space Partitioning Tree}, p. \hyperpage{11}
   \end{theglossary}

@@ -1,27 +1,7 @@
-\chapter{Multiresolução e Nivel de Detalhe}
+\chapter{Multiresolução Sequencial}
 \section{Erro Perpendicular}
-No caso elíptico, o problema de determinar o ponto de uma elipse $\mathbf{s}_i$ 
-do conjunto que está sendo agregado ao plano da elipse $\mathbf{\={s}}$ 
-que passa a representar esse conjunto não é tão imediato como no caso cicular. Para
-calcular a distância perpendicular entre $\mathbf{s}_i$ e
-$\mathbf{\=s}$, temos que empregar o seguinte processo: Seja
-$\mathbf{v}(\alpha) = \mathbf{x}_i + \{\mathbf{t}_i^1\cos{\alpha} +
-\mathbf{t}_i^2\sin{\alpha}\}$ a equação paramétrica de $\mathbf{s}_i$,
-$\mathbf{\=x}$ o centro de $\mathbf{\=s}$ e $\mathbf{\=n}$ a normal ao plano
-$\mathbf{\=H}$ de $\mathbf{\=s}$. 
-
-Para maximizar em $\mathbf{\alpha}$ a distância entre $\mathbf{v}(\alpha)$ e
-$\mathbf{\=H}$ precisamos resolver o pronblema de otimização abaixo:
-
-\begin{eqnarray}
-\mathbf{d}_i &=& \mathbf{\max}_{\alpha \in [0,2\pi]}  | <\mathbf{v}(\alpha)
-- \mathbf{\=x},\mathbf{\=n} > | \nonumber \\ 
-&=& | <\mathbf{x}_i - \mathbf{\=x},\mathbf{n} >  +  \mathbf{\max}_{\alpha \in
- 	[0,2\pi]} [ <\mathbf{t}_i^1,\mathbf{n}>\cos{\alpha} +
- 	<\mathbf{t}_i^2,\mathbf{n}>\sin{\alpha} ] |
-\label{eq1}
-\end{eqnarray}
-
+\section{Erro Tangencial}
+\section{Resultados}
 
 
 
