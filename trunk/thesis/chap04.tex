@@ -28,11 +28,10 @@ superfícies baseadas em pontos \textit{Puros} e baseadas em \textit{Splats}.
 Uma abordagem simples e muito usada na simplificação de nuvem de pontos é
 avaliar a importância de cada ponto na nuvem de pontos. 
 Esta importância é quantificada em um valor que indica a quantidade de informação que o ponto possui para formar a superfície, ou a sua redundância. 
-Linsen \cite{Linsen2001} defini a informação contida em um ponto como uma soma ponderada de fatores que inclui distância e curvatura entre outros, estimados pelos seus vizinhos. 
+Linsen \cite{Linsen2001} defini a informação contida em um ponto como uma soma ponderada de fatores estimados pelos seus vizinhos, como distância e curvatura por exemplo.
 Em Alexa et al.\cite{Alexa2001} os pontos são removidos de acordo com a importância de sua contribuição
-na representação da superfície dada por \texit{MLS} ( \texit{Moving Least Squares}\abbrev{MLS}{\texit{Moving Least Squares}}).
-Kalaiah e Varshney
-\cite{Kalaiah2003} medem a importância de cada ponto baseado nas propriedades 
+na superfície \texit{MLS} ( \texit{Moving Least Squares}\abbrev{MLS}{\texit{Moving Least Squares}}).
+Kalaiah e Varshney \cite{Kalaiah2003} medem a importância de cada ponto baseado nas propriedades 
 diferenciais fornecidas pela sua vizinhança. 
 Após a determinação da importância de cada ponto, a simplificação é então realizada removendo os pontos de baixa contribuição ou alta reduncância. 
 
@@ -50,15 +49,15 @@ simplificado.}
 \end{figure}
 
 Os métodos de simplificação citados acima são baseados na suposição de que a
-superfície determinada pela nuvem de pontos seja suave. Contudo, alguns modelos, como os de peças mecânicas por exemplo, contêm descontinuidades, geralmente bordas afiadas que separam a superfície em duas
-partes distintas. Song e Feng \cite{Song2009} criaram um método de
-simplificação considerando estes modelos baseado na mesma ideia do métodos
+superfície determinada pela nuvem de pontos seja suave. Contudo, modelos de peças mecânicas por exemplo, contêm descontinuidades que são geralmente bordas afiadas separando a superfície em duas
+partes distintas. Song e Feng \cite{Song2009} resolveram este problema criando um método de
+simplificação baseado na mesma ideia do métodos
 citados acima, porém com duas diferenças principais.
 Primeiro, ao invés de operar sobre toda a nuvem de pontos de uma só vez,
-o algoritmo considera apenas uma região suave distante por vez. 
+o algoritmo considera apenas uma região suave distinta por vez.
 Segundo, o grau de importância dos pontos é medido de forma diferente: enquanto Alexa et al.\cite{Alexa2001}
 focam em uma simplificação
-continua, e Kalaiah e Varshney \cite{Kalaiah2003} na renderização e em
+contínua, e Kalaiah e Varshney \cite{Kalaiah2003} na renderização e em
 uma distribuição homogênea, Song e Feng \cite{Song2009} buscam uma simplificação
 que preserve as partes característica do modelo, como ilustrado na Figura~\ref{fig:song2009}.
 
@@ -143,7 +142,7 @@ Simulação de Partículas. \textbf{(d)} Simplificação Interativas.}
  %Algoritmo pode gerar uma representação em multiresolução e
  %progressiva de forma eficiente.
 
-Os algoritmos citados acima criam uma nuvem de pontos simplificada realizando uma amostragem do modelo, ou seja, definindo um subconjunto da nuvem de pontos original ao remover iterativamente pontos de acordo com uma métrica de erro.
+Os algoritmos citados acima criam uma nuvem de pontos simplificada realizando uma amostragem do modelo, ou seja, definindo um subconjunto da nuvem original ao remover iterativamente pontos de acordo com uma métrica de erro.
 Enquanto estes métodos são simples e eficientes, suas estratégias de
 simplificação não garantem uma distribuição global uniforme. Além disso, os
 erros proposto por estes métodos por vezes não produzem um boa estimativa, não sendo trivial formular métricas mais precisas.
@@ -153,31 +152,30 @@ proposta por Pauly et al.\cite{Pauly2002}, onde vários métodos de simplificação
 de polígonos foram adaptados para pontos. São eles:
 \begin{itemize}
   \item{\textit{Métodos de Clusterização:} Onde a nuvem de pontos
-  $\mathbf{\mathcal P}$ é dividida em subconjuntos. Os pontos deste subconjunto são então substituídos por um ponto representativo (geralmente seu centroide). Existem dois tipos de clusterização: incremental, onde clusters
- são criados sistematicamente crescendo regiões através da agregação de pontos
+  $\mathbf{\mathcal P}$ é dividida em subconjuntos. Os pontos deste subconjunto são então substituídos por um ponto representativo (geralmente seu centróide). Existem dois tipos de clusterização: incremental, onde clusters
+ são criados sistematicamente ao crescer regiões através da agregação de pontos
 vizinhos; e o hierárquico, onde clusters são criados tomando a nuvem de pontos original e dividindo-a em conjuntos menores.}
   \item{\textit{Simplificação Iterativa:} Onde repetidamente seleciona-se pares
-  de pontos e junta-os em um só. Note que para cada junção, há um acréscimo no
-  erro total. No entanto, cria-se uma lista ordenada com todos pares possíveis, colocando no topo a junção que provoca o menor erro. Pares de pontos são então aglomerados de forma que o erro seja mínimo. Para avaliar o
+  de pontos e juntando-os em um só. Note que para cada junção, há um acréscimo no
+  erro total, no entanto, cria-se uma lista ordenada com todos pares possíveis, colocando no topo a junção que provoca o menor erro. Pares de pontos são então aglomerados de forma a minizar o erro. Para avaliar o
   erro de junção dos pares de pontos é usada uma adaptação do \texit{Quadric
   Error Metric}\abbrev{QEM}{\texit{Quadric Error Metric}} apresentado para
   malhas poligonais em~\cite{Garland1997}.}
   \item{\textit{Simulação de Partículas:} Onde há uma distribuição aleatória
   de um número $\mathbf{n}$ de pontos na superfície, tal que
-  $|\mathbf{\mathcal{P}^}^\prime| = n$. Então cada ponto é considerado copmo uma
-partícula que aplica forças de repulsão às vizinhas, espalhando-se até que a
+  $|\mathbf{\mathcal{P}^}^\prime| = n$. Cada ponto é considerado como uma
+partícula que aplica forças de repulsão às vizinhas, causando um espalhamento até que a
   distribuição desejada seja alcançada.}
 \end{itemize}
   
 Como discutido em \cite{Pauly2002}, o método de clusterização incremental é o
 que possui o maior erro médio, seguido pelo método hierárquico, simulação de
 partículas e do método iterativo, que possui menor erro. A distribuição dos
-pontos produzida pelos métodos de clusterização se apro'xima da distribuição
+pontos produzida pelos métodos de clusterização se aproxima da distribuição
 original, que é desejável em alguns caso. Entretanto, simulação de
-partículas é a alternativa mais viável quando se deseja um densidade uniforme ou
+partículas é a alternativa mais viável quando se deseja uma densidade uniforme ou
 um controle da densidade local da distribuição. Métodos de clusterização são os mais
-eficientes devido a sua simplicidade. Clusterização incremental, simplificação iterativa e simulação de partículas requerem uma capacidade grande de memória por ser linear no número de amostras, enquanto a
-clusterização hierárquica depende apenas do tamanho do modelo simplificado. O autor discute que as três técnicas operam diretamente na nuvem de pontos, ao invés de reconstruir a superfície a priori e só então aplicar a simplificação. A Figura~\ref{fig:pauly} ilustra estes métodos.
+eficientes devido a sua simplicidade. Clusterização incremental, simplificação iterativa e simulação de partículas possuem custo de armazenamento linear em relação ao número total de amostras, requerindo muitas vezes uma capacidade grande de memória, enquanto a clusterização hierárquica depende apenas do tamanho do modelo simplificado. O autor discute que as três técnicas operam diretamente na nuvem de pontos ao invés de reconstruir a superfície a priori para aplicar o processo de simplificação. A Figura~\ref{fig:pauly} ilustra estes métodos.
 
 \section{Simplificação Baseada em \textit{Splats}}
 
@@ -191,12 +189,12 @@ facilitam a concepção de algoritmos eficientes~\cite{Ren2002,BotschW2002,Botsch2
 Embora a representação baseada em \textit{splats} seja bastante utilizada na
 prática, muitos esquemas de simplificação tomam apenas o centro do \textit{splat} em consideração (como discutido na seção anterior).
 A ideia é primeiro gerar o conjunto de pontos na qual a densidade se adapta a
-curvatura da superfície e em um processo posterior, converter os pontos
-em \textit{splats} pela analise local de sua vizinhança, e assim estimando sua
-normal e seu tamanho. Em contraste, técnicas de simplificação
+curvatura da superfície, e em um processo posterior converter os pontos
+em \textit{splats} estimando sua normal e tamanho pela análise local de sua vizinhança. 
+Em contraste, técnicas de simplificação
 baseadas em \textit{splat}, exploram toda a geometria do disco ou elipse para
 obter o conjunto de \textit{splats} que recobrem a superfície. No entanto, estas
-técnicas são computacionalmente mais intensas. 
+técnicas são computacionalmente mais intensas.
 
 Wu e Kobbelt~\cite{WuK04} desenvolveram uma técnica de simplificação
 otimizada baseada em \textit{splats} que explora a flexibilidade de modelos de
@@ -219,17 +217,16 @@ dos \textit{splats} usando filtro EWA. Note a melhor distribuição dos
 \label{fig:wu04}
 \end{figure} 
 
-
 O objetivo da simplificação otimizada é computar um conjunto mínimo de
 \textit{splats} $\mathbf{\mathcal{T}=\{\mathbf{s}_j}\}$ que aproxime o conjunto
 original $\mathbf{\mathcal{P}}$ com um erro abaixo de uma tolerância
 $\mathbf{\varepsilon}$. Para inicializar o algoritmo, em uma fase de pré-processamento, para cada ponto ${\mathbf{p}_i}$ propriedades locais da superfície como vetor normal $\mathbf{n}_i$ e 
-densidade $\mathbf{\omega}_i$ são calculadas baseados em uma vizinhaça local. Dependendo da
+densidade $\mathbf{\omega}_i$ são calculados baseados em uma vizinhaça local. Dependendo da
 aplicação, pode-se decidir entre \textit{splats} circulares ou elípticos. Um
-\textit{splat} circular e definido por um centro ${\mathbf{c}_i}$, normal
-${\mathbf{n}_i}$ e um raio ${\mathbf{r}_i}$; no caso elíptico o raio
+\textit{splat} circular é definido por um centro ${\mathbf{c}_i}$, normal
+${\mathbf{n}_i}$ e um raio ${\mathbf{r}_i}$; no caso do elíptico o raio
 ${\mathbf{r}_i}$ é substituído por dois vetores ${\mathbf{t}_i^1}$ e
-${\mathbf{t}_i^2}$ que definem os eixos principais da elipse.
+${\mathbf{t}_i^2}$ que definem os seus eixos principais.
 Para assegurar o erro $\mathbf{\varepsilon}$ máximo, uma nova métrica de distância
 \textit{splat}-ponto é introduzida: para um ponto
 ${\mathbf{p}_i}$ a distância ao \textit{splat} ${\mathbf{\mathcal T}}$ é
@@ -257,32 +254,30 @@ se for um \textit{splat} elíptico. Se $\mathbf{p}_i$ projetar no interior de vár
 A simplificação otimizada segue três passos. No primeiro passo é computado o
 \textit{splat} máximo para cada ponto ${\mathbf{p}_i}$ cujo erro é limitado por
 um $\mathbf{\varepsilon}$. Começando por uma semente $\mathbf{p}_i$, 
-o \textit{splat} $\mathbf{s}_i$ crescem adicionando os vizinhos
-de acordo com sua distancias calculada usando \ref{eq:circular} para
-\textit{spalt} circular ou \ref{eq:eliptico} para elíptico. Este último
-adapta-se melhor a curvatura da superfície. Em um segundo passo, para o conjunto
-inicial de \textit{splats}, um subconjunto
-que cobre a superfície sem que haja buracos entre os vizinhos é selecionado
+o \textit{splat} $\mathbf{s}_i$ cresce ao encorporar os vizinhos
+de acordo com sua distâncias. Esta distância é calculada usando \ref{eq:circular} para
+\textit{spalt} circular ou \ref{eq:eliptico} para elíptico, sendo que este último
+adapta-se melhor à curvatura da superfície. Em um segundo passo, para o conjunto
+inicial de \textit{splats}, um subconjunto que cobre a superfície sem que haja buracos entre os vizinhos é selecionado
 usando um procedimento guloso.
  
 Por último, o procedimento guloso anterior é otimizado usando um procedimento
-global. A ideia e iterativamente substituir subconjuntos de \textit{splats}
-por um novo subconjunto que tenha mesmo elementos ou um que tenha um melhor
-distribuição, já que o procedimento anterior é baseado em decisões locais e
-geralmente redundante ou possuindo um distribuição desigual. A ideia é usar um
-sistemas de partículas como em~\cite{Pauly2002,Tuk}, diferenciando na forma
+global. A ideia é substituir iterativamente subconjuntos de \textit{splats}
+por um novo subconjunto que possua os mesmo elementos ou que tenha uma
+distribuição melhor. Para melhorar o procedimento anterior, baseado em decisões locais e
+geralmente redundante ou possuindo uma distribuição não uniforme, é utilizado um
+sistemas de partículas como em~\cite{Pauly2002,Tuk} porém diferenciado na forma
 como as partículas interagem. A figura~\ref{fig:wu04} mostra o
-efeito desta simplificação otimização quando o último passo é finalizado.
+efeito desta simplificação otimizada após a finalização do último passo.
 
 Wu el al.~\cite{ProgressiveSplat2005} desenvolveram um algoritmo iterativo com
 um abordagem gulosa para criar uma representação progressiva de \textit{splats}.
-Funciona de forma semelhante ao \textit{Progressive Meshes} de
-Hoppe~\cite{Hoppe1996}. Especificamente, data um conjunto de pontos são criado
-\textit{splats} para cada deles. Em seguida, todas as possíveis operações de
-\textit{junção de} \texti{splats} são organizada em um lista de prioridades de
+O seu funcionamento é semelhante ao \textit{Progressive Meshes} de
+Hoppe~\cite{Hoppe1996}, no entanto, são criados
+\textit{splats} para cada conjunto de pontos. Em seguida, todas as possíveis operações de
+\textit{junção de} \texti{splats} são organizada em uma lista de prioridades de
 acordo com uma \textit{métrica de
-erro} que avalia o erro causado pela respectiva operação de junção com o
-elemento com menor erro estando no topo.
+erro}, que avalia o erro causado pela respectiva operação de junção.
 
 \begin{figure}[ht]
 \centering
@@ -294,16 +289,16 @@ $10.000$, $70.000$ e $600.000$ \textit{splats}}
 \end{figure} 
 
 A entrada do algoritmo é um conjunto de pontos $\mathbf{\mathcal P}
-= \{\mathbf{1}\ldots\mathbf{p}_i\}$ que são transformado em um conjunto
-\textit{splats} $\mathbf{\mathcal T  = \{\mathbf{1} \ldots \mathbf{s}_i}\}$ onde
-cada \textit{splat} representa um elipse em $3D$ com centro $\mathbf{c}_i$,
+= \{\mathbf{1}\ldots\mathbf{p}_i\}$ que são transformados em um conjunto de
+\textit{splats} $\mathbf{\mathcal T  = \{\mathbf{1} \ldots \mathbf{s}_i}\}$.
+Cada \textit{splat} representa uma elipse em $3D$ com centro $\mathbf{c}_i$,
 normal
 $\mathbf{n}_i$ e dois vetores ortogonais $\mathbf{t}_i^1$ e $\mathbf{t}_i^2$
 
 Similar a~ \cite{Pauly2002} e \cite{WuK04} os $k$-vizinhos de $\mathbf{p}_i$, 
 $\mathbf{\mathcal{N}}_k(\mathbf{p}_i)$,   
-são computados de ante mão, tanto para analisar a superfície local 
-(computar normal $\mathbf{n}_i$) como para gerar o splat inicial $\mathbf{s}_i$.
+são computados previamente para analisar localmente a superfície 
+(computar normal $\mathbf{n}_i$) e gerar o splat inicial $\mathbf{s}_i$.
 Para tanto, um plano $\mathbf{\mathcal{H}}$ é formado para $\mathbf{p}_i$ e
 $\mathbf{\mathcal{N}}_k(\mathbf{p}_i)$ definindo $\mathbf{s}_i$ com normal 
 $\mathbf{n}_i$ e centro $\mathbf{c}_i = \mathbf{p}_i$. Como os
@@ -328,20 +323,20 @@ pertence a $\mathit{E}$ se $\mathbf{p}_j \in
 Então um operação de junção de \textit{splat} $\Phi$ juntará dois
 \textit{splats} $\mathbf{s}_a$ e $\mathbf{s}_b$ associados a dois pontos
 $\mathbf{p}_a$ e $\mathbf{p}_b$ de um aresta $\mathbf{e} \in \mathit{E}$
-em um \textit{splat} $\mathbf{s}_m$. Assim,  a lista de prioridades conterá
-todos as
-possíveis operações de junção de todas as arestas pertencentes à $\mathit{E}$.  
-Para avaliar a operação de junção dois \texit{splats}, dois erros foram
-entendidos. Um que mede o erro pela distância ($\mathbf{\mathit{L}}^2$) e
-outro pelo desvio da normal ($\mathbf{\mathit{L}}^{2,1}$).
+em um \textit{splat} $\mathbf{s}_m$. A lista de prioridades conterá
+todas as
+possíveis operações de junção de todas as arestas pertencentes a $\mathit{E}$.  
+Para avaliar a operação de junção de dois \texit{splats}, dois erros foram
+entendidos. Um para medir o erro relativo à distância ($\mathbf{\mathit{L}}^2$) e
+outro ao desvio da normal ($\mathbf{\mathit{L}}^{2,1}$).
 
 \subsubsection{Métrica $\mathbf{\mathit{L}}^2$}
 
 A métrica $\mathbf{\mathit{L}}^2$ é baseada na distância Euclidiana. Para
 computar o erro causado pela operação de junção de \textit{splats} $\Phi$
-respectivo ao conjunto de pontos originais, uma lista adicional de índices
-$\{f_i\}$ dos pontos originais é mantida para cada \textit{splat} $\mathbf{s}_i$
-onde um índice ${i}$ refere a um ponto $\mathbf{p}_i$. 
+em relação ao conjunto de pontos originais, uma lista adicional de índices
+$\{f_i\}$ dos pontos originais é mantida para cada \textit{splat} $\mathbf{s}_i$,
+onde um índice ${i}$ refere-se a um ponto $\mathbf{p}_i$. 
 
 \begin{figure}[ht]
 \centering
@@ -351,7 +346,7 @@ $\mathbf{\mathit{L}}^2$ (esquerda) e $\mathbf{\mathit{L}}^{2,1}$ (direita) }
 \label{fig:merge}
 \end{figure}  
 
-Então o erro da junção
+O erro da junção
 de dois \textit{splats} $\mathbf{s}_a$ e $\mathbf{s}_b$ em um novo
 \textit{splats} $\mathbf{s}_m$ é definido como:
 \begin{equation}
@@ -359,29 +354,29 @@ de dois \textit{splats} $\mathbf{s}_a$ e $\mathbf{s}_b$ em um novo
  |dist(\mathbf{p}_f,\mathbf{s}_m)|^2 ,  \{f_m\} = {f_a} + {f_b}. 
 \label{eq:l2}
 \end{equation}
-Note que o erro é ponderado pela tamanho da aresta, afim de penalizar a junção
-de \textit{splats} muito distantes
+Note que o erro é ponderado pelo tamanho da aresta, a fim de penalizar a junção
+de \textit{splats} muito distantes.
  
 Dado a métrica de erro~\ref{eq:l2} e dois \textit{splats}
 $\mathbf{s}_a$ e $\mathbf{s}_b$ para a junção, $\mathbf{s}_m$ é determinado
-aplicando-se \textit{PCA} no conjunto de pontos $\mathbf{\mathcal{P}}_m =
+pela método de análise das componentes principais (\textit{PCA}) do conjunto de pontos $\mathbf{\mathcal{P}}_m =
 \{\mathbf{p}_f\}$ diretamente
-em $3D$. Assim , teremos o ponto médio $\bar{\mathbf{p}}$ e três autovalores
+em $3D$. Assim, teremos o ponto médio $\bar{\mathbf{p}}$ e três autovalores
 $\lambda_1 \geq \lambda_2 \geq \lambda_3$ e seus autovetores correspondentes
 $\mathbf{v}_1$, $\mathbf{v}_2$, $\mathbf{v}_3$.
 
-Assim, $\mathbf{s}_m$ será
+Desta forma, $\mathbf{s}_m$ será
 determinado com centro $\mathbf{c}_m = \bar{\mathbf{p}}$, normal $\mathbf{n}_m
-= \mathbf{v}_3$ e os dois eixos $\mathbf{t}_m^1$ e $\mathbf{t}_m^2$ com
-direções de terão as $\mathbf{v}_1$ e $\mathbf{v}_2$ com tamanho respectivo há
+= \mathbf{v}_3$ e os dois eixos $\mathbf{t}_m^1$ e $\mathbf{t}_m^2$ definidos
+pelas direções de $\mathbf{v}_1$ e $\mathbf{v}_2$ com tamanho respectivo a
 $\sqrt{\lambda_1/\lambda_2}$. Então os tamanho dos eixos serão ajustados de
 forma que a \textit{splat} englobe todo os pontos $\mathbf{\mathcal{P}}_m$
-quando projetados em $2D$ no plano definido por  $\mathbf{s}_m$~\ref{fig:merge}.
+quando projetados em $2D$ no plano definido por $\mathbf{s}_m$ (Figura~\ref{fig:merge}).
  
 
 \subsubsection{Métrica $\mathbf{\mathit{L}}^{2,1}$}
 A métrica de erro $\mathbf{\mathit{L}}^{2,1}$ mede o desvio na direção da
-normal e foi entendida da métrica original proposta em~\cite{Cohen2004}. Neste
+normal, sendo uma extensão da métrica original proposta em~\cite{Cohen2004}. Neste
 caso o computo é simples e não há necessidade da lista de índices. Dada a
 operação de junção $\Phi$ e dois \textit{splats} $\mathbf{s}_a$ e
 $\mathbf{s}_b$, com suas respectivas áreas $|\mathbf{s}_a|$ e
@@ -408,17 +403,17 @@ e normal
 \end{equation}
 
 Os vetores $\mathbf{t}_m^1$ e $\mathbf{t}_m^2$ são calculados da mesma forma
-que $\mathbf{\mathit{L}}^{2}$, só que ao invés de projetos o conjunto de pontos
-$\mathbf{\mathcal{P}}_m$(que não é mais mantido), $n$ pontos ($8$ é o
+que para métrica $\mathbf{\mathit{L}}^{2}$, porém, como o conjunto de pontos
+$\mathbf{\mathcal{P}}_m$ não é mais mantido para ser projetado, $n$ pontos (geralmente $8$ é o
 suficiente) são calculados na borda dos \textit{splats} $|\mathbf{s}_a|$ e
 $|\mathbf{s}_b|$ e projetados no
-plano definido por $|\mathbf{s}_m|$. Só então aplica-se \textit{PCA} e
+plano definido por $|\mathbf{s}_m|$. A partir destes aplica-se \textit{PCA} e
 computa-se os tamanhos de $\mathbf{t}_m^1$ e $\mathbf{t}_m^2$.
 
 Com as duas métricas de erro a sequência de operações de junção de
 \textit{splats} ${\Phi_i}$ e sua operação inversa, operação de divisão do
 \textit{splat}, podem ser criadas durante o processo de simplificação. Esse
-procedimento é similar ao proposto para malhas poligonais~\cite{Hoppe1996} com a
-grande diferença de não manter informação de topologia.
+procedimento é similar ao proposto para malhas poligonais~\cite{Hoppe1996}, 
+porém não mantém a manter informação de topologia.
 
 \section{Discussão}
