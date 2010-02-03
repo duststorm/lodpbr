@@ -42,15 +42,15 @@
 \contentsline {subsection}{\numberline {3.4.5}Discuss\~ao}{22}{subsection.3.4.5}
 \contentsline {chapter}{\numberline {4}Simplifica\c c\~ao de Superf\IeC {\'\i }cies}{24}{chapter.4}
 \contentsline {section}{\numberline {4.1}Simplifica\c c\~ao Baseada em Pontos \textit {Puros}}{24}{section.4.1}
-\contentsline {section}{\numberline {4.2}Simplifica\c c\~ao Baseada em \textit {Splats}}{27}{section.4.2}
+\contentsline {section}{\numberline {4.2}Simplifica\c c\~ao Baseada em \textit {Splats}}{28}{section.4.2}
 \contentsline {subsubsection}{M\'etrica $\mathbf {\mathit {L}}^2$}{31}{section*.15}
 \contentsline {subsubsection}{M\'etrica $\mathbf {\mathit {L}}^{2,1}$}{32}{section*.16}
-\contentsline {section}{\numberline {4.3}Discuss\~ao}{32}{section.4.3}
-\contentsline {chapter}{\numberline {5}Multiresolu\c c\~ao Sequencial}{33}{chapter.5}
-\contentsline {section}{\numberline {5.1}Erro Perpendicular}{33}{section.5.1}
-\contentsline {section}{\numberline {5.2}Erro Tangencial}{33}{section.5.2}
-\contentsline {section}{\numberline {5.3}Resultados}{33}{section.5.3}
-\contentsline {chapter}{\numberline {6}Conclus\~ao e Trabalhos Futuros}{34}{chapter.6}
-\contentsline {chapter}{Refer\^encias Bibliogr\'aficas}{35}{chapter*.17}
-\contentsline {chapter}{\numberline {A}An\'alise das Componentes Principais}{41}{appendix.A}
-\contentsline {chapter}{\numberline {B}\textit {Visibilty Culling}}{42}{appendix.B}
+\contentsline {section}{\numberline {4.3}Discuss\~ao}{33}{section.4.3}
+\contentsline {chapter}{\numberline {5}Multiresolu\c c\~ao Sequencial}{34}{chapter.5}
+\contentsline {section}{\numberline {5.1}Erro Perpendicular}{34}{section.5.1}
+\contentsline {section}{\numberline {5.2}Erro Tangencial}{34}{section.5.2}
+\contentsline {section}{\numberline {5.3}Resultados}{35}{section.5.3}
+\contentsline {chapter}{\numberline {6}Conclus\~ao e Trabalhos Futuros}{36}{chapter.6}
+\contentsline {chapter}{Refer\^encias Bibliogr\'aficas}{37}{chapter*.17}
+\contentsline {chapter}{\numberline {A}An\'alise das Componentes Principais}{43}{appendix.A}
+\contentsline {chapter}{\numberline {B}\textit {Visibilty Culling}}{44}{appendix.B}
