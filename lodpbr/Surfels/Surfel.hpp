@@ -869,8 +869,22 @@ typename Surfel<Real>::ListPoint3 Surfel<Real>::BoundariesSamples
 
 		 i = i + (360.0 / pSteps);
 
+
 	 }
 
+	 ListPoint3Iterator it = lPoints.begin();
+
+	 Point3 p1 =  (*(it++));
+	 Point3 p2 =  (*(it++));
+	 Point3 p3=  (*(it));
+
+	 Vector3 v1 = p2 - p1;
+	 Vector3 v2 = p3 - p1;
+
+	 Vector3 v3 = ( v1 ^ v2 );
+
+	 if ((v3 * mNormal) < 0.0)
+		 lPoints.reverse();
 	 return lPoints;
 
 }
@@ -1124,54 +1138,32 @@ void Surfel<Real>::DrawTriangleFan(int p,const Real& pRadius)
 
 	 	ListPoint3 lBoundaries = this->BoundariesSamples(p,pRadius);
 	 	glPushMatrix();
-	 	glEnable (GL_BLEND);
-	 	glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-
+	 	glEnable(GL_LIGHTING);
 	    glEnable(GL_POLYGON_OFFSET_FILL | GL_POLYGON_SMOOTH_HINT | GL_MULTISAMPLE);
 	    glPolygonOffset(1,1);
-	    glColor3f(1.0,1.0,1.0);
-	    glBegin(GL_LINES);
-	    glVertex3fv(mCenter);
-	    glVertex3fv(mCenter+(mMajorAxis.second*mMajorAxis.first*pRadius));
-	    glVertex3fv(mCenter);
-	    glVertex3fv(mCenter+(mMinorAxis.second*mMinorAxis.first*pRadius));
-	    glVertex3fv(mCenter);
-	    glVertex3fv(mCenter+(mNormal*mMinorAxis.first*pRadius));
-	    glEnd();
-	 	glBegin (GL_POLYGON);
-	 		for(ListPoint3Iterator it = lBoundaries.begin();it != lBoundaries.end();++it)
-	 		{
-	 			glNormal3fv (this->mNormal);
-	 			glVertex3fv( *it );
-	 		}
+	 	glEnable (GL_BLEND);
+	 	glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+//	 	glPushMatrix();
+//			glColor4f(1.0,1.0,1.0,0.5);
+//			glBegin(GL_LINES);
+//				glVertex3fv(mCenter);
+//				glVertex3fv(mCenter+(mMajorAxis.second*mMajorAxis.first*pRadius));
+//				glVertex3fv(mCenter);
+//				glVertex3fv(mCenter+(mMinorAxis.second*mMinorAxis.first*pRadius));
+//				glVertex3fv(mCenter);
+//				glVertex3fv(mCenter+(mNormal*mMinorAxis.first*pRadius));
+//			glEnd();
+//		glPopMatrix();
+	 	glPolygonMode(GL_FRONT_AND_BACK,GL_FILL);
+	 	glColor4f(1.0,0.35,0.0,0.75);
+	 	glBegin (GL_TRIANGLE_FAN);
+			for(ListPoint3Iterator it = lBoundaries.begin();it != lBoundaries.end();++it)
+			{
+				glVertex3fv( *it );
+			}
 		glEnd();
-		glDisable(GL_POLYGON_OFFSET_FILL | GL_POLYGON_SMOOTH_HINT |  GL_MULTISAMPLE) ;
-		glDisable (GL_BLEND);
-
-
-	    glDisable (GL_LIGHTING);
-		glColor3f(0.0,0.0,0.0);
-		glEnable(GL_MULTISAMPLE) ;
-
-//		glBegin(GL_LINES);
-//		for(ListPoint3Iterator it = lBoundaries.begin();it != lBoundaries.end();++it)
-//		{
-//			glVertex3fv( it->ToRealPtr() );
-//			glVertex3fv( this->mCenter.ToRealPtr());
-//		}
-//		glEnd();
-
-//		glColor3f(1.0,1.0,1.0);
-//		glBegin(GL_LINES);
-//			glVertex3fv(mCenter);
-//			glVertex3fv((mCenter + (mNormal * 0.02f)));
-//		glEnd();
-
-		glDisable(GL_MULTISAMPLE) ;
-		glEnable (GL_LIGHTING);
+		glDisable(GL_LIGHTING);
 		glPopMatrix();
-
 }
 
 }

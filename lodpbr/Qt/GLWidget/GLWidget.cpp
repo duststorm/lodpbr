@@ -451,46 +451,57 @@ void GLWidget::initializeGL()
 
 	makeCurrent();
 	mGLInitialized = true;
-    GLfloat luzAmbiente[4]={0.2,0.2,0.2,1.0};
- 	GLfloat luzDifusa[4]={1.0,1.0,0.0,1.0};         //cor
+
+    GLfloat luzAmbiente[4] ={0.0f, 0.0f, 0.0f,1.0};
+ 	GLfloat luzDifusa[4]   ={1.0,1.0,1.0,1.0};         //cor
 	GLfloat luzEspecular[4]={1.0, 1.0, 1.0, 1.0};   //brilho
-	GLfloat especularidade[4]={1.0,0.0,0.0,1.0};	  //brilho do material
 
-	GLint especMaterial = 64;
+	GLfloat materialAmbient[]   = { 1.0f, 0.35f, 0.0f, 1.0f };
+	GLfloat materialDiffuse[]   = { 1.0f, 0.35f, 0.0f, 1.0f };
+	GLfloat materialSpecular[]  = { 1.0f, 1.0f, 1.0f, 1.0f };
+	GLfloat materialEmission[]  = { 0.0f, 0.0f, 0.0f, 1.0f };
+	GLfloat materialShininess   = 64.0f;
 
-	GLfloat light_position0[] = {0.0, 0.5, 10.0, 0.0};
+	GLfloat lightPosition0[] = {0.0, 0.0, 5.0, 0.0};
+	GLfloat lightPosition1[] = {0.0, 0.0, -5.0, 0.0};
 
-	//glClearColor(1.0f, 1.0f, 1.0f, 0.0f);           //cor fundo
+
+	glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, materialAmbient);
+	glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, materialDiffuse);
+	glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, materialSpecular);
+	glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, materialEmission);
+	glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, materialShininess);
+
 	glShadeModel(GL_SMOOTH);                      	//gouraud
-	glMaterialfv(GL_FRONT_AND_BACK,GL_DIFFUSE, luzDifusa);//refletancia do material
-	glMaterialfv(GL_FRONT_AND_BACK,GL_SPECULAR, especularidade);//refletancia do material
-	glMateriali(GL_FRONT_AND_BACK,GL_SHININESS,especMaterial);  //concentracao do brilho
 
-	glLightModelfv(GL_LIGHT_MODEL_AMBIENT, luzAmbiente);        //luz ambiente
-	glLightModelfv(GL_LIGHT_MODEL_TWO_SIDE, luzAmbiente);        //luz ambiente
+//	glLightModelfv(GL_LIGHT_MODEL_AMBIENT, luzAmbiente);        //luz ambiente
+//	glLightModelfv(GL_LIGHT_MODEL_TWO_SIDE, luzAmbiente);        //luz ambiente
 
 	glLightfv(GL_LIGHT0, GL_AMBIENT, luzAmbiente);  //parametros da luz 0
-	glLightfv(GL_LIGHT0, GL_DIFFUSE, luzDifusa );
-	glLightfv(GL_LIGHT0, GL_SPECULAR, light_position0 );
+	glLightfv(GL_LIGHT0, GL_DIFFUSE, luzDifusa);
+	glLightfv(GL_LIGHT0, GL_SPECULAR, luzEspecular);
+
+	glLightfv(GL_LIGHT0, GL_POSITION,  lightPosition0);
+	glLightfv(GL_LIGHT1, GL_POSITION,  lightPosition1);
+
+	glLightfv(GL_LIGHT1, GL_AMBIENT, luzAmbiente);  //parametros da luz 0
+	glLightfv(GL_LIGHT1, GL_DIFFUSE, luzDifusa );
+	glLightfv(GL_LIGHT1, GL_SPECULAR, luzEspecular);
 
 
-	//glEnable(GL_POINT_SMOOTH);
-//	glEnable(GL_COLOR_MATERIAL);  //cor do material a partir da cor corrente
-//	glEnable(GL_LIGHTING);        //uso de iluminacao
-//	glEnable(GL_LIGHT0);          //luz  0
-//	glEnable(GL_DEPTH_TEST);
-//	glBlendFunc(GL_ONE, GL_ONE);
-	//depth-buffering
-	//glEnable(GL_NORMALIZE);
+	glEnable(GL_COLOR_MATERIAL);
+	//set material properties which will be assigned by glColor
+
+   	glEnable(GL_LIGHTING);        //uso de iluminacao
+  	glEnable(GL_LIGHT0);          //luz  0
+  	glEnable(GL_LIGHT1);          //luz  0
+
+   	glEnable(GL_DEPTH_TEST);
+
+    glEnable(GL_NORMALIZE);
 
 	setForegroundColor(settings.getTextColor());
 	setBackgroundColor(settings.getBackgroundColor());
-
-	glBlendFunc(GL_ONE, GL_ONE);
-	glEnable(GL_LIGHT0);
-	glEnable(GL_LIGHTING);
-	glEnable(GL_DEPTH_TEST);
-	glEnable(GL_COLOR_MATERIAL);
 
 }
 
@@ -598,6 +609,7 @@ void GLWidget::BuildCluster(vcg::CallBackPos *cb=0 )
 			Celer::Surfel<float>* seed = new Celer::Surfel<float>(cluster.Surfels[0]);
 			cluster.Build<JoinByNormal<float,Celer::Surfel<float>* >,
 						  MergeBySize <float,Celer::Surfel<float>* > >(1000,200,(seed),cb );
+
 		}
 	}
 }
@@ -662,15 +674,23 @@ void GLWidget::paintGL()
     		glBegin(GL_POINTS);
     		for (std::vector<Surfel>::iterator s = cluster.Surfels.begin(); s != cluster.Surfels.end();++s)
     		{
-    			if( (s->Curvature() >= 0.0) && (s->Curvature() < 0.25) )
-    				glColor3f(1.0f,1.0f,1.0f);
-    			else if ( (s->Curvature() > 0.25) && (s->Curvature() < 0.50) )
-    				glColor3f(0.0,1.0f,1.0f);
-    			else if ( (s->Curvature() > 0.5) && (s->Curvature() < 0.75) )
-    				glColor3f(1.0f,1.0f,0.0f);
-    			else if ( (s->Curvature() > 0.75) && (s->Curvature() <= 1.0) )
-    				glColor3f(1.0f,0.0f,0.0);
-    			glVertex3fv( s->Center().ToRealPtr() );
+//    			if( (s->Curvature() >= 0.0) && (s->Curvature() < 0.25) )
+//    				glColor3f(1.0f,1.0f,1.0f);
+//    			else if ( (s->Curvature() > 0.25) && (s->Curvature() < 0.50) )
+//    				glColor3f(0.0,1.0f,1.0f);
+//    			else if ( (s->Curvature() > 0.5) && (s->Curvature() < 0.75) )
+//    				glColor3f(1.0f,1.0f,0.0f);
+//    			else if ( (s->Curvature() > 0.75) && (s->Curvature() <= 1.0) )
+//    				glColor3f(1.0f,0.0f,0.0);
+
+    			glColor3f(0.5f,1.0f,0.0f);
+
+    			//if ((camera.Eyes().Norm()* s->Normal()) > 0.2f)
+    			{
+    				//std::cout << "Normal " <<  (camera.Eyes().Norm()* s->Normal()) << std::endl;
+    				glVertex3fv( s->Center().ToRealPtr() );
+    			}
+
     			//s->DrawEllpsoid(64,2,1.0);
 //    			s->DrawTriangleFan(64,0.5);
     		}
@@ -690,23 +710,23 @@ void GLWidget::paintGL()
     		if 	   (mClusterLog.maskRenderingClusterBy.Test(ClusterLog::Index))
     		{
     			if (mClusterLog.maskShow.Test(ClusterLog::Cluster))
-    				cluster.DrawClustersIndex(mClusterLog.getClusteIndex(),(mClusterLog.maskShow.Test(ClusterLog::Seed)));
+    				cluster.DrawClustersIndex(camera.Eyes().Norm(),mClusterLog.getClusteIndex(),(mClusterLog.maskShow.Test(ClusterLog::Seed)));
 
     			if (mClusterLog.maskShow.Test(ClusterLog::Surfel))
-    				cluster.DrawSurfels(mClusterLog.getClusteIndex(),64,mClusterLog.getRadiusf());
+    				cluster.DrawSurfels(camera.Eyes().Norm(),mClusterLog.getClusteIndex(),32,mClusterLog.getRadiusf());
     		}
     		else if (mClusterLog.maskRenderingClusterBy.Test(ClusterLog::Range))
     		{
 
     			if (mClusterLog.maskShow.Test(ClusterLog::Cluster))
-    				cluster.DrawClustersRange(mClusterLog.getClusterRangeBegin(),mClusterLog.getClusterRangeEnd(),(mClusterLog.maskShow.Test(ClusterLog::Seed)));
+    				cluster.DrawClustersRange(camera.Eyes().Norm(),mClusterLog.getClusterRangeBegin(),mClusterLog.getClusterRangeEnd(),(mClusterLog.maskShow.Test(ClusterLog::Seed)));
 
     			if (mClusterLog.maskShow.Test(ClusterLog::Surfel))
     			{
         			std::cout << "Radiusf " << mClusterLog.getRadiusf() << std::endl;
 
     				for(unsigned int i = mClusterLog.getClusterRangeBegin();i <= mClusterLog.getClusterRangeEnd();++i)
-    					cluster.DrawSurfels(i,8,mClusterLog.getRadiusf());
+    					cluster.DrawSurfels(camera.Eyes().Norm(),i,8,mClusterLog.getRadiusf());
     			}
 
     		}else

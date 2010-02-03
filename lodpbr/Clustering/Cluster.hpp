@@ -93,9 +93,7 @@ public:
 //                for (SurfelVectorIterator it =  Surfels.begin();it != Surfels.end(); ++ it )
 //                 {
 // 						SurfelPtr s = new Surfel(*it);
-//
 // 						Curvature(s,100);
-//
 // 						it->SetCurvature(s->Curvature());
 // 						if (maxC <  s->Curvature())
 // 						{
@@ -157,11 +155,17 @@ public:
         	lNeighbors = KDTree.KNearestNeighbors(pSurfel ,pNeighbourhoodSize , KNearestSearchComps);
         	Real signal = 0;
 
+        	Celer::Point3<Real> mean;
+
         	for(SurfelPtrVectorReverseIterator it = lNeighbors.rbegin(); it != lNeighbors.rend(); ++it)
         	{
         		//signal =  ((*it)->Center()-pSurfel->Center())*(*it)->Normal();
         		lSurfels.push_back( (*it)->Center() );
+        		 mean += (*it)->Center();
+
         	}
+
+        	mean /= lSurfels.size();
 
 //        	if (signal > 0)
 //        		signal = 1;
@@ -170,7 +174,7 @@ public:
 
         	Celer::Point3<Real> lSurfel (pSurfel->Center());
 
-        	Celer::EigenSystem<Real> lEigen(lSurfels,lSurfel);
+        	Celer::EigenSystem<Real> lEigen(lSurfels,mean);
 
     		pSurfel->SetCurvature((lEigen.Curvature())*3);
 
@@ -271,7 +275,7 @@ public:
 
         		lSurfel                 = lOpen.front();
         		lOpen.pop_front();
-        		if(lSurfel->ExpansionMarked() == 1)
+        		if(lSurfel->Marked() == 1)
         		{
         			//std::cout << "cont " << cont << std::endl;
         			continue;
@@ -280,7 +284,7 @@ public:
         		lSurfel->SetExpansionMarked     (1);
         		lSurfel->SetClusterID           (cont);
 
-        		lNeighbors  = KDTree.KNearestNeighbors(lSurfel ,30 , KNearestSearchComps);
+        		lNeighbors  = KDTree.KNearestNeighbors(lSurfel ,16 , KNearestSearchComps);
 
         		mHeightMax = std::fabs(lSurfel->Normal()*( lNeighbors.back()->Center() - lSurfel->Center() ));
 
@@ -295,7 +299,7 @@ public:
 
         			if( Dist >=  mHeightMax)
         			{
-        				if ((*it)->ExpansionMarked()== 0)
+        				if ((*it)->Marked() == 0 )
         					lOpen.push_back((*it));
 //        				for(size_t j = i; j != 0; --j)
 //        				{
@@ -307,11 +311,21 @@ public:
 
         			}else
         			{
-//							if ((*it)->ExpansionMarked() == 0)
-//							{
+							if ((*it)->ExpansionMarked() == 1)
+							{
+								if ((*it)->Marked() == 0 )
+								{
+									(*it)->SetMarked(1);
+									lClose.push_back((*(*it)));
+								}
+
+							}else
+							{
 								(*it)->SetExpansionMarked(1);
 								lClose.push_back((*(*it)));
-//							}
+								lOpen.push_back((*it));
+							}
+
 
         			}
 //        			else
@@ -337,31 +351,26 @@ public:
         		lNeighbors.clear();
         		if(cb && (progress%100)==0) cb(progress*50/kd_tree_size,"Cluster Building");
         	}
-
+        	cb(100,"Cluster Done!");
+        	std::cout << "progress :" << progress << "kdtree " << kd_tree_size << "Cluster Size"<<  std::endl;
     		KDTree.ResetMarkedClustering();
         }
 
-
-
-
-
-
 /* ------------------------------- Draw Functions -------------------------- */
 
-        void DrawSurfels(unsigned int pNumber,unsigned int pSteps = 8,const Real& pRadius = 1.0 )
+        void DrawSurfels(const Celer::Vector3<float>& view,unsigned int pNumber,unsigned int pSteps = 8,const Real& pRadius = 1.0 )
         {
-        	itColor = colors.begin();
-        	glPushAttrib(GL_ALL_ATTRIB_BITS);
-        	glPushMatrix();
-        	glColor3fv(Colors());
-        	NewSurfels[pNumber].DrawTriangleFan(pSteps,pRadius);
-        	glPopMatrix();
-        	glPopAttrib();
+        	if ((view *  NewSurfels[pNumber].Normal())> -0.2f )
+        	{
+        		glPushMatrix();
+        		glColor4f(1.0f,0.35f,0.0f,0.5f);
+        		NewSurfels[pNumber].DrawTriangleFan(pSteps,pRadius);
+        		glPopMatrix();
+        	}
         }
 
-        void DrawClustersIndex (unsigned int pNumber,bool pShowSeed )
+        void DrawClustersIndex (const Celer::Vector3<float>& view,unsigned int pNumber,bool pShowSeed )
         {
-        	glPushAttrib(GL_ALL_ATTRIB_BITS);
         	glPushMatrix();
         	glDisable(GL_LIGHTING);
         	itColor = colors.begin();
@@ -376,8 +385,11 @@ public:
         		glBegin(GL_POINTS);
         		for ( SurfelListIterator j = Clusters[pNumber].second.begin() ; j != Clusters[pNumber].second.end(); ++j )
         		{
-    	 			glNormal3fv (j->Normal());
-        			glVertex3fv( j->Center() );
+                	if ((view *  j->Normal())> 0.2f )
+                	{
+                		glNormal3fv (j->Normal());
+						glVertex3fv( j->Center() );
+                	}
         		}
         		glEnd();
         		glPopMatrix();
@@ -400,10 +412,10 @@ public:
         	glDisable(GL_MULTISAMPLE);
         	glEnable(GL_LIGHTING);
         	glPopMatrix();
-        	glPopAttrib();
+
         }
 
-        void DrawClustersRange (unsigned int Begin, unsigned int End,bool pShowSeed)
+        void DrawClustersRange (const Celer::Vector3<float>&view,unsigned int Begin, unsigned int End,bool pShowSeed)
         {
         	glPushAttrib(GL_ALL_ATTRIB_BITS);
         	glPushMatrix();
@@ -417,8 +429,11 @@ public:
         		glBegin(GL_POINTS);
         		for ( SurfelListIterator j = Clusters[i].second.begin() ; j != Clusters[i].second.end(); ++j )
         		{
-        			glNormal3fv (j->Normal());
-        			glVertex3fv( j->Center() );
+                	if ((view *  j->Normal())> 0.2f )
+                    	{
+                    		glNormal3fv (j->Normal());
+    						glVertex3fv( j->Center() );
+                    	}
         		}
         		glEnd();
         		glPopMatrix();
