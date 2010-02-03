@@ -93,6 +93,42 @@ public:
 
   }
 
+//  /// Returns a pointer to the kd-tree node which contains point p
+//  /// @param p point which should be inside a descendant
+//  std::pair<bool,SurfelPtr> SearchSeed ()
+//  {
+//	  if (mListPtr.size() == 1)
+//	  { // internal node, contains only one object
+//		  if ( mListPtr[0]->ExpansionMarked()) // found match
+//		  {
+//			  return this;
+//		  }
+//		  else
+//		  {
+//			  if (p->Center()[mSplitDimension] > mSplitCoordnate)
+//			  {
+//				  return son[1]->SearchLeaf (p);
+//			  }else
+//			  {
+//				  return son[0]->SearchLeaf (p);
+//			  }
+//		  }
+//
+//	  }else if (mListPtr.size() > 1)
+//	  { // leaf node, search entire list for a match
+//		  for (int i = 0; i < mListPtr.size(); ++i)
+//		  {
+//			  if (mListPtr[i]->Center() == p.Center())
+//			  {
+//				  return this;
+//			  }
+//		  }
+//
+//		  return NULL;
+//	  }
+//  }
+
+
   /// Returns a pointer to the kd-tree node which contains point p
   /// @param p point which should be inside a descendant
   const KdTreeNode* SearchLeaf (const SurfelPtr& p) const
@@ -127,6 +163,7 @@ public:
 		  return NULL;
 	  }
   }
+
 
   /// Returns the left son of this node
   /// @return left son
