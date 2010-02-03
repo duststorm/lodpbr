@@ -1,6 +1,55 @@
 \chapter{Multiresolução Sequencial}
 \section{Erro Perpendicular}
 \section{Erro Tangencial}
+
+\begin{itemize}
+  \item {O contorno da elipse $\mathbf{s}_m$ que
+  representa o cluster é discretizado num conjunto, $\mathbf{\mathcal C} =
+  \{p_1,\ldots,p_8\}$, de $8$ de seus pontos. Específicamente,
+  aqueles que definem com o centro da elipse raias que fazem com o eixo maior um ângulo múltiplo de $45^{o}$.  }
+\item {Seja  $\mathbf{s}_i$ uma elipse do conjunto $\mathbf{\mathcal T} =
+\{\mathbf{s}_1, \ldots,\mathbf{s}_n\}$, que está sendo condensado e $\mathbf{s}_i^\prime$ um
+elipse do conjuto $\mathbf{\mathcal T}^\prime = \{\mathbf{s}_i^\prime,
+\ldots,\mathbf{s}_n^\prime\}$\ de elipses projetadas sobre o plano definodo
+por $\mathbf{s}_m$. A distância de cada um dos pontos ($p_{k} \in $ $\mathbf{\mathcal C}$) em que se discretiza 
+$\mathbf{s}_m$ a $\mathbf{s}_i^\prime$  $-$ que notaremos por
+$dist(p_{k},\mathbf{s}_i^\prime)$ $-$ é obtida de forma aproximada da forma
+indicada abaixo. Os elementos referidos no texto a seguir estão representados na figura X.}
+\end{itemize}
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=15.0cm]{img/cap05/tangencial} 
+\caption{Junção dos \textit{splats} de acordo com a métrica
+$\mathbf{\mathit{L}}^2$ (esquerda) e $\mathbf{\mathit{L}}^{2,1}$ (direita) }
+\label{fig:merge}
+\end{figure}  
+
+
+\begin{enumerate}
+  \item {No caso óbvio em que $p_{k} \in  \mathbf{s}_i^\prime$, teremos
+  $dist(p_{k}, \mathbf{s}_i^\prime) = 0 $.}
+  \item {Caso contrário  considere o segmento de reta delimitado pelo ponto $q_{1}$,  
+onde a raia $[ c_{i}, p_{k}]$ corta a elipse  $\mathbf{s}_i^\prime$  e $q_{2}$,  a extremidade do eixo 
+maior de $\mathbf{s}_i^\prime$  que está mais próxima de $p_{k}$.}
+\item {Computa-se a distância de  $p_{k}$ a $[q_{1}, q_{2}]$ e usa-se essa distância como 
+aproximação de $dist(p_{k}, \mathbf{s}_i^\prime))$. Essa aproximação tem erro
+percentual limitado por ? e revelou-se suficiente para os propósitos de nossa aplicação.}
+\end{enumerate}
+ 
+
+Utilizando a distancia aproximada definida acima se obtem para cada $p_{k}$
+sua distância ao conjunto de elipses  $\mathbf{\mathcal T}^\prime$ $-$ dado por
+$ \min_{ \mathbf{s}_i^\prime \in  \mathbf{\mathcal T}^\prime}
+(dist_{p_k \in \mathbf{\mathcal C}}(p_{k}, \mathbf{s}_i^\prime))$. O erro
+tangencial será finalmente obtido tomando-se a maior dessas distâncias. Ele pode, então, ser expresso por:
+
+
+\begin{eqnarray}
+e_t &=& \displaystyle\max  \{ \min_{ \mathbf{s}_i^\prime \in  \mathbf{\mathcal T}^\prime}
+(dist_{p_k \in \mathbf{\mathcal C}}(p_{k}, \mathbf{s}_i^\prime)) \}\\\nonumber 
+\end{eqnarray}
+
 \section{Resultados}
 
 
