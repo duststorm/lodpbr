@@ -10,8 +10,55 @@
 \caption{Erro Perpendicular}
 \label{fig:merge_splats}
 \end{figure}  
-
 \section{Erro Tangencial}
+O erro tangencial mede a  diferença entre a elipse que representa o cluster
+($\mathbf{s}_{m}$) e o conjunto ($\Gamma$) formado pelas projeções das elipses
+que fazem parte do cluster sobre o plano de $\mathbf{s}_{m}$. Há duas maneiras naturais de avaliar a diferença entre dois conjuntos planares. 
+A primeira é dada pela área da diferença simétrica entre  os conjuntos. 
+No caso, como $\mathbf{s}_{m}$ contem $\Gamma$, essa diferença é simplesmente
+$\mathbf{s}_{m}-\Gamma$. A segunda pela maior distância de um ponto de um
+conjunto a outro. Como $\Gamma \subseteq \mathbf{s}_{m}$, podemos nos restringir a encontrar o ponto 
+$d$ e $\mathbf{s}_{m}$ mais afastado de $\Gamma$. 
+Para obter computacionalmente a área de $\mathbf{s}_{m}
+-\Gamma$($\mathbf{\mathcal A}(\mathbf{s}_{m}-\Gamma$)),pensamos em duas
+estratégias :
+\begin{enumerate}
+ \item { A primeira visa obter essa área de forma exata. De fato, identificando
+ os pontos extremos de cada elipse em relação a uma das coordenadas e os ordenando segundo ela, 
+ podemos por um algoritmo de varredura de linhas, identificar as interseções dos contornos das 
+ elipses de $\Gamma$ e partir delas $\mathbf{\mathcal
+ A}(\mathbf{s}_{m}-\Gamma$). Esse procedimento, entretanto, tem uma
+ complexidade que torna impraticável a sua utilização para nossos propósitos.
+ Para concluir isso, basta considerar que ele é $O(n_{x} \log{n_{x}})$, onde $
+ n_{x}$ é o número de intersecções entre elipses de $\Gamma$, o qual já é quadrático no número dessas elipses. Além disso o simples cômputo de uma intersecção entre duas elipses em posição genérica já envolve 
+ a resolução de uma equação do quarto grau. Assim pretender encontrar o valor exato de 
+$\mathbf{\mathcal A}(\mathbf{s}_{m}-\Gamma$) está fora de cogitação. }
+ \item { Imergir as elipses envolvidas numa malha regular e determinar a
+ situação de pertinência em relação a $\mathbf{s}_{m}$ e $\Gamma$ do centro de cada
+ célula. Uma célula cujo centro pertence a $\mathbf{s}_{m}$ e não a $\Gamma$, contribui
+ com sua área para o cômputo de $\mathbf{\mathcal A}(\mathbf{s}_{m}-\Gamma$). A
+ determinação da pertinência com relação a todas as elipses de $\Gamma$, que tem de ser efetuada para um
+ número de pontos quadrático na resolução da malha prejudica a performance
+ dessa alternativa, obrigando a que se empregue uma malha muito grosseira ou
+ que se limite o número de elipses sendo agregadas. Portanto também essa opção
+ não parece ser inteiramente satisfatória.}
+\end{enumerate}
+
+
+Tendo em vista as dificuldades apontadas acima na obtenção da aéra de
+$\mathbf{s}_{m}-\Gamma$ nos concentramos em obter o erro tangencial via uma
+aproximação computacionalmente viável de $dist(\mathbf{s}_{m},\Gamma$), a distância a
+$\Gamma$ do ponto de $s_{m}$ mais afastado dele. A determinação de
+$dist(\mathbf{s}_{m},\Gamma$) fica facilitada se assumirmos que o ponto de $\mathbf{s}_{m}$ mais
+distante de $\Gamma$ estiver na sua borda. Isso certamente é verdade se o
+número de elipses em $\Gamma$ for igual a $2$ e em casos reais, devido a
+própria limitação do tamanho do cluster e do fato do próprio processo de
+expansão que gera os clusters não fazer curvas acentuadas, essa suposição não
+causou distorções acentuadas no cálculo do erro tangencial. Se podemos limitar
+a busca do ponto mais distante de $\Gamma$, a borda de $\mathbf{s}_{m}$,
+$dist(\mathbf{s}_{m},\Gamma$) pode ser aproximada de forma aceitável e com custo
+computacional adequado, da seguinte forma:
+
 \begin{itemize}
   \item {O contorno da elipse $\mathbf{s}_m$ que
   representa o cluster é discretizado num conjunto, $\mathbf{\mathcal C} =
@@ -24,13 +71,16 @@ elipse do conjuto $\mathbf{\mathcal T}^\prime = \{\mathbf{s}_i^\prime,
 por $\mathbf{s}_m$. A distância de cada um dos pontos ($p_{k} \in $ $\mathbf{\mathcal C}$) em que se discretiza 
 $\mathbf{s}_m$ a $\mathbf{s}_i^\prime$  $-$ que notaremos por
 $dist(p_{k},\mathbf{s}_i^\prime)$ $-$ é obtida de forma aproximada da forma
-indicada abaixo. Os elementos referidos no texto a seguir estão representados na figura X.}
+indicada abaixo. Os elementos referidos no texto a seguir estão representados
+na Figura~\ref{fig:merge_splats}.}
 \end{itemize}
 
 \begin{figure}[ht]
 \centering
 \includegraphics[width=15.0cm]{img/cap05/tangencial} 
-\caption{ Erro Tangencial }
+\caption{ Distância aproximada de uma elipse $\mathbf{s}_i^\prime$ do conjunto
+das elipses projetadas $\mathbf{\mathcal T}^\prime$ ao contorno de $\mathbf{s}_m$
+dicretizado em $8$ pontos. \textbf{Esquerda:}. \textbf{Direita:}.}
 \label{fig:merge_splats}
 \end{figure}  
 
