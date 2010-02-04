@@ -33,10 +33,15 @@
 \BOOKMARK [1][-]{section.4.1}{Simplifica\347\343o Baseada em Pontos Puros}{chapter.4}
 \BOOKMARK [1][-]{section.4.2}{Simplifica\347\343o Baseada em Splats}{chapter.4}
 \BOOKMARK [1][-]{section.4.3}{Discuss\343o}{chapter.4}
-\BOOKMARK [0][-]{chapter.5}{Multiresolu\347\343o Sequencial}{}
-\BOOKMARK [1][-]{section.5.1}{Erro Perpendicular}{chapter.5}
-\BOOKMARK [1][-]{section.5.2}{Erro Tangencial}{chapter.5}
-\BOOKMARK [1][-]{section.5.3}{Resultados}{chapter.5}
+\BOOKMARK [0][-]{chapter.5}{Simplifica\347\343o de Superf\355cies baseadas em Splats}{}
+\BOOKMARK [1][-]{section.5.1}{Introdu\347\343o}{chapter.5}
+\BOOKMARK [1][-]{section.5.2}{Clusteriza\347\343o Incremental}{chapter.5}
+\BOOKMARK [2][-]{subsection.5.2.1}{Centro e Normal}{section.5.2}
+\BOOKMARK [2][-]{subsection.5.2.2}{Eixos da El\355pse}{section.5.2}
+\BOOKMARK [1][-]{section.5.3}{Erro Perpendicular}{chapter.5}
+\BOOKMARK [1][-]{section.5.4}{Erro Tangencial}{chapter.5}
+\BOOKMARK [1][-]{section.5.5}{Resultados}{chapter.5}
+\BOOKMARK [1][-]{section.5.6}{Discurss\343o}{chapter.5}
 \BOOKMARK [0][-]{chapter.6}{Conclus\343o e Trabalhos Futuros}{}
 \BOOKMARK [0][-]{chapter*.17}{Refer\352ncias Bibliogr\341ficas}{}
 \BOOKMARK [0][-]{appendix.A}{An\341lise das Componentes Principais}{}
