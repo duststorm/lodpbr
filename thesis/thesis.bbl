@@ -54,6 +54,11 @@
 \newblock In: {\em In Proceedings of the 15th Brazilian Symposium on Computer
   Graphics and Image Processing\/}, 2002.
 
+\bibitem{Bou07}
+\MakeUppercase{ Boubekeur, T.}, {\em Hierarchical Processing, Editing and
+  Rendering of Acquired Geometry\/}, Ph.D. Thesis, University of Bordeaux,
+  September 2007.
+
 \bibitem{Lorensen1978}
 \MakeUppercase{ Lorensen, W.~E., Cline, H.~E.}, \enquote{Marching cubes: A high
   resolution 3D surface construction algorithm}, {\em SIGGRAPH Comput.

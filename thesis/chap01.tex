@@ -7,18 +7,21 @@ devido a evolução do \textit{hardware} gráfico 3D, e.g
 (\textit{Graphic Processor Unit}) % ,
 \abbrev{GPU}{\textit{Graphic Processor Unit}} e devido ao fato, que modelos
 extremamente grandes produzidos pelos \textit{Scanners} $3D$ estarem
-disponíveis \cite{Levoy2000, Correa02towardspoint-based}. Ao contrário do
-método tradicional de renderização em que modelos $3D$ são aproximados por um
-conjunto de polígonos (malhas poligonais) e iluminados usando
+disponíveis \cite{Levoy2000, Correa02towardspoint-based}.
+\begin{figure}[ht]
+\centering
+\includegraphics[width=12.0cm]{img/cap01/meshVsPoint} 
+\caption{\textbf{Esquerda:} Modelo Max Planck. \textbf{Topo-Direita:}
+Renderização usando malhas poligonais
+\textbf{Baixo-Direita:} Renderização usando \textit{Splats} (Retirada
+de~\cite{Bou07})}
+\label{fig:triangle2point}
+\end{figure} 
+Ao contrário do método tradicional de renderização em que modelos $3D$ são
+aproximados por um conjunto de polígonos (malhas poligonais) e iluminados usando
 \textit{Gouraund} ou \textit{Phong} durante a projeção, técnicas de renderização
 baseada em pontos usa nuvem de pontos sem conectividade explicita.
 
-\begin{figure}[ht]
-\centering
-\includegraphics[width=12.0cm]{img/cap01/triangle2point} 
-\caption{Lucy figure}
-\label{fig:triangle2point}
-\end{figure}
 Há várias razões para o sucesso da renderização baseada em pontos. Primeiro,
 com o aumento na quantidade de memória das GPUs modernas tornou-se 
 possível tratar cenas com quantidade enormes de polígonos e como consequência a
