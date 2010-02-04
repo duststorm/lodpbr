@@ -1,6 +1,11 @@
 \begin{thebibliography}{10}
 \newcommand{\enquote}[1]{``#1''}
 
+\bibitem{Bou07}
+\MakeUppercase{ Boubekeur, T.}, {\em Hierarchical Processing, Editing and
+  Rendering of Acquired Geometry\/}, Ph.D. Thesis, University of Bordeaux,
+  September 2007.
+
 \bibitem{LevoyW1985}
 \MakeUppercase{ Levoy, M., Whitted, T.}, {\em The Use of Points as a Display
   Primitive\/}, Tech. Rep. 85-022, Department of Computer Science,University of
@@ -53,11 +58,6 @@
   Point-Based Acquisition and Rendering of Large Real-World Environments}.
 \newblock In: {\em In Proceedings of the 15th Brazilian Symposium on Computer
   Graphics and Image Processing\/}, 2002.
-
-\bibitem{Bou07}
-\MakeUppercase{ Boubekeur, T.}, {\em Hierarchical Processing, Editing and
-  Rendering of Acquired Geometry\/}, Ph.D. Thesis, University of Bordeaux,
-  September 2007.
 
 \bibitem{Lorensen1978}
 \MakeUppercase{ Lorensen, W.~E., Cline, H.~E.}, \enquote{Marching cubes: A high
