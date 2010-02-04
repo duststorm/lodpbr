@@ -19,45 +19,45 @@ Warning--empty pages in Correa02towardspoint-based
 Warning--empty pages in marroquim07
 Warning--empty journal in Alexa2004
 Warning--empty pages in EfficenteLOD2003
-You've used 45 entries,
+You've used 46 entries,
             2438 wiz_defined-function locations,
-            918 strings with 13579 characters,
-and the built_in function-call counts, 12448 in all, are:
-= -- 1084
-> -- 315
+            923 strings with 13693 characters,
+and the built_in function-call counts, 12559 in all, are:
+= -- 1091
+> -- 319
 < -- 35
-+ -- 153
-- -- 108
-* -- 1119
-:= -- 1632
-add.period$ -- 108
-call.type$ -- 45
++ -- 155
+- -- 109
+* -- 1129
+:= -- 1652
+add.period$ -- 109
+call.type$ -- 46
 change.case$ -- 0
 chr.to.int$ -- 0
-cite$ -- 49
-duplicate$ -- 729
-empty$ -- 1353
-format.name$ -- 108
-if$ -- 2828
+cite$ -- 50
+duplicate$ -- 737
+empty$ -- 1365
+format.name$ -- 109
+if$ -- 2849
 int.to.chr$ -- 0
-int.to.str$ -- 45
+int.to.str$ -- 46
 missing$ -- 42
-newline$ -- 164
-num.names$ -- 45
-pop$ -- 185
+newline$ -- 167
+num.names$ -- 46
+pop$ -- 187
 preamble$ -- 1
 purify$ -- 0
 quote$ -- 0
-skip$ -- 338
+skip$ -- 340
 stack$ -- 0
 substring$ -- 980
-swap$ -- 322
+swap$ -- 324
 text.length$ -- 35
 text.prefix$ -- 0
 top$ -- 0
 type$ -- 0
 warning$ -- 4
-while$ -- 127
-width$ -- 47
-write$ -- 447
+while$ -- 128
+width$ -- 48
+write$ -- 456
 (There were 5 warnings)
