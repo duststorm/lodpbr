@@ -3,8 +3,8 @@ Como mencionado no capítulo \ref{cap:02}, modelos baseados em pontos complexos p
 milhões ou mesmo bilhões de amostras, como por exemplo no projeto do David Digital\cite{Levoy2000}. 
 Para que seja possível processar ou visualizar estes modelos em tempo real, muitas vezes é necessário reduzir a complexidade realizando operações de simplificação.
 Estas técnicas geram aproximações adequadas do modelo reduzindo o número de amostras e procurando manter da melhor forma possível as características do modelo original.
-Formalmente, o objetivo de uma simplificação de superfícies baseadas em pontos
-pode ser formuladas da seguinte forma: 
+Formalmente, a definição de uma simplificação de superfícies baseadas em pontos
+pode ser formulada da seguinte forma: 
 
 Seja uma superfície $\mathbf{\mathcal{S}}$
 definida por uma nuvem de pontos $\mathbf{\mathcal{P}}$. Dado um número
@@ -18,15 +18,15 @@ $\mathbf{\mathcal{S}}$ seja mínima.
 %Na prática ,  achar um ótimo global do problema descrito acima é $np - hard$
 Diversos algoritmos de simplificação utilizam
 diferentes heurísticas baseadas em erros locais para encontrar a melhor aproximação.
-Neste capítulos serão apresentados alguns métodos de simplificação divididos em duas categorias:
+Neste capítulo serão apresentados alguns métodos de simplificação divididos em duas categorias:
 superfícies baseadas em pontos \textit{Puros} e baseadas em \textit{Splats}.
 
 %{New point based simplification based on MLS and splat for Point Modesl}
 
 \section{Simplificação Baseada em Pontos \textit{Puros}}
 \label{sec:puro}
-Uma abordagem simples e muito usada na simplificação de nuvem de pontos é
-avaliar a importância de cada ponto na nuvem de pontos. 
+Uma abordagem simples e muito usada na simplificação de nuvens de pontos é
+avaliar a importância de cada ponto. 
 Esta importância é quantificada em um valor que indica a quantidade de informação que o ponto possui para formar a superfície, ou a sua redundância. 
 Linsen \cite{Linsen2001} defini a informação contida em um ponto como uma soma ponderada de fatores estimados pelos seus vizinhos, como distância e curvatura por exemplo.
 Em Alexa et al.\cite{Alexa2001} os pontos são removidos de acordo com a importância de sua contribuição
@@ -41,19 +41,17 @@ Após a determinação da importância de cada ponto, a simplificação é então realiz
 \includegraphics[width=7.0cm]{img/cap04/teaPotSong} &
 \includegraphics[width=6.0cm]{img/cap04/pecaSong} 
 \end{tabular}
-\caption{Método de simplificação proposto por~\cite{Song2009}. Nos dois
-modelos: \textbf{Topo-esquerda:} Modelo original. \textbf{Topo-direta:} Em
-destaque pontos, classificados como de bordas. \textbf{Baixo:} Modelos
-simplificado.}
+\caption{Método de simplificação proposto por~\cite{Song2009}. Para os dois
+modelos exemplos são mostrados: o modelo original (\textbf{topo-esquerda}), os pontos classificados como de bordas destacados (\textbf{topo-direita}), e o modelo simplificado (\textbf{baixo}).}
 \label{fig:song2009}
 \end{figure}
 
 Os métodos de simplificação citados acima são baseados na suposição de que a
 superfície determinada pela nuvem de pontos seja suave. Contudo, modelos de peças mecânicas por exemplo, contêm descontinuidades que são geralmente bordas afiadas separando a superfície em duas
-partes distintas. Song e Feng \cite{Song2009} resolveram este problema criando um método de
+partes distintas. Song e Feng \cite{Song2009} abordaram este problema criando um método de
 simplificação baseado na mesma ideia do métodos
 citados acima, porém com duas diferenças principais.
-Primeiro, ao invés de operar sobre toda a nuvem de pontos de uma só vez,
+Primeiro, ao invés de operar sobre toda a nuvem de pontos,
 o algoritmo considera apenas uma região suave distinta por vez.
 Segundo, o grau de importância dos pontos é medido de forma diferente: enquanto Alexa et al.\cite{Alexa2001}
 focam em uma simplificação
@@ -145,7 +143,7 @@ Simulação de Partículas. \textbf{(d)} Simplificação Interativas.}
 Os algoritmos citados acima criam uma nuvem de pontos simplificada realizando uma amostragem do modelo, ou seja, definindo um subconjunto da nuvem original ao remover iterativamente pontos de acordo com uma métrica de erro.
 Enquanto estes métodos são simples e eficientes, suas estratégias de
 simplificação não garantem uma distribuição global uniforme. Além disso, os
-erros proposto por estes métodos por vezes não produzem um boa estimativa, não sendo trivial formular métricas mais precisas.
+erros propostos por estes métodos por vezes não produzem um boa estimativa para todos casos, não sendo trivial formular métricas genéricas mais precisas.
 
 Uma maneira sistemática de simplificação de pontos foi
 proposta por Pauly et al.\cite{Pauly2002}, onde vários métodos de simplificação
@@ -156,7 +154,7 @@ de polígonos foram adaptados para pontos. São eles:
  são criados sistematicamente ao crescer regiões através da agregação de pontos
 vizinhos; e o hierárquico, onde clusters são criados tomando a nuvem de pontos original e dividindo-a em conjuntos menores.}
   \item{\textit{Simplificação Iterativa:} Onde repetidamente seleciona-se pares
-  de pontos e juntando-os em um só. Note que para cada junção, há um acréscimo no
+  de pontos juntando-os em um só. Note que para cada junção, há um acréscimo no
   erro total, no entanto, cria-se uma lista ordenada com todos pares possíveis, colocando no topo a junção que provoca o menor erro. Pares de pontos são então aglomerados de forma a minizar o erro. Para avaliar o
   erro de junção dos pares de pontos é usada uma adaptação do \texit{Quadric
   Error Metric}\abbrev{QEM}{\texit{Quadric Error Metric}} apresentado para
@@ -192,8 +190,8 @@ A ideia é primeiro gerar o conjunto de pontos na qual a densidade se adapta a
 curvatura da superfície, e em um processo posterior converter os pontos
 em \textit{splats} estimando sua normal e tamanho pela análise local de sua vizinhança. 
 Em contraste, técnicas de simplificação
-baseadas em \textit{splat}, exploram toda a geometria do disco ou elipse para
-obter o conjunto de \textit{splats} que recobrem a superfície. No entanto, estas
+baseadas em \textit{splats}, exploram toda a geometria do disco ou elipse para
+obter o subconjunto que recobre a superfície. No entanto, estas
 técnicas são computacionalmente mais intensas.
 
 Wu e Kobbelt~\cite{WuK04} desenvolveram uma técnica de simplificação
@@ -211,8 +209,8 @@ satisfaz um erro global pré-determinado.
 \textbf{Meio:} Modelo aproximado por $422$ \textit{splats} após o segundo passo
 (seleção gulosa). \textbf{Direita:} $333$ \textit{splats} após
 finalizado o terceiro passo (otimização global usando sistemas de partículas)
-\textbf{Direita-Meio} e \textbf{Esquerda-Meio} são a renderização
-dos \textit{splats} usando filtro EWA. Note a melhor distribuição dos
+A segunda e quarta imagem mostram os \textit{splats} renderizados usando filtro EWA. 
+Note a melhor distribuição dos
 \textit{splats} após passo de otimização global}
 \label{fig:wu04}
 \end{figure} 
@@ -220,8 +218,8 @@ dos \textit{splats} usando filtro EWA. Note a melhor distribuição dos
 O objetivo da simplificação otimizada é computar um conjunto mínimo de
 \textit{splats} $\mathbf{\mathcal{T}=\{\mathbf{s}_j}\}$ que aproxime o conjunto
 original $\mathbf{\mathcal{P}}$ com um erro abaixo de uma tolerância
-$\mathbf{\varepsilon}$. Para inicializar o algoritmo, em uma fase de pré-processamento, para cada ponto ${\mathbf{p}_i}$ propriedades locais da superfície como vetor normal $\mathbf{n}_i$ e 
-densidade $\mathbf{\omega}_i$ são calculados baseados em uma vizinhaça local. Dependendo da
+$\mathbf{\varepsilon}$. Em uma fase de pré-processamento propriedades locais da superfície, como vetor normal $\mathbf{n}_i$ e 
+densidade $\mathbf{\omega}_i$, são calculadas para cada ponto ${\mathbf{p}_i}$ baseadas em uma vizinhaça local. Dependendo da
 aplicação, pode-se decidir entre \textit{splats} circulares ou elípticos. Um
 \textit{splat} circular é definido por um centro ${\mathbf{c}_i}$, normal
 ${\mathbf{n}_i}$ e um raio ${\mathbf{r}_i}$; no caso do elíptico o raio
@@ -249,15 +247,15 @@ no caso de um \textit{splat} circular ou
 \label{eq:eliptico}
 \end{equation}
 se for um \textit{splat} elíptico. Se $\mathbf{p}_i$ projetar no interior de vários
-\textit{splats}, a distância mínima é escolhida. Se nenhum $\mathbf{s}_j$ for encontrado pelas equações \ref{eq:circular} ou \ref{eq:eliptico}, sua distância é definida como $dist(\mathbf{p}_i,\mathbf{\mathcal T}) = \infty$.
+\textit{splats} a distância mínima é escolhida. Se nenhum $\mathbf{s}_j$ for encontrado pelas equações \ref{eq:circular} ou \ref{eq:eliptico}, sua distância é definida como $dist(\mathbf{p}_i,\mathbf{\mathcal T}) = \infty$.
  
-A simplificação otimizada segue três passos. No primeiro passo é computado o
+A simplificação otimizada é realizada em três passos. No primeiro passo é computado o
 \textit{splat} máximo para cada ponto ${\mathbf{p}_i}$ cujo erro é limitado por
 um $\mathbf{\varepsilon}$. Começando por uma semente $\mathbf{p}_i$, 
 o \textit{splat} $\mathbf{s}_i$ cresce ao encorporar os vizinhos
-de acordo com sua distâncias. Esta distância é calculada usando \ref{eq:circular} para
-\textit{spalt} circular ou \ref{eq:eliptico} para elíptico, sendo que este último
-adapta-se melhor à curvatura da superfície. Em um segundo passo, para o conjunto
+de acordo com sua distâncias. Esta distância é calculada usando as equações \ref{eq:circular} e
+\ref{eq:eliptico}, sendo que os \textit{splats} elípticos possuem a vantagem de 
+adaptarem-se melhor à curvatura da superfície. Em um segundo passo, para o conjunto
 inicial de \textit{splats}, um subconjunto que cobre a superfície sem que haja buracos entre os vizinhos é selecionado
 usando um procedimento guloso.
  
@@ -283,7 +281,7 @@ erro}, que avalia o erro causado pela respectiva operação de junção.
 \centering
 \includegraphics[width=15.0cm]{img/cap04/progressiveSplat} 
 \caption{ Representação progressiva do modelo de Carlos Magno ($600.000$
- de pontos). Da esquerda para direita, modelos com: $20.00$,
+ de pontos). Da esquerda para direita, modelos com: $2.000$,
 $10.000$, $70.000$ e $600.000$ \textit{splats}}
 \label{fig:progressiveSplat}
 \end{figure} 
@@ -293,7 +291,7 @@ A entrada do algoritmo é um conjunto de pontos $\mathbf{\mathcal P}
 \textit{splats} $\mathbf{\mathcal T  = \{\mathbf{1} \ldots \mathbf{s}_i}\}$.
 Cada \textit{splat} representa uma elipse em $3D$ com centro $\mathbf{c}_i$,
 normal
-$\mathbf{n}_i$ e dois vetores ortogonais $\mathbf{t}_i^1$ e $\mathbf{t}_i^2$
+$\mathbf{n}_i$ e dois vetores ortogonais $\mathbf{t}_i^1$ e $\mathbf{t}_i^2$.
 
 Similar a~ \cite{Pauly2002} e \cite{WuK04} os $k$-vizinhos de $\mathbf{p}_i$, 
 $\mathbf{\mathcal{N}}_k(\mathbf{p}_i)$,   
@@ -304,12 +302,12 @@ $\mathbf{\mathcal{N}}_k(\mathbf{p}_i)$ definindo $\mathbf{s}_i$ com normal
 $\mathbf{n}_i$ e centro $\mathbf{c}_i = \mathbf{p}_i$. Como os
 \textit{splats} iniciais são círculos, $\mathbf{t}_i^1$ e $\mathbf{t}_i^2$
 serão dois vetores ortogonais  paralelos a $\mathbf{\mathcal{H}}$ com mesmo
-tamanho $\mathbf{r}_i$,
+tamanho $\mathbf{r}_i$:
 
 \begin{equation}
  \mathbf{r}_i  = \max_j || (\mathbf{p}_j - \mathbf{c}_i) - \mathbf{n}_i^{\mathit
  T}(\mathbf{p}_j - \mathbf{c}_i) - \mathbf{n}_i || ,
-\label{eq:circular}
+\label{eq:planocircular}
 \end{equation}
 
 \noindent para todo  $\mathbf{p}_j$ $\in$
@@ -320,7 +318,7 @@ Sendo assim, é criado um grafo
 $\mathbf{\mathcal{G}}(\mathbf{\mathcal{P}},\mathit{E})$ onde uma aresta $(i,j)$ 
 pertence a $\mathit{E}$ se $\mathbf{p}_j \in
 \mathbf{\mathcal{N}}_k(\mathbf{p}_i)$.
-Então um operação de junção de \textit{splat} $\Phi$ juntará dois
+Então uma operação de junção $\Phi$ juntará dois
 \textit{splats} $\mathbf{s}_a$ e $\mathbf{s}_b$ associados a dois pontos
 $\mathbf{p}_a$ e $\mathbf{p}_b$ de um aresta $\mathbf{e} \in \mathit{E}$
 em um \textit{splat} $\mathbf{s}_m$. A lista de prioridades conterá
@@ -333,10 +331,10 @@ outro ao desvio da normal ($\mathbf{\mathit{L}}^{2,1}$).
 \subsubsection{Métrica $\mathbf{\mathit{L}}^2$}
 
 A métrica $\mathbf{\mathit{L}}^2$ é baseada na distância Euclidiana. Para
-computar o erro causado pela operação de junção de \textit{splats} $\Phi$
+computar o erro causado pela operação $\Phi$
 em relação ao conjunto de pontos originais, uma lista adicional de índices
 $\{f_i\}$ dos pontos originais é mantida para cada \textit{splat} $\mathbf{s}_i$,
-onde um índice ${i}$ refere-se a um ponto $\mathbf{p}_i$. 
+onde o índice ${i}$ refere-se ao ponto $\mathbf{p}_i$. 
 
 \begin{figure}[ht]
 \centering
@@ -369,9 +367,9 @@ Desta forma, $\mathbf{s}_m$ será
 determinado com centro $\mathbf{c}_m = \bar{\mathbf{p}}$, normal $\mathbf{n}_m
 = \mathbf{v}_3$ e os dois eixos $\mathbf{t}_m^1$ e $\mathbf{t}_m^2$ definidos
 pelas direções de $\mathbf{v}_1$ e $\mathbf{v}_2$ com tamanho respectivo a
-$\sqrt{\lambda_1/\lambda_2}$. Então os tamanho dos eixos serão ajustados de
+$\sqrt{\lambda_1/\lambda_2}$. Os tamanho dos eixos são ajustados de
 forma que a \textit{splat} englobe todo os pontos $\mathbf{\mathcal{P}}_m$
-quando projetados em $2D$ no plano definido por $\mathbf{s}_m$ (Figura~\ref{fig:merge}).
+quando projetados no plano definido por $\mathbf{s}_m$ (Figura~\ref{fig:merge}).
  
 
 \subsubsection{Métrica $\mathbf{\mathit{L}}^{2,1}$}
@@ -398,7 +396,7 @@ De acordo com a métrica  $\mathbf{\mathit{L}}^{2,1}$ o centro do novo
 e normal
 \begin{equation}
  \mathbf{n}_{m}  =  \frac{|\mathbf{s}_a|\cdot\mathbf{n}_{a} +  
- |\mathbf{s}_b|\cdot\mathbf{n}_{b}}{|\mathbf{s}_a|+|\mathbf{s}_b|} 
+ |\mathbf{s}_b|\cdot\mathbf{n}_{b}}{|\mathbf{s}_a|+|\mathbf{s}_b|}.
 \label{eq:l21n}
 \end{equation}
 
@@ -414,6 +412,6 @@ Com as duas métricas de erro a sequência de operações de junção de
 \textit{splats} ${\Phi_i}$ e sua operação inversa, operação de divisão do
 \textit{splat}, podem ser criadas durante o processo de simplificação. Esse
 procedimento é similar ao proposto para malhas poligonais~\cite{Hoppe1996}, 
-porém não mantém a manter informação de topologia.
+porém sem manter informação de topologia.
 
 \section{Discussão}
