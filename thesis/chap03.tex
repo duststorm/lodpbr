@@ -82,7 +82,7 @@ Uma \textit{kd-tree} é em geral uma árvore multidimensional de busca em $k$
 dimensões; no entanto, para dados em $3D$ a árvore correspondente é geralmente
 chamada de \textit{kd-tree} tridimensional ao invés de \textit{$3$d-tree}. Elas são um
 caso especial de árvores binária de particionamento espaciais (\textit{BSP Tree}
-- \textit{Binary Space Partitioning Tree}) \abbrev{\textit{BSP
+- \textit{Binary Space Partitioning Tree})\abbrev{\textit{BSP
 Tree}}{\textit{Binary Space Partitioning Tree}}. A \textit{kd-tree} usa planos
 de cortes que são perpendiculares a um dos eixos coordenados (também chamados
 de hiperplanos), ou seja, uma especialização de uma \textit{BSP Tree} onde
@@ -105,7 +105,7 @@ alcançada (Figura \ref{fig:Kdtree}).
 
 Uma \textit{kd-tree} será usada nesta dissertação como uma estrutura de busca dos
 $k$ vizinhos mais próximos a um ponto $x$. A busca em uma \textit{kd-tree}
-requer achar a célula que contenha $x$ e computar todas as células que
+requer achar a célula que contem $x$ e computar todas as células que
 intersetam uma esfera de raio $r$ centrada no ponto (veja \ref{fig:kdSphere}). As células
 de interesse são computadas subindo na hierarquia e depois testando todos os
 filhos destas células contra a esfera. Pontos que estão alocados nestas células
@@ -117,7 +117,7 @@ ver \cite{Samet2005}.
 \centering
 \includegraphics[width=15.0cm]{img/cap03/KDOctreeOctreeBusca}
 \caption{ Círculo de busca em uma \textit{quadtree} (esquerda) e
-\textit{kd-tree} (direita) em $2D$. Células em destaque tem seus pontos testados
+\textit{kd-tree} (direita) em $2D$. Células em destaque têm seus pontos testados
 contra o círculo de busca. Note que na \textit{kd-tree} a busca é mais
 eficiente.}
 \label{fig:kdSphere}
@@ -171,8 +171,7 @@ renderização de pontos baseado em uma hierarquia de esferas envolventes. O
 segundo é o \textit{Sequential Point Tress} (SPT) \cite{Dachsbacher2003}% 
 \abbrev{SPT}{\textit{Sequential Point Trees}}, uma estrutura de dados
 que permite renderizar em Níveis de Detalhes e diretamente na GPU
-modelos de pontos. E por último serão apresentados resumidamente outros
-trabalhos que seguem esta mesma linha.
+modelos de pontos.
 
 \section{\textit{QSplat}}
 \label{sec:qspalt}
@@ -192,7 +191,7 @@ O \textit{QSplat} usa uma hierarquia de esferas envolventes que também é usada
 para controle de nível de detalhe, \textit{view frustum cullling} e
 \textit{back facing culling} \cite{Rusinkiewicz2000}. 
 Cada nó da hierarquia (Figura \ref{fig:NodeQSplat}) contém o centro e o raio da esfera envolvente, uma normal, o ângulo do cone
-de normais, opcionalmente uma cor, além de alguns \textit{bits} para representam a estrutura da árvore. A hierarquia é criada em um pré-processamento
+de normais, opcionalmente uma cor, além de alguns \textit{bits} para representar a estrutura da árvore. A hierarquia é criada em um pré-processamento
 e guardada em disco. Na Figura \ref{fig:schematicQSplat} temos uma ilustração
 desta hierarquia.
 
@@ -238,7 +237,7 @@ ${}^{9}/{}_{16}$ e ${}^{16}/{}_{16}$.
 
 \subsubsection{Cor}
 A cor por ponto é codificada em $16$\textit{bits}, sendo distribuídos da seguinte
-forma entre os canais de vermelho, verde e azul: $5-6-5$.
+forma entre os canais de vermelho, verde e azul: $5-6-5$
 (R-G-B\footnote{Sistema de cores RGB}).
 
 %\item[Normal]{}
@@ -295,7 +294,7 @@ ser renderizado ponto por ponto. Como consequência, este ``modo imediato'', ou
 seja, o envio de ponto a ponto para renderização subutiliza a GPU.
 No entanto, esta simplicidade torna o \textit{Qsplat} um algoritmo
 utilizável em outras aplicações: por exemplo, sua hierarquia de esfera é uma boa
-estrutura para \textit{Ray Tracing}, e para aplicações em rede como a
+estrutura para \textit{Ray Tracing} e para aplicações em rede como a
 do \textit{Stream QSplat}\cite{Rusinkiewicz2001}, que permite visualizar
 modelos $3D$ de forma progressiva e remotamente.
 
@@ -304,7 +303,7 @@ modelos $3D$ de forma progressiva e remotamente.
 \textit{QSplat} possui um processamento de dados muito simples e de fácil
 implementação, mas infelizmente sua estrutura hierárquica recursiva é difícil de
 ser implementada em GPU. Os pontos renderizados não são armazenados de forma
-contínua, portanto não são processados sequencialmente. A \textit{CPU}
+contínua e, portanto, não são processados sequencialmente. A \textit{CPU}
 (\textit{Central Processor Unit})%
 \abbrev{CPU}{\textit{Central Processor Unit}} percorre a
 árvore e faz chamadas independentes para renderizar cada nó. Isso causa um
@@ -470,15 +469,15 @@ porção da lista é selecionada enquanto outras são descartadas.
 
 \subsection{Discussão}
 
-O algoritmo SPT é simples, de fácil implementação e provê uma renderização contínua usando
+O algoritmo \textit{Sequential Point Trees} é simples, de fácil implementação e provê uma renderização contínua usando
 níveis de detalhes. O autor enfatiza que grande parte do trabalho é movido para GPU,
-deixando a CPU livre para outras tarefas. No entanto, SPT só é eficiente se o modelo 
+deixando a CPU livre para outras tarefas. No entanto, o SPT só é eficiente se o modelo 
 estiver  inteiramente na memória de vídeo, o que nem sempre é possível.
 
-SPT renderiza pontos em baixa qualidade, já que utiliza pontos
+O algoritmo renderiza pontos em baixa qualidade, já que utiliza pontos
 renderizados usando funções do \textit{pipeline} fixo do
 \textit{OpenGL}, mais especificamente \textit{GL\_POINTS} com tamanhos variáveis. 
-Outra desvantagem é que por não realizar \textit{frustum culling} o SPT pode perder em eficiência em alguns casos.
+Outra desvantagem é que por não realizar \textit{frustum culling} o método pode perder em eficiência em alguns casos.
 
 %\section{Clusterização}
 %Métodos de clusterização tem sido usados em computação gráfica para reduzir a

@@ -11,13 +11,13 @@ Nesta dissertação iremos assumir que o conjunto de pontos $\mathbf{\mathcal P}$
 Neste capítulo, discutiremos as origens e definições de pontos como
 primitiva geométrica de renderização. Na seção \ref{cap02:sec:origens} será
 apresentado um breve histórico, enquanto que nas seções \ref{cap02:sec:puro} e
-\ref{cap02:sec:orientado} será apresentada a primitiva em si. Por último discutiremos 
+\ref{cap02:sec:orientado} a primitiva será descrita em mais detalhes. Por último discutiremos 
 os \textit{Splats} na seção \ref{cap02:sec:splat}, que são uma extensão da
 representação pura por pontos.
 \section{Pontos como Primitiva Universal de Visualização}
 \label{cap02:sec:origens}
 
-Visualização e modelagem de modelos representados como uma coleção de pontos não
+Visualização de modelos representados como uma coleção de pontos não
 é uma ideia recente, na década de $70$ por exemplo, os primeiros vídeo games já
 representavam explosões de naves espaciais usando pontos luminosos.
 Pontos também foram uma representação popular para trabalhos de simulações
@@ -38,13 +38,13 @@ uso de pontos como primitiva universal de modelagem e renderização. Eles
 propuseram representar superfícies genéricas como um conjunto de pontos $3D$
 suficientemente denso, de modo a
 possibilitar a renderização da superfície contínua. De fato, a proposta era um
-pouco ambiciosa ao colocar os pontos como uma meta-primitiva, ou
-seja, todas representações deveriam ser convertidas para pontos em um certo
-momento permitindo a unificação dos algoritmos de visualização. Para permitir a 
-reconstrução de uma superfície contínua, os pontos são incrementados com valores 
+pouco ambiciosa ao colocar os pontos como uma meta-primitiva, desta forma
+todas representações deveriam ser convertidas para pontos em um certo
+momento permitindo a unificação dos algoritmos de visualização. Para reconstruir
+uma superfície contínua, os pontos são incrementados com valores 
 de normal, cor, um coeficiente de transparência, além de um valor que estima a 
 densidade local, permitindo que o ponto projetado possua uma área de cobertura maior
- do que a de um pixel (Figura \ref{fig:levoyWhitted}).
+do que a de um pixel (Figura \ref{fig:levoyWhitted}).
 
 %Superfícies baseada em pontos
 %recentetimente tem ganhado atenção da comunidade
@@ -75,10 +75,9 @@ superfície contínua.
 \label{cap02:sec:puro}
 Inicialmente consideramos uma nuvem de pontos onde não haja nenhuma informação
 de topologia ou densidade da superfície. Na prática, esta representação
-dificilmente é utilizada diretamente, pois sem no mínimo uma informação de
-normal não é viável reconstruir a superfície interativamente para efeitos de
-visualização. Xu et al.~\cite{Xu2004} apresentaram uma técnica de renderização sem
- informação de normal, porém tratavam apenas das silhuetas e não da superfície completa.
+dificilmente é utilizada diretamente, pois não é possível elaborar efeitos de iluminação sem
+ao menos a informação dos vetores normais. Xu et al.~\cite{Xu2004} apresentaram uma técnica de renderização sem
+informação de normal, porém tratavam apenas das silhuetas e não da superfície completa.
 
 \section{Pontos Orientados}
 \label{cap02:sec:orientado}
@@ -92,7 +91,7 @@ definidos
 como um subconjunto de $k$ pontos com menor distância Euclidiana ao ponto dado.
 No capítulo \ref{chapter:3} será apresentada uma estrutura eficiente para obter
 os 
-$k$-vizinhos de uma nuvem de pontos. Dados os $k$ vizinhos
+$k$-vizinhos de uma nuvem de pontos; no entanto, assumindo-se que são dados os $k$ vizinhos
 $\mathbf{\mathcal N}_{\mathbf{\mathcal 
 P}}^{k} =
 \{\mathbf{c}_1,\ldots,\mathbf{c}_k\}$ de um ponto $\mathbf{c}_i$, a normal no
@@ -112,9 +111,8 @@ Entretanto, a informação de normal geralmente não é suficiente para gerar uma
 visualização contínua da superfície, sendo necessário estimar o espaço
 entre pontos vizinhos, ou seja, uma valor local de densidade. Esta informação
 pode ser gerada implicitamente em superfícies amostradas de forma regular, 
-porém muitas vezes gera uma nuvem de pontos muito densa, já que áreas planares
-são consideradas
-com a mesma resolução do que áreas com grandes variações de curvatura. Desta maneira,
+porém muitas algumas regiões podem ficar super-amostradas, já que áreas planares
+são consideradas com a mesma resolução do que áreas com grandes variações de curvatura. Desta maneira,
 \textit{splats} (seção a seguir) constituem uma maneira simples de representar
 adaptativamente nuvens de pontos.
 
@@ -126,7 +124,7 @@ adaptativamente nuvens de pontos.
 visão ampliada da superfície com \textit{splats} renderizados com
 metade dos valores dos raios originais. \textbf{Direita:} um \textit{splat}
 elíptico é definido por uma posição $\mathbf{c}_i$ e dois eixos tangentes
-$\mathbf{t}_i^1$ e $\mathbf{t}_i^2$. Retirada de~\cite{Bart2006} }
+$\mathbf{t}_i^1$ e $\mathbf{t}_i^2$ (retirada de~\cite{Bart2006}). }
 \label{fig:bartellipse}
 \end{figure}
 
@@ -136,21 +134,19 @@ Os \textit{splats} foram propostos primeiramente por Pfister et
 al.\cite{Pfister2000} que introduziram a ideia de ``\textit{surfel}'' e
 interpolação local dos pontos projetados. Este trabalho foi
 estendido por Zwicker et al \cite{Zwicker2001} em 2001, introduzindo o conceito
-de \textit{Surface Splatting}, uma das técnicas de renderização de superfícies
+de \textit{Surface Splatting}, uma das técnicas mais populares de renderização de superfícies
 baseadas
-em pontos mais populares até hoje. Neste trabalho foi proposto o uso do filtro
+em pontos. Neste trabalho foi proposto o uso do filtro
 EWA
 (\textit{Elliptical Weighted Average}\abbrev{EWA}{\textit{Elliptical Weighted
 Average}}) para reconstruir a superfície em espaço de imagem utilizando os \textit{splats}
 projetados.
-
 Um \textit{splat} pode ser definido como circular ou elíptico como discutido por 
-Kobbelt e Botsch \cite{Kobbelt2004}. Nesta dissertação usaremos \textit{splats} elípticos, sendo
-assim, a partir deste momento neste texto entende-se como \textit{splat} aquele elíptico.
+Kobbelt e Botsch \cite{Kobbelt2004}; nesta dissertação usaremos aqueles elípticos.
 
 \subsection{\textit{Splat} Elíptico}
 \textit{Splats} são definidos como pequenas elipses com centro definido
-pela posição do ponto e vetor normal pela normal da superfície no ponto. Desta
+pela posição do ponto, e vetor normal pela normal da superfície no ponto. Desta
 forma, cada \textit{splat} pode ser definido unicamente por uma posição 
 $\mathbf{c}_i$ e dois vetores $\mathbf{t}_i^1$ e $\mathbf{t}_i^2$ ortogonais e
 tangentes à superfície (veja Figura \ref{fig:bartellipse}), onde os tamanhos
@@ -240,8 +236,8 @@ projetados e a renderização é realizada através da rasterização das elipses
 (Figura \ref{fig:ssplat} direita).
 Ainda assim, esse procedimento resulta em imagens de baixa qualidade pois gera
 descontinuidades entre as elipses (ver figura \ref{fig:manequim}
-centro-esquerda). A fim de obter um imagem de alta qualidade usando este
-algoritmo ingênuo, seria necessário um quantidade muito
+centro-esquerda). A fim de obter uma imagem de alta qualidade usando este
+algoritmo ingênuo, seria necessário uma quantidade muito
 grande de amostras, de modo a tornar as descontinuidades imperceptíveis.
  
 \begin{figure}[ht]
