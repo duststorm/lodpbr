@@ -4,6 +4,49 @@
 \subsection{Centro e Normal}
 \subsection{Eixos da Elípse}
 \section{Erro Perpendicular}
+No caso elíptico, o problema de determinar o ponto de uma elipse
+$\mathbf{s}_i$ do conjunto que está sendo agregado ao plano da elipse
+$\mathbf{s}_m$ que passa a representar esse conjunto, não é tão  imediato como no caso circular. Para
+calcular a chamada distância perpendicular entre $\mathbf{s}_i$ e $\mathbf{s}_i$, que
+notaremos $\mathbf{\mathcal D}(i,m)$ precisamos executar o seguinte processo.
+Seja:
+\begin{equation}
+v(\alpha) = t_{i}^{1} \cos(\alpha) + t_{i}^{2} \sin(\alpha) + c_{i},
+\end{equation}
+a representação paramétrica do contorno da elipse $\mathbf{s}_i$ e
+$\mathbf{n}$ a normal ao plano $P_{m}$ da elipse $$\mathbf{s}_m$$. Para
+maximizar em $\alpha$ a distância entre $v(\alpha)$ e $P_{m}$ precisamos resolver o seguinte problema de otimização:
+\begin{eqnarray*}
+\lefteqn{max_{\alpha \in [0,2\pi]}<v(\alpha)-c_{m},n> = }\\ \nonumber
+&&max_{\alpha \in [0,2\pi]}{ <t_{i}^{1},n> \cos(\alpha) + <t_{i}^{2},n>
+\sin(\alpha) + <c_{i}- c_{m},n>
+\end{eqnarray*}
+Para  resolver esse problema começamos igualando a zero a derivada da função objetivo, o
+que determina que a solução procurada $\alpha_{max}$ deve satisfazer a:
+\begin{eqnarray*}
+<t_{i}^{1},n> \sin(\alpha_{max}) + <t_{i}^{2},n>
+\cos(\alpha_{max}) &=& 0 \\  
+{\frac{<t_{i}^{2},n>}{<t_{i}^{1},n>}} &=& \tan(\alpha_{max})\\ \nonumber
+\end{eqnarray*}
+onde:
+\begin{eqnarray*}
+cos(\alpha_{max}) &=& +- \frac{ <t_{i}^{1},n>}{\sqrt{<t_{i}^{1},n>^{2} + 
+<t_{i}^{2},n>^{2}}} \\ \nonumber
+ sin(\alpha_{max}) &=& +- \frac{<t_{i}^{2},n>}{\sqrt{<t_{i}^{1},n>^{2} +
+ <t_{i}^{2},n>^{2}}} \nonumber
+\end{eqnarray*}
+
+Para identificar inteiramente $\alpha_{max}$ resta, agora, decidir acerca dos
+sinais que aparecem nas expressões acima, o que significa distinguir  os casos 
+de distância máxima  e distância mínima a $P_{m}$. Isso é feito, observando que os 
+resultados acima nos permitem escrever $\mathbf{\mathcal D}(i,m)$ da seguinte
+forma:
+\begin{eqnarray*}
+$D(i,m) =  max_{sign \in [-1,1]}{\|sign( <t_{i}^{1},n> +
+<t_{i}^{2},n>)}+<c_{i}- c_{m},n>\|} &=& \\{\| (<t_{i}^{1},n> + <t_{i}^{2},n>)\|
++ \|<c_{i}- c_{m},n>\|}&&
+\end{eqnarray*}
+
 \begin{figure}[ht]
 \centering
 \includegraphics[width=15.0cm]{img/cap05/perpendicular3} 
