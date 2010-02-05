@@ -66,6 +66,11 @@ void GLWidget::init()
 //    GLfloat x = GLfloat(width()) / height();
 //    camera.SetProjectionMatrix(30.0,x,0.1,100000);
 
+	mShowModel 		 = false;
+	mShowModelNormal = false;
+	mShowModelPoints = false;
+	mShowModelSurfel = false;
+	mSurfelRadius 	= 1.0;
 
 	mSelectionMode = NONE;
 	mSelectBuffer = 0;
@@ -230,19 +235,6 @@ void GLWidget::setShowNormal(bool checked)
 	update();
 }
 
-void GLWidget::setShowModel(bool checked)
-{
-	if (checked == true)
-	{
-		mClusterLog.maskShow.Add(ClusterLog::Model);
-	}
-	else
-	{
-		mClusterLog.maskShow.Clear(ClusterLog::Model);
-	}
-	update();
-}
-
 void GLWidget::setShowDrawClusterWithID	(bool checked)
 {
 	if (checked == true)
@@ -295,6 +287,37 @@ void GLWidget::SetMode(bool t)
 	mode = t;
 
 }
+
+// Model
+void GLWidget::setShowModel(bool checked)
+{
+	mShowModel = checked;
+	update();
+}
+void GLWidget::setShowModelPoints(bool checked)
+{
+	mShowModelPoints = checked;
+	update();
+}
+
+void GLWidget::setShowModelSurfel(bool checked)
+{
+	mShowModelSurfel = checked;
+	update();
+}
+
+void GLWidget::setShowModelNormal(bool checked)
+{
+	mShowModelNormal = checked;
+	update();
+}
+
+void GLWidget::setModelSurfelRadius(int value)
+{
+	mSurfelRadius = value;
+	update();
+}
+
 // =================================== KD-Tree ================================//
 void GLWidget::getKNearestNeighbors(void)
 {
@@ -667,7 +690,7 @@ void GLWidget::paintGL()
     if (  cluster.Surfels.size() != 0 )
     {
 
-    	if (mClusterLog.maskShow.Test(ClusterLog::Model))
+    	if (mShowModel)
     	{
     		glPushMatrix();
     		glPointSize(2.0);
@@ -684,13 +707,14 @@ void GLWidget::paintGL()
 //    				glColor3f(1.0f,0.0f,0.0);
 
     			glColor3f(0.5f,1.0f,0.0f);
-
-    			//if ((camera.Eyes().Norm()* s->Normal()) > 0.2f)
+    			if ((camera.Eyes().Norm()* s->Normal()) > -0.2)
     			{
     				//std::cout << "Normal " <<  (camera.Eyes().Norm()* s->Normal()) << std::endl;
-    				glVertex3fv( s->Center().ToRealPtr() );
+    				if (mShowModelPoints)
+    					glVertex3fv( s->Center().ToRealPtr() );
+    				if (mShowModelSurfel)
+    					s->DrawTriangleFan(32,(mSurfelRadius*0.01));
     			}
-
     			//s->DrawEllpsoid(64,2,1.0);
 //    			s->DrawTriangleFan(64,0.5);
     		}
@@ -726,7 +750,7 @@ void GLWidget::paintGL()
         			std::cout << "Radiusf " << mClusterLog.getRadiusf() << std::endl;
 
     				for(unsigned int i = mClusterLog.getClusterRangeBegin();i <= mClusterLog.getClusterRangeEnd();++i)
-    					cluster.DrawSurfels(camera.Eyes().Norm(),i,8,mClusterLog.getRadiusf());
+    					cluster.DrawSurfels(camera.Eyes().Norm(),i,32,mClusterLog.getRadiusf());
     			}
 
     		}else

@@ -53,10 +53,17 @@ public slots:
  	void on_action_Save_As_LOD_triggered							();
  	void on_action_Full_Screen_triggered							();
  	// tool bar -- atributos do modelo
- 	void on_action_Show_Points_toggled							    (bool checked);
+
  	void on_pushButtonBuild_clicked									();
  	void on_pushButtonInteractive_clicked							();
  	void on_pushButtonSeed_clicked									();
+
+ 	// --Model   Dock Widget Draw
+ 	void on_toolButtonDrawModel_toggled								(bool checked);
+ 	void on_toolButtonModelDrawPoints_toggled						(bool checked);
+ 	void on_toolButtonModelDrawNormal_toggled						(bool checked);
+ 	void on_toolButtonModelDrawSurfel_toggled						(bool checked);
+ 	void on_sliderModelSurfelRadius_valueChanged					(int value);
 
  	// --Cluster Dock Widget Draw--
  	//
