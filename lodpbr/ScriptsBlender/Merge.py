@@ -239,19 +239,13 @@ class Merge:
    def CalcularEixosAeB(self):
        
        cov = self.CovarianceMatrix(self.mPontosPorjetos)
-       
        #print cov, "MATRIX"
-             
        #eigenvec = la.eigenvectors(cov)
        eigenvalue,eigenvec = nu.eig(cov)
-       
        #print 'LA',eigenvec
        print 'NUMPY',eigenvalue,eigenvec
-       
        #print len(eigenvec[0]) ,' PRIMEIRO ',eigenvec[0]
-                                   
        self.mEigenVector = [Blender.Mathutils.Vector(eigenvec[:,0]),Blender.Mathutils.Vector(eigenvec[:,1]),Blender.Mathutils.Vector(eigenvec[:,2])]
-             
        self.mEigenValues = [eigenvalue[0],eigenvalue[1],eigenvalue[2]]
        
        for i in range(len(self.mEigenValues)-1):

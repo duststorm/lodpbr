@@ -114,7 +114,6 @@ public slots:
 	void setShowClusters			(bool checked);
 	void setShowCluster				(bool checked);
 	void setShowSeed				(bool checked);
-	void setShowModel				(bool checked);
 	void setShowSurfel				(bool checked);
 	void setShowNormal				(bool checked);
 
@@ -124,12 +123,20 @@ public slots:
 	void setDrawClusterWithID 	 		 (int value);
 	void setDrawClusterWithRangeBegin 	 (int value);
 	void setDrawClusterWithRangeEnd 	 (int value);
-
 	void setRadius						 (int value);
 
+	// Model
+//--
+	void setModelSurfelRadius			 (int value);
+	void setShowModel					 (bool checked);
+	void setShowModelPoints				 (bool checked);
+	void setShowModelNormal				 (bool checked);
+	void setShowModelSurfel				 (bool checked);
+
+	// Cluster
+// --
 	bool getShowCluster				() {return mClusterLog.maskShow.Test(ClusterLog::Cluster);};
 	bool getShowSeed				() {return mClusterLog.maskShow.Test(ClusterLog::Seed);};
-	bool getShowModel				() {return mClusterLog.maskShow.Test(ClusterLog::Model);};
 	bool getShowSurfel				() {return mClusterLog.maskShow.Test(ClusterLog::Surfel);};
 	bool getShowNormal				() {return mClusterLog.maskShow.Test(ClusterLog::Normal);};
 
@@ -226,6 +233,11 @@ private:
 	// C o l o r s
 	QColor backgroundColor, foregroundColor;
 
+	int  mSurfelRadius;
+	bool mShowModel;
+	bool mShowModelPoints;
+	bool mShowModelNormal;
+	bool mShowModelSurfel;
 
 
 };

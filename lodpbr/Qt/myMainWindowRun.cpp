@@ -144,10 +144,33 @@ void MyMainWindow::on_action_Full_Screen_triggered()
 
 }
 
-void MyMainWindow::on_action_Show_Points_toggled(bool checked)
+// Model Attributs
+
+void MyMainWindow::on_toolButtonDrawModel_toggled(bool checked)
 {
 	GLWIDGET()->setShowModel(checked);
 }
+
+void MyMainWindow::on_toolButtonModelDrawPoints_toggled(bool checked)
+{
+	GLWIDGET()->setShowModelPoints(checked);
+}
+
+void MyMainWindow::on_toolButtonModelDrawNormal_toggled(bool checked)
+{
+	GLWIDGET()->setShowModelNormal(checked);
+}
+
+void MyMainWindow::on_toolButtonModelDrawSurfel_toggled(bool checked)
+{
+	GLWIDGET()->setShowModelSurfel(checked);
+}
+
+void MyMainWindow::on_sliderModelSurfelRadius_valueChanged (int value)
+{
+	GLWIDGET()->setModelSurfelRadius(value);
+}
+
 
 //==== DockBuildCluster =======================================================
 
