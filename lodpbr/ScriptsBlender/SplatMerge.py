@@ -253,7 +253,7 @@ def buttonevents(evt):
        
         merge = Merge(listEllipse)
         
-        ellipse =  Ellipse(merge.Center(),merge.A()*merge.EigenValues()[0],merge.B()*merge.EigenValues()[1],45.0,"Ellipse"+str(index))
+        ellipse =  Ellipse(merge.Center(),merge.A(),merge.B(),45.0,"Ellipse"+str(index))
         
         
         print ""

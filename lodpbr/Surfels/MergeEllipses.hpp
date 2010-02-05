@@ -196,12 +196,14 @@ public:
 
 		typename std::list<Real>::const_iterator lD = std::max_element(lFactors.begin(),lFactors.end());
 
-		mNewMinorValue = std::sqrt ( *lD / mNewMinorAxis.first );
-		mNewMajorValue = std::sqrt ( *lD / mNewMajorAxis.first );
+//		mNewMinorValue = std::sqrt ( *lD / mNewMinorAxis.first );
+//		mNewMajorValue = std::sqrt ( *lD / mNewMajorAxis.first );
 
-		mNewMinorAxis.first *= mNewMinorValue;
-		mNewMajorAxis.first *= mNewMajorValue;
+//		mNewMinorAxis.first *= mNewMinorValue;
+//		mNewMajorAxis.first *= mNewMajorValue;
 
+	   mNewMinorAxis.first = std::sqrt( (*lD) * mNewMinorAxis.first );
+  	   mNewMajorAxis.first = std::sqrt( (*lD) * mNewMajorAxis.first );
 
 
 	}

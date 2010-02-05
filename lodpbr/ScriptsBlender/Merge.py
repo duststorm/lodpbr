@@ -92,22 +92,26 @@ class Error:
     def newPerpendicularError(self):
         dist_max = 0.0
         for ellipse in self.ListEllipse:
-            if fabs(self.Ellipse.Normal()*ellipse.EixoB()) > 1e-6 :
-                factor = (self.Ellipse.Normal()*ellipse.EixoA()*ellipse.A()) / (self.Ellipse.Normal()*ellipse.EixoB()*ellipse.B())
-                factor2 = factor*factor
-                alfa = sqrt(1.0/(1.0+factor2))
-                beta = factor*alfa
-                ray = ellipse.EixoB()*alfa*ellipse.B() + ellipse.EixoA()*beta*ellipse.A()
-            else:
-                 ray = ellipse.EixoA()*ellipse.A()
-#            if (   (ellipse.Center()-self.Ellipse.Center())*self.Ellipse.Normal()  ) * (ray * self.Ellipse.Normal()) < 0:
-#                ray = -ray
-            dist = fabs( (ellipse.Center()-self.Ellipse.Center()) * self.Ellipse.Normal() )+ fabs( ray* self.Ellipse.Normal() ) 
+#            if fabs(self.Ellipse.Normal()*ellipse.EixoB()) > 1e-6 :
+#                factor = (self.Ellipse.Normal()*ellipse.EixoA()*ellipse.A()) / (self.Ellipse.Normal()*ellipse.EixoB()*ellipse.B())
+#                factor2 = factor*factor
+#                alfa = sqrt(1.0/(1.0+factor2))
+#                beta = factor*alfa
+#                ray = ellipse.EixoB()*alfa*ellipse.B() + ellipse.EixoA()*beta*ellipse.A()
+#            else:
+#                 ray = ellipse.EixoA()*ellipse.A()
+##            if (   (ellipse.Center()-self.Ellipse.Center())*self.Ellipse.Normal()  ) * (ray * self.Ellipse.Normal()) < 0:
+##                ray = -ray*ellipse.A()
+
+            tn1 = (self.Ellipse.Normal()*ellipse.EixoB()*ellipse.B()) * (self.Ellipse.Normal()*ellipse.EixoB()*ellipse.B())
+            tn2 = (self.Ellipse.Normal()*ellipse.EixoA()*ellipse.A()) * (self.Ellipse.Normal()*ellipse.EixoA()*ellipse.A())
+            dist = fabs( (ellipse.Center()-self.Ellipse.Center()) * self.Ellipse.Normal() )+ sqrt( tn1+ tn2) 
+            #fabs( ray* self.Ellipse.Normal() ) 
             if (dist > dist_max ):
                 dist_max = dist
-            print "ray",ray     
-            print "new per: Center EixoA,EixoB,normal,erro,",ellipse.Center(),ellipse.EixoA(),ellipse.EixoB(),ellipse.Normal(),dist
-            print "center,normal", self.Ellipse.Center(),self.Ellipse.Normal()        
+            
+#            print "new per: Center EixoA,EixoB,normal,erro,",ellipse.Center(),ellipse.EixoA(),ellipse.EixoB(),ellipse.Normal(),dist
+#            print "center,normal", self.Ellipse.Center(),self.Ellipse.Normal()        
         return dist_max
         
 
