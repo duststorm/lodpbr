@@ -2,10 +2,9 @@
 %makeindex -s coppe.ist -o thesis.lab thesis.abx
 %aspell -l"pt_BR" --encoding="iso-8859-1" -c chap01.tex
 \section{Motivação}
-Renderização Baseada em pontos vem se tornando popular nos últimos anos
-devido a evolução do \textit{hardware} gráfico 3D
-(\textit{Graphic Processor Unit}) % ,
-\abbrev{GPU}{\textit{Graphic Processor Unit}} e devido aos modelos
+Renderização Baseada em pontos vem se tornando popular nos últimos anos, especialmente
+devido a evolução do \textit{hardware} gráfico 3D (\textit{Graphic Processor Unit}) % ,
+\abbrev{GPU}{\textit{Graphic Processor Unit}} e à necessidade de processar modelos
 extremamente grandes produzidos pelos \textit{Scanners} $3D$~\cite{Levoy2000, Correa02towardspoint-based}. 
 Ao contrário do método tradicional de renderização em que modelos $3D$ são aproximados por um
 conjunto de polígonos (malhas poligonais), técnicas de renderização
@@ -21,19 +20,29 @@ de~\cite{Bou07})}
 \label{fig:triangle2point}
 \end{figure}
 
-Há várias razões para o sucesso da renderização baseada em pontos. Primeiro,
-com o aumento na quantidade de memória das GPUs modernas tornou-se 
-possível tratar cenas com quantidade enormes de polígonos; como consequência,
-polígonos são mapeados em apenas um \textit{pixel} 
+Com o aumento da capacidade do hardware gráfico tornou-se 
+possível tratar cenas com quantidade enormes de polígonos, porém a resolução dos dispositívos de saída não acompanharam esta taxa de crescimento; como consequência,
+muitas vezes polígonos são mapeados em apenas um \textit{pixel} 
 perdendo-se tempo desnecessário com o processo de rasterização, como
 ilustrado na Figura \ref{fig:triangle2point}. Como as GPUs são 
-otimizadas para renderizar polígonos, muitos modelos de pontos são convertidos para polígonos usando
+otimizadas para renderizar triângulos, assim como a maioria dos algoritmos de processamento consolidados foram pensados para tratar malhas poligonais, era de praxe a conversão de modelos de pontos para polígonos usando
 métodos como o algoritmo \textit{marching cubes}~\cite{Lorensen1978}. No
 entanto, com as GPUs modernas possuindo cada vez mais partes programáveis dentro do \textit{pipeline} gráfico, 
-é possível criar algoritmos de renderização de pontos que justifiquem a não conversão para polígonos, produzindo resultados eficientes e imagens de alta qualidade~\cite{Ren2002,Botsch2003,marroquim07}. 
-Uma outra razão pelo sucesso dos pontos é que muitas vezes não é necessário, ou pelo menos é vantajoso, não guardar as informações de topologia inerentes às malhas.
+é possível criar algoritmos de renderização de pontos que justifiquem o processamento direto na nas nuvens de pontos, produzindo resultados eficientes e imagens de alta qualidade no caso da renderização.
+Especialmente quando para aplicação não é necessária a informação de topologia, ou seja, a conectividade entre os pontos, é especialmente vantajoso o uso deste tipo de representação.
 
-\section{Objetivo}
+\section{Proposta}
+
+Apesar de algoritmos eficientes para renderizar nuvens de pontos na GPU terem sido propostos~\cite{Ren2002,Botsch2003,marroquim07}, os modelos em resoluções cada vez maiores criam a necessidade de formas mais eficientes de visualizar a nuvem de pontos. O projeto de digitalizar as catacombas de Roma por exemplo, gerou um modelo com mais de 1.2 bilhões de amostras~\cite{Scheiblauer2009}. Um método comum é a aplicação de níveis de detalhes (LOD), onde representações em resoluções mais baixas são criadas e escolhidas para renderização de acordo com uma métrica de visualização, como por exemplo distância ao observador.
+
+Nesta tese consideramos o problema de simplificar o modelo de pontos para criar representações em resoluções mais baixas objetivando a renderização. O desafio é, dada uma nuvem de ponto, combinar amostras de forma a reduzir a complexidade do modelo obtendo a melhor aproximação possível, isto é, com menor erro. Para tanto é proposto um modelo de clusterização baseado em \textit{splats}, que são extensões de pontos e possuindo informação de densidade local e propriedades diferenciais da superfície no ponto.
+Diferentemente de outros métodos, a proposa é realizar toda a simplificação considerando \textit{splats} elípticos, que provêm uma aproximação da superfície melhor do que os \textit{splats} circulares, e ainda mais do que os pontos ``puros''. São abordados três problemas básicos para construir os diferentes níveis de resolução:
+
+\begin{itemize}
+\item quais pontos devem ser combinados para diminuir a resolução, o que normalmente envolve métricas de erros específicas para este tipo de representação;
+\item dado o conjunto de pontos a ser combinados, como formar um \textit{splat} representativo a partir destes;
+\item como construir uma estrutura de dados eficientes para renderização considerando o suporte a algoritmos em GPU.
+\end{itemize}
 
 \section{Organização da Dissertação}
 
