@@ -48,7 +48,7 @@ modelos exemplos são mostrados: o modelo original (\textbf{topo-esquerda}), os p
 \end{figure}
 
 Os métodos de simplificação citados acima são baseados na suposição de que a
-superfície determinada pela nuvem de pontos seja suave. Contudo, modelos de peças mecânicas por exemplo, contêm descontinuidades que são geralmente bordas afiadas separando a superfície em duas
+superfície determinada pela nuvem de pontos seja suave. Contudo, modelos de peças mecânicas por exemplo, contem descontinuidades que são geralmente bordas afiadas separando a superfície em duas
 partes distintas. Song e Feng \cite{Song2009} abordaram este problema criando um método de
 simplificação baseado na mesma ideia do métodos
 citados acima, porém com duas diferenças principais.
@@ -156,7 +156,7 @@ de polígonos foram adaptados para pontos. São eles:
 vizinhos; e o hierárquico, onde clusters são criados tomando a nuvem de pontos original e dividindo-a em conjuntos menores.}
   \item{\textit{Simplificação Iterativa:} Onde repetidamente seleciona-se pares
   de pontos juntando-os em um só. Note que para cada junção, há um acréscimo no
-  erro total, no entanto, cria-se uma lista ordenada com todos pares possíveis, colocando no topo a junção que provoca o menor erro. Pares de pontos são então aglomerados de forma a minizar o erro. Para avaliar o
+  erro total, no entanto, cria-se uma lista ordenada com todos pares possíveis, colocando no topo a junção que provoca o menor erro. Pares de pontos são então aglomerados de forma a minimizar o erro. Para avaliar o
   erro de junção dos pares de pontos é usada uma adaptação do \texit{Quadric
   Error Metric}\abbrev{QEM}{\texit{Quadric Error Metric}} apresentado para
   malhas poligonais em~\cite{Garland1997}.}
@@ -220,7 +220,7 @@ O objetivo da simplificação otimizada é computar um conjunto mínimo de
 \textit{splats} $\mathbf{\mathcal{T}=\{\mathbf{s}_j}\}$ que aproxime o conjunto
 original $\mathbf{\mathcal{P}}$ com um erro abaixo de uma tolerância
 $\mathbf{\varepsilon}$. Em uma fase de pré-processamento propriedades locais da superfície, como vetor normal $\mathbf{n}_i$ e 
-densidade $\mathbf{\omega}_i$, são calculadas para cada ponto ${\mathbf{p}_i}$ baseadas em uma vizinhaça local. Dependendo da
+densidade $\mathbf{\omega}_i$, são calculadas para cada ponto ${\mathbf{p}_i}$ baseadas em uma vizinhança local. Dependendo da
 aplicação, pode-se decidir entre \textit{splats} circulares ou elípticos. Um
 \textit{splat} circular é definido por um centro ${\mathbf{c}_i}$, normal
 ${\mathbf{n}_i}$ e um raio ${\mathbf{r}_i}$; no caso do elíptico o raio
@@ -253,7 +253,7 @@ se for um \textit{splat} elíptico. Se $\mathbf{p}_i$ projetar no interior de vár
 A simplificação otimizada é realizada em três passos. No primeiro passo é computado o
 \textit{splat} máximo para cada ponto ${\mathbf{p}_i}$ cujo erro é limitado por
 um $\mathbf{\varepsilon}$. Começando por uma semente $\mathbf{p}_i$, 
-o \textit{splat} $\mathbf{s}_i$ cresce ao encorporar os vizinhos
+o \textit{splat} $\mathbf{s}_i$ cresce ao incorporar os vizinhos
 de acordo com sua distâncias. Esta distância é calculada usando as equações \ref{eq:circular} e
 \ref{eq:eliptico}, sendo que os \textit{splats} elípticos possuem a vantagem de 
 adaptarem-se melhor à curvatura da superfície. Em um segundo passo, para o conjunto
@@ -417,3 +417,17 @@ procedimento é similar ao proposto para malhas poligonais~\cite{Hoppe1996},
 porém sem manter informação de topologia.
 
 \section{Discussão}
+A aquisição de modelos de pontos (via $3D$ \textit{scanners}) produz amostras
+ alta densidade o que torna difícil um processamento eficiente deste
+ modelos. Por isso técnicas de simplificação são importantes em qualquer processo de
+ modelagem ou visualização de nuvem de pontos. Neste capítulo foram discutidos
+ vários técnicas de simplificação de modelos, considerando apenas pontos.
+ Enquanto estas técnicas são eficientes, elas possuem um desvantagem de produzirem uma
+ aproximação muito simples. Um representação mais elaborada baseada em
+ \textit{splats} é uma extensão popular de superfícies baseada em pontos,
+ principalmente quando se deseja visualização eficiente e com qualidade. Poucos
+ algoritmos utilizam toda a geometria dos \textit{splats} quando aplicam
+ técnicas de simplificação. Simplificação considerando \textit{splats} evita um
+ posterior processo para obtenção de \textit{splats}, porém são um pouco mais
+ elaborados. No capítulo a seguir será apresentado uma simplificação
+ baseada em \textit{splats}.
