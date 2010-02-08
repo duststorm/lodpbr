@@ -1,51 +1,82 @@
 \chapter{Simplificação de Superfícies baseadas em \textit{Splats}}
-\section{Introdução}
+Neste capítulo apresentaremos um algoritmo para simplificação de superfícies
+baseada em \textit{splats}. Utilizamos uma abordagem incremental, onde clusters
+serão criados sistematicamente ao crescer regiões através da agregação de
+\textit{splats} vizinhos. Este cresciemento é guiado por dois erros: primeiro o
+\textit{Erro Perpedicular}, que mede a variação dos \textit{splats} na direção
+da normal, e segundo o \textit{Erro tangencial} que nos fornece uma medida de
+cobertura. Partiremos da suposição, de que o modelo já possui um representação
+em \textit{splats} e que de inicios todos são \textit{splats} circulares. 
+\section{Motivação}
+Como mensionado no capítulo~\ref{cap04}, modelos baseados em pontos
+são complexos, devido a grande quantidade da amostra necessárias para
+representa-ló tornando operações de simplificação um ferramenta necessária para
+torna possível viável algoritmos de modelagem e visualização.
+Como mencioando no seção~\ref{cap02:sec:splat}, \texit{splats} são muitos
+usados no contexto de renderização, quando se deseja qualidade e eficiência.
+Embora a representação de superfícies baseadas em \textit{splats} seja comum na
+prática, muitos algoritimos de simplificação usa apenas o centro em
+consideração. A ideia e primeiro gerar uma superfície com uma densidade de
+pontos que se ajuste a curvatura da superfície. Em um processamento posterior,
+estes pontos são convertidos em \texit{splats} circulares ou elípticos. Em
+contraste a este método, simplificação de superfícies baseada em \textit{splat}
+levam em consideração toda a geometria do \textit{splat}.
+ 
+Muitos algoritmos de simplificação~\cite{Rusinkiewicz2000,BotschW2002,EfficenteLOD2003} são baseados em
+estruturas hierarquicas. Os pontos são organizados em estrutura de partição
+espacial (ver capítulo~\ref{cap03}) e os \textit{splats} são criados pela
+análisa local da superfície. Estas técnicas são simples e rápidas, mas como não
+há uma estratégias de otmização mais elaborada, e os resultados geralmente são
+conservativos e tendem a produzir muito \textit{splats} redundantes.
+A fim de produizir amostras com maior qualidade, usaremos uma abordagem gulosa
+e incremental para renderização eficiente usando \textit{splats}. Usaremos
+\textit{splats} elípticos, por se ajustarem melhor a curvatura da superfície e
+assim o gerarem mesmo amostras.
+
+ 
 \section{Clusterização Incremental}
 \subsection{Centro e Normal}
-\subsection{Eixos da Elípse}
-\section{Erro Perpendicular}
-No caso elíptico, o problema de determinar o ponto de uma elipse
-$\mathbf{s}_i$ do conjunto que está sendo agregado ao plano da elipse
-$\mathbf{s}_m$ que passa a representar esse conjunto, não é tão  imediato como no caso circular. Para
-calcular a chamada distância perpendicular entre $\mathbf{s}_i$ e $\mathbf{s}_i$, que
-notaremos $\mathbf{\mathcal D}(i,m)$ precisamos executar o seguinte processo.
-Seja:
-\begin{equation}
-v(\alpha) = t_{i}^{1} \cos(\alpha) + t_{i}^{2} \sin(\alpha) + c_{i},
-\end{equation}
-a representação paramétrica do contorno da elipse $\mathbf{s}_i$ e
-$\mathbf{n}$ a normal ao plano $P_{m}$ da elipse $$\mathbf{s}_m$$. Para
-maximizar em $\alpha$ a distância entre $v(\alpha)$ e $P_{m}$ precisamos resolver o seguinte problema de otimização:
-\begin{eqnarray*}
-\lefteqn{max_{\alpha \in [0,2\pi]}<v(\alpha)-c_{m},n> = }\\ \nonumber
-&&max_{\alpha \in [0,2\pi]}{ <t_{i}^{1},n> \cos(\alpha) + <t_{i}^{2},n>
-\sin(\alpha) + <c_{i}- c_{m},n>
-\end{eqnarray*}
-Para  resolver esse problema começamos igualando a zero a derivada da função objetivo, o
-que determina que a solução procurada $\alpha_{max}$ deve satisfazer a:
-\begin{eqnarray*}
-<t_{i}^{1},n> \sin(\alpha_{max}) + <t_{i}^{2},n>
-\cos(\alpha_{max}) &=& 0 \\  
-{\frac{<t_{i}^{2},n>}{<t_{i}^{1},n>}} &=& \tan(\alpha_{max})\\ \nonumber
-\end{eqnarray*}
-onde:
-\begin{eqnarray*}
-cos(\alpha_{max}) &=& +- \frac{ <t_{i}^{1},n>}{\sqrt{<t_{i}^{1},n>^{2} + 
-<t_{i}^{2},n>^{2}}} \\ \nonumber
- sin(\alpha_{max}) &=& +- \frac{<t_{i}^{2},n>}{\sqrt{<t_{i}^{1},n>^{2} +
- <t_{i}^{2},n>^{2}}} \nonumber
-\end{eqnarray*}
+Para calcular o novo centro $\mathbf{c}_m$ e normal $\mathbf{n}_m$ , usamos uma
+soma ponderada pela área dos \textit{splat} de acordo com a
+equação~\ref{eq:l21c} e~\ref{eq:l21n}. Assim , dado um conjunto
+de \textit{splats}, o centro $\mathbf{c}_m$ e normal $\mathbf{n}_m$ do novo
+\textit{splat} pode ser definido como :
 
-Para identificar inteiramente $\alpha_{max}$ resta, agora, decidir acerca dos
-sinais que aparecem nas expressões acima, o que significa distinguir  os casos 
-de distância máxima  e distância mínima a $P_{m}$. Isso é feito, observando que os 
-resultados acima nos permitem escrever $\mathbf{\mathcal D}(i,m)$ da seguinte
-forma:
-\begin{eqnarray*}
-$D(i,m) =  max_{sign \in [-1,1]}{\|sign( <t_{i}^{1},n> +
-<t_{i}^{2},n>)}+<c_{i}- c_{m},n>\|} &=& \\{\| (<t_{i}^{1},n> + <t_{i}^{2},n>)\|
-+ \|<c_{i}- c_{m},n>\|}&&
-\end{eqnarray*}
+\begin{equation}
+ \mathbf{c}_{m}  =  \frac{
+ \sum_i{|\mathbf{s}_i|\cdot\mathbf{c}_i}}{\sum_i|\mathbf{s}_m|}.
+\end{equation}
+e normal
+\begin{equation}
+ \mathbf{n}_{m}  =  \frac{
+ \sum_i{|\mathbf{s}_i|\cdot\mathbf{n}_i}}{\sum_i|\mathbf{s}_m|}.
+\end{equation}
+
+\subsection{Eixos da Elipse}
+Similiar a~\ref{cap04:sec:splats:l21}, afim de obter os eixos da elipse
+$\mathbf{s}_m$, projetamos $8$ pontos da borda das elipses $\mathbf{s}_i$ no
+plano definido por $\mathbf{c}_m$ e $\mathbf{n}_m$. Aplicamos \textit{PCA} no
+conjunto $C^\prime $ pontos projetados e obtemos os autovalores $\lambda_1 \geq \lambda_2 \geq \lambda_3$ 
+e autovetores unitários $v_1,v_2,v_3$. Assim a direção dos eixos da elipse
+$\mathbf{s}_m$ fica sendo a de $v_1$ e $v_2$. Para computar a dimensão dos eixos
+principais da elipse obtemnos, assumindo que a excentricidade da elipse e dada
+por $\sqrt{ \frac{\lambda_1}{\lambda_2}}  $:
+\begin{equation}
+\bar{\mathbf{e}}  =  \frac{\max_{q \in C^\prime } \{
+(\langle q,v_1 \rangle^2)\cdot\lambda_1 + (\langle q,v_2
+\rangle^2)\cdot\lambda_2 \} }{\lambda_1\cdot\lambda_2}
+\end{equation}
+A partir de $\bar{\mathbf{e}}$ determinamos a dimensão do eixo maior
+fazendo:
+\begin{equation}
+|t_m^1| = \sqrt{\lambda_1} \cdot \bar{\mathbf{e}}
+\end{equation}
+ e a do eixo menor por:
+ \begin{equation}
+|t_m^2| = \sqrt{\lambda_2} \cdot \bar{\mathbf{e}} 
+\end{equation}
+\section{Erro Perpendicular}
+\label{cap05:sec:perpendicular}
 
 \begin{figure}[ht]
 \centering
@@ -53,6 +84,69 @@ $D(i,m) =  max_{sign \in [-1,1]}{\|sign( <t_{i}^{1},n> +
 \caption{Erro Perpendicular}
 \label{fig:merge_splats}
 \end{figure}  
+
+No caso elíptico, o problema de determinar o ponto de uma elipse
+$\mathbf{s}_i$ do conjunto que está sendo agregado ao plano da elipse
+$\mathbf{s}_m$ que passa a representar esse conjunto, não é tão  imediato como no caso circular. Para
+calcular a chamada distância perpendicular entre $\mathbf{s}_i$ e
+$\mathbf{s}_m$, que notaremos $\mathbf{\mathcal D}(i,m)$ precisamos executar o
+seguinte processo.Seja:
+\begin{equation}
+v(\alpha) = t_{i}^{1} \cos(\alpha) + t_{i}^{2} \sin(\alpha) + c_{i},
+\end{equation}
+a representação paramétrica do contorno da elipse $\mathbf{s}_i$ e
+${n}_m$ a normal ao plano $P_{m}$ da elipse $\mathbf{s}_m$. Para
+maximizar em $\alpha$ a distância entre $v(\alpha)$ e $P_{m}$ precisamos 
+resolver o seguinte problema de otimização:
+\begin{equation}
+\max_{\alpha \in [0,2\pi]}\langle v(\alpha)-c_{m},{n}_m\rangle = \langle t_{i}^{1},{n}_m \rangle
+\cos(\alpha) + \langle t_{i}^{2},{n}_m \rangle \sin(\alpha) + \langle c_{i}-
+c_{m},{n}_m \rangle
+\end{equation}
+Para  resolver esse problema começamos igualando a zero a derivada da função
+objetiva, o que determina que a solução procurada $\alpha_{max}$ deve satisfazer a:
+\begin{equation}
+\langle t_{i}^{2},{n}_m\rangle \cos(\alpha_{max}) - \langle t_{i}^{1},{n}_m
+\rangle \sin(\alpha_{max}) &=& 0  \Longrightarrow \frac{\langle t_{i}^{2},{n}_m
+\rangle}{\langle t_{i}^{1},{n}_m \rangle} &=& \tan(\alpha_{max})
+ \nonumber
+\end{equation}
+onde:
+\begin{align}
+cos(\alpha_{max}) &= \pm \frac{ \langle t_{i}^{1},{n}_m
+\rangle}{\sqrt{\langle t_{i}^{1},{n}_m \rangle^{2} + \langle t_{i}^{2},{n}_m
+\rangle^{2}}} \\ \nonumber sin(\alpha_{max}) &= \pm
+\frac{\langle t_{i}^{2},{n}_m\rangle}{\sqrt{\langle t_{i}^{1},{n}_m\rangle^{2} +
+\langle t_{i}^{2},{n}_m\rangle^{2}}} \nonumber
+\end{align}
+
+Para identificar inteiramente $\alpha_{max}$ resta, agora, decidir acerca dos
+sinais que aparecem nas expressões acima, o que significa distinguir  os casos 
+de distância máxima  e distância mínima a $P_{m}$. Isso é feito, observando que os 
+resultados acima nos permitem escrever $\mathbf{\mathcal D}(i,m)$ da seguinte
+forma:
+\begin{eqnarray*}
+\mathbf{\mathcal D}(i,m) &=&  \max_{sign \in \{-1,1\}}{|sign \cdot
+\frac{\langle t_{i}^{1},{n}_m\rangle^{2} + \langle
+t_{i}^{2},{n}_m\rangle^{2}}{\sqrt{ \langle t_{i}^{1},{n}_m\rangle^{2}
++\langle t_{i}^{2},{n}_m\rangle^{2}}}+\langle c_{i}- c_{m},{n}_m\rangle|} && \\
+\mathbf{\mathcal D}(i,m) &=& \sqrt{\langle t_{i}^{1},{n}_m\rangle^{2} +
+\langle t_{i}^{2},{n}_m\rangle^{2}}+|\langle c_{i}- c_{m},{n}_m\rangle|\\
+\end{eqnarray*}
+Podemos ultiliza $\max_{i}\{\mathbf{\mathcal D}(i,m)\}$ como medida do erro
+perpendicular. Alternativamente podemos estender a definição de erro
+perpendicular dada na seção~\ref{sec:SPT} para o caso circular, meramente
+substituindo na equação~\ref{perpendicular:Circular} $d_i$ por
+$\sqrt{\langle t_{i}^{1},{n}_m\rangle^{2} +\langle
+t_{i}^{2},{n}_m\rangle^{2}}$, o que nos permitirá obter:
+\begin{eqnarray*}
+\mathbf{e}_p  &=&  \max\{\langle c_i-c,n\rangle+ \sqrt{
+\langle t_{i}^{1},{n}_m\rangle^{2} +\langle t_{i}^{2},{n}_m\rangle^{2}} \} -\\ 
+&& \min\{\langle c_i-c,n\rangle - \sqrt{\langle t_{i}^{1},{n}_m\rangle^{2}
++\langle t_{i}^{2},{n}_m\rangle^{2}}
+\}
+\end{eqnarray*}
+
 \section{Erro Tangencial}
 O erro tangencial mede a  diferença entre a elipse que representa o cluster
 ($\mathbf{s}_{m}$) e o conjunto ($\Gamma$) formado pelas projeções das elipses

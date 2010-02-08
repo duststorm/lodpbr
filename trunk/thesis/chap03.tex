@@ -1,5 +1,5 @@
 \chapter{Estruturas de Dados para Pontos}
-\label{chapter:3}
+\label{cap03}
 \section{Estrutura de Partição do Espaço}
 Estruturas de Partição Espacial são comuns em computação gráfica, em particular 
 quando se deseja processar modelos grandes. Diversos métodos de simplificação,
@@ -325,7 +325,7 @@ hierarquia. Os nós folhas possuem pontos que são distribuídos uniformemente no
 objeto, possuindo diâmetros aproximadamente iguais.
 
 \subsection{Métricas de Erro}
-
+\label{sec:SPT}
 Cada nó na hierarquia pode ser aproximado por um disco de mesmo centro,
 normal e diâmetro do nó. O erro desta aproximação é avaliado por duas métricas:
 o erro \textit{perpendicular} $\mathbf{e}_p$ e o erro \textit{tangencial} $\mathbf{e}_t$.
@@ -358,7 +358,7 @@ de variância e pode ser calculado como:
 \begin{eqnarray}
  \mathbf{e}_p & = & \max\{((c_i-c)\cdot n)+d_i\} - \min\{((c_i-c)\cdot n )-d_i\}
  \\ &   &\textnormal{com}\hspace{0.5cm}  d_i = r_i \sqrt{1-(n_i\cdot n)^2.}
-  \label{perpendicular}
+  \label{perpendicular:Circular}
 \end{eqnarray}
 
 Durante a renderização, o erro perpendicular é projetado na imagem, resultando
