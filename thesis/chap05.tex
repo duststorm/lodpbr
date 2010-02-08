@@ -1,72 +1,70 @@
 \chapter{Simplificação de Superfícies baseadas em \textit{Splats}}
 Neste capítulo apresentaremos um algoritmo para simplificação de superfícies
-baseada em \textit{splats}. Utilizamos uma abordagem incremental, onde clusters
-serão criados sistematicamente ao crescer regiões através da agregação de
-\textit{splats} vizinhos. Este crescimento é guiado por dois erros: primeiro o
-\textit{Erro Perpendicular}, que mede a variação dos \textit{splats} na direção
-da normal, e segundo o \textit{Erro tangencial} que nos fornece uma medida de
-cobertura. Partiremos da suposição, de que o modelo já possui um representação
-em \textit{splats} e que de inícios todos são \textit{splats} circulares. 
+representada por \textit{splats}. Utilizamos uma abordagem incremental, onde clusters
+são criados sistematicamente ao crescer regiões através da agregação de
+\textit{splats} vizinhos. Este crescimento é guiado por dois erros: o
+\textit{erro perpendicular}, que mede a variação dos \textit{splats} na direção
+da normal; e o \textit{erro tangencial}, que nos fornece uma medida de
+cobertura. Partiremos da suposição de que o modelo já possui um representação
+em \textit{splats} e que inicialmente todos são \textit{splats} circulares.
+
 \section{Motivação}
 Como mencionado no capítulo~\ref{cap04}, modelos baseados em pontos
-são complexos, devido a grande quantidade da amostra necessárias para
-representa-lo tornando operações de simplificação um ferramenta necessária para
-torna possível viável algoritmos de modelagem e visualização.
-Como mencionado no seção~\ref{cap02:sec:splat}, \texit{splats} são muitos
-usados no contexto de renderização, quando se deseja qualidade e eficiência.
+são complexos devido à grande quantidade de amostras necessárias para
+representá-lo, tornando operações de simplificação uma ferramenta necessária para
+que seja possível alcançar taxas interativas de processamento e visualização;
+\texit{splats} são muitos usados no contexto de renderização quando se deseja qualidade e eficiência (seção~\ref{cap02:sec:splat}).
 Embora a representação de superfícies baseadas em \textit{splats} seja comum na
 prática, muitos algoritmos de simplificação usa apenas o centro em
-consideração. A ideia e primeiro gerar uma superfície com uma densidade de
-pontos que se ajuste a curvatura da superfície. Em um processamento posterior,
-estes pontos são convertidos em \texit{splats} circulares ou elípticos. Em
-contraste a este método, simplificação de superfícies baseada em \textit{splat}
+consideração;
+a ideia é em um primeiro momento gerar uma superfície com uma densidade de
+pontos que se ajuste a curvatura da superfície e em um processamento posterior,
+converter estes pontos em \texit{splats} circulares ou elípticos. Em
+contraste a esta abordagem, simplificação de superfícies baseada em \textit{splats}
 levam em consideração toda a geometria do \textit{splat}.
  
 Muitos algoritmos de simplificação~\cite{Rusinkiewicz2000,BotschW2002,EfficenteLOD2003} são baseados em
-estruturas hierárquicas. Os pontos são organizados em estrutura de partição
-espacial (ver capítulo~\ref{cap03}) e os \textit{splats} são criados pela
-analise local da superfície. Estas técnicas são simples e rápidas, mas como não
-há uma estratégias de otimização mais elaborada, e os resultados geralmente são
-conservativos e tendem a produzir muito \textit{splats} redundantes.
+estruturas hierárquicas. Os pontos são organizados em uma estrutura de partição
+espacial (capítulo~\ref{cap03}) e os \textit{splats} criados pela
+análise local da superfície. Estas técnicas são simples e rápidas, mas como não
+há uma estratégias de otimização mais elaborada, os resultados geralmente são
+conservativos e tendem a produzir uma quantidade significativa de \textit{splats} redundantes.
 A fim de produzir amostras com maior qualidade, usaremos uma abordagem gulosa
-e incremental para renderização eficiente usando \textit{splats}. Clusters serão
-criados adicionado vizinhos de acordo com métricas de erro que serão
-apresentadas nas seções~\ref{cap05:sec:perpendicular}
-e~\ref{cap05:sec:tangencial}.
+e incremental para renderização eficiente usando \textit{splats}, onde clusters são
+criados adicionando vizinhos de acordo com métricas de erro definidas a diante (seções~\ref{cap05:sec:perpendicular}
+e~\ref{cap05:sec:tangencial}).
  
 \section{Clusterização Incremental}
-Com uma semente $\mathbf{s}_j \in \mathbf{\mathcal T}$  escolhida
-randomicamente, um cluster $\mathit{C_0}$ é construído adicionando-se 
-sucessivamente os vizinhos mais próximos de $\mathbf{s}_j$. Este crescimento
-incremental para quando um limitante $\varphi_p$ (para erro perpendicular) e 
+Um cluster $\mathit{C_0}$ é construído adicionando-se 
+sucessivamente os vizinhos mais próximos de $\mathbf{s}_j$ a partir de uma semente $\mathbf{s}_j \in \mathbf{\mathcal T}$  escolhida randomicamente. Este crescimento
+incremental pára quando um limitante $\varphi_p$ (para erro perpendicular) e 
 $\varphi_t$ (para o erro tangencial) é alcançado. O próximo cluster
-$\mathit{C_1}$ é então construído com o mesmo processo, com uma nova
-semente escolhida da vizinhança de $\mathit{C_0}$.
-De inicio cada vizinho que possui erro perpendicular abaixo de $\varphi_p$ é
-utilizado como possível candidato a membro do cluster. Com isso o novo
-centro $\mathbf{c}_m$ e normal $\mathbf{n}_m$, do \textit{splat}
-$\mathbf{s}_m$ que representa cluster, é atualizado
+$\mathit{C_1}$ é então construído seguindo o mesmo processo, com uma nova
+semente escolhida na vizinhança de $\mathit{C_0}$.
+Inicialmente, cada vizinho que possui erro perpendicular abaixo de $\varphi_p$ é
+utilizado como possível candidato a membro do cluster. Com isso, o novo
+centro $\mathbf{c}_m$ e normal $\mathbf{n}_m$ do \textit{splat}
+$\mathbf{s}_m$ que representa o cluster são atualizados
 (ver~\ref{cap05:sec:centroNormal}). Com $\mathbf{c}_m$ e $\mathbf{n}_m$,
-podemos atualizar a extensões do \textit{splat} $\mathbf{s}_m$
-(ver~\ref{cap05:sec:eixos}) e com isso computar o erro tangencial
-$\mathbf{e}_t$. Se o erro tangencial calculado estiver acima de $\varphi_t$, a
-configuração do ultimo vizinho adicionado é estabelecida como o cluster final.
-O processo continua até que todos os \textit{splats} de  $\mathbf{\mathcal T}$
-estiverem em algum cluster $\mathit C_i$.
+podemos atualizar as extensões do \textit{splat} $\mathbf{s}_m$
+(ver~\ref{cap05:sec:eixos}) e, consequentemente, computar o novo erro tangencial
+$\mathbf{e}_t$. Caso este erro esteja acima de $\varphi_t$, a
+configuração do último vizinho adicionado é estabelecida como o cluster final.
+O processo continua até que todos os \textit{splats} de $\mathbf{\mathcal T}$
+perteçam a algum cluster $\mathit C_i$.
 
 \subsection{Centro e Normal}
 \label{cap05:sec:centroNormal}
-Para calcular o novo centro $\mathbf{c}_m$ e normal $\mathbf{n}_m$ , usamos uma
+Para calcular o novo centro $\mathbf{c}_m$ e normal $\mathbf{n}_m$, utilizamos uma
 soma ponderada pela área dos \textit{splat} de acordo com a
-equação~\ref{eq:l21c} e~\ref{eq:l21n}. Assim , dado um conjunto
-de \textit{splats}, o centro $\mathbf{c}_m$ e normal $\mathbf{n}_m$ do novo
-\textit{splat} pode ser definido como :
+equação~\ref{eq:l21c} e~\ref{eq:l21n} (métrica $\mathbf{\mathit{L}}^2$). Assim, dado um conjunto
+de \textit{splats}, o centro $\mathbf{c}_m$ e a normal $\mathbf{n}_m$ do novo
+\textit{splat} podem ser definidos respectivamente como :
 
 \begin{equation}
  \mathbf{c}_{m}  =  \frac{
- \sum_i{|\mathbf{s}_i|\cdot\mathbf{c}_i}}{\sum_i|\mathbf{s}_m|}.
+ \sum_i{|\mathbf{s}_i|\cdot\mathbf{c}_i}}{\sum_i|\mathbf{s}_m|},
 \end{equation}
-e normal
 \begin{equation}
  \mathbf{n}_{m}  =  \frac{
  \sum_i{|\mathbf{s}_i|\cdot\mathbf{n}_i}}{\sum_i|\mathbf{s}_m|}.
@@ -74,28 +72,28 @@ e normal
 
 \subsection{Eixos da Elipse}
 \label{cap05:sec:eixos}
-Similar a~\ref{cap04:sec:splats:l21}, afim de obter os eixos da elipse
+Similar a~\ref{cap04:sec:splats:l21}, a fim de obter os eixos da elipse
 $\mathbf{s}_m$, projetamos $8$ pontos da borda das elipses $\mathbf{s}_i$ no
 plano definido por $\mathbf{c}_m$ e $\mathbf{n}_m$. Aplicamos \textit{PCA} no
-conjunto $C^\prime $ pontos projetados e obtemos os autovalores $\lambda_1 \geq \lambda_2 \geq \lambda_3$ 
-e autovetores unitários $v_1,v_2,v_3$. Assim a direção dos eixos da elipse
-$\mathbf{s}_m$ fica sendo a de $v_1$ e $v_2$. Para computar a dimensão dos eixos
-principais da elipse obtemos, assumindo que a excentricidade da elipse e dada
-por $\sqrt{ \frac{\lambda_1}{\lambda_2}}  $:
+conjunto de pontos projetados $C^\prime $ para obter os autovalores $\lambda_1 \geq \lambda_2 \geq \lambda_3$ 
+e autovetores unitários $v_1,v_2,v_3$. A direção dos eixos da elipse 
+$\mathbf{s}_m$ é então definida pelos vetores $v_1$ e $v_2$.
+Assumindo que a excentricidade da elipse é dada
+por $\sqrt{ \frac{\lambda_1}{\lambda_2}}$, pode-se computar as dimensões dos eixos
+principais como:
+\begin{equation}
+|t_m^1| = \sqrt{\lambda_1} \cdot \bar{\mathbf{e}},
+\end{equation}
+ \begin{equation}
+|t_m^2| = \sqrt{\lambda_2} \cdot \bar{\mathbf{e}},
+\end{equation}
+onde
 \begin{equation}
 \bar{\mathbf{e}}  =  \frac{\max_{q \in C^\prime } \{
 (\langle q,v_1 \rangle^2)\cdot\lambda_1 + (\langle q,v_2
-\rangle^2)\cdot\lambda_2 \} }{\lambda_1\cdot\lambda_2}
+\rangle^2)\cdot\lambda_2 \} }{\lambda_1\cdot\lambda_2}.
 \end{equation}
-A partir de $\bar{\mathbf{e}}$ determinamos a dimensão do eixo maior
-fazendo:
-\begin{equation}
-|t_m^1| = \sqrt{\lambda_1} \cdot \bar{\mathbf{e}}
-\end{equation}
- e a do eixo menor por:
- \begin{equation}
-|t_m^2| = \sqrt{\lambda_2} \cdot \bar{\mathbf{e}} 
-\end{equation}
+
 \section{Erro Perpendicular}
 \label{cap05:sec:perpendicular}
 
