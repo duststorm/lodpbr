@@ -1,6 +1,7 @@
 \chapter{Simplificação de Superfícies}
-Como mencionado no capítulo \ref{cap:02}, modelos baseados em pontos complexos podem chegar a
-milhões ou mesmo bilhões de amostras, como por exemplo no projeto do David Digital\cite{Levoy2000}. 
+\label{cap04}
+Como mencionado no capítulo~\ref{cap:02}, modelos baseados em pontos complexos
+podem chegar a milhões ou mesmo bilhões de amostras, como por exemplo no projeto do David Digital\cite{Levoy2000}. 
 Para que seja possível processar ou visualizar estes modelos em tempo real, muitas vezes é necessário reduzir a complexidade realizando operações de simplificação.
 Estas técnicas geram aproximações adequadas do modelo reduzindo o número de amostras e procurando manter da melhor forma possível as características do modelo original.
 Formalmente, a definição de uma simplificação de superfícies baseadas em pontos
@@ -176,7 +177,7 @@ um controle da densidade local da distribuição. Métodos de clusterização são os 
 eficientes devido a sua simplicidade. Clusterização incremental, simplificação iterativa e simulação de partículas possuem custo de armazenamento linear em relação ao número total de amostras, requerindo muitas vezes uma capacidade grande de memória, enquanto a clusterização hierárquica depende apenas do tamanho do modelo simplificado. O autor discute que as três técnicas operam diretamente na nuvem de pontos ao invés de reconstruir a superfície a priori para aplicar o processo de simplificação. A Figura~\ref{fig:pauly} ilustra estes métodos.
 
 \section{Simplificação Baseada em \textit{Splats}}
-
+\label{cap04:sec:splats}
 Como discutido no capítulo \ref{cap:02}, para preencher buracos entre os pontos
 de forma mais eficiente, representações baseadas em pontos são frequentemente
 estendidas para representações baseadas em \textit{Splats}~\cite{Zwicker2001},
@@ -237,7 +238,7 @@ definida como sendo a projeção ortogonal no plano do \textit{splat} ${\mathbf{s}
 \noindent se
 \begin{equation}
  || (\mathbf{p}_i - \mathbf{c}_i) - \mathbf{n}_j^{\mathit T}(\mathbf{p}_i -
- \mathbf{c}_i) - \mathbf{n}_j ||^2 \leq \mathbf r_j ^2
+ \mathbf{c}_i)\mathbf{n}_j ||^2 \leq \mathbf r_j ^2
 \label{eq:circular}
 \end{equation}
 no caso de um \textit{splat} circular ou
@@ -306,7 +307,7 @@ tamanho $\mathbf{r}_i$:
 
 \begin{equation}
  \mathbf{r}_i  = \max_j || (\mathbf{p}_j - \mathbf{c}_i) - \mathbf{n}_i^{\mathit
- T}(\mathbf{p}_j - \mathbf{c}_i) - \mathbf{n}_i || ,
+ T}(\mathbf{p}_j - \mathbf{c}_i)\mathbf{n}_i || ,
 \label{eq:planocircular}
 \end{equation}
 
@@ -329,7 +330,7 @@ entendidos. Um para medir o erro relativo à distância ($\mathbf{\mathit{L}}^2$) 
 outro ao desvio da normal ($\mathbf{\mathit{L}}^{2,1}$).
 
 \subsubsection{Métrica $\mathbf{\mathit{L}}^2$}
-
+\label{cap04:sec:splats:l2}
 A métrica $\mathbf{\mathit{L}}^2$ é baseada na distância Euclidiana. Para
 computar o erro causado pela operação $\Phi$
 em relação ao conjunto de pontos originais, uma lista adicional de índices
@@ -373,6 +374,7 @@ quando projetados no plano definido por $\mathbf{s}_m$ (Figura~\ref{fig:merge}).
  
 
 \subsubsection{Métrica $\mathbf{\mathit{L}}^{2,1}$}
+\label{cap04:sec:splats:l21}
 A métrica de erro $\mathbf{\mathit{L}}^{2,1}$ mede o desvio na direção da
 normal, sendo uma extensão da métrica original proposta em~\cite{Cohen2004}. Neste
 caso o computo é simples e não há necessidade da lista de índices. Dada a
