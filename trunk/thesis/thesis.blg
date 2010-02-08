@@ -11,8 +11,6 @@ A level-1 auxiliary file: chap04.aux
 A level-1 auxiliary file: chap05.aux
 A level-1 auxiliary file: chap06.aux
 The style file: coppe-unsrt.bst
-A level-1 auxiliary file: appenA.aux
-A level-1 auxiliary file: appenB.aux
 Database file #1: thesis.bib
 Warning--I didn't find a database entry for "Tuk"
 Warning--empty pages in Correa02towardspoint-based
@@ -21,7 +19,7 @@ Warning--empty journal in Alexa2004
 Warning--empty pages in EfficenteLOD2003
 You've used 47 entries,
             2438 wiz_defined-function locations,
-            929 strings with 13924 characters,
+            927 strings with 13904 characters,
 and the built_in function-call counts, 12893 in all, are:
 = -- 1121
 > -- 327
