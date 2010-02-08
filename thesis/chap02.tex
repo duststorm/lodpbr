@@ -60,14 +60,22 @@ do que a de um pixel (Figura \ref{fig:levoyWhitted}).
 %assim, um disco orientado.
 
 
-\begin{figure}[ht]
-\centering
-\includegraphics[width=15.0cm]{img/cap02/gaelwittenAndLevoy} 
+\begin{figure}[tcb]
+  \centering \mbox{} \hfill
+  \begin{minipage}[b]{0.35\linewidth}
+ \centering
+  \includegraphics[width=1.25\linewidth]{img/cap02/levoy1}\\[0cm](a)
+  \end{minipage}
+  \hfill
+  \begin{minipage}[b]{0.35\linewidth}
+    \centering
+    \includegraphics[width=1.25\linewidth]{img/cap02/levoy2}\\[0cm](b)
+  \end{minipage}
+  \hfill \mbox{}
 \caption{Renderização Baseada em Pontos proposta por Levoy e Whitted (
-Retirada de \cite{LevoyW1985}). $(a)$ Ponto como primitiva universal de
-renderização. $(b)$ \textit{z-buffer} com tolerância para reconstruir uma
-superfície contínua.
-\textbf{$(a)$} }
+Retirada de \cite{LevoyW1985}). (\emph{a}) Ponto como primitiva universal de
+renderização. (\emph{b}) \textit{z-buffer} com tolerância para reconstruir uma
+superfície contínua.}
 \label{fig:levoyWhitted}
 \end{figure}
 
@@ -138,8 +146,8 @@ de \textit{Surface Splatting}, uma das técnicas mais populares de renderização d
 baseadas
 em pontos. Neste trabalho foi proposto o uso do filtro
 EWA
-(\textit{Elliptical Weighted Average}\abbrev{EWA}{\textit{Elliptical Weighted
-Average}}) para reconstruir a superfície em espaço de imagem utilizando os \textit{splats}
+(\textit{Elliptical Weighted Average}\abbrev{\textit{EWA}}{\textit{Elliptical
+Weighted Average}}) para reconstruir a superfície em espaço de imagem utilizando os \textit{splats}
 projetados.
 Um \textit{splat} pode ser definido como circular ou elíptico como discutido por 
 Kobbelt e Botsch \cite{Kobbelt2004}; nesta dissertação usaremos aqueles elípticos.

@@ -1,5 +1,37 @@
 \chapter{Conclusão e Trabalhos Futuros}
 
+Representação de superfícies de pontos baseada em \textit{splats} é bastente
+útil na computação gráfica, principalemnte quando se deseja visualizar de forma
+interativa e com qualidade, grande modelos produzidos por $3D$\texit{scanners}
+e outros tipos de midia que captura geometria em forma de nuvem de pontos.
 
+A contribuição desta dissertação, foi a elaboração de um algoritmo de
+simplificação que trabalha diretamente com \textit{splats}. Com intuito de
+obter uma simplificação com maior qualidade, uma aborgagem incremental de
+clusterização foi ultilizada. Adotamos os \textit{splats} elípticos por se
+adptarem melhor a superfície.
 
+\secion{Trabalhos Futuros}
+A abordagem incremental ultizada, nos permite criar um hierarquia de volumes
+envolvetes bem mais elaborada. E de inicio queremos:
+\begin{itemize}
+  \item Usa este fato para gerar uma hieraquia de volumes envolventes, e crirar
+  um estrutura de renderização em nível de detalhes como a aprensentada pelo
+  \textit{QSplat}~\ref{cap:03:sec:qsplat}.
+  \item Converter esta estrutura, usando nosso erros estendidos, para um
+  estrutura como a apresentada no \texit{SPT}~\ref{cap:03:sec:spt}.
+\end{itemize}
 
+Muitas otmizações podem ser feitas no algoritmo de simplificação, entre elas:
+
+\begin{itemize}
+  \item Um forma mais elaborada de se conseguir os $k-$vizinhos mais próximos
+  \item Um forma incremental de obtenção do próximo candidato a membro do
+  cluster. Já que re-computamos o \textit{splat} a cada iteração.
+  \item Algum otmização global a fim de uma melhor distribuição dos cluster na
+  superfície.
+\end{itemize}
+
+Muitas questões relativas a simplificação podem ser trabalhadas. Nesta
+dissertação levemos em consideração apenas a geometrica do modelos, mas outros
+atributos como cor, por exemplo, podem ser levados em consideração.
