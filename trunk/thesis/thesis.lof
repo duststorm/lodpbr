@@ -2,9 +2,9 @@
 \select@language {english}
 \select@language {brazil}
 \addvspace {10\p@ }
-\contentsline {figure}{\numberline {1.1}{\ignorespaces \textbf {Esquerda:} Modelo Max Planck. \textbf {Topo-Direita:} Renderiza\c c\~ao usando malhas poligonais \textbf {Baixo-Direita:} Renderiza\c c\~ao usando \textit {Splats} (Retirada de~\cite {Bou07})}}{2}{figure.1.1}
+\contentsline {figure}{\numberline {1.1}{\ignorespaces \textbf {Esquerda:} Modelo Max Planck. \textbf {Topo-Direita:} Renderiza\c c\~ao usando malhas poligonais \textbf {Baixo-Direita:} Renderiza\c c\~ao usando \textit {Splats} renderizados com fra\c c\~ao do tamanho para efeito de ilustra\c c\~ao (Retirada de~\cite {Bou07})}}{2}{figure.1.1}
 \addvspace {10\p@ }
-\contentsline {figure}{\numberline {2.1}{\ignorespaces Renderiza\c c\~ao Baseada em Pontos proposta por Levoy e Whitted ( Retirada de \cite {LevoyW1985}). $(a)$ Ponto como primitiva universal de renderiza\c c\~ao. $(b)$ \textit {z-buffer} com toler\^ancia para reconstruir uma superf\IeC {\'\i }cie cont\IeC {\'\i }nua. \textbf {$(a)$} }}{6}{figure.2.1}
+\contentsline {figure}{\numberline {2.1}{\ignorespaces Renderiza\c c\~ao Baseada em Pontos proposta por Levoy e Whitted ( Retirada de \cite {LevoyW1985}). (\emph {a}) Ponto como primitiva universal de renderiza\c c\~ao. (\emph {b}) \textit {z-buffer} com toler\^ancia para reconstruir uma superf\IeC {\'\i }cie cont\IeC {\'\i }nua.}}{6}{figure.2.1}
 \contentsline {figure}{\numberline {2.2}{\ignorespaces \textbf {Esquerda:} um modelo $3D$ representado por \textit {splats}. \textbf {Centro:} vis\~ao ampliada da superf\IeC {\'\i }cie com \textit {splats} renderizados com metade dos valores dos raios originais. \textbf {Direita:} um \textit {splat} el\IeC {\'\i }ptico \'e definido por uma posi\c c\~ao $\mathbf {c}_i$ e dois eixos tangentes $\mathbf {t}_i^1$ e $\mathbf {t}_i^2$ (retirada de~\cite {Bart2006}). }}{8}{figure.2.2}
 \contentsline {figure}{\numberline {2.3}{\ignorespaces \textbf {Esquerda:} splats renderizados com metade dos valores dos raios para efeitos de ilustra\c c\~ao. \textbf {Centro-esquerda:} splats renderizados sem interpola\c c\~ao. \textbf {Centro-direita:} interpola\c c\~ao das cores; \textbf {direita:} interpola\c c\~ao das normais. Retirada de~\cite {PhongSplat2004}}}{10}{figure.2.3}
 \contentsline {figure}{\numberline {2.4}{\ignorespaces \textbf {Esquerda:} proje\c c\~ao de pontos com cobertura de um pixel. \textbf {Direita:} splats com \'area de cobertura s\~ao interpolados para gerar uma superf\IeC {\'\i }cie cont\IeC {\'\i }nua em espa\c co de imagem. Adaptada de~\cite {Bart2006}}}{11}{figure.2.4}
@@ -27,8 +27,7 @@
 \contentsline {figure}{\numberline {4.4}{\ignorespaces Representa\c c\~ao progressiva do modelo de Carlos Magno ($600.000$ de pontos). Da esquerda para direita, modelos com: $2.000$, $10.000$, $70.000$ e $600.000$ \textit {splats}}}{32}{figure.4.4}
 \contentsline {figure}{\numberline {4.5}{\ignorespaces Jun\c c\~ao dos \textit {splats} de acordo com a m\'etrica $\mathbf {\mathit {L}}^2$ (esquerda) e $\mathbf {\mathit {L}}^{2,1}$ (direita) }}{33}{figure.4.5}
 \addvspace {10\p@ }
-\contentsline {figure}{\numberline {5.1}{\ignorespaces Erro Perpendicular}}{38}{figure.5.1}
-\contentsline {figure}{\numberline {5.2}{\ignorespaces Dist\^ancia aproximada de uma elipse $\mathbf {s}_i^\prime $ do conjunto das elipses projetadas $\mathbf {\mathcal T}^\prime $ ao contorno de $\mathbf {s}_m$ dicretizado em $8$ pontos. \textbf {Esquerda:}. \textbf {Direita:}.}}{39}{figure.5.2}
-\addvspace {10\p@ }
-\addvspace {10\p@ }
+\contentsline {figure}{\numberline {5.1}{\ignorespaces O erro perpendicular mede a dist\^ancia m\'axima dos \textit {splats} $\mathbf {s}_i$ na dire\c c\~ao perpendicular ao plano $\mathbf {P}_m$ definido por pelo \textit {splat} $\mathbf {s}_m$}}{39}{figure.5.1}
+\contentsline {figure}{\numberline {5.2}{\ignorespaces Dist\^ancia aproximada de uma elipse $\mathbf {s}_i^\prime $ do conjunto das elipses projetadas $\mathbf {\mathcal T}^\prime $ ao contorno de $\mathbf {s}_m$ discretizado em $8$ pontos.}}{42}{figure.5.2}
+\contentsline {figure}{\numberline {5.3}{\ignorespaces \textbf {(a)} Modelo \textit {Bunny} original: $139990$. \textbf {(b)} \textit {Bunny} simplificado: $11258$. \textbf {(c)} Modelo \textit {Armadillo} original: $172974$. \textbf {(d)} Modelo simplificado: $11964$.\textbf {(e)} Modelo \textit {Dragon} original: $437645$ \textbf {(f)} Modelo simplificado $37959$.}}{44}{figure.5.3}
 \addvspace {10\p@ }

@@ -3,19 +3,20 @@
 %aspell -l"pt_BR" --encoding="iso-8859-1" -c chap01.tex
 \section{Motivação}
 Renderização Baseada em pontos vem se tornando popular nos últimos anos, especialmente
-devido a evolução do \textit{hardware} gráfico 3D (\textit{Graphic Processor Unit}) % ,
+devido à evolução do \textit{hardware} gráfico 3D (\textit{Graphic Processor Unit}) % ,
 \abbrev{GPU}{\textit{Graphic Processor Unit}} e à necessidade de processar modelos
-extremamente grandes produzidos pelos \textit{Scanners} $3D$~\cite{Levoy2000, Correa02towardspoint-based}. 
-Ao contrário do método tradicional de renderização em que modelos $3D$ são aproximados por um
+extremamente grandes, e.x. aqueles produzidos por \textit{Scanners} $3D$~\cite{Levoy2000, Correa02towardspoint-based}. 
+Ao contrário do método tradicional de renderização aonde a superfície do modelo é aproximada por um
 conjunto de polígonos (malhas poligonais), técnicas de renderização
-baseadas em pontos usam apenas a nuvem de pontos sem conectividade explicita.
+baseadas em pontos usam apenas a nuvem de pontos sem conectividade explicita, como
+ilustrado na Figura \ref{fig:triangle2point}.
 
 \begin{figure}[ht]
 \centering
 \includegraphics[width=12.0cm]{img/cap01/meshVsPoint} 
 \caption{\textbf{Esquerda:} Modelo Max Planck. \textbf{Topo-Direita:}
 Renderização usando malhas poligonais
-\textbf{Baixo-Direita:} Renderização usando \textit{Splats} (Retirada
+\textbf{Baixo-Direita:} Renderização usando \textit{Splats} renderizados com fração do tamanho para efeito de ilustração (Retirada
 de~\cite{Bou07})}
 \label{fig:triangle2point}
 \end{figure}
@@ -23,9 +24,8 @@ de~\cite{Bou07})}
 Com o aumento da capacidade do hardware gráfico tornou-se 
 possível tratar cenas com quantidade enormes de polígonos, porém a resolução dos dispositivos de saída não acompanharam esta taxa de crescimento; como consequência,
 muitas vezes polígonos são mapeados em apenas um \textit{pixel} 
-perdendo-se tempo desnecessário com o processo de rasterização, como
-ilustrado na Figura \ref{fig:triangle2point}. Como as GPUs são 
-otimizadas para renderizar triângulos, assim como a maioria dos algoritmos de processamento consolidados foram pensados para tratar malhas poligonais, era de praxe a conversão de modelos de pontos para polígonos usando
+alocando tempo desnecessário ao processo de rasterização. No entanto, as GPUs são 
+otimizadas para renderizar triângulos, assim como a maioria dos algoritmos para processar e visualizar modelos foram pensados para tratar malhas poligonais, desta forma, era de praxe a conversão de modelos de pontos para polígonos usando
 métodos como o algoritmo \textit{marching cubes}~\cite{Lorensen1978}. No
 entanto, com as GPUs modernas possuindo cada vez mais partes programáveis dentro do \textit{pipeline} gráfico, 
 é possível criar algoritmos de renderização de pontos que justifiquem o processamento direto na nas nuvens de pontos, produzindo resultados eficientes e imagens de alta qualidade no caso da renderização.
