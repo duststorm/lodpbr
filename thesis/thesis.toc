@@ -55,4 +55,5 @@
 \contentsline {section}{\numberline {5.5}Resultados}{42}{section.5.5}
 \contentsline {section}{\numberline {5.6}Discuss\~ao}{43}{section.5.6}
 \contentsline {chapter}{\numberline {6}Conclus\~ao e Trabalhos Futuros}{45}{chapter.6}
+\contentsline {section}{\numberline {6.1}Trabalhos Futuros}{45}{section.6.1}
 \contentsline {chapter}{Refer\^encias Bibliogr\'aficas}{47}{chapter*.16}
