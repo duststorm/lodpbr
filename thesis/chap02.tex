@@ -1,6 +1,6 @@
 \chapter{Superfícies Baseada em Pontos}
 \label{cap:02}
-Superfícies baseada em pontos ganharam recentemente a atenção da
+Superfícies baseadas em pontos ganharam recentemente a atenção da
 comunidade de computação gráfica \cite{PBGBook2007}. Geralmente são provenientes
 de \textit{scanners} $3D$ que amostram a superfície do objeto gerando uma nuvem
 de pontos $\mathbf{\mathcal P}$. Operações de filtragem \cite{Alexa2004} são
@@ -12,8 +12,9 @@ Neste capítulo, discutiremos as origens e definições de pontos como
 primitiva geométrica de renderização. Na seção \ref{cap02:sec:origens} será
 apresentado um breve histórico, enquanto que nas seções \ref{cap02:sec:puro} e
 \ref{cap02:sec:orientado} a primitiva será descrita em mais detalhes. Por último discutiremos 
-os \textit{Splats} na seção \ref{cap02:sec:splat}, que são uma extensão da
+os \textit{splats} na seção \ref{cap02:sec:splat}, que são uma extensão da
 representação pura por pontos.
+
 \section{Pontos como Primitiva Universal de Visualização}
 \label{cap02:sec:origens}
 
@@ -42,7 +43,7 @@ pouco ambiciosa ao colocar os pontos como uma meta-primitiva, desta forma
 todas representações deveriam ser convertidas para pontos em um certo
 momento permitindo a unificação dos algoritmos de visualização. Para reconstruir
 uma superfície contínua, os pontos são incrementados com valores 
-de normal, cor, um coeficiente de transparência, além de um valor que estima a 
+de normal, cor e um coeficiente de transparência, além de um valor que estima a 
 densidade local, permitindo que o ponto projetado possua uma área de cobertura maior
 do que a de um pixel (Figura \ref{fig:levoyWhitted}).
 
@@ -97,7 +98,7 @@ conjunto de pontos como uma coleção de posições $\mathbf{\mathcal P} =
 de algum método que nos forneça os $k$-vizinhos mais próximos do ponto,
 definidos
 como um subconjunto de $k$ pontos com menor distância Euclidiana ao ponto dado.
-No capítulo \ref{chapter:3} será apresentada uma estrutura eficiente para obter
+No capítulo \ref{cap03} será apresentada uma estrutura eficiente para obter
 os 
 $k$-vizinhos de uma nuvem de pontos; no entanto, assumindo-se que são dados os $k$ vizinhos
 $\mathbf{\mathcal N}_{\mathbf{\mathcal 
@@ -119,7 +120,7 @@ Entretanto, a informação de normal geralmente não é suficiente para gerar uma
 visualização contínua da superfície, sendo necessário estimar o espaço
 entre pontos vizinhos, ou seja, uma valor local de densidade. Esta informação
 pode ser gerada implicitamente em superfícies amostradas de forma regular, 
-porém muitas algumas regiões podem ficar super-amostradas, já que áreas planares
+porém algumas regiões podem ficar super-amostradas, já que áreas planares
 são consideradas com a mesma resolução do que áreas com grandes variações de curvatura. Desta maneira,
 \textit{splats} (seção a seguir) constituem uma maneira simples de representar
 adaptativamente nuvens de pontos.
@@ -157,7 +158,7 @@ Kobbelt e Botsch \cite{Kobbelt2004}; nesta dissertação usaremos aqueles elíptico
 pela posição do ponto, e vetor normal pela normal da superfície no ponto. Desta
 forma, cada \textit{splat} pode ser definido unicamente por uma posição 
 $\mathbf{c}_i$ e dois vetores $\mathbf{t}_i^1$ e $\mathbf{t}_i^2$ ortogonais e
-tangentes à superfície (veja Figura \ref{fig:bartellipse}), onde os tamanhos
+tangentes à superfície (Figura \ref{fig:bartellipse}), onde os tamanhos
 dos vetores definem a extensão da elipse.
 
 Existem alguns algoritmos para converter superfícies de pontos pura em
@@ -266,7 +267,7 @@ se intersetam em espaço de imagem pertencem de fato à mesma superfície do
 objeto. Infelizmente, na GPU, estes valores de profundidade não são acessíveis
 em tempo de renderização, requerendo estratégias mais elaboradas que tratem o
 problema em duas passadas: na primeira as elipses são projetadas e rasterizadas
-normalmente preenchendo o buffer de profundidade; na segunda as elipses são
+preenchendo o buffer de profundidade de modo habitual; e na segunda as elipses são
 interpoladas utilizando o z-buffer da primeria passada como referência.
 
 Para realizar a interpolação é feita uma média ponderada de todas as elipses que
@@ -276,8 +277,8 @@ um peso a cada elipse dependendo da distância ao seu centro de projeção.
 Ainda mais, a interpolação pode ser realizada de duas
 formas distintas: interpolando as cores dos splats (Figura \ref{fig:manequim}
 centro-direita) ou as normais (Figura \ref{fig:manequim} direita). 
-Na primeira o computo de iluminação é realizado uma vez por elipse e as cores
+Na primeira, o computo de iluminação é realizado uma vez por elipse e as cores
 são interpoladas por pixel (análogo a tonalização \textit{Gouraud}), enquanto que na
 segunda estratégia as normais são interpoladas e o cálculo de
-iluminação realizado por pixel da imagem, uma técnica conhecida como
+iluminação é realizado por pixel da imagem, uma técnica conhecida como
 \textit{deffered shading}, ou \textit{per-pixel shading}.
