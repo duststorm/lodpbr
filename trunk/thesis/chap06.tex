@@ -1,37 +1,32 @@
 \chapter{Conclusão e Trabalhos Futuros}
 
-Representação de superfícies de pontos baseada em \textit{splats} é bastente
-útil na computação gráfica, principalemnte quando se deseja visualizar de forma
-interativa e com qualidade, grande modelos produzidos por $3D$\texit{scanners}
-e outros tipos de midia que captura geometria em forma de nuvem de pontos.
+Representação de superfícies por \textit{splats} se mostra vantajosa em muitos casos,
+principalmente quando o objetivo é visualizar interativamente modelos contendo um grande
+número de amostras, como os produzidos por $3D$ \textit{scanners}. \textit{Splats} permitem
+a renderização em alta qualidade ao acrescentar informações locais da superfície aos pontos, como por exemplo, valores de densidade e propriedades diferenciais (normal e vetores tangentes).
 
-A contribuição desta dissertação, foi a elaboração de um algoritmo de
-simplificação que trabalha diretamente com \textit{splats}. Com intuito de
-obter uma simplificação com maior qualidade, uma aborgagem incremental de
-clusterização foi ultilizada. Adotamos os \textit{splats} elípticos por se
-adptarem melhor a superfície.
+A contribuição desta dissertação é a elaboração de um algoritmo de
+simplificação que atua diretamente nos \textit{splats}. Diferentemente dos algoritmos que trabalham com apenas a posição geometrica (pontos ``puros''), os \textit{splats} permitem guiar a simplificação de uma forma mais precisa, além de não necessitar de conversões ou de manter diferentes representações do modelo. Ainda mais, a utilização de \textit{splats} elípticos permitem uma aproximação com menos elementos por se adaptarem melhor à superfície.
+Objetivando uma simplificação de alta qualidade, uma aborgagem incremental de clusterização foi utilizada.
 
-\secion{Trabalhos Futuros}
-A abordagem incremental ultizada, nos permite criar um hierarquia de volumes
-envolvetes bem mais elaborada. E de inicio queremos:
+\section{Trabalhos Futuros}
+A abordagem incremental utilizada facilita a criação de uma hierarquia de volumes
+envolventes, e consequentemente gerar estruturas de dados específicas para visualização.
+Com este intuito, e com base nos trabalhos relacionados, existem dois passos naturais a serem seguidos a partir da abordagem de simplificação apresentada:
 \begin{itemize}
-  \item Usa este fato para gerar uma hieraquia de volumes envolventes, e crirar
-  um estrutura de renderização em nível de detalhes como a aprensentada pelo
-  \textit{QSplat}~\ref{cap:03:sec:qsplat}.
-  \item Converter esta estrutura, usando nosso erros estendidos, para um
-  estrutura como a apresentada no \texit{SPT}~\ref{cap:03:sec:spt}.
+  \item gerar uma hieraquia de volumes envolventes para criar
+  uma estrutura de renderização em nível de detalhes como a aprensentada pelo
+  \textit{QSplat} (Seção~\ref{cap:03:sec:qsplat});
+  \item converter esta estrutura, usando os erros estendidos apresentados, para uma
+  estrutura como a apresentada pelo \textit{SPT} (Seção~\ref{cap:03:sec:spt}).
 \end{itemize}
 
-Muitas otmizações podem ser feitas no algoritmo de simplificação, entre elas:
+Adicionalmente, algumas otimizações podem ser feitas no algoritmo de simplificação, entre elas:
 
 \begin{itemize}
-  \item Um forma mais elaborada de se conseguir os $k-$vizinhos mais próximos
-  \item Um forma incremental de obtenção do próximo candidato a membro do
-  cluster. Já que re-computamos o \textit{splat} a cada iteração.
-  \item Algum otmização global a fim de uma melhor distribuição dos cluster na
-  superfície.
+  \item uma forma mais eficiente para encontrar os $k-$vizinhos mais próximos;
+  \item obter incrementalmente o próximo candidato a membro do cluster, na forma atual o \textit{splat} é re-computado a cada iteração;
+  \item realizar otimizações globais a fim de obter uma melhor distribuição dos cluster na superfície.
 \end{itemize}
 
-Muitas questões relativas a simplificação podem ser trabalhadas. Nesta
-dissertação levemos em consideração apenas a geometrica do modelos, mas outros
-atributos como cor, por exemplo, podem ser levados em consideração.
+Finalmente, é de especial interesse guiar a simplificação utilizando outros aspectos além da geometria, por exemplo, levando em consideração atributos como a cor das amostras.
