@@ -2,12 +2,11 @@
 \label{cap03}
 Neste capítulo apresentaremos as principais estrutura de dados utilizadas para
 tratar nuvem de pontos. Com ausência de conectividade, operações de
-modelagem podem ser realizadas com a adição ou remoção de pontos apenas, mas
-informações de vizinhança, que muitas vezes é necessária, não é explicitamente presente.
+modelagem podem ser realizadas com a adição ou remoção de apenas pontos, porém, não é explicitamente presente para outras operações
+informações de vizinhança onde se faz necessária.
 
 Este capítulo apresenta algumas estruturas de dados para tratar nuvem de
-pontos bem como alguns trabalhos que estenderam algumas destas estruturas
-visando renderização interativa.
+pontos além de algumas extensões propostas visando renderização interativa.
  
 \section{Estrutura de Partição do Espaço}
 Estruturas de Partição Espacial são comuns em computação gráfica, em particular 
@@ -69,7 +68,7 @@ a ficar desbalanceados. Para aliviar essa deficiência uma versão modificada de
 Uma outra aplicação é a determinação de vizinhança de um dado
 ponto do modelo. Uma \textit{octree} possui $26$ direções possíveis de
 vizinhança: $6$ ao longo das faces, $12$ ao longo as arestas e $8$ nas direções
-dos vértices. Como o computo dos vizinho não se limita apenas a um nó, a
+dos vértices. Como o cômputo dos vizinho não se limita apenas a um nó, a
 determinação da vizinhança pode ser custosa. Uma estrutura mais adquada 
 para este de tipo de busca é a \textit{kd-tree}, apresentada a seguir.
 
@@ -141,7 +140,7 @@ usado, por exemplo, no \textit{QSplat} \cite{Rusinkiewicz2000} para renderização
 progressiva (este algoritmo será descrito com mais detalhes na seção
 \ref{sec:qspalt}). Diferentemente de métodos de partição de dados para indexação
 no espaço, como as \textit{Octrees} e \textit{kd-trees} descritas anteriormente,
-as BVHs não são obrigatoriamente uma partição baseadas no espaço. Sendo assim, algumas
+as BVHs não são obrigatoriamente uma partição baseada no espaço. Sendo assim, algumas
 restrições são removidas permitindo a construção de uma
 hierarquia espacial mais genérica. De fato, ela permite qualquer hierarquia que
 agrupe os elementos, sem estar necessariamente baseada em seleção espacial. O
@@ -193,8 +192,7 @@ envolventes com renderização baseada em pontos. Os nós internos da hierarquia
 armazenam atributos (posição, normal, cor) que são estimados pelos seus nós filhos. O algoritmo de renderização percorre a
 hierarquia até que o tamanho da projeção da esfera envolvente seja menor que um
 valor pré-determinado (geralmente um \textit{pixel}); o nó é então renderizado
-e seus filhos ignorados. O sistema será descrito com mais detalhes nas
-seções seguintes.
+e seus filhos ignorados.
 
 \subsection{\textit{QSplat} Estrutura de Dados}
 O \textit{QSplat} usa uma hierarquia de esferas envolventes que também é usada
@@ -297,11 +295,11 @@ um cálculo de iluminação baseada na normal e cor da mesma.
 \end{figure}
 
 \subsection{Discussão}
-\textit{QSplat} possui um processo bem simples, mas infelizmente ele não usa
+O \textit{QSplat} possui um processo bem simples, mas infelizmente ele não usa
 todo o potencial computacional que as GPUs oferecem. Dada a
 granularidade na sua determinação de nível de detalhes, um modelo pode chegar a
-ser renderizado ponto por ponto. Como consequência, este ``modo imediato'', ou
-seja, o envio de ponto a ponto para renderização subutiliza a GPU.
+ser renderizado ponto por ponto. Este ``modo imediato'' envia 
+ponto a ponto para renderização e, consequentemente, subutiliza a GPU.
 No entanto, esta simplicidade torna o \textit{Qsplat} um algoritmo
 utilizável em outras aplicações: por exemplo, sua hierarquia de esfera é uma boa
 estrutura para \textit{Ray Tracing} e para aplicações em rede como a
@@ -311,7 +309,7 @@ modelos $3D$ de forma progressiva e remotamente.
 
 \section{\textit{Sequential Point Trees}}
 \label{cap:03:sec:spt}
-\textit{QSplat} possui um processamento de dados muito simples e de fácil
+O \textit{QSplat} possui um processamento de dados muito simples e de fácil
 implementação, mas infelizmente sua estrutura hierárquica recursiva é difícil de
 ser implementada em GPU. Os pontos renderizados não são armazenados de forma
 contínua e, portanto, não são processados sequencialmente. A \textit{CPU}
@@ -327,7 +325,7 @@ mais detalhes.
 
 \subsection{Hierarquia de Pontos}
 Inicialmente o SPT utiliza uma hierarquia de pontos representada por uma
-\textit{octree} (ver \ref{section:Octree}), onde cada nó da hierarquia
+\textit{octree} (ver Seção~\ref{section:Octree}), onde cada nó da hierarquia
 representa parte do objeto. Cada nó armazena um centro $\mathbf{c}$ e uma
 estimativa da normal $\mathbf{n}$. Um nó armazena também um diâmetro $\mathbf{d}$ da esfera
 envolvente centrada em $\mathbf{c}$. Um nó interno representa
@@ -388,7 +386,7 @@ O erro tangencial $\mathbf{e}_t$ analisa a projeção dos discos dos
 filhos no disco do pai, como mostrado na Figura \ref{fig:Tangencial}. 
 O erro é medido usando várias retas ao redor dos filhos projetados
 de forma a separá-los de uma região não coberta. $\mathbf{e}_t$ é definido como
-a menor distância entre estas retas e a borda do disco pai, ou seja, mede a cobertura do disco pai. Erros negativos são setados em zero. O erro tangencial é projetado no espaço de imagem como:
+a menor distância entre estas retas e a borda do disco pai, ou seja, mede a cobertura do disco pai; erros negativos são setados em zero. O erro tangencial é projetado no espaço de imagem como:
 
 \begin{equation}
  \mathbf{\tilde{e}}_t = \mathbf{e}_t \frac{\cos{(\alpha)}}{\mathbf{r}} 
@@ -449,9 +447,9 @@ lista da mesma hierarquia de pontos ordenada por $\mathbf{r_\max}$.(Retirada de
 \end{figure}
 
 Para tanto, o erro simplificado $\mathbf{\tilde{e}}_g$ é substituído por um que
-seja mais intuitivo. Assumindo $\mathbf{\epsilon}$ constante, ao invés de usar o
+seja mais apropriado. Assumindo $\mathbf{\epsilon}$ constante, ao invés de usar o
 teste recursivo $\mathbf{\tilde{e}}_g  = {}^{e_g}/{}_r < \mathbf{\epsilon}
-$, é armazenado um distância mínima $\mathbf{r}_{\min} =
+$, é armazenado uma distância mínima $\mathbf{r}_{\min} =
 {}^{e_g}/{}_{\epsilon}$ no nó simplificando o teste recursivo para $\mathbf{r} > \mathbf{r}_{\min}$. 
 Entretanto, quando os nós da árvore são processados sequencialmente sem informação hierárquica, 
 há necessidade de um teste não recursivo. Para este fim, é adicionado um
