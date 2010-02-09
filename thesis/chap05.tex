@@ -72,7 +72,7 @@ de \textit{splats}, o centro $\mathbf{c}_m$ e a normal $\mathbf{n}_m$ do novo
 
 \subsection{Eixos da Elipse}
 \label{cap05:sec:eixos}
-Similar a~\ref{cap04:sec:splats:l21}, a fim de obter os eixos da elipse
+Similar ao método apresentado na Seção~\ref{cap04:sec:splats:l21}, a fim de obter os eixos da elipse
 $\mathbf{s}_m$, projetamos $8$ pontos da borda das elipses $\mathbf{s}_i$ no
 plano definido por $\mathbf{c}_m$ e $\mathbf{n}_m$. Aplicamos \textit{PCA} no
 conjunto de pontos projetados $C^\prime $ para obter os autovalores $\lambda_1 \geq \lambda_2 \geq \lambda_3$ 
@@ -106,11 +106,11 @@ pelo \textit{splat} $\mathbf{s}_m$}
 \label{fig:merge_splats}
 \end{figure}  
 
-No caso elíptico, o problema de determinar o ponto de uma elipse
-$\mathbf{s}_i$ do conjunto que está sendo agregado ao plano da elipse
-$\mathbf{s}_m$ que passa a representar esse conjunto, não é tão  imediato como no caso circular. Para
+O problema de determinar a distância máxima de uma elipse
+$\mathbf{s}_i$, do conjunto que está sendo agregado, ao plano da elipse
+$\mathbf{s}_m$ (que passa a representar esse conjunto), não é tão imediato como no caso circular. Para
 calcular a chamada distância perpendicular entre $\mathbf{s}_i$ e
-$\mathbf{s}_m$, que notaremos $\mathbf{\mathcal D}(i,m)$ precisamos executar o
+$\mathbf{s}_m$, que notaremos como $\mathbf{\mathcal D}(i,m)$, precisamos executar o
 seguinte processo. Seja:
 \begin{equation}
 v(\alpha) = t_{i}^{1} \cos(\alpha) + t_{i}^{2} \sin(\alpha) + c_{i},
@@ -122,14 +122,14 @@ resolver o seguinte problema de otimização:
 \begin{equation}
 \max_{\alpha \in [0,2\pi]}\langle v(\alpha)-c_{m},{n}_m\rangle = \langle t_{i}^{1},{n}_m \rangle
 \cos(\alpha) + \langle t_{i}^{2},{n}_m \rangle \sin(\alpha) + \langle c_{i}-
-c_{m},{n}_m \rangle
+c_{m},{n}_m \rangle.
 \end{equation}
 Para  resolver esse problema começamos igualando a zero a derivada da função
 objetiva, o que determina que a solução procurada $\alpha_{max}$ deve satisfazer a:
 \begin{equation}
 \langle t_{i}^{2},{n}_m\rangle \cos(\alpha_{max}) - \langle t_{i}^{1},{n}_m
 \rangle \sin(\alpha_{max}) &=& 0  \Longrightarrow \frac{\langle t_{i}^{2},{n}_m
-\rangle}{\langle t_{i}^{1},{n}_m \rangle} &=& \tan(\alpha_{max})
+\rangle}{\langle t_{i}^{1},{n}_m \rangle} &=& \tan(\alpha_{max}),
 \end{equation}
 onde:
 \begin{align}
@@ -137,26 +137,26 @@ cos(\alpha_{max}) &= \pm \frac{ \langle t_{i}^{1},{n}_m
 \rangle}{\sqrt{\langle t_{i}^{1},{n}_m \rangle^{2} + \langle t_{i}^{2},{n}_m
 \rangle^{2}}} \\ \nonumber sin(\alpha_{max}) &= \pm
 \frac{\langle t_{i}^{2},{n}_m\rangle}{\sqrt{\langle t_{i}^{1},{n}_m\rangle^{2} +
-\langle t_{i}^{2},{n}_m\rangle^{2}}} \nonumber
+\langle t_{i}^{2},{n}_m\rangle^{2}}} \nonumber.
 \end{align}
 
-Para identificar inteiramente $\alpha_{max}$ resta, agora, decidir acerca dos
+Para identificar inteiramente $\alpha_{max}$ resta apenas decidir acerca dos
 sinais que aparecem nas expressões acima, o que significa distinguir  os casos 
-de distância máxima  e distância mínima a $P_{m}$. Isso é feito, observando que os 
+de distância máxima e distância mínima a $P_{m}$. Isto é feito observando que os 
 resultados acima nos permitem escrever $\mathbf{\mathcal D}(i,m)$ da seguinte
 forma:
 \begin{eqnarray*}
-\mathbf{\mathcal D}(i,m) &=&  \max_{sign \in \{-1,1\}}{|sign \cdot
+\mathbf{\mathcal D}(i,m) &=& \max_{sign \in \{-1,1\}}{|sign \cdot
 \frac{\langle t_{i}^{1},{n}_m\rangle^{2} + \langle
 t_{i}^{2},{n}_m\rangle^{2}}{\sqrt{ \langle t_{i}^{1},{n}_m\rangle^{2}
 +\langle t_{i}^{2},{n}_m\rangle^{2}}}+\langle c_{i}- c_{m},{n}_m\rangle|} && \\
 \mathbf{\mathcal D}(i,m) &=& \sqrt{\langle t_{i}^{1},{n}_m\rangle^{2} +
-\langle t_{i}^{2},{n}_m\rangle^{2}}+|\langle c_{i}- c_{m},{n}_m\rangle|\\
+\langle t_{i}^{2},{n}_m\rangle^{2}}+|\langle c_{i}- c_{m},{n}_m\rangle|.\\
 \end{eqnarray*}
-Podemos utiliza $\max_{i}\{\mathbf{\mathcal D}(i,m)\}$ como medida do erro
-perpendicular. Alternativamente podemos estender a definição de erro
+Podemos então utilizar $\max_{i}\{\mathbf{\mathcal D}(i,m)\}$ como medida do erro
+perpendicular. Alternativamente, podemos estender a definição de erro
 perpendicular dada na seção~\ref{sec:SPT} para o caso circular, meramente
-substituindo na equação~\ref{perpendicular:Circular} $d_i$ por
+substituindo na equação~\ref{perpendicular:Circular}, $d_i$ por
 $\sqrt{\langle t_{i}^{1},{n}_m\rangle^{2} +\langle
 t_{i}^{2},{n}_m\rangle^{2}}$, o que nos permitirá obter:
 \begin{eqnarray*}
@@ -164,7 +164,7 @@ t_{i}^{2},{n}_m\rangle^{2}}$, o que nos permitirá obter:
 \langle t_{i}^{1},{n}_m\rangle^{2} +\langle t_{i}^{2},{n}_m\rangle^{2}} \} -\\ 
 && \min\{\langle c_i-c,n\rangle - \sqrt{\langle t_{i}^{1},{n}_m\rangle^{2}
 +\langle t_{i}^{2},{n}_m\rangle^{2}}
-\}
+\}.
 \end{eqnarray*}
 
 \section{Erro Tangencial}
@@ -177,54 +177,56 @@ A primeira é dada pela área da diferença simétrica entre os conjuntos.
 No caso, como $\mathbf{s}_{m}$ contem $\Gamma$, essa diferença é simplesmente
 $\mathbf{s}_{m}-\Gamma$. A segunda pela maior distância de um ponto de um
 conjunto a outro. Como $\Gamma \subseteq \mathbf{s}_{m}$, podemos nos restringir 
-a encontrar o ponto $q$ e $\mathbf{s}_{m}$ mais afastado de $\Gamma$. 
+a encontrar o ponto $q$ em $\mathbf{s}_{m}$ mais afastado de $\Gamma$. 
 Para obter computacionalmente a área de $\mathbf{s}_{m}
 -\Gamma$ ($\mathbf{\mathcal A}(\mathbf{s}_{m}-\Gamma$)), pensamos em duas
 estratégias :
 \begin{enumerate}
  \item {A primeira visa obter essa área de forma exata. De fato, identificando
  os pontos extremos de cada elipse em relação a uma das coordenadas e os ordenando segundo ela, 
- podemos por um algoritmo de varredura de linhas, identificar as interseções dos contornos das 
- elipses de $\Gamma$ e partir delas $\mathbf{\mathcal
+ podemos por um algoritmo de varredura de linhas identificar as interseções dos contornos das 
+ elipses de $\Gamma$ e, a partir delas $\mathbf{\mathcal
  A}(\mathbf{s}_{m}-\Gamma$). Esse procedimento, entretanto, tem uma
  complexidade que torna impraticável a sua utilização para nossos propósitos.
  Para concluir isso, basta considerar que ele é $O(n_{x} \log{n_{x}})$, onde $
- n_{x}$ é o número de intersecções entre elipses de $\Gamma$, o qual já é quadrático
- no número dessas elipses. Além disso o simples cômputo de uma intersecção entre duas elipses em posição genérica já envolve 
- a resolução de uma equação do quarto grau. Assim pretender encontrar o valor exato de 
-$\mathbf{\mathcal A}(\mathbf{s}_{m}-\Gamma$) está fora de cogitação. }
- \item { Imergir as elipses envolvidas numa malha regular e determinar a
+ n_{x}$ é o número de interseções entre elipses de $\Gamma$, o qual já é quadrático
+ no número dessas elipses. Além disso, o simples cômputo de uma interseção entre duas elipses em posição genérica já envolve 
+ a resolução de uma equação do quarto grau. Assim, pretender encontrar o valor exato de 
+$\mathbf{\mathcal A}(\mathbf{s}_{m}-\Gamma$) é uma tarefa impraticável. }
+
+ \item { A segunda forma busca uma solução aproximada ao imergir as elipses envolvidas numa malha regular e determinar a
  situação de pertinência em relação a $\mathbf{s}_{m}$ e $\Gamma$ do centro de cada
  célula. Uma célula cujo centro pertence a $\mathbf{s}_{m}$ e não a $\Gamma$, contribui
  com sua área para o cômputo de $\mathbf{\mathcal A}(\mathbf{s}_{m}-\Gamma$). A
- determinação da pertinência com relação a todas as elipses de $\Gamma$, que tem de ser efetuada para um
- número de pontos quadrático na resolução da malha prejudica a performance
- dessa alternativa, obrigando a que se empregue uma malha muito grosseira ou
- que se limite o número de elipses sendo agregadas. Portanto também essa opção
- não parece ser inteiramente satisfatória.}
+ determinação da pertinência com relação a todas as elipses de $\Gamma$, precisando ser efetuada para um
+ número de pontos quadrático na resolução da malha, prejudica a performance
+ dessa alternativa. Isto obriga que se empregue uma malha muito grosseira ou
+ que se limite o número de elipses sendo agregadas, tornando, portanto, esta opção
+ também não inteiramente satisfatória.}
 \end{enumerate}
 
 Tendo em vista as dificuldades apontadas acima na obtenção da área de
 $\mathbf{s}_{m}-\Gamma$ nos concentramos em obter o erro tangencial via uma
-aproximação computacionalmente viável de $dist(\mathbf{s}_{m},\Gamma$), a distância a
+aproximação computacionalmente viável da $dist(\mathbf{s}_{m},\Gamma$), a distância a
 $\Gamma$ do ponto de $s_{m}$ mais afastado dele. A determinação de
 $dist(\mathbf{s}_{m},\Gamma$) fica facilitada se assumirmos que o ponto de $\mathbf{s}_{m}$ mais
 distante de $\Gamma$ estiver na sua borda. Isso certamente é verdade se o
 número de elipses em $\Gamma$ for igual a $2$ e em casos reais, devido a
 própria limitação do tamanho do cluster e do fato do próprio processo de
-expansão que gera os clusters não fazer curvas acentuadas, essa suposição não
+expansão que gera os clusters não fazer curvas acentuadas. Notamos que essa suposição não
 causou distorções acentuadas no cálculo do erro tangencial. Se podemos limitar
-a busca do ponto mais distante de $\Gamma$, a borda de $\mathbf{s}_{m}$,
-$dist(\mathbf{s}_{m},\Gamma$) pode ser aproximada de forma aceitável e com custo
+a busca do ponto mais distante de $\Gamma$ a borda de $\mathbf{s}_{m}$,
+podemos aproximar $dist(\mathbf{s}_{m},\Gamma$) de forma aceitável e com custo
 computacional adequado, da seguinte forma:
 
 \begin{itemize}
 \item {O contorno da elipse $\mathbf{s}_m$ que
 representa o cluster é discretizado num conjunto, $\mathbf{\mathcal C} =
-\{p_1,\ldots,p_8\}$, de $8$ de seus pontos. Especificamente,
- aqueles que definem com o centro da elipse raias que fazem com o eixo maior um ângulo múltiplo de $45^{o}$.  }
-\item {Seja  $\mathbf{s}_i$ uma elipse do conjunto $\mathbf{\mathcal T} =
-\{\mathbf{s}_1, \ldots,\mathbf{s}_n\}$, que está sendo condensado e $\mathbf{s}_i^\prime$ um
+\{p_1,\ldots,p_8\}$, contendo $8$ de seus pontos. Especificamente,
+são aqueles que definem com o centro da elipse raias que fazem com o eixo maior um ângulo múltiplo de $45^{o}$.  }
+
+\item {Seja $\mathbf{s}_i$ uma elipse do conjunto $\mathbf{\mathcal T} =
+\{\mathbf{s}_1, \ldots,\mathbf{s}_n\}$, que está sendo condensado, e $\mathbf{s}_i^\prime$ uma
 elipse do conjunto $\mathbf{\mathcal T}^\prime = \{\mathbf{s}_i^\prime,
 \ldots,\mathbf{s}_n^\prime\}$\ de elipses projetadas sobre o plano definido
 por $\mathbf{s}_m$. A distância de cada um dos pontos ($p_{k} \in $ $\mathbf{\mathcal C}$) em que se discretiza 
@@ -239,7 +241,7 @@ na Figura~\ref{fig:merge_splats}.}
 \includegraphics[width=15.0cm]{img/cap05/tangencial} 
 \caption{ Distância aproximada de uma elipse $\mathbf{s}_i^\prime$ do conjunto
 das elipses projetadas $\mathbf{\mathcal T}^\prime$ ao contorno de $\mathbf{s}_m$
-discretizado em $8$ pontos.}
+discretizado em $8$ pontos. O segmento em vermelho representa o erro tangencial.}
 \label{fig:merge_splats}
 \end{figure}  
 
@@ -247,15 +249,17 @@ discretizado em $8$ pontos.}
 \begin{enumerate}
 \item {No caso óbvio em que $p_{k} \in  \mathbf{s}_i^\prime$, teremos
 $dist(p_{k}, \mathbf{s}_i^\prime) = 0 $.}
-\item {Caso contrário  considere o segmento de reta delimitado pelo ponto $q_{1}$,  
-onde a raia $[ c_{i}, p_{k}]$ corta a elipse  $\mathbf{s}_i^\prime$  e $q_{2}$,  a extremidade do eixo 
+
+\item {Caso contrário, considere o segmento de reta delimitado pelo ponto $q_{1}$,  
+onde a raia $[ c_{i}, p_{k}]$ corta a elipse  $\mathbf{s}_i^\prime$, e $q_{2}$ sendo a extremidade do eixo 
 maior de $\mathbf{s}_i^\prime$  que está mais próxima de $p_{k}$.}
+
 \item {Computa-se a distância de  $p_{k}$ a $[q_{1}, q_{2}]$ e usa-se essa distância como 
 aproximação de $dist(p_{k}, \mathbf{s}_i^\prime))$.}
 \end{enumerate}
 
-Utilizando a distancia aproximada definida acima se obtém para cada $p_{k}$
-sua distância ao conjunto de elipses  $\mathbf{\mathcal T}^\prime$ $-$ dado por
+Utilizando a distância aproximada definida acima, se obtém para cada $p_{k}$
+sua distância ao conjunto de elipses $\mathbf{\mathcal T}^\prime$ $-$ dado por
 $ \min_{ \mathbf{s}_i^\prime \in  \mathbf{\mathcal T}^\prime}
 (dist_{p_k \in \mathbf{\mathcal C}}(p_{k}, \mathbf{s}_i^\prime))$. O erro
 tangencial será finalmente obtido tomando-se a maior dessas distâncias. Ele pode, então, ser expresso por:
@@ -267,27 +271,24 @@ e_t &=& \displaystyle\max  \{ \min_{ \mathbf{s}_i^\prime \in  \mathbf{\mathcal T
 \end{eqnarray}
 
 \section{Resultados}
-Abaixo uma tabela com o resultado da simplificação de $3$ modelos. O
+A Tabela~\ref{cap05:tabelasimplificacao} expõe os resultados das simplificações de $3$ modelos. O
 limitante para erro perpendicular $\varphi_p$ foi tomado como sendo o dobro da
-distância do vizinho mais próximo à semente $dist(\mathbf{s}_{seed},p_1)\quad
-p_1 \in \mathbf{\mathcal{N}}_k(\mathbf{s}_{seed})$ . O limitante tangencial $\varphi_t$ foi
+distância do vizinho mais próximo à semente: $2 \cdot \min_{p \in \mathbf{\mathcal{N}}_k(\mathbf{s}_{seed})}dist(\mathbf{s}_{seed},p)\quad$. 
+O limitante tangencial $\varphi_t$ foi
 tomado como sendo a dimensão do eixo menor da semente $||\mathbf{t}_{seed}^1||$.
-\begin{table}[hb]
+\begin{table}[ht]
 \begin{center}
-\begin{tabular}{lcccc}
+\begin{tabular}{lcc}
 \hline
-Modelo  & N° \textit{Splats} Originais &$\varphi_p$ & $\varphi_t$ &
+Modelo  & N° \textit{Splats} Originais &
 N° \textit{Splats} Simplificação
 \\
 \hline
-\textit{Bunny} 	   & $139990$ & $2\cdot dist(\mathbf{s}_{seed},p_1)$   &
-$||\mathbf{t}_{seed}^1||$ & $11258$\\
+\textit{Bunny} 	   & $139990$ & $11258$\\
 \hline
-\textit{Armadillo} & $172974$ & $2\cdot dist(\mathbf{s}_{seed},p_1)$   &
-$||\mathbf{t}_{seed}^1||$ & $11964$\\
+\textit{Armadillo} & $172974$ & $11964$\\
 \hline
-\textit{Dragon} & $437645$ & $2\cdot dist(\mathbf{s}_{seed},p_1)$   &
-$||\mathbf{t}_{seed}^1||$ & $37959$\\
+\textit{Dragon}    & $437645$ & $37959$\\
 \hline
 \end{tabular}
 \end{center}
@@ -339,16 +340,16 @@ original: $139990$. \textbf{(b)} \textit{Bunny} simplificado: $11258$. \textbf{(
 \end{figure}
 
 Foi usada uma \textit{K-D Tree} para computar os $k-$vizinhos mais próximos da
-semente. Foram usados $32$ vizinhos mais próximos, mas este número depende
-da densidade do modelo. Sendo assim  o tamanho do cluster fica limitado a
-$32$, mas nem sempre são tomados os $32$ vizinhos.
+semente. Foram usados $32$ vizinhos mais próximos, mas este número é dependendente
+da densidade do modelo; sendo assim, o tamanho do cluster fica limitado ao máximo de
+$32$.
 
 \section{Discussão}
 Este capítulo apresentou um algoritmo de simplificação baseado em
 \textit{splats} bem como duas extensões de métricas de erro para o caso
-elíptico, o erro perpendicular e o tangencial. O erro perpendicular no da uma
+elíptico, o erro perpendicular e o tangencial. O erro perpendicular fornece uma
 medida de variância na direção da normal, permitindo distinguir regiões com
 curvatura acentuada de regiões planares. O erro tangencial nos fornece uma
-medida de cobertura, evitando que os cluster cresçam de forma descontrolada,
-combrindo áreas desnecessárias.
+medida de cobertura, evitando que os cluster cresçam de forma descontrolada e, consequentemente,
+cubram áreas desnecessárias.
 
