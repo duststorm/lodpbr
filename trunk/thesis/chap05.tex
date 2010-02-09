@@ -111,7 +111,7 @@ $\mathbf{s}_i$ do conjunto que está sendo agregado ao plano da elipse
 $\mathbf{s}_m$ que passa a representar esse conjunto, não é tão  imediato como no caso circular. Para
 calcular a chamada distância perpendicular entre $\mathbf{s}_i$ e
 $\mathbf{s}_m$, que notaremos $\mathbf{\mathcal D}(i,m)$ precisamos executar o
-seguinte processo.Seja:
+seguinte processo. Seja:
 \begin{equation}
 v(\alpha) = t_{i}^{1} \cos(\alpha) + t_{i}^{2} \sin(\alpha) + c_{i},
 \end{equation}
@@ -130,7 +130,6 @@ objetiva, o que determina que a solução procurada $\alpha_{max}$ deve satisfazer
 \langle t_{i}^{2},{n}_m\rangle \cos(\alpha_{max}) - \langle t_{i}^{1},{n}_m
 \rangle \sin(\alpha_{max}) &=& 0  \Longrightarrow \frac{\langle t_{i}^{2},{n}_m
 \rangle}{\langle t_{i}^{1},{n}_m \rangle} &=& \tan(\alpha_{max})
- \nonumber
 \end{equation}
 onde:
 \begin{align}
@@ -294,6 +293,7 @@ $||\mathbf{t}_{seed}^1||$ & $37959$\\
 \end{center}
 \caption{Número de \textit{splats} após simplificação usando nosso
 algoritmo.}
+\label{cap05:tabelasimplificacao}
 \end{table}
 
 \begin{figure}[ht]
@@ -331,10 +331,9 @@ algoritmo.}
     \includegraphics[width=1.00\linewidth]{img/cap05/dragonS}\\[0cm](f)
 \end{minipage}
 \end{tabular}
-\caption{\textbf{(a)} Modelo \textit{Bunny} original: $139990$.
-\textbf{(b)} \textit{Bunny} simplificado: $11258$. \textbf{(c)} Modelo
-\textit{Armadillo} original: $172974$. \textbf{(d)} Modelo simplificado:
-$11964$.\textbf{(e)} Modelo \textit{Dragon} original: $437645$ 
+\caption{Modelos aprensetados na
+tabela~\ref{cap05:tabelasimplificacao}.\textbf{(a)} Modelo \textit{Bunny}
+original: $139990$. \textbf{(b)} \textit{Bunny} simplificado: $11258$. \textbf{(c)} Modelo \textit{Armadillo} original: $172974$. \textbf{(d)} Modelo simplificado: $11964$.\textbf{(e)} Modelo \textit{Dragon} original: $437645$
 \textbf{(f)} Modelo simplificado $37959$.}
 \label{fig:pauly}
 \end{figure}
@@ -347,4 +346,9 @@ $32$, mas nem sempre são tomados os $32$ vizinhos.
 \section{Discussão}
 Este capítulo apresentou um algoritmo de simplificação baseado em
 \textit{splats} bem como duas extensões de métricas de erro para o caso
-elíptico, o erro perpendicular e o tangencial. 
+elíptico, o erro perpendicular e o tangencial. O erro perpendicular no da uma
+medida de variância na direção da normal, permitindo distinguir regiões com
+curvatura acentuada de regiões planares. O erro tangencial nos fornece uma
+medida de cobertura, evitando que os cluster cresçam de forma descontrolada,
+combrindo áreas desnecessárias.
+
