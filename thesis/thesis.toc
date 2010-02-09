@@ -2,8 +2,8 @@
 \select@language {english}
 \select@language {brazil}
 \contentsline {chapter}{Lista de Figuras}{x}{chapter*.3}
-\contentsline {chapter}{Lista de Tabelas}{xiii}{chapter*.4}
-\contentsline {chapter}{Lista de Abreviaturas}{xiv}{chapter*.5}
+\contentsline {chapter}{Lista de Tabelas}{xiv}{chapter*.4}
+\contentsline {chapter}{Lista de Abreviaturas}{xv}{chapter*.5}
 \contentsline {chapter}{\numberline {1}Introdu\c c\~ao}{1}{chapter.1}
 \contentsline {section}{\numberline {1.1}Motiva\c c\~ao}{1}{section.1.1}
 \contentsline {section}{\numberline {1.2}Proposta}{2}{section.1.2}
@@ -17,28 +17,28 @@
 \contentsline {subsection}{\numberline {2.4.2}\textit {Surface Splatting}}{9}{subsection.2.4.2}
 \contentsline {chapter}{\numberline {3}Estruturas de Dados para Pontos}{12}{chapter.3}
 \contentsline {section}{\numberline {3.1}Estrutura de Parti\c c\~ao do Espa\c co}{12}{section.3.1}
-\contentsline {subsection}{\numberline {3.1.1}\textit {Octrees}}{12}{subsection.3.1.1}
+\contentsline {subsection}{\numberline {3.1.1}\textit {Octrees}}{13}{subsection.3.1.1}
 \contentsline {subsection}{\numberline {3.1.2}\textit {kd-tree}}{14}{subsection.3.1.2}
 \contentsline {subsection}{\numberline {3.1.3}Hierarquia de Volumes Envolventes}{15}{subsection.3.1.3}
 \contentsline {section}{\numberline {3.2}Multiresolu\c c\~ao e N\IeC {\'\i }vel de Detalhe}{16}{section.3.2}
 \contentsline {section}{\numberline {3.3}\textit {QSplat}}{17}{section.3.3}
 \contentsline {subsection}{\numberline {3.3.1}\textit {QSplat} Estrutura de Dados}{17}{subsection.3.3.1}
-\contentsline {subsubsection}{Posi\c c\~ao e Raio}{17}{section*.6}
-\contentsline {subsubsection}{Normal}{17}{section*.7}
-\contentsline {subsubsection}{Cone de Normais}{18}{section*.8}
-\contentsline {subsubsection}{Cor}{18}{section*.9}
-\contentsline {subsection}{\numberline {3.3.2}Renderiza\c c\~ao}{18}{subsection.3.3.2}
+\contentsline {subsubsection}{Posi\c c\~ao e Raio}{18}{section*.6}
+\contentsline {subsubsection}{Normal}{18}{section*.7}
+\contentsline {subsubsection}{Cone de Normais}{19}{section*.8}
+\contentsline {subsubsection}{Cor}{19}{section*.9}
+\contentsline {subsection}{\numberline {3.3.2}Renderiza\c c\~ao}{19}{subsection.3.3.2}
 \contentsline {subsubsection}{\textit {Visible Culling}}{19}{section*.10}
-\contentsline {subsubsection}{Heur\IeC {\'\i }stica de Renderiza\c c\~ao}{19}{section*.11}
-\contentsline {subsubsection}{Renderizando um \textit {Splat}}{19}{section*.12}
-\contentsline {subsection}{\numberline {3.3.3}Discuss\~ao}{19}{subsection.3.3.3}
-\contentsline {section}{\numberline {3.4}\textit {Sequential Point Trees}}{20}{section.3.4}
+\contentsline {subsubsection}{Heur\IeC {\'\i }stica de Renderiza\c c\~ao}{20}{section*.11}
+\contentsline {subsubsection}{Renderizando um \textit {Splat}}{20}{section*.12}
+\contentsline {subsection}{\numberline {3.3.3}Discuss\~ao}{20}{subsection.3.3.3}
+\contentsline {section}{\numberline {3.4}\textit {Sequential Point Trees}}{21}{section.3.4}
 \contentsline {subsection}{\numberline {3.4.1}Hierarquia de Pontos}{21}{subsection.3.4.1}
 \contentsline {subsection}{\numberline {3.4.2}M\'etricas de Erro}{21}{subsection.3.4.2}
 \contentsline {subsubsection}{Erro Perpendicular}{21}{section*.13}
 \contentsline {subsection}{\numberline {3.4.3}Renderiza\c c\~ao Recursiva}{23}{subsection.3.4.3}
 \contentsline {subsection}{\numberline {3.4.4}Arranjamento Sequencial}{23}{subsection.3.4.4}
-\contentsline {subsection}{\numberline {3.4.5}Discuss\~ao}{24}{subsection.3.4.5}
+\contentsline {subsection}{\numberline {3.4.5}Discuss\~ao}{25}{subsection.3.4.5}
 \contentsline {chapter}{\numberline {4}Simplifica\c c\~ao de Superf\IeC {\'\i }cies}{26}{chapter.4}
 \contentsline {section}{\numberline {4.1}Simplifica\c c\~ao Baseada em Pontos \textit {Puros}}{26}{section.4.1}
 \contentsline {section}{\numberline {4.2}Simplifica\c c\~ao Baseada em \textit {Splats}}{30}{section.4.2}
@@ -52,8 +52,8 @@
 \contentsline {subsection}{\numberline {5.2.2}Eixos da Elipse}{38}{subsection.5.2.2}
 \contentsline {section}{\numberline {5.3}Erro Perpendicular}{38}{section.5.3}
 \contentsline {section}{\numberline {5.4}Erro Tangencial}{40}{section.5.4}
-\contentsline {section}{\numberline {5.5}Resultados}{42}{section.5.5}
+\contentsline {section}{\numberline {5.5}Resultados}{43}{section.5.5}
 \contentsline {section}{\numberline {5.6}Discuss\~ao}{43}{section.5.6}
-\contentsline {chapter}{\numberline {6}Conclus\~ao e Trabalhos Futuros}{45}{chapter.6}
-\contentsline {section}{\numberline {6.1}Trabalhos Futuros}{45}{section.6.1}
-\contentsline {chapter}{Refer\^encias Bibliogr\'aficas}{47}{chapter*.16}
+\contentsline {chapter}{\numberline {6}Conclus\~ao e Trabalhos Futuros}{46}{chapter.6}
+\contentsline {section}{\numberline {6.1}Trabalhos Futuros}{46}{section.6.1}
+\contentsline {chapter}{Refer\^encias Bibliogr\'aficas}{48}{chapter*.16}
