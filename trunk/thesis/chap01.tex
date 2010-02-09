@@ -22,21 +22,20 @@ de~\cite{Bou07})}
 \end{figure}
 
 Com o aumento da capacidade do hardware gráfico tornou-se 
-possível tratar cenas com quantidade enormes de polígonos, porém a resolução dos dispositivos de saída não acompanharam esta taxa de crescimento; como consequência,
+possível tratar cenas com quantidades enormes de polígonos, porém a resolução dos dispositivos de saída não acompanharam esta taxa de crescimento; como consequência,
 muitas vezes polígonos são mapeados em apenas um \textit{pixel} 
 alocando tempo desnecessário ao processo de rasterização. No entanto, as GPUs são 
-otimizadas para renderizar triângulos, assim como a maioria dos algoritmos para processar e visualizar modelos foram pensados para tratar malhas poligonais, desta forma, era de praxe a conversão de modelos de pontos para polígonos usando
-métodos como o algoritmo \textit{marching cubes}~\cite{Lorensen1978}. No
-entanto, com as GPUs modernas possuindo cada vez mais partes programáveis dentro do \textit{pipeline} gráfico, 
-é possível criar algoritmos de renderização de pontos que justifiquem o processamento direto na nas nuvens de pontos, produzindo resultados eficientes e imagens de alta qualidade no caso da renderização.
+otimizadas para renderizar triângulos, assim como a maioria dos algoritmos para processar e visualizar modelos foram pensados para tratar malhas poligonais; desta forma, era de praxe a conversão de modelos de pontos para polígonos usando
+métodos como o algoritmo de \textit{marching cubes}~\cite{Lorensen1978}. Por outro lado, com as GPUs modernas possuindo cada vez mais partes programáveis dentro do \textit{pipeline} gráfico, 
+é possível criar algoritmos de renderização de pontos que justifiquem o processamento direto nas nuvens de pontos, produzindo resultados eficientes e imagens de alta qualidade no caso da renderização.
 Especialmente quando para aplicação não é necessária a informação de topologia, ou seja, a conectividade entre os pontos, é especialmente vantajoso o uso deste tipo de representação.
 
 \section{Proposta}
 
-Apesar de algoritmos eficientes para renderizar nuvens de pontos na GPU terem sido propostos~\cite{Ren2002,Botsch2003,marroquim07}, os modelos em resoluções cada vez maiores criam a necessidade de formas mais eficientes de visualizar a nuvem de pontos. O projeto de digitalizar as catacombas de Roma por exemplo, gerou um modelo com mais de 1.2 bilhões de amostras~\cite{Scheiblauer2009}. Um método comum é a aplicação de níveis de detalhes (LOD), onde representações em resoluções mais baixas são criadas e escolhidas para renderização de acordo com uma métrica de visualização, como por exemplo distância ao observador.
+Apesar de algoritmos eficientes para renderizar nuvens de pontos na GPU terem sido propostos~\cite{Ren2002,Botsch2003,marroquim07}, os modelos em resoluções cada vez maiores criam a necessidade de formas mais eficientes de visualizar a nuvem de pontos. O projeto de digitalizar as catacombas de Roma por exemplo, gerou um modelo com mais de 1.2 bilhão de amostras~\cite{Scheiblauer2009}. Um método comum é a aplicação de níveis de detalhes (LOD), onde representações em resoluções mais baixas são criadas e escolhidas para renderização de acordo com uma métrica de visualização, como por exemplo distância ao observador.
 
-Nesta tese consideramos o problema de simplificar o modelo de pontos para criar representações em resoluções mais baixas objetivando a renderização. O desafio é, dada uma nuvem de ponto, combinar amostras de forma a reduzir a complexidade do modelo obtendo a melhor aproximação possível, isto é, com menor erro. Para tanto é proposto um modelo de clusterização baseado em \textit{splats}, que são extensões de pontos e possuindo informação de densidade local e propriedades diferenciais da superfície no ponto.
-Diferentemente de outros métodos, a proposa é realizar toda a simplificação considerando \textit{splats} elípticos, que provêm uma aproximação da superfície melhor do que os \textit{splats} circulares, e ainda mais do que os pontos ``puros''. São abordados três problemas básicos para construir os diferentes níveis de resolução:
+Nesta tese consideramos o problema de simplificar o modelo de pontos para criar representações em resoluções mais baixas objetivando a renderização. O desafio é, dada uma nuvem de ponto, combinar amostras de forma a reduzir a complexidade do modelo obtendo a melhor aproximação possível, isto é, com menor erro. Para tanto é proposto um modelo de clusterização baseado em \textit{splats}, que são extensões de pontos, possuindo informação de densidade local e propriedades diferenciais da superfície no ponto.
+Diferentemente de outros métodos, a proposta é realizar toda a simplificação considerando \textit{splats} elípticos, que provêm uma aproximação da superfície melhor do que os \textit{splats} circulares, e ainda mais do que os pontos ``puros''. São abordados três problemas básicos para construir os diferentes níveis de resolução:
 
 \begin{itemize}
 \item quais pontos devem ser combinados para diminuir a resolução, o que normalmente envolve métricas de erros específicas para este tipo de representação;
@@ -51,17 +50,17 @@ Esta dissertação está organizada da seguinte forma:
 \begin{itemize}
   \item {\textbf{Capítulo 2} discutiremos o uso de pontos como primitiva para
   representar superfícies, sendo apresentado primeiro um breve histórico seguido por uma
-  discussão quanto a primitiva em si. Por último serão apresentados os \textit{Splats}
+  discussão quanto a primitiva em si. Por último serão apresentados os \textit{splats}
   como extensão de pontos, focando na tarefa de visualização.}
   \item {\textbf{Capítulo 3} serão apresentadas as principais estruturas de
   dados para tratar nuvens de pontos.}
   \item {\textbf{Capítulo 4} apresentaremos os principais algoritmos de
   simplificação de nuvens de pontos. Este capítulo será divido em duas partes:
   simplificação de superfícies baseadas em pontos ``puros''; e simplificação de
-  superfícies baseadas em \textit{Splats}.}
-  \item {\textbf{Capítulo 5} Apresentaremos um método de simplificação de
+  superfícies baseadas em \textit{splats}.}
+  \item {\textbf{Capítulo 5} apresentaremos um método de simplificação de
   superfícies baseada em \textit{splats} usando uma clusterização incremental.}
-  \item {\textbf{Capítulo 6} Faremos um breve revisão da dissertação, bem como
+  \item {\textbf{Capítulo 6} faremos um breve revisão da dissertação, bem como
   conclusões e possíveis direções para trabalhos futuros.}
 \end{itemize}
 
