@@ -190,10 +190,12 @@ estratégias :
 	\includegraphics[width=1.00\linewidth]{img/cap05/grade4}\\[0cm](a)
 \end{minipage}
 \end{tabular}
-\caption{}
-\label{fig:raia}
+\caption{Segunda proposta de erro tangencial. Imegir as elipses e calcular a
+diferença de área pela grade regular.}
+\label{fig:grade}
 \end{figure}
 \begin{enumerate}
+  \item 
  \item {A primeira visa obter essa área de forma exata. De fato, identificando
  os pontos extremos de cada elipse em relação a uma das coordenadas e os ordenando segundo ela, 
  podemos por um algoritmo de varredura de linhas identificar as interseções dos contornos das 
@@ -248,21 +250,33 @@ na Figura~\ref{fig:merge_splats}.}
 \end{itemize}
 \begin{figure}[ht]
 \centering
-\includegraphics[width=15.0cm]{img/cap05/tangencial}
+%\begin{tabular}{cc}
+\begin{minipage}[b]{0.43\linewidth}
+  	\centering
+	\includegraphics[width=1.00\linewidth]{img/cap05/tangencial1}\\[0cm](a)
+\end{minipage}
+   \hfill
+\begin{minipage}[b]{0.43\linewidth}
+   	\centering
+	\includegraphics[width=1.00\linewidth]{img/cap05/tangencial2}\\[0cm](b)
+\end{minipage}
+\\
 \centering
-\begin{tabular}{cc}
 \begin{minipage}[b]{0.4\linewidth}
   	\centering
-	\includegraphics[width=1.00\linewidth]{img/cap05/raias}\\[0cm]
+	\includegraphics[width=1.00\linewidth]{img/cap05/raias}\\[0cm](c)
+	\label{fig:raia}
 \end{minipage}
-\end{tabular}
-\caption{}
-\label{fig:raia}
+%\end{tabular}
 \caption{ Distância aproximada de uma elipse $\mathbf{s}_i^\prime$ do conjunto
 das elipses projetadas $\mathbf{\mathcal T}^\prime$ ao contorno de $\mathbf{s}_m$
-discretizado em $8$ pontos. O segmento em vermelho representa o erro tangencial.}
+discretizado em $8$ pontos.$(b)$ Quando a projeção nãos está no segmento
+delimitado por $\overline{q_1q_2}$, o erro tangencial é
+tomado com sendo a distância de $p_{k}$ a $q_1$. O segmento em vermelho representa o erro tangencial. Embaixo,
+ilustra a discretização de $\mathbf{s}_m$.}
 \label{fig:merge_splats}
 \end{figure}  
+
 \begin{enumerate}
 \item {No caso óbvio em que $p_{k} \in  \mathbf{s}_i^\prime$, teremos
 $dist(p_{k}, \mathbf{s}_i^\prime) = 0 $.}
