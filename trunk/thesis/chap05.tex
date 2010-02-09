@@ -181,6 +181,18 @@ a encontrar o ponto $q$ em $\mathbf{s}_{m}$ mais afastado de $\Gamma$.
 Para obter computacionalmente a área de $\mathbf{s}_{m}
 -\Gamma$ ($\mathbf{\mathcal A}(\mathbf{s}_{m}-\Gamma$)), pensamos em duas
 estratégias :
+
+\begin{figure}[ht]
+\centering
+\begin{tabular}{cc}
+\begin{minipage}[b]{0.4\linewidth}
+  	\centering
+	\includegraphics[width=1.00\linewidth]{img/cap05/grade4}\\[0cm](a)
+\end{minipage}
+\end{tabular}
+\caption{}
+\label{fig:raia}
+\end{figure}
 \begin{enumerate}
  \item {A primeira visa obter essa área de forma exata. De fato, identificando
  os pontos extremos de cada elipse em relação a uma das coordenadas e os ordenando segundo ela, 
@@ -224,7 +236,6 @@ computacional adequado, da seguinte forma:
 representa o cluster é discretizado num conjunto, $\mathbf{\mathcal C} =
 \{p_1,\ldots,p_8\}$, contendo $8$ de seus pontos. Especificamente,
 são aqueles que definem com o centro da elipse raias que fazem com o eixo maior um ângulo múltiplo de $45^{o}$.  }
-
 \item {Seja $\mathbf{s}_i$ uma elipse do conjunto $\mathbf{\mathcal T} =
 \{\mathbf{s}_1, \ldots,\mathbf{s}_n\}$, que está sendo condensado, e $\mathbf{s}_i^\prime$ uma
 elipse do conjunto $\mathbf{\mathcal T}^\prime = \{\mathbf{s}_i^\prime,
@@ -235,17 +246,23 @@ $dist(p_{k},\mathbf{s}_i^\prime)$ $-$ é obtida de forma aproximada da forma
 indicada abaixo. Os elementos referidos no texto a seguir estão representados
 na Figura~\ref{fig:merge_splats}.}
 \end{itemize}
-
 \begin{figure}[ht]
 \centering
-\includegraphics[width=15.0cm]{img/cap05/tangencial} 
+\includegraphics[width=15.0cm]{img/cap05/tangencial}
+\centering
+\begin{tabular}{cc}
+\begin{minipage}[b]{0.4\linewidth}
+  	\centering
+	\includegraphics[width=1.00\linewidth]{img/cap05/raias}\\[0cm]
+\end{minipage}
+\end{tabular}
+\caption{}
+\label{fig:raia}
 \caption{ Distância aproximada de uma elipse $\mathbf{s}_i^\prime$ do conjunto
 das elipses projetadas $\mathbf{\mathcal T}^\prime$ ao contorno de $\mathbf{s}_m$
 discretizado em $8$ pontos. O segmento em vermelho representa o erro tangencial.}
 \label{fig:merge_splats}
 \end{figure}  
-
-
 \begin{enumerate}
 \item {No caso óbvio em que $p_{k} \in  \mathbf{s}_i^\prime$, teremos
 $dist(p_{k}, \mathbf{s}_i^\prime) = 0 $.}
