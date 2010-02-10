@@ -1,12 +1,13 @@
 
 \begin{theglossary}
   \makeatletter
-  \item [BVH] \textit{Bounding Volume Hierarchies}, p. \hyperpage{10}
-  \item [CPU] \textit{Central Processor Unit}, p. \hyperpage{18}
-  \item [EPE] Estrutura de Parti\c c\~ao Espacial, p. \hyperpage{10}
-  \item [EWA] Elliptical Weighted Average, p. \hyperpage{6}
+  \item [CAD] \textit{Computer-AidedDesign}, p. \hyperpage{vi}
+  \item [CPU] \textit{Central Processor Unit}, p. \hyperpage{21}
+  \item [EWA] \textit{Elliptical Weighted Average}, p. \hyperpage{8}
   \item [GPU] \textit{Graphic Processor Unit}, p. \hyperpage{1}
-  \item [MLS] Moving Least Squares, p. \hyperpage{25}
-  \item [SPT] \textit{Sequential Point Trees}, p. \hyperpage{14}
-  \item [\textit{BSP Tree}] \textit{Binary Space Partitioning Tree}, p. \hyperpage{11}
+  \item [MLS] \textit{Moving Least Squares}, p. \hyperpage{27}
+  \item [QEM]  \textit{Quadric Error Metric}, p. \hyperpage{29}
+  \item [SPT] \textit{Sequential Point Trees}, p. \hyperpage{16}
+  \item [\texit{BVH}] \textit{Bounding Volume Hierarchies}, p. \hyperpage{12}
+  \item [\textit{BSP Tree}] \textit{Binary Space Partitioning Tree}, p. \hyperpage{14}
   \end{theglossary}

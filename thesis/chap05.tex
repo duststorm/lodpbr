@@ -37,7 +37,7 @@ e~\ref{cap05:sec:tangencial}).
 \section{Clusterização Incremental}
 Um cluster $\mathit{C_0}$ é construído adicionando-se 
 sucessivamente os vizinhos mais próximos de $\mathbf{s}_j$ a partir de uma semente $\mathbf{s}_j \in \mathbf{\mathcal T}$  escolhida randomicamente. Este crescimento
-incremental pára quando um limitante $\varphi_p$ (para erro perpendicular) e 
+incremental para quando um limitante $\varphi_p$ (para erro perpendicular) e 
 $\varphi_t$ (para o erro tangencial) é alcançado. O próximo cluster
 $\mathit{C_1}$ é então construído seguindo o mesmo processo, com uma nova
 semente escolhida na vizinhança de $\mathit{C_0}$.
@@ -51,7 +51,7 @@ podemos atualizar as extensões do \textit{splat} $\mathbf{s}_m$
 $\mathbf{e}_t$. Caso este erro esteja acima de $\varphi_t$, a
 configuração do último vizinho adicionado é estabelecida como o cluster final.
 O processo continua até que todos os \textit{splats} de $\mathbf{\mathcal T}$
-perteçam a algum cluster $\mathit C_i$.
+pertençam a algum cluster $\mathit C_i$.
 
 \subsection{Centro e Normal}
 \label{cap05:sec:centroNormal}
@@ -270,7 +270,7 @@ na Figura~\ref{fig:merge_splats}.}
 %\end{tabular}
 \caption{ Distância aproximada de uma elipse $\mathbf{s}_i^\prime$ do conjunto
 das elipses projetadas $\mathbf{\mathcal T}^\prime$ ao contorno de $\mathbf{s}_m$
-discretizado em $8$ pontos.$(b)$ Quando a projeção nãos está no segmento
+discretizado em $8$ pontos.$(b)$ Quando a projeção n o está no segmento
 delimitado por $\overline{q_1q_2}$, o erro tangencial é
 tomado com sendo a distância de $p_{k}$ a $q_1$. O segmento em vermelho representa o erro tangencial. Embaixo,
 ilustra a discretização de $\mathbf{s}_m$.}
@@ -363,7 +363,7 @@ algoritmo.}
     \includegraphics[width=1.00\linewidth]{img/cap05/dragonS}\\[0cm](f)
 \end{minipage}
 \end{tabular}
-\caption{Modelos aprensetados na
+\caption{Modelos apresentados na
 tabela~\ref{cap05:tabelasimplificacao}.\textbf{(a)} Modelo \textit{Bunny}
 original: $139990$. \textbf{(b)} \textit{Bunny} simplificado: $11258$. \textbf{(c)} Modelo \textit{Armadillo} original: $172974$. \textbf{(d)} Modelo simplificado: $11964$.\textbf{(e)} Modelo \textit{Dragon} original: $437645$
 \textbf{(f)} Modelo simplificado $37959$.}
@@ -371,7 +371,7 @@ original: $139990$. \textbf{(b)} \textit{Bunny} simplificado: $11258$. \textbf{(
 \end{figure}
 
 Foi usada uma \textit{K-D Tree} para computar os $k-$vizinhos mais próximos da
-semente. Foram usados $32$ vizinhos mais próximos, mas este número é dependendente
+semente. Foram usados $32$ vizinhos mais próximos, mas este número é dependente
 da densidade do modelo; sendo assim, o tamanho do cluster fica limitado ao máximo de
 $32$.
 
