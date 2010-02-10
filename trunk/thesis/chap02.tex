@@ -147,7 +147,7 @@ de \textit{Surface Splatting}, uma das técnicas mais populares de renderização d
 baseadas
 em pontos. Neste trabalho foi proposto o uso do filtro
 EWA
-(\textit{Elliptical Weighted Average}\abbrev{\textit{EWA}}{\textit{Elliptical
+(\textit{Elliptical Weighted Average}\abbrev{EWA}{\textit{Elliptical
 Weighted Average}}) para reconstruir a superfície em espaço de imagem utilizando os \textit{splats}
 projetados.
 Um \textit{splat} pode ser definido como circular ou elíptico como discutido por 
@@ -263,12 +263,12 @@ interseção entre as elipses (Figura
 \ref{fig:manequim} centro-direita e direita). Porém, implementar este
 procedimento diretamente no \textit{pipeline} gráfico requer acesso aos valores
 de profundidade armazenados (\textit{z-buffer}) para testar se duas elipses que
-se intersetam em espaço de imagem pertencem de fato à mesma superfície do
+se interseptam em espaço de imagem pertencem de fato à mesma superfície do
 objeto. Infelizmente, na GPU, estes valores de profundidade não são acessíveis
 em tempo de renderização, requerendo estratégias mais elaboradas que tratem o
 problema em duas passadas: na primeira as elipses são projetadas e rasterizadas
 preenchendo o buffer de profundidade de modo habitual; e na segunda as elipses são
-interpoladas utilizando o z-buffer da primeria passada como referência.
+interpoladas utilizando o z-buffer da primeira passada como referência.
 
 Para realizar a interpolação é feita uma média ponderada de todas as elipses que
 cobrem um dado pixel. Geralmente são utilizados filtros Gaussianos para atribuir

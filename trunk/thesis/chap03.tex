@@ -14,7 +14,7 @@ quando se deseja processar modelos grandes. Diversos métodos de simplificação,
 reconstrução, compressão, visibilidade entre outros, são baseados neste tipo de estrutura. O
 objetivo é criar uma indexação do espaço, ou seja, dividi-lo em células e prover
 uma relação entre estas e o espaço ocupado pelo objeto \cite{Samet2005}.
-No caso específico de nuvens de pontos, exitem algumas classes de algoritmos disponíveis: 
+No caso específico de nuvens de pontos, existem algumas classes de algoritmos disponíveis: 
 baseados em representações hierárquicas, não hierárquicas ou em cluster de pontos. Nesta seção
  as estruturas mais comuns serão introduzidas: \textit{Octree} (seção
 \ref{section:Octree}), \textit{K-d Tree} (seção \ref{section:KDtree}) e
@@ -69,7 +69,7 @@ Uma outra aplicação é a determinação de vizinhança de um dado
 ponto do modelo. Uma \textit{octree} possui $26$ direções possíveis de
 vizinhança: $6$ ao longo das faces, $12$ ao longo as arestas e $8$ nas direções
 dos vértices. Como o cômputo dos vizinho não se limita apenas a um nó, a
-determinação da vizinhança pode ser custosa. Uma estrutura mais adquada 
+determinação da vizinhança pode ser custosa. Uma estrutura mais adequada 
 para este de tipo de busca é a \textit{kd-tree}, apresentada a seguir.
 
 \begin{figure}[ht]
@@ -114,8 +114,8 @@ alcançada (Figura \ref{fig:Kdtree}).
 Uma \textit{kd-tree} será usada nesta dissertação como uma estrutura de busca dos
 $k$ vizinhos mais próximos a um ponto $x$. A busca em uma \textit{kd-tree}
 requer achar a célula que contem $x$ e computar todas as células que
-intersetam uma esfera de raio $r$ centrada no ponto (veja \ref{fig:kdSphere}). As células
-de interesse são computadas subindo na hierarquia e depois testando todos os
+interseptam uma esfera de raio $r$ centrada no ponto (veja \ref{fig:kdSphere}).
+As células de interesse são computadas subindo na hierarquia e depois testando todos os
 filhos destas células contra a esfera. Pontos que estão alocados nestas células
 são candidatos ao teste de intersecção com a esfera de busca, e os pontos que estão
 dentro da esfera são retornados como vizinhos de $x$. Para mais detalhes
@@ -147,8 +147,8 @@ agrupe os elementos, sem estar necessariamente baseada em seleção espacial. O
 único requisito em uma BVH é que o volume envolvente (i.e., uma caixa ou esfera) de cada nó englobe todos os
 elementos da sua subárvore. Geralmente uma estrutura de partição espacial
 pode ser estendida para uma BVH, gerando o volume envolvente atribuído a cada nó.
-As BVHs podem ser construidas de maneira \textit{top down}, ou seja, de cima
-para baixo, similiar a uma \textit{octree} ou \textit{kd-tree}.
+As BVHs podem ser construídas de maneira \textit{top down}, ou seja, de cima
+para baixo, similar a uma \textit{octree} ou \textit{kd-tree}.
 
 No exemplo da Figura \ref{fig:BVH}, a construção de uma BVH de esferas
 envolventes usada no \textit{QSplat} é ilustrada. Dado todos os pontos do
