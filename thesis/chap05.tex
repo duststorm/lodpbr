@@ -5,17 +5,17 @@ são criados sistematicamente ao crescer regiões através da agregação de
 \textit{splats} vizinhos. Este crescimento é guiado por dois erros: o
 \textit{erro perpendicular}, que mede a variação dos \textit{splats} na direção
 da normal; e o \textit{erro tangencial}, que nos fornece uma medida de
-cobertura. Partiremos da suposição de que o modelo já possui um representação
+cobertura. Partiremos da suposição de que o modelo já possui uma representação
 em \textit{splats} e que inicialmente todos são \textit{splats} circulares.
 
 \section{Motivação}
-Como mencionado no capítulo~\ref{cap04}, modelos baseados em pontos
+Como mencionado no Capítulo~\ref{cap04}, modelos baseados em pontos
 são complexos devido à grande quantidade de amostras necessárias para
 representá-lo, tornando operações de simplificação uma ferramenta necessária para
 que seja possível alcançar taxas interativas de processamento e visualização;
-\texit{splats} são muitos usados no contexto de renderização quando se deseja qualidade e eficiência (seção~\ref{cap02:sec:splat}).
+\texit{splats} são muitos usados no contexto de renderização quando se deseja qualidade e eficiência (Seção~\ref{cap02:sec:splat}).
 Embora a representação de superfícies baseadas em \textit{splats} seja comum na
-prática, muitos algoritmos de simplificação usa apenas o centro em
+prática, muitos algoritmos de simplificação utilizam apenas o centro em
 consideração;
 a ideia é em um primeiro momento gerar uma superfície com uma densidade de
 pontos que se ajuste a curvatura da superfície e em um processamento posterior,
@@ -25,13 +25,13 @@ levam em consideração toda a geometria do \textit{splat}.
  
 Muitos algoritmos de simplificação~\cite{Rusinkiewicz2000,BotschW2002,EfficenteLOD2003} são baseados em
 estruturas hierárquicas. Os pontos são organizados em uma estrutura de partição
-espacial (capítulo~\ref{cap03}) e os \textit{splats} criados pela
+espacial (Capítulo~\ref{cap03}) e os \textit{splats} criados pela
 análise local da superfície. Estas técnicas são simples e rápidas, mas como não
-há uma estratégias de otimização mais elaborada, os resultados geralmente são
+existem estratégias de otimização mais elaborada, os resultados geralmente são
 conservativos e tendem a produzir uma quantidade significativa de \textit{splats} redundantes.
 A fim de produzir amostras com maior qualidade, usaremos uma abordagem gulosa
 e incremental para renderização eficiente usando \textit{splats}, onde clusters são
-criados adicionando vizinhos de acordo com métricas de erro definidas a diante (seções~\ref{cap05:sec:perpendicular}
+criados adicionando vizinhos de acordo com métricas de erro definidas a diante (Seções~\ref{cap05:sec:perpendicular}
 e~\ref{cap05:sec:tangencial}).
  
 \section{Clusterização Incremental}
@@ -195,11 +195,11 @@ diferença de área pela grade regular.}
 \label{fig:grade}
 \end{figure}
 \begin{enumerate}
-  \item 
+  
  \item {A primeira visa obter essa área de forma exata. De fato, identificando
  os pontos extremos de cada elipse em relação a uma das coordenadas e os ordenando segundo ela, 
  podemos por um algoritmo de varredura de linhas identificar as interseções dos contornos das 
- elipses de $\Gamma$ e, a partir delas $\mathbf{\mathcal
+ elipses de $\Gamma$ e, a partir delas, $\mathbf{\mathcal
  A}(\mathbf{s}_{m}-\Gamma$). Esse procedimento, entretanto, tem uma
  complexidade que torna impraticável a sua utilização para nossos propósitos.
  Para concluir isso, basta considerar que ele é $O(n_{x} \log{n_{x}})$, onde $
@@ -211,7 +211,7 @@ $\mathbf{\mathcal A}(\mathbf{s}_{m}-\Gamma$) é uma tarefa impraticável. }
  \item { A segunda forma busca uma solução aproximada ao imergir as elipses envolvidas numa malha regular e determinar a
  situação de pertinência em relação a $\mathbf{s}_{m}$ e $\Gamma$ do centro de cada
  célula. Uma célula cujo centro pertence a $\mathbf{s}_{m}$ e não a $\Gamma$, contribui
- com sua área para o cômputo de $\mathbf{\mathcal A}(\mathbf{s}_{m}-\Gamma$). A
+ com sua área para o cômputo de $\mathbf{\mathcal A}(\mathbf{s}_{m}-\Gamma$) (Figura~\ref{fig:grade}). A
  determinação da pertinência com relação a todas as elipses de $\Gamma$, precisando ser efetuada para um
  número de pontos quadrático na resolução da malha, prejudica a performance
  dessa alternativa. Isto obriga que se empregue uma malha muito grosseira ou
@@ -285,7 +285,7 @@ $dist(p_{k}, \mathbf{s}_i^\prime) = 0 $.}
 onde a raia $[ c_{i}, p_{k}]$ corta a elipse  $\mathbf{s}_i^\prime$, e $q_{2}$ sendo a extremidade do eixo 
 maior de $\mathbf{s}_i^\prime$  que está mais próxima de $p_{k}$.}
 
-\item {Computa-se a distância de  $p_{k}$ a $[q_{1}, q_{2}]$ e usa-se essa distância como 
+\item {Computa-se a distância mínima de $p_{k}$ ao segmento $[q_{1}, q_{2}]$ e usa-se essa distância como 
 aproximação de $dist(p_{k}, \mathbf{s}_i^\prime))$.}
 \end{enumerate}
 
@@ -293,7 +293,7 @@ Utilizando a distância aproximada definida acima, se obtém para cada $p_{k}$
 sua distância ao conjunto de elipses $\mathbf{\mathcal T}^\prime$ $-$ dado por
 $ \min_{ \mathbf{s}_i^\prime \in  \mathbf{\mathcal T}^\prime}
 (dist_{p_k \in \mathbf{\mathcal C}}(p_{k}, \mathbf{s}_i^\prime))$. O erro
-tangencial será finalmente obtido tomando-se a maior dessas distâncias. Ele pode, então, ser expresso por:
+tangencial será finalmente obtido tomando-se a maior dessas distâncias. Ele pode ser então expresso por:
 
 
 \begin{eqnarray}
