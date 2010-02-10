@@ -1,7 +1,7 @@
 \chapter{Simplificação de Superfícies}
 \label{cap04}
-Como mencionado no capítulo~\ref{cap:02}, modelos baseados em pontos complexos
-podem chegar a milhões ou mesmo bilhões de amostras, como por exemplo no projeto do David Digital\cite{Levoy2000}. 
+Como mencionado anteriormente, modelos baseados em pontos complexos
+podem chegar a milhões ou mesmo bilhões de amostras. 
 Para que seja possível processar ou visualizar estes modelos em tempo real, muitas vezes é necessário reduzir a complexidade realizando operações de simplificação.
 Estas técnicas geram aproximações adequadas do modelo reduzindo o número de amostras e procurando manter da melhor forma possível as características do modelo original.
 Formalmente, a definição de uma simplificação de superfícies baseadas em pontos
@@ -31,7 +31,7 @@ avaliar a importância de cada ponto.
 Esta importância é quantificada em um valor que indica a quantidade de informação que o ponto possui para formar a superfície, ou a sua redundância. 
 Linsen \cite{Linsen2001} defini a informação contida em um ponto como uma soma ponderada de fatores estimados pelos seus vizinhos, como distância e curvatura por exemplo.
 Em Alexa et al.\cite{Alexa2001} os pontos são removidos de acordo com a importância de sua contribuição
-na superfície \texit{MLS} ( \texit{Moving Least Squares}\abbrev{MLS}{\texit{Moving Least Squares}}).
+na representação de uma superfície \texit{MLS} ( \texit{Moving Least Squares}\abbrev{MLS}{\texit{Moving Least Squares}}).
 Kalaiah e Varshney \cite{Kalaiah2003} medem a importância de cada ponto baseado nas propriedades 
 diferenciais fornecidas pela sua vizinhança. 
 Após a determinação da importância de cada ponto, a simplificação é então realizada removendo os pontos de baixa contribuição ou alta reduncância. 
@@ -174,7 +174,7 @@ pontos produzida pelos métodos de clusterização se aproxima da distribuição
 original, que é desejável em alguns caso. Entretanto, simulação de
 partículas é a alternativa mais viável quando se deseja uma densidade uniforme ou
 um controle da densidade local da distribuição. Métodos de clusterização são os mais
-eficientes devido a sua simplicidade. Clusterização incremental, simplificação iterativa e simulação de partículas possuem custo de armazenamento linear em relação ao número total de amostras, requerindo muitas vezes uma capacidade grande de memória, enquanto a clusterização hierárquica depende apenas do tamanho do modelo simplificado. O autor discute que as três técnicas operam diretamente na nuvem de pontos ao invés de reconstruir a superfície a priori para aplicar o processo de simplificação. A Figura~\ref{fig:pauly} ilustra estes métodos.
+eficientes devido a sua simplicidade. Clusterização incremental, simplificação iterativa e simulação de partículas possuem custo de armazenamento linear em relação ao número total de amostras, requerendo muitas vezes uma capacidade grande de memória, enquanto a clusterização hierárquica depende apenas do tamanho do modelo simplificado. O autor discute que as três técnicas operam diretamente na nuvem de pontos ao invés de reconstruir a superfície a priori para aplicar o processo de simplificação. A Figura~\ref{fig:pauly} ilustra estes métodos.
 
 \section{Simplificação Baseada em \textit{Splats}}
 \label{cap04:sec:splats}
@@ -183,7 +183,7 @@ de forma mais eficiente, representações baseadas em pontos são frequentemente
 estendidas para representações baseadas em \textit{Splats}~\cite{Zwicker2001},
 onde a superfície é aproximada por discos ou elipses. Esta representação é de
 especial interesse no contexto de renderização, onde os \textit{splats}
-facilitam a concepção de algoritmos eficientes~\cite{Ren2002,BotschW2002,Botsch2003,marroquim07} que gerem imagens de alta qualidade.
+facilitam a concepção de algoritmos eficientes~\cite{Ren2002,BotschW2002,Botsch2003,marroquim07} que geram imagens de alta qualidade.
 
 Embora a representação baseada em \textit{splats} seja bastante utilizada na
 prática, muitos esquemas de simplificação tomam apenas o centro do \textit{splat} em consideração (como discutido na seção anterior).
@@ -254,7 +254,7 @@ A simplificação otimizada é realizada em três passos. No primeiro passo é comput
 \textit{splat} máximo para cada ponto ${\mathbf{p}_i}$ cujo erro é limitado por
 um $\mathbf{\varepsilon}$. Começando por uma semente $\mathbf{p}_i$, 
 o \textit{splat} $\mathbf{s}_i$ cresce ao incorporar os vizinhos
-de acordo com sua distâncias. Esta distância é calculada usando as equações \ref{eq:circular} e
+de acordo com suas distâncias. Esta distância é calculada usando as equações \ref{eq:circular} e
 \ref{eq:eliptico}, sendo que os \textit{splats} elípticos possuem a vantagem de 
 adaptarem-se melhor à curvatura da superfície. Em um segundo passo, para o conjunto
 inicial de \textit{splats}, um subconjunto que cobre a superfície sem que haja buracos entre os vizinhos é selecionado
@@ -263,18 +263,23 @@ usando um procedimento guloso.
 Por último, o procedimento guloso anterior é otimizado usando um procedimento
 global. A ideia é substituir iterativamente subconjuntos de \textit{splats}
 por um novo subconjunto que possua os mesmo elementos ou que tenha uma
-distribuição melhor. Para melhorar o procedimento anterior, baseado em decisões locais e
-geralmente redundante ou possuindo uma distribuição não uniforme, é utilizado um
-sistemas de partículas como em~\cite{Pauly2002,Tuk} porém diferenciado na forma
-como as partículas interagem. A figura~\ref{fig:wu04} mostra o
+distribuição melhor. 
+Para melhorar o procedimento anterior, é utilizado um
+sistemas de partículas como em~\cite{Pauly2002}. 
+A figura~\ref{fig:wu04} mostra o
 efeito desta simplificação otimizada após a finalização do último passo.
+
+%Para melhorar o procedimento anterior, baseado em decisões locais e
+%geralmente redundante ou possuindo uma distribuição não uniforme, é utilizado um
+%sistemas de partículas como em~\cite{Pauly2002, Tuk} porém diferenciado na forma
+%como as partículas interagem. 
 
 Wu el al.~\cite{ProgressiveSplat2005} desenvolveram um algoritmo iterativo com
 um abordagem gulosa para criar uma representação progressiva de \textit{splats}.
 O seu funcionamento é semelhante ao \textit{Progressive Meshes} de
 Hoppe~\cite{Hoppe1996}, no entanto, são criados
 \textit{splats} para cada conjunto de pontos. Em seguida, todas as possíveis operações de
-\textit{junção de} \texti{splats} são organizada em uma lista de prioridades de
+\textit{junção} de \texti{splats} são organizadas em uma lista de prioridades de
 acordo com uma \textit{métrica de
 erro}, que avalia o erro causado pela respectiva operação de junção.
 
@@ -353,7 +358,7 @@ de dois \textit{splats} $\mathbf{s}_a$ e $\mathbf{s}_b$ em um novo
  |dist(\mathbf{p}_f,\mathbf{s}_m)|^2 ,  \{f_m\} = {f_a} + {f_b}. 
 \label{eq:l2}
 \end{equation}
-Note que o erro é ponderado pelo tamanho da aresta, a fim de penalizar a junção
+Note que o erro é ponderado pelo tamanho da aresta a fim de penalizar a junção
 de \textit{splats} muito distantes.
  
 Dado a métrica de erro~\ref{eq:l2} e dois \textit{splats}
@@ -369,7 +374,7 @@ determinado com centro $\mathbf{c}_m = \bar{\mathbf{p}}$, normal $\mathbf{n}_m
 = \mathbf{v}_3$ e os dois eixos $\mathbf{t}_m^1$ e $\mathbf{t}_m^2$ definidos
 pelas direções de $\mathbf{v}_1$ e $\mathbf{v}_2$ com tamanho respectivo a
 $\sqrt{\lambda_1/\lambda_2}$. Os tamanho dos eixos são ajustados de
-forma que a \textit{splat} englobe todo os pontos $\mathbf{\mathcal{P}}_m$
+forma que o \textit{splat} englobe todo os pontos $\mathbf{\mathcal{P}}_m$
 quando projetados no plano definido por $\mathbf{s}_m$ (Figura~\ref{fig:merge}).
  
 
@@ -380,7 +385,7 @@ normal, sendo uma extensão da métrica original proposta em~\cite{Cohen2004}. Nes
 caso o computo é simples e não há necessidade da lista de índices. Dada a
 operação de junção $\Phi$ e dois \textit{splats} $\mathbf{s}_a$ e
 $\mathbf{s}_b$, com suas respectivas áreas $|\mathbf{s}_a|$ e
-$|\mathbf{s}_b|$, similar a~\ref{eq:l2}, o erro ponderado pelo tamanho da
+$|\mathbf{s}_b|$, de forma similar a Equação~\ref{eq:l2} o erro ponderado pelo tamanho da
 aresta é definido como:
 \begin{equation}
  \mathbf{\varepsilon}_{\Phi}  =  ||e||\cdot|\mathbf{s}_a| +
@@ -417,17 +422,15 @@ procedimento é similar ao proposto para malhas poligonais~\cite{Hoppe1996},
 porém sem manter informação de topologia.
 
 \section{Discussão}
-A aquisição de modelos de pontos (via $3D$ \textit{scanners}) produz amostras
- alta densidade o que torna difícil um processamento eficiente deste
+A aquisição de modelos de pontos (via $3D$ \textit{scanners}) produz um grande número de amostras,
+ tornando difícil um processamento eficiente deste
  modelos. Por isso técnicas de simplificação são importantes em qualquer processo de
  modelagem ou visualização de nuvem de pontos. Neste capítulo foram discutidos
- vários técnicas de simplificação de modelos, considerando apenas pontos.
- Enquanto estas técnicas são eficientes, elas possuem um desvantagem de produzirem uma
- aproximação muito simples. Um representação mais elaborada baseada em
+ várias técnicas de simplificação de modelos, considerando apenas pontos.
+ Enquanto estas técnicas são eficientes, elas possuem uma desvantagem de produzirem uma
+ aproximação muito simples. Uma representação mais elaborada baseada em
  \textit{splats} é uma extensão popular de superfícies baseada em pontos,
- principalmente quando se deseja visualização eficiente e com qualidade. Poucos
- algoritmos utilizam toda a geometria dos \textit{splats} quando aplicam
- técnicas de simplificação. Simplificação considerando \textit{splats} evita um
- posterior processo para obtenção de \textit{splats}, porém são um pouco mais
- elaborados. No capítulo a seguir será apresentado uma simplificação
+ principalmente quando se deseja uma visualização eficiente e com qualidade. Poucos
+ algoritmos utilizam toda a geometria dos \textit{splats} para guiar a simplificação, o que, apesar de serem mais elaborados, evitam um
+ processo posterior para recriar os splats. No capítulo a seguir será apresentada uma simplificação
  baseada em \textit{splats}.
