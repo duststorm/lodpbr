@@ -49,6 +49,7 @@ public slots:
 	void updateDockCluster											();
 
  	void on_action_Open_File_triggered								();
+ 	void on_action_Save_As_Simplification_triggered					();
  	void on_action_Open_LOD_triggered								();
  	void on_action_Save_As_LOD_triggered							();
  	void on_action_Full_Screen_triggered							();

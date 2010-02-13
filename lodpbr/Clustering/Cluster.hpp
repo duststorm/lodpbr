@@ -284,11 +284,11 @@ public:
         		lSurfel->SetExpansionMarked     (1);
         		lSurfel->SetClusterID           (cont);
 
-        		lNeighbors  = KDTree.KNearestNeighbors(lSurfel ,16 , KNearestSearchComps);
+        		lNeighbors  = KDTree.KNearestNeighbors(lSurfel ,128, KNearestSearchComps);
 
         		mHeightMax = std::fabs(lSurfel->Normal()*( lNeighbors.back()->Center() - lSurfel->Center() ));
 
-        		mHeightMax *= 2.0;
+        		mHeightMax *= 16.0;
 
         		for(SurfelPtrVectorReverseIterator it = lNeighbors.rbegin(); it != lNeighbors.rend(); ++it)
         		{
@@ -363,7 +363,8 @@ public:
         	if ((view *  NewSurfels[pNumber].Normal())> -0.2f )
         	{
         		glPushMatrix();
-        		glColor4f(1.0f,0.35f,0.0f,0.5f);
+        		//glColor4f(1.0f,0.35f,0.0f,0.5f);
+        		glColor4f(0.5f,0.5f,0.5f,1.0f);
         		NewSurfels[pNumber].DrawTriangleFan(pSteps,pRadius);
         		glPopMatrix();
         	}
@@ -417,9 +418,7 @@ public:
 
         void DrawClustersRange (const Celer::Vector3<float>&view,unsigned int Begin, unsigned int End,bool pShowSeed)
         {
-        	glPushAttrib(GL_ALL_ATTRIB_BITS);
         	glPushMatrix();
-        	glDisable(GL_LIGHTING);
         	itColor = colors.begin();
         	for(unsigned int i = Begin; i <= End ; ++i )
         	{
@@ -457,9 +456,7 @@ public:
 
         	}
         	glEnd();
-        	glEnable(GL_LIGHTING);
         	glPopMatrix();
-        	glPopAttrib();
         }
 
     	void Clear()

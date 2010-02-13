@@ -70,6 +70,26 @@ void MyMainWindow::on_action_Save_As_LOD_triggered	()
 	}
 }
 
+void MyMainWindow::on_action_Save_As_Simplification_triggered	()
+{
+	if (GLWIDGET())
+	{
+		QString fileName = QFileDialog::getSaveFileName(this, tr("Save File"),
+                ".",
+                tr("PLY Model (*.ply )"));
+
+		if (fileName != "")
+		{
+			if (fileName.contains(".ply",Qt::CaseInsensitive) == 0)
+				fileName.append(".ply");
+
+			std::string filename =  QFile::encodeName(fileName).constData ();
+			GLWIDGET()->SaveSimplification(filename.c_str(),QCallBack);
+		}
+
+	}
+}
+
 void MyMainWindow::open(QString pFilename,bool who,WidgetProxy * p ) {
 
    if (pFilename != "") {

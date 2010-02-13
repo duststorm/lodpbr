@@ -205,7 +205,6 @@ public:
 	   mNewMinorAxis.first = std::sqrt( (*lD) * mNewMinorAxis.first );
   	   mNewMajorAxis.first = std::sqrt( (*lD) * mNewMajorAxis.first );
 
-
 	}
 
 	Point3 Mean (const ListPoint3& pPoint3List)
