@@ -61,7 +61,7 @@ void GLWidget::init()
 
 	mode = true;
 
-	settings.setBackgroundColor(QColor(55,55,55));
+	settings.setBackgroundColor(QColor(255,255,255));
 
 //    GLfloat x = GLfloat(width()) / height();
 //    camera.SetProjectionMatrix(30.0,x,0.1,100000);
@@ -318,6 +318,36 @@ void GLWidget::setModelSurfelRadius(int value)
 	update();
 }
 
+// == IO ==
+
+void GLWidget::LoadModel(const char * filename,vcg::CallBackPos *cb=0 )
+{
+
+	mClusterLog = ClusterLog();
+	mLSplatLog = LSplatLog();
+	cluster.Surfels.clear();
+	Box = Celer::BoundingBox3<float>();
+	Celer::IOSurfels<float>::LoadMesh(filename,cluster.Surfels,Box,cb);
+	std::cout << cluster.Surfels.capacity();
+}
+
+void GLWidget::SaveLOD(const char * filename,vcg::CallBackPos *cb)
+{
+	if(cluster.NewSurfels.size() > 0)
+		Celer::IOSurfels<float>::SaveSurfels(cluster.NewSurfels,filename,cb);
+}
+
+void GLWidget::LoadLOD(const char * filename,vcg::CallBackPos *cb)
+{
+	if(cluster.NewSurfels.size() == 0)
+		Celer::IOSurfels<float>::LoadSurfels(filename,cluster.NewSurfels,cb);
+}
+
+void GLWidget::SaveSimplification(const char * filename,vcg::CallBackPos *cb)
+{
+	if (cluster.NewSurfels.size() > 0 )
+		Celer::IOSurfels<float>::SaveMesh(filename,cluster.NewSurfels,cb);
+}
 // =================================== KD-Tree ================================//
 void GLWidget::getKNearestNeighbors(void)
 {
@@ -478,22 +508,26 @@ void GLWidget::initializeGL()
     GLfloat luzAmbiente[4] ={0.0f, 0.0f, 0.0f,1.0};
  	GLfloat luzDifusa[4]   ={1.0,1.0,1.0,1.0};         //cor
 	GLfloat luzEspecular[4]={1.0, 1.0, 1.0, 1.0};   //brilho
-
-	GLfloat materialAmbient[]   = { 1.0f, 0.35f, 0.0f, 1.0f };
-	GLfloat materialDiffuse[]   = { 1.0f, 0.35f, 0.0f, 1.0f };
-	GLfloat materialSpecular[]  = { 1.0f, 1.0f, 1.0f, 1.0f };
-	GLfloat materialEmission[]  = { 0.0f, 0.0f, 0.0f, 1.0f };
-	GLfloat materialShininess   = 64.0f;
-
-	GLfloat lightPosition0[] = {0.0, 0.0, 5.0, 0.0};
-	GLfloat lightPosition1[] = {0.0, 0.0, -5.0, 0.0};
-
-
-	glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, materialAmbient);
-	glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, materialDiffuse);
-	glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, materialSpecular);
-	glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, materialEmission);
-	glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, materialShininess);
+//
+//	GLfloat materialAmbient[]   = { 1.0f, 0.35f, 0.0f, 1.0f };
+//	GLfloat materialDiffuse[]   = { 1.0f, 0.35f, 0.0f, 1.0f };
+//	GLfloat materialSpecular[]  = { 1.0f, 1.0f, 1.0f, 1.0f };
+//	GLfloat materialEmission[]  = { 0.0f, 0.0f, 0.0f, 1.0f };
+//	GLfloat materialShininess   = 64.0f;
+//
+	GLfloat lightPos0[] = {0.0, 0.0, 5.0, 0.0};
+	GLfloat lightPos1[] = {0.0, 0.0, -5.0, 0.0};
+	GLfloat lightPos2[] = {5.0, 0.0, 0.0, 0.0};
+	GLfloat lightPos3[] = {-5.0, 0.0,0.0, 0.0};
+	GLfloat lightPos4[] = {0.0, -5.0, 0.0, 0.0};
+	GLfloat lightPos5[] = {0.0, 5.0, 0.0, 0.0};
+//
+//
+//	glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, materialAmbient);
+//	glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, materialDiffuse);
+//	glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, materialSpecular);
+//	glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, materialEmission);
+//	glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, materialShininess);
 
 	glShadeModel(GL_SMOOTH);                      	//gouraud
 
@@ -504,24 +538,60 @@ void GLWidget::initializeGL()
 	glLightfv(GL_LIGHT0, GL_DIFFUSE, luzDifusa);
 	glLightfv(GL_LIGHT0, GL_SPECULAR, luzEspecular);
 
-	glLightfv(GL_LIGHT0, GL_POSITION,  lightPosition0);
-	glLightfv(GL_LIGHT1, GL_POSITION,  lightPosition1);
-
 	glLightfv(GL_LIGHT1, GL_AMBIENT, luzAmbiente);  //parametros da luz 0
-	glLightfv(GL_LIGHT1, GL_DIFFUSE, luzDifusa );
+	glLightfv(GL_LIGHT1, GL_DIFFUSE, luzDifusa);
 	glLightfv(GL_LIGHT1, GL_SPECULAR, luzEspecular);
+
+	glLightfv(GL_LIGHT2, GL_AMBIENT, luzAmbiente);  //parametros da luz 0
+	glLightfv(GL_LIGHT2, GL_DIFFUSE, luzDifusa);
+	glLightfv(GL_LIGHT2, GL_SPECULAR, luzEspecular);
+
+	glLightfv(GL_LIGHT3, GL_AMBIENT, luzAmbiente);  //parametros da luz 0
+	glLightfv(GL_LIGHT3, GL_DIFFUSE, luzDifusa);
+	glLightfv(GL_LIGHT3, GL_SPECULAR, luzEspecular);
+
+	glLightfv(GL_LIGHT4, GL_AMBIENT, luzAmbiente);  //parametros da luz 0
+	glLightfv(GL_LIGHT4, GL_DIFFUSE, luzDifusa);
+	glLightfv(GL_LIGHT4, GL_SPECULAR, luzEspecular);
+
+	glLightfv(GL_LIGHT5, GL_AMBIENT, luzAmbiente);  //parametros da luz 0
+	glLightfv(GL_LIGHT5, GL_DIFFUSE, luzDifusa);
+	glLightfv(GL_LIGHT5, GL_SPECULAR, luzEspecular);
+
+    glLightModelf(GL_LIGHT_MODEL_LOCAL_VIEWER, 1.0f);
+
+    glLightModelfv(GL_LIGHT_MODEL_AMBIENT, luzAmbiente);
+
+    glLightfv(GL_LIGHT0, GL_POSITION, lightPos0);
+    glLightfv(GL_LIGHT1, GL_POSITION, lightPos1);
+    glLightfv(GL_LIGHT2, GL_POSITION, lightPos2);
+    glLightfv(GL_LIGHT3, GL_POSITION, lightPos3);
+    glLightfv(GL_LIGHT4, GL_POSITION, lightPos4);
+    glLightfv(GL_LIGHT5, GL_POSITION, lightPos5);
+
+//	glLightfv(GL_LIGHT0, GL_POSITION,  lightPosition0);
+//	glLightfv(GL_LIGHT1, GL_POSITION,  lightPosition1);
+//
+//	glLightfv(GL_LIGHT1, GL_AMBIENT, luzAmbiente);  //parametros da luz 0
+//	glLightfv(GL_LIGHT1, GL_DIFFUSE, luzDifusa );
+//	glLightfv(GL_LIGHT1, GL_SPECULAR, luzEspecular);
 
 
 	glEnable(GL_COLOR_MATERIAL);
 	//set material properties which will be assigned by glColor
 
-   	glEnable(GL_LIGHTING);        //uso de iluminacao
-  	glEnable(GL_LIGHT0);          //luz  0
-  	glEnable(GL_LIGHT1);          //luz  0
+	glEnable(GL_LIGHTING);
 
-   	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_LIGHT0);
+	glEnable(GL_LIGHT1);
+	glEnable(GL_LIGHT2);
+	glEnable(GL_LIGHT3);
+	glEnable(GL_LIGHT4);
+	glEnable(GL_LIGHT5);
 
+  	glEnable(GL_DEPTH_TEST);
     glEnable(GL_NORMALIZE);
+
 
 	setForegroundColor(settings.getTextColor());
 	setBackgroundColor(settings.getBackgroundColor());
@@ -547,28 +617,6 @@ void GLWidget::resizeGL(int width, int height)
     mCenterX =  static_cast<float> (width*0.5);
     mCenterY =  static_cast<float> (height*0.5);
 
-}
-
-void GLWidget::LoadModel(const char * filename,vcg::CallBackPos *cb=0 )
-{
-
-	mClusterLog = ClusterLog();
-	mLSplatLog = LSplatLog();
-	cluster.Surfels.clear();
-	Box = Celer::BoundingBox3<float>();
-	Celer::IOSurfels<float>::LoadMesh(filename,cluster.Surfels,Box,cb);
-	std::cout << cluster.Surfels.capacity();
-}
-
-void GLWidget::SaveLOD(const char * filename,vcg::CallBackPos *cb)
-{
-	if(cluster.NewSurfels.size() > 0)
-		Celer::IOSurfels<float>::SaveSurfels(cluster.NewSurfels,filename,cb);
-}
-void GLWidget::LoadLOD(const char * filename,vcg::CallBackPos *cb)
-{
-	if(cluster.NewSurfels.size() == 0)
-		Celer::IOSurfels<float>::LoadSurfels(filename,cluster.NewSurfels,cb);
 }
 
 void GLWidget::calLimits()
@@ -663,64 +711,52 @@ void GLWidget::paintGL()
     initializeGL();
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-//    glMatrixMode(GL_PROJECTION);
-//    glLoadIdentity();
-//    camera.ComputeProjectionMatrix();
-//    glMultMatrixf((~camera.PespectiveProjectionMatrix()).ToRealPtr());
-
     camera.LoadProjectionMatrix();
     camera.SetViewByMouse();
     camera.LoadModelViewMatrix();
-//    glMatrixMode(GL_MODELVIEW);
-//    glLoadIdentity();
-//
-//    camera.SetViewByMouse();
-//    glMultMatrixf((~camera.ViewMatrix()));
+
+
 
     fps.nextFrame();
 
 //--
-
 	//select(lastPos);
 //
-
-
 //--
-
     if (  cluster.Surfels.size() != 0 )
     {
-
     	if (mShowModel)
     	{
-    		glPushMatrix();
-    		glPointSize(2.0);
-    		glBegin(GL_POINTS);
     		for (std::vector<Surfel>::iterator s = cluster.Surfels.begin(); s != cluster.Surfels.end();++s)
     		{
-//    			if( (s->Curvature() >= 0.0) && (s->Curvature() < 0.25) )
-//    				glColor3f(1.0f,1.0f,1.0f);
-//    			else if ( (s->Curvature() > 0.25) && (s->Curvature() < 0.50) )
-//    				glColor3f(0.0,1.0f,1.0f);
-//    			else if ( (s->Curvature() > 0.5) && (s->Curvature() < 0.75) )
-//    				glColor3f(1.0f,1.0f,0.0f);
-//    			else if ( (s->Curvature() > 0.75) && (s->Curvature() <= 1.0) )
-//    				glColor3f(1.0f,0.0f,0.0);
+    			//    			if( (s->Curvature() >= 0.0) && (s->Curvature() < 0.25) )
+    			//    				glColor3f(1.0f,1.0f,1.0f);
+    			//    			else if ( (s->Curvature() > 0.25) && (s->Curvature() < 0.50) )
+    			//    				glColor3f(0.0,1.0f,1.0f);
+    			//    			else if ( (s->Curvature() > 0.5) && (s->Curvature() < 0.75) )
+    			//    				glColor3f(1.0f,1.0f,0.0f);
+    			//    			else if ( (s->Curvature() > 0.75) && (s->Curvature() <= 1.0) )
+    			//    				glColor3f(1.0f,0.0f,0.0);
 
-    			glColor3f(0.5f,1.0f,0.0f);
     			if ((camera.Eyes().Norm()* s->Normal()) > -0.2)
     			{
     				//std::cout << "Normal " <<  (camera.Eyes().Norm()* s->Normal()) << std::endl;
     				if (mShowModelPoints)
+    				{
+    					glDisable(GL_LIGHTING);
+    					glPointSize(2.0);
+    					glBegin(GL_POINTS);
     					glVertex3fv( s->Center().ToRealPtr() );
+    					glEnd();
+    					glEnable(GL_LIGHTING);
+    				}
     				if (mShowModelSurfel)
+    				{
     					s->DrawTriangleFan(32,(mSurfelRadius*0.01));
+    				}
     			}
-    			//s->DrawEllpsoid(64,2,1.0);
-//    			s->DrawTriangleFan(64,0.5);
     		}
-    		glEnd();
-    		glPopMatrix();
-    	}
+		}
 
     	for (size_t i = 0; i != Knn.size();++i)
     	{
@@ -747,56 +783,43 @@ void GLWidget::paintGL()
 
     			if (mClusterLog.maskShow.Test(ClusterLog::Surfel))
     			{
-        			std::cout << "Radiusf " << mClusterLog.getRadiusf() << std::endl;
-
     				for(unsigned int i = mClusterLog.getClusterRangeBegin();i <= mClusterLog.getClusterRangeEnd();++i)
+    				{
     					cluster.DrawSurfels(camera.Eyes().Norm(),i,32,mClusterLog.getRadiusf());
+    				}
     			}
-
-    		}else
-    		{
-
     		}
-
     	}
 
-    	DrawGroud();
+    	//DrawGroud();
     	if ( (mSelectionMode == ADD_NEIBORHOO) || (mSelectionMode == DEL_NEIBORHOO))
     		drawSelectionRectangle();
-
-
-//		qglColor(Qt::lightGray);
-//
-//    	renderText(10,5,QString	("___________________________"));
-//    	renderText(10,25,QString("Number of Points :"));renderText(145,25,fps.fpsString());
-//    	renderText(10,30,QString("___________________________"));
-
-
     }
+
 
     restoreGLState();
     QPainter p; // used for text overlay
     p.begin(this);
-    p.setRenderHint(QPainter::Antialiasing);
-    // save the GL state set for QPainter
-    //draw the overlayed text using QPainter
-    p.setPen(QColor(197, 197, 197, 157));
-    p.setBrush(QColor(197, 197, 197, 127));
-    p.drawRect(QRect(0, 0, width(), 50));
-    p.setBrush(QColor(197, 0, 0, 127));
-
-    p.drawRect(10 ,(height()-90) ,100,10);
-
-    p.drawRect(10 ,(height()-70) ,100,10);
-    //p.drawRect(QRect(10 , height()-(2*(height()*0.01)),100,height()-((height()*0.01)) ));
-    p.setPen(settings.getTextColor());
-    p.setBrush(Qt::NoBrush);
-    const QString str1(tr("A simple OpenGL pbuffer example."));
-    const QString str2(tr("Use the mouse wheel to zoom, press buttons and move mouse to rotate, double-click to flip."));
-    QFontMetrics fm(p.font());
-    p.drawText(width()/2 - fm.width(str1)/2, 20, str1);
-    p.drawText(width()/2 - fm.width(str2)/2, 20 + fm.lineSpacing(), str2);
-    p.setPen(QColor(197, 197, 197, 157));
+//    p.setRenderHint(QPainter::Antialiasing);
+//    // save the GL state set for QPainter
+//    //draw the overlayed text using QPainter
+//    p.setPen(QColor(197, 197, 197, 157));
+//    p.setBrush(QColor(197, 197, 197, 127));
+//    p.drawRect(QRect(0, 0, width(), 50));
+//    p.setBrush(QColor(197, 0, 0, 127));
+//
+//    p.drawRect(10 ,(height()-90) ,100,10);
+//
+//    p.drawRect(10 ,(height()-70) ,100,10);
+//    //p.drawRect(QRect(10 , height()-(2*(height()*0.01)),100,height()-((height()*0.01)) ));
+//    p.setPen(settings.getTextColor());
+//    p.setBrush(Qt::NoBrush);
+//    const QString str1(tr("A simple OpenGL pbuffer example."));
+//    const QString str2(tr("Use the mouse wheel to zoom, press buttons and move mouse to rotate, double-click to flip."));
+//    QFontMetrics fm(p.font());
+//    p.drawText(width()/2 - fm.width(str1)/2, 20, str1);
+//    p.drawText(width()/2 - fm.width(str2)/2, 20 + fm.lineSpacing(), str2);
+//    p.setPen(QColor(197, 197, 197, 157));
     p.end();
 
 
@@ -1050,7 +1073,7 @@ void GLWidget::endSelection(const QPoint& point)
 	mSelectionMode = NONE;
 	getKNearestNeighbors();
 	if (result.size()>0)
-		std::cout << "é = esse " << result[0].Curvature() << std::endl;
+		std::cout << "ae = esse " << result[0].Curvature() << std::endl;
 
 }
 

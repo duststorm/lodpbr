@@ -74,9 +74,10 @@ public:
     bool glInitialized() const  { return mGLInitialized; }
 
     // From lodpbr
-    void LoadModel(const char * filename,vcg::CallBackPos *cb);
-    void SaveLOD(const char * filename,vcg::CallBackPos *cb);
-    void LoadLOD(const char * filename,vcg::CallBackPos *cb);
+    void LoadModel			(const char * filename,vcg::CallBackPos *cb);
+    void SaveLOD			(const char * filename,vcg::CallBackPos *cb);
+    void LoadLOD			(const char * filename,vcg::CallBackPos *cb);
+    void SaveSimplification (const char * filename,vcg::CallBackPos *cb);
     void calLimits();
     void DrawGroud();
     void SetMode(bool);
@@ -102,6 +103,8 @@ public slots:
 	void setBackgroundColor(const QColor& color) { backgroundColor=color; qglClearColor(color); };
 	void setForegroundColor(const QColor& color) { foregroundColor = color; };
 	//@}
+
+	//Save and Load
 
 	void setClusterBuiltType	(const QString & text);
 	void setClusterBuiltSystem	(const QString & text);

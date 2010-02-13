@@ -24,6 +24,7 @@
 #include <vcg/simplex/face/topology.h>
 
 #include <vcg/complex/trimesh/base.h>
+#include <vcg/complex/trimesh/allocate.h>
 #include <vcg/complex/trimesh/update/topology.h>
 #include <vcg/complex/trimesh/update/normal.h>
 #include <vcg/complex/trimesh/update/flag.h>
@@ -109,11 +110,48 @@ public:
 
 	typedef ::vcg::ply::PropDescriptor PropDescriptor ;
 
+	typedef typename CMesh::VertexIterator VertexIterator;
+
 	IOSurfels()
 	{
 
 	}
 
+
+	static int SaveMesh (const char * filename,
+			std::vector<Surfel<Real> >& pSurfel,vcg::CallBackPos *cb)
+	{
+		CMesh mesh;
+        VertexIterator vi = vcg::tri::Allocator<CMesh>::AddVertices(mesh,pSurfel.size());
+        int mask = 0;
+		vcg::tri::io::PlyInfo info;
+		bool binary = 0;
+		for (size_t i = 0; i < pSurfel.size();++i)
+		{
+
+			(*vi).P()[0] = pSurfel[i].Center().x;
+			(*vi).P()[1] = pSurfel[i].Center().y;
+			(*vi).P()[2] = pSurfel[i].Center().z;
+
+			(*vi).N()[0] = pSurfel[i].Normal().x;
+			(*vi).N()[1] = pSurfel[i].Normal().y;
+			(*vi).N()[2] = pSurfel[i].Normal().z;
+
+			(*vi).R()	 = pSurfel[i].MajorAxis().first;
+
+
+			++vi;
+		}
+
+		mask |= vcg::tri::io::Mask::IOM_VERTNORMAL;
+		mask |= vcg::tri::io::Mask::IOM_VERTRADIUS;
+
+		info.mask = mask;
+
+		int result = vcg::tri::io::ExporterPLY<CMesh>::Save(mesh,filename,binary,info,cb);
+
+
+	}
 	static int LoadMesh (
 			const char * filename,
 			std::vector<Surfel<Real> >& pSurfel,

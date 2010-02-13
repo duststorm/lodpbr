@@ -203,6 +203,7 @@ namespace Celer{
         {
           // WARNING: makeCurrent must be called by every calling method
           glMatrixMode(GL_MODELVIEW);
+          glLoadIdentity();
           ComputerModelViewMatrix();
           if (reset)
             glLoadMatrixf((~mViewMatrix).ToRealPtr());

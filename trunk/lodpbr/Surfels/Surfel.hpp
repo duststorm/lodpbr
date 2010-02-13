@@ -19,6 +19,7 @@
 #include <GL/glu.h>
 
 #include <wrap/io_trimesh/import_ply.h>
+#include <wrap/io_trimesh/export_ply.h>
 #include <wrap/io_trimesh/io_ply.h>
 #include <wrap/ply/plylib.h>
 
@@ -1138,7 +1139,6 @@ void Surfel<Real>::DrawTriangleFan(int p,const Real& pRadius)
 
 	 	ListPoint3 lBoundaries = this->BoundariesSamples(p,pRadius);
 	 	glPushMatrix();
-	 	glEnable(GL_LIGHTING);
 	    glEnable(GL_POLYGON_OFFSET_FILL | GL_POLYGON_SMOOTH_HINT | GL_MULTISAMPLE);
 	    glPolygonOffset(1,1);
 	 	glEnable (GL_BLEND);
@@ -1155,14 +1155,14 @@ void Surfel<Real>::DrawTriangleFan(int p,const Real& pRadius)
 //			glEnd();
 //		glPopMatrix();
 	 	glPolygonMode(GL_FRONT_AND_BACK,GL_FILL);
-	 	glColor4f(1.0,0.35,0.0,0.75);
+	 	glColor4f(0.5f,0.5f,0.5f,1.0f);
+	 	//glColor4f(1.0,0.35,0.0,0.75);
 	 	glBegin (GL_TRIANGLE_FAN);
 			for(ListPoint3Iterator it = lBoundaries.begin();it != lBoundaries.end();++it)
 			{
 				glVertex3fv( *it );
 			}
 		glEnd();
-		glDisable(GL_LIGHTING);
 		glPopMatrix();
 }
 
