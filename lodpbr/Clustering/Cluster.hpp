@@ -288,7 +288,7 @@ public:
 
         		mHeightMax = std::fabs(lSurfel->Normal()*( lNeighbors.back()->Center() - lSurfel->Center() ));
 
-        		mHeightMax *= 16.0;
+        		mHeightMax *= 2.0;
 
         		for(SurfelPtrVectorReverseIterator it = lNeighbors.rbegin(); it != lNeighbors.rend(); ++it)
         		{
