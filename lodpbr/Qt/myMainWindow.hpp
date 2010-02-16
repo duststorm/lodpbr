@@ -53,6 +53,14 @@ public slots:
  	void on_action_Open_LOD_triggered								();
  	void on_action_Save_As_LOD_triggered							();
  	void on_action_Full_Screen_triggered							();
+
+
+ 	// -- Visible Dock Widgets
+//
+// 	void on_action_Cluster_Draw_toggled								(bool);
+// 	void on_action_Cluster_Build_toggled							(bool);
+// 	void on_action_Model_Draw_toggled								(bool);
+
  	// tool bar -- atributos do modelo
 
  	void on_pushButtonBuild_clicked									();

@@ -35,6 +35,7 @@
 
 #include "ClusterCriteria.hpp"
 
+#include "Qt/GLWidget/Log/ClusterLog.hpp"
 
 template <class Real>
 class Cluster
@@ -288,7 +289,7 @@ public:
 
         		mHeightMax = std::fabs(lSurfel->Normal()*( lNeighbors.back()->Center() - lSurfel->Center() ));
 
-        		mHeightMax *= 2.0;
+        		mHeightMax *= 4.0;
 
         		for(SurfelPtrVectorReverseIterator it = lNeighbors.rbegin(); it != lNeighbors.rend(); ++it)
         		{
@@ -323,7 +324,7 @@ public:
 							{
 								(*it)->SetExpansionMarked(1);
 								lClose.push_back((*(*it)));
-								lOpen.push_back((*it));
+								//lOpen.push_back((*it));
 							}
 
 
@@ -358,16 +359,47 @@ public:
 
 /* ------------------------------- Draw Functions -------------------------- */
 
-        void DrawSurfels(const Celer::Vector3<float>& view,unsigned int pNumber,unsigned int pSteps = 8,const Real& pRadius = 1.0 )
+        void DrawSurfels(ClusterLog& pClusterLog,unsigned int pSteps = 8 )
         {
-        	if ((view *  NewSurfels[pNumber].Normal())> -0.2f )
-        	{
-        		glPushMatrix();
-        		//glColor4f(1.0f,0.35f,0.0f,0.5f);
-        		glColor4f(0.5f,0.5f,0.5f,1.0f);
-        		NewSurfels[pNumber].DrawTriangleFan(pSteps,pRadius);
-        		glPopMatrix();
-        	}
+    	 	glPushMatrix();
+    	    glEnable(GL_POLYGON_OFFSET_FILL | GL_POLYGON_SMOOTH_HINT | GL_MULTISAMPLE);
+    	    glPolygonOffset(1,1);
+    	 	glEnable (GL_BLEND);
+    	 	glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    	 	glPolygonMode(GL_FRONT_AND_BACK,GL_FILL);
+    	 	//glColor4f(0.5f,0.5f,0.5f,1.0f);
+    	 	glColor4f(1.0,0.35,0.0,0.75);
+    	 	if(pClusterLog.maskRenderingClusterBy.Test(ClusterLog::Range))
+    	 	{
+    	 	for(unsigned int i = pClusterLog.getClusterRangeBegin(); i <= pClusterLog.getClusterRangeEnd() ; ++i )
+    	 	{
+
+    	 		if ( ( pClusterLog.getCamera().Eyes().Norm() * NewSurfels[i].Normal() ) < 0.2f )
+    	 		{
+    	 			std::list<Celer::Point3<float> > lBoundaries = NewSurfels[i].BoundariesSamples(pSteps,pClusterLog.getRadiusf());
+    	 			glBegin (GL_TRIANGLE_FAN);
+    	 			for(typename std::list<Celer::Point3<float> >::iterator  it = lBoundaries.begin();it != lBoundaries.end();++it)
+    	 			{
+    	 				glVertex3fv( *it );
+    	 			}
+    	 			glEnd();
+    	 		}
+    	 	}
+
+    	 	}
+    	 	if(pClusterLog.maskRenderingClusterBy.Test(ClusterLog::Index))
+    	 	{
+	 			std::list<Celer::Point3<float> > lBoundaries = NewSurfels[pClusterLog.getClusteIndex()].BoundariesSamples(pSteps,pClusterLog.getRadiusf());
+	 			glBegin (GL_TRIANGLE_FAN);
+	 			for(typename std::list<Celer::Point3<float> >::iterator  it = lBoundaries.begin();it != lBoundaries.end();++it)
+	 			{
+	 				glVertex3fv( *it );
+	 			}
+	 			glEnd();
+    	 	}
+    	 	glPopMatrix();
+
+
         }
 
         void DrawClustersIndex (const Celer::Vector3<float>& view,unsigned int pNumber,bool pShowSeed )
