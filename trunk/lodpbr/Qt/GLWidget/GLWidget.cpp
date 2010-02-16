@@ -773,7 +773,8 @@ void GLWidget::paintGL()
     				cluster.DrawClustersIndex(camera.Eyes().Norm(),mClusterLog.getClusteIndex(),(mClusterLog.maskShow.Test(ClusterLog::Seed)));
 
     			if (mClusterLog.maskShow.Test(ClusterLog::Surfel))
-    				cluster.DrawSurfels(camera.Eyes().Norm(),mClusterLog.getClusteIndex(),32,mClusterLog.getRadiusf());
+    				cluster.DrawSurfels(mClusterLog,32);
+
     		}
     		else if (mClusterLog.maskRenderingClusterBy.Test(ClusterLog::Range))
     		{
@@ -783,10 +784,7 @@ void GLWidget::paintGL()
 
     			if (mClusterLog.maskShow.Test(ClusterLog::Surfel))
     			{
-    				for(unsigned int i = mClusterLog.getClusterRangeBegin();i <= mClusterLog.getClusterRangeEnd();++i)
-    				{
-    					cluster.DrawSurfels(camera.Eyes().Norm(),i,32,mClusterLog.getRadiusf());
-    				}
+    				cluster.DrawSurfels(mClusterLog,32);
     			}
     		}
     	}

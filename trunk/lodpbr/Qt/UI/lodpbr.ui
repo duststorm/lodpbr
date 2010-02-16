@@ -76,10 +76,13 @@
     <property name="title">
      <string>View</string>
     </property>
+    <widget class="QMenu" name="menuDockWindows">
+     <property name="title">
+      <string>Dock windows</string>
+     </property>
+    </widget>
     <addaction name="action_Full_Screen"/>
-    <addaction name="action_Cluster_Builder"/>
-    <addaction name="action_Cluster_Draw"/>
-    <addaction name="action_Model_Draw"/>
+    <addaction name="menuDockWindows"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuView"/>
@@ -98,14 +101,14 @@
    <property name="minimumSize">
     <size>
      <width>300</width>
-     <height>250</height>
+     <height>420</height>
     </size>
    </property>
    <property name="acceptDrops">
     <bool>true</bool>
    </property>
    <property name="floating">
-    <bool>true</bool>
+    <bool>false</bool>
    </property>
    <property name="features">
     <set>QDockWidget::AllDockWidgetFeatures</set>
@@ -433,7 +436,7 @@
    <addaction name="actionAdd"/>
    <addaction name="separator"/>
   </widget>
-  <widget class="QDockWidget" name="dockWidgetClusterBuilder">
+  <widget class="QDockWidget" name="dockWidgetClusterBuild">
    <property name="enabled">
     <bool>true</bool>
    </property>
@@ -775,12 +778,12 @@
     <enum>QAction::TextHeuristicRole</enum>
    </property>
   </action>
-  <action name="action_Cluster_Builder">
+  <action name="action_Cluster_Build">
    <property name="checkable">
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>Cluster Builder</string>
+    <string>Cluster Build</string>
    </property>
   </action>
   <action name="actionQuit">
@@ -827,25 +830,14 @@
     <string>Save as Simplification</string>
    </property>
   </action>
+  <action name="dummyAction">
+   <property name="text">
+    <string>n/a</string>
+   </property>
+  </action>
  </widget>
  <resources/>
  <connections>
-  <connection>
-   <sender>action_Cluster_Draw</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>dockWidgetDrawCluster</receiver>
-   <slot>setVisible(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>-1</x>
-     <y>-1</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>819</x>
-     <y>324</y>
-    </hint>
-   </hints>
-  </connection>
   <connection>
    <sender>dockWidgetDrawCluster</sender>
    <signal>visibilityChanged(bool)</signal>
@@ -879,25 +871,9 @@
    </hints>
   </connection>
   <connection>
-   <sender>action_Cluster_Builder</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>dockWidgetClusterBuilder</receiver>
-   <slot>setVisible(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>-1</x>
-     <y>-1</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>154</x>
-     <y>324</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>dockWidgetClusterBuilder</sender>
+   <sender>dockWidgetClusterBuild</sender>
    <signal>visibilityChanged(bool)</signal>
-   <receiver>action_Cluster_Builder</receiver>
+   <receiver>action_Cluster_Build</receiver>
    <slot>setChecked(bool)</slot>
    <hints>
     <hint type="sourcelabel">

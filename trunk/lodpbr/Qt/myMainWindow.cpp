@@ -192,20 +192,12 @@ void MyMainWindow::on_action_Open_File_triggered()
     }
 }
 //
-//
-//
-//
-//
-//
 //void MyMainWindow::on_action_Quit_MainWin_triggered()
 //{
 //	this->~QMainWindow();
 //}
 //
-//void MyMainWindow::on_push_Button_Vertex_Around_clicked()
-//{
-//
-//}
+
 
 void MyMainWindow::keyPressEvent(QKeyEvent *e)
 {

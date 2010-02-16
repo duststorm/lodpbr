@@ -5,8 +5,9 @@ QProgressBar *MyMainWindow::progress;
 
 MyMainWindow::MyMainWindow (QMainWindow *parent): QMainWindow(parent)
 {
-    setupUi (this);
-
+//	ui = new Ui::MainWindow;
+//	ui->setupUi(this);
+	setupUi(this);
 
 //    this->glWidget =  new GLWidget(QGLFormat(QGLFormat(QGL::SampleBuffers)),this);
 //	  this->setCentralWidget(glWidget);
@@ -36,8 +37,25 @@ MyMainWindow::MyMainWindow (QMainWindow *parent): QMainWindow(parent)
 	dockWidgetClusterContents->setEnabled(0);
 	dockWidgetDrawClusterContents->setEnabled(0);
 
-	dockWidgetClusterBuilder->hide();
+	dockWidgetClusterBuild->hide();
 	dockWidgetDrawCluster->hide();
+	dockWidgetDrawModel->hide();
+
+	this->menuDockWindows->addAction(dockWidgetDrawModel->toggleViewAction());
+	dockWidgetDrawModel->toggleViewAction()->setShortcut(QApplication::translate("MainWindow", "Ctrl+D", 0, QApplication::UnicodeUTF8));
+
+	this->menuDockWindows->addSeparator();
+
+	this->menuDockWindows->addAction(dockWidgetDrawCluster->toggleViewAction());
+	dockWidgetDrawCluster->toggleViewAction()->setShortcut(QApplication::translate("MainWindow", "Ctrl+M", 0, QApplication::UnicodeUTF8));
+	this->menuDockWindows->addAction(dockWidgetClusterBuild->toggleViewAction());
+	dockWidgetClusterBuild->toggleViewAction()->setShortcut(QApplication::translate("MainWindow", "Ctrl+N", 0, QApplication::UnicodeUTF8));
+
+	//Q_FOREACH(QDockWidget* widget, findChildren<QDockWidget*>())
+	//{
+
+	//}
+
 
 // Loucuras da KglLib
 //	glWidget = new GLWidget(QGLFormat(QGLFormat(QGL::SampleBuffers)),this);
@@ -114,13 +132,13 @@ void MyMainWindow::updateDockCluster()
 			spinBoxCluster_DrawClusterWithRangeEnd->setValue(GLWIDGET()->getDrawClusterWithRangeEnd());
 
 		}
-		// Não tem clusters a serem renderizados
+		// Nao tem clusters a serem renderizados
 		else
 		{
 			dockWidgetDrawClusterContents->setEnabled(0);
 		}
 	}
-	// Não há GLWidget
+	// Nao ha GLWidget
 	else
 	{
 		dockWidgetClusterContents->setEnabled(0);

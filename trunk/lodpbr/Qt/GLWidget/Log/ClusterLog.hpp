@@ -2,12 +2,13 @@
  * ClusterRenderLog.h
  *
  *  Created on: Nov 4, 2009
- *      Author: fmc
+ *      Author: Felipe Carvalho
  */
 
 #ifndef CLUSTERRENDERLOG_H_
 #define CLUSTERRENDERLOG_H_
 
+#include "Scene/Camera.hpp"
 
 #include "Qt/Tools/BitMask.hpp"
 
@@ -23,7 +24,6 @@ public:
 		Clusters    = 1 << 5,
 		Model		= 1 << 6
 	};
-
 	enum RenderingClusterBy
 	{
 		Range 			= 1 << 7,
@@ -43,7 +43,6 @@ public:
     	AllPossibleCluster 		= 1 << 15,
     	LimitedNumberOfCluster 	= 1 << 16
     };
-
     enum BuildClusterSystem
 	{
     	Continuous    		 = 1 << 17,
@@ -155,9 +154,19 @@ public:
         this->mSeedRangeEnd = mSeedRangeEnd;
     }
 
+    void setCamera(const Celer::Camera& camera )
+    {
+    	this->mCamera = camera;
+    }
 
+    Celer::Camera getCamera() const
+    {
+    	this->mCamera;
+    }
 
 private:
+
+    Celer::Camera mCamera;
 
     unsigned int mKNeighborsSize;
 
