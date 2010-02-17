@@ -3,7 +3,7 @@
 
 /**
  *
- * Author: Ricardo Marroquim, Felipe Moura
+ * Author:  Felipe Carvalho - Ricardo Marroquim
  *
  * Data created: 08-01-2008
  *

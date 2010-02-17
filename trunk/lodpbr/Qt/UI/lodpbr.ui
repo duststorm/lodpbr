@@ -1,46 +1,50 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<ui version="4.0">
+<ui version="4.0" >
  <class>MainWindow</class>
- <widget class="QMainWindow" name="MainWindow">
-  <property name="enabled">
+ <widget class="QMainWindow" name="MainWindow" >
+  <property name="enabled" >
    <bool>true</bool>
   </property>
-  <property name="geometry">
+  <property name="geometry" >
    <rect>
     <x>0</x>
     <y>0</y>
     <width>1088</width>
-    <height>829</height>
+    <height>827</height>
    </rect>
   </property>
-  <property name="windowTitle">
+  <property name="windowTitle" >
    <string>MainWindow</string>
   </property>
-  <property name="documentMode">
+  <property name="dockNestingEnabled" >
    <bool>true</bool>
   </property>
-  <property name="tabShape">
-   <enum>QTabWidget::Rounded</enum>
-  </property>
-  <property name="dockNestingEnabled">
-   <bool>true</bool>
-  </property>
-  <property name="dockOptions">
+  <property name="dockOptions" >
    <set>QMainWindow::AllowNestedDocks|QMainWindow::AllowTabbedDocks|QMainWindow::AnimatedDocks|QMainWindow::ForceTabbedDocks|QMainWindow::VerticalTabs</set>
   </property>
-  <widget class="QWidget" name="centralwidget">
-   <layout class="QGridLayout" name="gridLayout_6">
-    <item row="0" column="0">
-     <widget class="QMdiArea" name="mdiArea">
-      <property name="frameShape">
+  <property name="documentMode" stdset="0" >
+   <bool>true</bool>
+  </property>
+  <widget class="QWidget" name="centralwidget" >
+   <property name="geometry" >
+    <rect>
+     <x>306</x>
+     <y>58</y>
+     <width>458</width>
+     <height>745</height>
+    </rect>
+   </property>
+   <layout class="QGridLayout" name="gridLayout_6" >
+    <item row="0" column="0" >
+     <widget class="QMdiArea" name="mdiArea" >
+      <property name="frameShape" >
        <enum>QFrame::NoFrame</enum>
       </property>
-      <property name="frameShadow">
+      <property name="frameShadow" >
        <enum>QFrame::Sunken</enum>
       </property>
-      <property name="background">
-       <brush brushstyle="SolidPattern">
-        <color alpha="125">
+      <property name="background" >
+       <brush brushstyle="SolidPattern" >
+        <color alpha="125" >
          <red>125</red>
          <green>125</green>
          <blue>125</blue>
@@ -51,185 +55,210 @@
     </item>
    </layout>
   </widget>
-  <widget class="QMenuBar" name="menubar">
-   <property name="geometry">
+  <widget class="QMenuBar" name="menubar" >
+   <property name="geometry" >
     <rect>
      <x>0</x>
      <y>0</y>
      <width>1088</width>
-     <height>25</height>
+     <height>27</height>
     </rect>
    </property>
-   <widget class="QMenu" name="menuFile">
-    <property name="title">
+   <widget class="QMenu" name="menuFile" >
+    <property name="title" >
      <string>File</string>
     </property>
-    <addaction name="action_Open_File"/>
-    <addaction name="action_Open_LOD"/>
-    <addaction name="separator"/>
-    <addaction name="action_Save_As_Simplification"/>
-    <addaction name="action_Save_As_LOD"/>
-    <addaction name="separator"/>
-    <addaction name="actionQuit"/>
+    <addaction name="action_Open_File" />
+    <addaction name="action_Open_LOD" />
+    <addaction name="separator" />
+    <addaction name="action_Save_As_Simplification" />
+    <addaction name="action_Save_As_LOD" />
+    <addaction name="separator" />
+    <addaction name="actionQuit" />
    </widget>
-   <widget class="QMenu" name="menuView">
-    <property name="title">
+   <widget class="QMenu" name="menuView" >
+    <property name="title" >
      <string>View</string>
     </property>
-    <widget class="QMenu" name="menuDockWindows">
-     <property name="title">
+    <widget class="QMenu" name="menuDockWindows" >
+     <property name="title" >
       <string>Dock windows</string>
      </property>
     </widget>
-    <addaction name="action_Full_Screen"/>
-    <addaction name="menuDockWindows"/>
+    <addaction name="action_Full_Screen" />
+    <addaction name="menuDockWindows" />
    </widget>
-   <addaction name="menuFile"/>
-   <addaction name="menuView"/>
+   <addaction name="menuFile" />
+   <addaction name="menuView" />
   </widget>
-  <widget class="QStatusBar" name="statusbar"/>
-  <widget class="QDockWidget" name="dockWidgetDrawCluster">
-   <property name="enabled">
+  <widget class="QStatusBar" name="statusbar" >
+   <property name="geometry" >
+    <rect>
+     <x>0</x>
+     <y>803</y>
+     <width>1088</width>
+     <height>24</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QDockWidget" name="dockWidgetDrawCluster" >
+   <property name="enabled" >
     <bool>true</bool>
    </property>
-   <property name="sizePolicy">
-    <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+   <property name="geometry" >
+    <rect>
+     <x>770</x>
+     <y>58</y>
+     <width>318</width>
+     <height>745</height>
+    </rect>
+   </property>
+   <property name="sizePolicy" >
+    <sizepolicy vsizetype="Preferred" hsizetype="Preferred" >
      <horstretch>0</horstretch>
      <verstretch>0</verstretch>
     </sizepolicy>
    </property>
-   <property name="minimumSize">
+   <property name="minimumSize" >
     <size>
      <width>300</width>
      <height>420</height>
     </size>
    </property>
-   <property name="acceptDrops">
+   <property name="acceptDrops" >
     <bool>true</bool>
    </property>
-   <property name="floating">
+   <property name="floating" >
     <bool>false</bool>
    </property>
-   <property name="features">
+   <property name="features" >
     <set>QDockWidget::AllDockWidgetFeatures</set>
    </property>
-   <property name="allowedAreas">
+   <property name="allowedAreas" >
     <set>Qt::LeftDockWidgetArea|Qt::RightDockWidgetArea</set>
    </property>
-   <property name="windowTitle">
+   <property name="windowTitle" >
     <string>Draw Cluster</string>
    </property>
-   <attribute name="dockWidgetArea">
+   <attribute name="dockWidgetArea" >
     <number>2</number>
    </attribute>
-   <widget class="QWidget" name="dockWidgetDrawClusterContents">
-    <layout class="QVBoxLayout" name="verticalLayout_4">
+   <widget class="QWidget" name="dockWidgetDrawClusterContents" >
+    <property name="geometry" >
+     <rect>
+      <x>0</x>
+      <y>23</y>
+      <width>318</width>
+      <height>722</height>
+     </rect>
+    </property>
+    <layout class="QVBoxLayout" name="verticalLayout_4" >
      <item>
-      <widget class="QFrame" name="frameDraw">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
+      <widget class="QFrame" name="frameDraw" >
+       <property name="sizePolicy" >
+        <sizepolicy vsizetype="Minimum" hsizetype="Preferred" >
          <horstretch>0</horstretch>
          <verstretch>0</verstretch>
         </sizepolicy>
        </property>
-       <property name="frameShape">
+       <property name="frameShape" >
         <enum>QFrame::StyledPanel</enum>
        </property>
-       <property name="frameShadow">
+       <property name="frameShadow" >
         <enum>QFrame::Raised</enum>
        </property>
-       <layout class="QVBoxLayout" name="verticalLayout_7">
+       <layout class="QVBoxLayout" name="verticalLayout_7" >
         <item>
-         <widget class="QToolButton" name="toolButtonDrawCluster">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+         <widget class="QToolButton" name="toolButtonDrawCluster" >
+          <property name="sizePolicy" >
+           <sizepolicy vsizetype="Fixed" hsizetype="Expanding" >
             <horstretch>0</horstretch>
             <verstretch>0</verstretch>
            </sizepolicy>
           </property>
-          <property name="text">
+          <property name="text" >
            <string>Draw Cluster</string>
           </property>
-          <property name="checkable">
+          <property name="checkable" >
            <bool>true</bool>
           </property>
          </widget>
         </item>
         <item>
-         <layout class="QGridLayout" name="gridLayoutClusterDraw">
-          <item row="0" column="0">
-           <widget class="QToolButton" name="toolButtonClusterDraw">
-            <property name="enabled">
+         <layout class="QGridLayout" name="gridLayoutClusterDraw" >
+          <item row="0" column="0" >
+           <widget class="QToolButton" name="toolButtonClusterDraw" >
+            <property name="enabled" >
              <bool>false</bool>
             </property>
-            <property name="text">
+            <property name="text" >
              <string>Cluster</string>
             </property>
-            <property name="checkable">
+            <property name="checkable" >
              <bool>true</bool>
             </property>
            </widget>
           </item>
-          <item row="0" column="3">
-           <widget class="QToolButton" name="toolButtonClusterDrawNormal">
-            <property name="enabled">
+          <item row="0" column="3" >
+           <widget class="QToolButton" name="toolButtonClusterDrawNormal" >
+            <property name="enabled" >
              <bool>false</bool>
             </property>
-            <property name="text">
+            <property name="text" >
              <string>Normal</string>
             </property>
-            <property name="checkable">
+            <property name="checkable" >
              <bool>true</bool>
             </property>
            </widget>
           </item>
-          <item row="0" column="2">
-           <widget class="QSlider" name="sliderClusterSurfelRadius">
-            <property name="enabled">
+          <item row="0" column="2" >
+           <widget class="QSlider" name="sliderClusterSurfelRadius" >
+            <property name="enabled" >
              <bool>false</bool>
             </property>
-            <property name="toolTip">
+            <property name="toolTip" >
              <string>Radius in %</string>
             </property>
-            <property name="maximum">
+            <property name="maximum" >
              <number>100</number>
             </property>
-            <property name="orientation">
+            <property name="orientation" >
              <enum>Qt::Horizontal</enum>
             </property>
-            <property name="invertedAppearance">
+            <property name="invertedAppearance" >
              <bool>false</bool>
             </property>
-            <property name="invertedControls">
+            <property name="invertedControls" >
              <bool>false</bool>
             </property>
-            <property name="tickPosition">
+            <property name="tickPosition" >
              <enum>QSlider::NoTicks</enum>
             </property>
            </widget>
           </item>
-          <item row="1" column="0">
-           <widget class="QToolButton" name="toolButtonClusterDrawSeed">
-            <property name="enabled">
+          <item row="1" column="0" >
+           <widget class="QToolButton" name="toolButtonClusterDrawSeed" >
+            <property name="enabled" >
              <bool>false</bool>
             </property>
-            <property name="text">
+            <property name="text" >
              <string>  Seed  </string>
             </property>
-            <property name="checkable">
+            <property name="checkable" >
              <bool>true</bool>
             </property>
            </widget>
           </item>
-          <item row="0" column="1">
-           <widget class="QToolButton" name="toolButtonClusterDrawSurfel">
-            <property name="enabled">
+          <item row="0" column="1" >
+           <widget class="QToolButton" name="toolButtonClusterDrawSurfel" >
+            <property name="enabled" >
              <bool>false</bool>
             </property>
-            <property name="text">
+            <property name="text" >
              <string> Surfel </string>
             </property>
-            <property name="checkable">
+            <property name="checkable" >
              <bool>true</bool>
             </property>
            </widget>
@@ -237,57 +266,57 @@
          </layout>
         </item>
         <item>
-         <layout class="QHBoxLayout" name="horizontalLayoutDrawCluster"/>
+         <layout class="QHBoxLayout" name="horizontalLayoutDrawCluster" />
         </item>
         <item>
-         <widget class="QFrame" name="frameIndexRange">
-          <property name="enabled">
+         <widget class="QFrame" name="frameIndexRange" >
+          <property name="enabled" >
            <bool>false</bool>
           </property>
-          <property name="frameShape">
+          <property name="frameShape" >
            <enum>QFrame::StyledPanel</enum>
           </property>
-          <property name="frameShadow">
+          <property name="frameShadow" >
            <enum>QFrame::Raised</enum>
           </property>
-          <layout class="QVBoxLayout" name="verticalLayout_10">
+          <layout class="QVBoxLayout" name="verticalLayout_10" >
            <item>
-            <widget class="QRadioButton" name="radioButtonCluster_DrawIndex">
-             <property name="text">
+            <widget class="QRadioButton" name="radioButtonCluster_DrawIndex" >
+             <property name="text" >
               <string>Index</string>
              </property>
-             <property name="checked">
+             <property name="checked" >
               <bool>true</bool>
              </property>
             </widget>
            </item>
            <item>
-            <layout class="QHBoxLayout" name="horizontalLayoutDrawIndex">
+            <layout class="QHBoxLayout" name="horizontalLayoutDrawIndex" >
              <item>
-              <widget class="QSpinBox" name="spinBoxCluster_DrawClusterWithID">
-               <property name="minimum">
+              <widget class="QSpinBox" name="spinBoxCluster_DrawClusterWithID" >
+               <property name="minimum" >
                 <number>1</number>
                </property>
-               <property name="maximum">
+               <property name="maximum" >
                 <number>9999999</number>
                </property>
               </widget>
              </item>
              <item>
-              <widget class="QSlider" name="sliderCluster_DrawClusterWithID">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+              <widget class="QSlider" name="sliderCluster_DrawClusterWithID" >
+               <property name="sizePolicy" >
+                <sizepolicy vsizetype="Fixed" hsizetype="MinimumExpanding" >
                  <horstretch>0</horstretch>
                  <verstretch>0</verstretch>
                 </sizepolicy>
                </property>
-               <property name="minimum">
+               <property name="minimum" >
                 <number>1</number>
                </property>
-               <property name="maximum">
+               <property name="maximum" >
                 <number>10</number>
                </property>
-               <property name="orientation">
+               <property name="orientation" >
                 <enum>Qt::Horizontal</enum>
                </property>
               </widget>
@@ -295,105 +324,105 @@
             </layout>
            </item>
            <item>
-            <widget class="QRadioButton" name="radioButtonCluster_DrawRange">
-             <property name="text">
+            <widget class="QRadioButton" name="radioButtonCluster_DrawRange" >
+             <property name="text" >
               <string>Range</string>
              </property>
             </widget>
            </item>
            <item>
-            <layout class="QFormLayout" name="formLayout">
-             <property name="fieldGrowthPolicy">
+            <layout class="QFormLayout" name="formLayout" >
+             <property name="fieldGrowthPolicy" >
               <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
              </property>
-             <item row="1" column="0">
-              <widget class="QSpinBox" name="spinBoxCluster_DrawClusterWithRangeBegin">
-               <property name="enabled">
+             <item row="1" column="0" >
+              <widget class="QSpinBox" name="spinBoxCluster_DrawClusterWithRangeBegin" >
+               <property name="enabled" >
                 <bool>false</bool>
                </property>
-               <property name="minimum">
+               <property name="minimum" >
                 <number>1</number>
                </property>
-               <property name="maximum">
+               <property name="maximum" >
                 <number>9999999</number>
                </property>
               </widget>
              </item>
-             <item row="1" column="1">
-              <widget class="QSlider" name="sliderCluster_DrawClusterWithRangeBegin">
-               <property name="enabled">
+             <item row="1" column="1" >
+              <widget class="QSlider" name="sliderCluster_DrawClusterWithRangeBegin" >
+               <property name="enabled" >
                 <bool>false</bool>
                </property>
-               <property name="minimum">
+               <property name="minimum" >
                 <number>1</number>
                </property>
-               <property name="maximum">
+               <property name="maximum" >
                 <number>10</number>
                </property>
-               <property name="orientation">
+               <property name="orientation" >
                 <enum>Qt::Horizontal</enum>
                </property>
               </widget>
              </item>
-             <item row="3" column="1">
-              <widget class="QSlider" name="sliderCluster_DrawClusterWithRangeEnd">
-               <property name="enabled">
+             <item row="3" column="1" >
+              <widget class="QSlider" name="sliderCluster_DrawClusterWithRangeEnd" >
+               <property name="enabled" >
                 <bool>false</bool>
                </property>
-               <property name="minimum">
+               <property name="minimum" >
                 <number>1</number>
                </property>
-               <property name="maximum">
+               <property name="maximum" >
                 <number>10</number>
                </property>
-               <property name="orientation">
+               <property name="orientation" >
                 <enum>Qt::Horizontal</enum>
                </property>
               </widget>
              </item>
-             <item row="2" column="1">
-              <widget class="QLabel" name="labelTo">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+             <item row="2" column="1" >
+              <widget class="QLabel" name="labelTo" >
+               <property name="sizePolicy" >
+                <sizepolicy vsizetype="Preferred" hsizetype="Minimum" >
                  <horstretch>0</horstretch>
                  <verstretch>0</verstretch>
                 </sizepolicy>
                </property>
-               <property name="text">
+               <property name="text" >
                 <string>to</string>
                </property>
-               <property name="alignment">
+               <property name="alignment" >
                 <set>Qt::AlignCenter</set>
                </property>
               </widget>
              </item>
-             <item row="3" column="0">
-              <widget class="QSpinBox" name="spinBoxCluster_DrawClusterWithRangeEnd">
-               <property name="enabled">
+             <item row="3" column="0" >
+              <widget class="QSpinBox" name="spinBoxCluster_DrawClusterWithRangeEnd" >
+               <property name="enabled" >
                 <bool>false</bool>
                </property>
-               <property name="layoutDirection">
+               <property name="layoutDirection" >
                 <enum>Qt::LeftToRight</enum>
                </property>
-               <property name="wrapping">
+               <property name="wrapping" >
                 <bool>false</bool>
                </property>
-               <property name="frame">
+               <property name="frame" >
                 <bool>true</bool>
                </property>
-               <property name="buttonSymbols">
+               <property name="buttonSymbols" >
                 <enum>QAbstractSpinBox::UpDownArrows</enum>
                </property>
-               <property name="accelerated">
+               <property name="accelerated" >
                 <bool>true</bool>
                </property>
-               <property name="suffix">
+               <property name="suffix" >
                 <string/>
                </property>
-               <property name="minimum">
+               <property name="minimum" >
                 <number>1</number>
                </property>
-               <property name="maximum">
+               <property name="maximum" >
                 <number>9999999</number>
                </property>
               </widget>
@@ -404,11 +433,11 @@
          </widget>
         </item>
         <item>
-         <spacer name="verticalSpacer_DrawCluster">
-          <property name="orientation">
+         <spacer name="verticalSpacer_DrawCluster" >
+          <property name="orientation" >
            <enum>Qt::Vertical</enum>
           </property>
-          <property name="sizeHint" stdset="0">
+          <property name="sizeHint" stdset="0" >
            <size>
             <width>20</width>
             <height>40</height>
@@ -422,166 +451,213 @@
     </layout>
    </widget>
   </widget>
-  <widget class="QToolBar" name="toolBar">
-   <property name="windowTitle">
+  <widget class="QToolBar" name="toolBar" >
+   <property name="geometry" >
+    <rect>
+     <x>0</x>
+     <y>27</y>
+     <width>1088</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="windowTitle" >
     <string>toolBar</string>
    </property>
-   <attribute name="toolBarArea">
+   <attribute name="toolBarArea" >
     <enum>TopToolBarArea</enum>
    </attribute>
-   <attribute name="toolBarBreak">
+   <attribute name="toolBarBreak" >
     <bool>false</bool>
    </attribute>
-   <addaction name="separator"/>
-   <addaction name="actionAdd"/>
-   <addaction name="separator"/>
+   <addaction name="separator" />
+   <addaction name="actionAdd" />
+   <addaction name="separator" />
   </widget>
-  <widget class="QDockWidget" name="dockWidgetClusterBuild">
-   <property name="enabled">
+  <widget class="QDockWidget" name="dockWidgetClusterBuild" >
+   <property name="enabled" >
     <bool>true</bool>
    </property>
-   <property name="sizePolicy">
-    <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+   <property name="geometry" >
+    <rect>
+     <x>0</x>
+     <y>58</y>
+     <width>300</width>
+     <height>411</height>
+    </rect>
+   </property>
+   <property name="sizePolicy" >
+    <sizepolicy vsizetype="Preferred" hsizetype="Preferred" >
      <horstretch>0</horstretch>
      <verstretch>0</verstretch>
     </sizepolicy>
    </property>
-   <property name="minimumSize">
+   <property name="minimumSize" >
     <size>
      <width>300</width>
      <height>300</height>
     </size>
    </property>
-   <property name="maximumSize">
+   <property name="maximumSize" >
     <size>
-     <width>16000</width>
-     <height>16000</height>
+     <width>16777215</width>
+     <height>16777215</height>
     </size>
    </property>
-   <property name="acceptDrops">
+   <property name="acceptDrops" >
     <bool>false</bool>
    </property>
-   <property name="layoutDirection">
+   <property name="layoutDirection" >
     <enum>Qt::LeftToRight</enum>
    </property>
-   <property name="floating">
+   <property name="floating" >
     <bool>false</bool>
    </property>
-   <property name="features">
+   <property name="features" >
     <set>QDockWidget::AllDockWidgetFeatures</set>
    </property>
-   <property name="allowedAreas">
+   <property name="allowedAreas" >
     <set>Qt::LeftDockWidgetArea|Qt::RightDockWidgetArea</set>
    </property>
-   <property name="windowTitle">
+   <property name="windowTitle" >
     <string>Cluster Build</string>
    </property>
-   <attribute name="dockWidgetArea">
+   <attribute name="dockWidgetArea" >
     <number>1</number>
    </attribute>
-   <widget class="QWidget" name="dockWidgetClusterContents">
-    <layout class="QVBoxLayout" name="verticalLayout">
+   <widget class="QWidget" name="dockWidgetClusterContents" >
+    <property name="geometry" >
+     <rect>
+      <x>0</x>
+      <y>23</y>
+      <width>300</width>
+      <height>388</height>
+     </rect>
+    </property>
+    <layout class="QVBoxLayout" name="verticalLayout" >
      <item>
-      <widget class="QFrame" name="frameBuid">
-       <property name="minimumSize">
+      <widget class="QFrame" name="frameBuid" >
+       <property name="minimumSize" >
         <size>
          <width>100</width>
          <height>100</height>
         </size>
        </property>
-       <property name="frameShape">
+       <property name="frameShape" >
         <enum>QFrame::StyledPanel</enum>
        </property>
-       <property name="frameShadow">
+       <property name="frameShadow" >
         <enum>QFrame::Raised</enum>
        </property>
-       <layout class="QGridLayout" name="gridLayout_2">
-        <item row="0" column="0">
-         <widget class="QGroupBox" name="groupBoxCluster_Build">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+       <layout class="QGridLayout" name="gridLayout_2" >
+        <item row="0" column="0" >
+         <widget class="QGroupBox" name="groupBoxCluster_Build" >
+          <property name="sizePolicy" >
+           <sizepolicy vsizetype="Preferred" hsizetype="Preferred" >
             <horstretch>0</horstretch>
             <verstretch>0</verstretch>
            </sizepolicy>
           </property>
-          <property name="title">
+          <property name="title" >
            <string>Build</string>
           </property>
-          <property name="flat">
+          <property name="flat" >
            <bool>false</bool>
           </property>
-          <layout class="QFormLayout" name="formLayout_2">
-           <item row="0" column="0">
-            <widget class="QLabel" name="labelCluster_SurfelSimilarity">
-             <property name="text">
-              <string>Surfel Similarity</string>
-             </property>
-            </widget>
-           </item>
-           <item row="0" column="1">
-            <widget class="QComboBox" name="comboBoxCluster_BuildSurfelSimilarity">
+          <layout class="QVBoxLayout" name="verticalLayout_2" >
+           <item>
+            <layout class="QHBoxLayout" name="horizontalLayout_3" >
              <item>
-              <property name="text">
-               <string>by Normal</string>
-              </property>
+              <widget class="QLabel" name="labelCluster_StopCriteria" >
+               <property name="text" >
+                <string>Stop Criteria</string>
+               </property>
+              </widget>
              </item>
              <item>
-              <property name="text">
-               <string>by Geral</string>
-              </property>
+              <widget class="QComboBox" name="comboBoxCluster_BuildStopCriteria" >
+               <item>
+                <property name="text" >
+                 <string>by Size</string>
+                </property>
+               </item>
+               <item>
+                <property name="text" >
+                 <string>by Curvatura</string>
+                </property>
+               </item>
+              </widget>
              </item>
-            </widget>
+            </layout>
            </item>
-           <item row="1" column="0">
-            <widget class="QLabel" name="labelCluster_StopCriteria">
-             <property name="text">
-              <string>Stop Criteria</string>
-             </property>
-            </widget>
-           </item>
-           <item row="1" column="1">
-            <widget class="QComboBox" name="comboBoxCluster_BuildStopCriteria">
+           <item>
+            <layout class="QHBoxLayout" name="horizontalLayout_5" >
              <item>
-              <property name="text">
-               <string>by Size</string>
-              </property>
+              <widget class="QLabel" name="labelCluster_SurfelSimilarity" >
+               <property name="sizePolicy" >
+                <sizepolicy vsizetype="Preferred" hsizetype="Preferred" >
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="text" >
+                <string>Surfel Similarity</string>
+               </property>
+              </widget>
              </item>
              <item>
-              <property name="text">
-               <string>by Curvatura</string>
-              </property>
+              <widget class="QComboBox" name="comboBoxCluster_BuildSurfelSimilarity" >
+               <property name="sizePolicy" >
+                <sizepolicy vsizetype="Fixed" hsizetype="Preferred" >
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="layoutDirection" >
+                <enum>Qt::LeftToRight</enum>
+               </property>
+               <item>
+                <property name="text" >
+                 <string>by Normal</string>
+                </property>
+               </item>
+               <item>
+                <property name="text" >
+                 <string>by Geral</string>
+                </property>
+               </item>
+              </widget>
              </item>
-            </widget>
+            </layout>
            </item>
-           <item row="2" column="0">
-            <widget class="QPushButton" name="pushButtonBuild">
-             <property name="text">
+           <item>
+            <widget class="QPushButton" name="pushButtonBuild" >
+             <property name="text" >
               <string>Build</string>
              </property>
             </widget>
            </item>
-           <item row="3" column="0" colspan="2">
-            <widget class="QGroupBox" name="groupBoxCluster_BuildInteractive">
-             <property name="title">
+           <item>
+            <widget class="QGroupBox" name="groupBoxCluster_BuildInteractive" >
+             <property name="title" >
               <string>Interactive</string>
              </property>
-             <property name="flat">
+             <property name="flat" >
               <bool>false</bool>
              </property>
-             <property name="checkable">
+             <property name="checkable" >
               <bool>true</bool>
              </property>
-             <layout class="QHBoxLayout" name="horizontalLayout">
+             <layout class="QHBoxLayout" name="horizontalLayout" >
               <item>
-               <widget class="QPushButton" name="pushButtonSeed">
-                <property name="text">
+               <widget class="QPushButton" name="pushButtonSeed" >
+                <property name="text" >
                  <string>Seed</string>
                 </property>
                </widget>
               </item>
               <item>
-               <widget class="QPushButton" name="pushButtonInteractive">
-                <property name="text">
+               <widget class="QPushButton" name="pushButtonInteractive" >
+                <property name="text" >
                  <string>Interactive</string>
                 </property>
                </widget>
@@ -596,11 +672,11 @@
       </widget>
      </item>
      <item>
-      <spacer name="verticalSpacer">
-       <property name="orientation">
+      <spacer name="verticalSpacer" >
+       <property name="orientation" >
         <enum>Qt::Vertical</enum>
        </property>
-       <property name="sizeHint" stdset="0">
+       <property name="sizeHint" stdset="0" >
         <size>
          <width>20</width>
          <height>40</height>
@@ -611,126 +687,142 @@
     </layout>
    </widget>
   </widget>
-  <widget class="QDockWidget" name="dockWidgetDrawModel">
-   <property name="sizePolicy">
-    <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+  <widget class="QDockWidget" name="dockWidgetDrawModel" >
+   <property name="geometry" >
+    <rect>
+     <x>0</x>
+     <y>475</y>
+     <width>300</width>
+     <height>328</height>
+    </rect>
+   </property>
+   <property name="sizePolicy" >
+    <sizepolicy vsizetype="Preferred" hsizetype="Preferred" >
      <horstretch>0</horstretch>
      <verstretch>0</verstretch>
     </sizepolicy>
    </property>
-   <property name="minimumSize">
+   <property name="minimumSize" >
     <size>
      <width>300</width>
      <height>250</height>
     </size>
    </property>
-   <property name="allowedAreas">
+   <property name="allowedAreas" >
     <set>Qt::LeftDockWidgetArea|Qt::RightDockWidgetArea</set>
    </property>
-   <property name="windowTitle">
+   <property name="windowTitle" >
     <string>Draw Model</string>
    </property>
-   <attribute name="dockWidgetArea">
+   <attribute name="dockWidgetArea" >
     <number>1</number>
    </attribute>
-   <widget class="QWidget" name="dockWidgetContents_2">
-    <layout class="QVBoxLayout" name="verticalLayout_3">
+   <widget class="QWidget" name="dockWidgetContents_2" >
+    <property name="geometry" >
+     <rect>
+      <x>0</x>
+      <y>23</y>
+      <width>300</width>
+      <height>305</height>
+     </rect>
+    </property>
+    <layout class="QVBoxLayout" name="verticalLayout_3" >
      <item>
-      <widget class="QFrame" name="frameDrawModel">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+      <widget class="QFrame" name="frameDrawModel" >
+       <property name="sizePolicy" >
+        <sizepolicy vsizetype="Preferred" hsizetype="Preferred" >
          <horstretch>0</horstretch>
          <verstretch>0</verstretch>
         </sizepolicy>
        </property>
-       <property name="frameShape">
+       <property name="frameShape" >
         <enum>QFrame::StyledPanel</enum>
        </property>
-       <property name="frameShadow">
+       <property name="frameShadow" >
         <enum>QFrame::Raised</enum>
        </property>
-       <layout class="QVBoxLayout" name="verticalLayout_8">
+       <layout class="QVBoxLayout" name="verticalLayout_8" >
         <item>
-         <widget class="QToolButton" name="toolButtonDrawModel">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+         <widget class="QToolButton" name="toolButtonDrawModel" >
+          <property name="sizePolicy" >
+           <sizepolicy vsizetype="Preferred" hsizetype="Preferred" >
             <horstretch>0</horstretch>
             <verstretch>0</verstretch>
            </sizepolicy>
           </property>
-          <property name="text">
+          <property name="text" >
            <string>Draw Original Model</string>
           </property>
-          <property name="checkable">
+          <property name="checkable" >
            <bool>true</bool>
           </property>
          </widget>
         </item>
         <item>
-         <layout class="QHBoxLayout" name="horizontalLayout_Model">
+         <layout class="QHBoxLayout" name="horizontalLayout_Model" >
           <item>
-           <widget class="QToolButton" name="toolButtonModelDrawPoints">
-            <property name="enabled">
+           <widget class="QToolButton" name="toolButtonModelDrawPoints" >
+            <property name="enabled" >
              <bool>false</bool>
             </property>
-            <property name="text">
+            <property name="text" >
              <string>Points</string>
             </property>
-            <property name="checkable">
+            <property name="checkable" >
              <bool>true</bool>
             </property>
            </widget>
           </item>
           <item>
-           <widget class="QToolButton" name="toolButtonModelDrawNormal">
-            <property name="enabled">
+           <widget class="QToolButton" name="toolButtonModelDrawNormal" >
+            <property name="enabled" >
              <bool>false</bool>
             </property>
-            <property name="text">
+            <property name="text" >
              <string>Normal</string>
             </property>
-            <property name="checkable">
+            <property name="checkable" >
              <bool>true</bool>
             </property>
            </widget>
           </item>
           <item>
-           <widget class="QToolButton" name="toolButtonModelDrawSurfel">
-            <property name="enabled">
+           <widget class="QToolButton" name="toolButtonModelDrawSurfel" >
+            <property name="enabled" >
              <bool>false</bool>
             </property>
-            <property name="text">
+            <property name="text" >
              <string> Surfel </string>
             </property>
-            <property name="checkable">
+            <property name="checkable" >
              <bool>true</bool>
             </property>
            </widget>
           </item>
           <item>
-           <widget class="QSlider" name="sliderModelSurfelRadius">
-            <property name="enabled">
+           <widget class="QSlider" name="sliderModelSurfelRadius" >
+            <property name="enabled" >
              <bool>false</bool>
             </property>
-            <property name="toolTip">
+            <property name="toolTip" >
              <string>Radius in %</string>
             </property>
-            <property name="minimum">
+            <property name="minimum" >
              <number>1</number>
             </property>
-            <property name="maximum">
+            <property name="maximum" >
              <number>100</number>
             </property>
-            <property name="orientation">
+            <property name="orientation" >
              <enum>Qt::Horizontal</enum>
             </property>
-            <property name="invertedAppearance">
+            <property name="invertedAppearance" >
              <bool>false</bool>
             </property>
-            <property name="invertedControls">
+            <property name="invertedControls" >
              <bool>false</bool>
             </property>
-            <property name="tickPosition">
+            <property name="tickPosition" >
              <enum>QSlider::NoTicks</enum>
             </property>
            </widget>
@@ -738,11 +830,11 @@
          </layout>
         </item>
         <item>
-         <spacer name="verticalSpacer_2">
-          <property name="orientation">
+         <spacer name="verticalSpacer_2" >
+          <property name="orientation" >
            <enum>Qt::Vertical</enum>
           </property>
-          <property name="sizeHint" stdset="0">
+          <property name="sizeHint" stdset="0" >
            <size>
             <width>20</width>
             <height>40</height>
@@ -756,82 +848,82 @@
     </layout>
    </widget>
   </widget>
-  <action name="action_Open_File">
-   <property name="text">
+  <action name="action_Open_File" >
+   <property name="text" >
     <string>Open</string>
    </property>
-   <property name="shortcut">
+   <property name="shortcut" >
     <string>Ctrl+O</string>
    </property>
   </action>
-  <action name="action_Full_Screen">
-   <property name="checkable">
+  <action name="action_Full_Screen" >
+   <property name="checkable" >
     <bool>true</bool>
    </property>
-   <property name="text">
+   <property name="text" >
     <string>&amp;Full Screen</string>
    </property>
-   <property name="shortcut">
+   <property name="shortcut" >
     <string>Ctrl+F</string>
    </property>
-   <property name="menuRole">
+   <property name="menuRole" >
     <enum>QAction::TextHeuristicRole</enum>
    </property>
   </action>
-  <action name="action_Cluster_Build">
-   <property name="checkable">
+  <action name="action_Cluster_Build" >
+   <property name="checkable" >
     <bool>true</bool>
    </property>
-   <property name="text">
+   <property name="text" >
     <string>Cluster Build</string>
    </property>
   </action>
-  <action name="actionQuit">
-   <property name="text">
+  <action name="actionQuit" >
+   <property name="text" >
     <string>Quit</string>
    </property>
-   <property name="shortcut">
+   <property name="shortcut" >
     <string>Ctrl+Q</string>
    </property>
   </action>
-  <action name="action_Cluster_Draw">
-   <property name="checkable">
+  <action name="action_Cluster_Draw" >
+   <property name="checkable" >
     <bool>true</bool>
    </property>
-   <property name="text">
+   <property name="text" >
     <string>Cluster Draw</string>
    </property>
   </action>
-  <action name="actionAdd">
-   <property name="text">
+  <action name="actionAdd" >
+   <property name="text" >
     <string>add</string>
    </property>
   </action>
-  <action name="action_Save_As_LOD">
-   <property name="text">
+  <action name="action_Save_As_LOD" >
+   <property name="text" >
     <string>Save as LOD</string>
    </property>
   </action>
-  <action name="action_Open_LOD">
-   <property name="text">
+  <action name="action_Open_LOD" >
+   <property name="text" >
     <string>Open LOD</string>
    </property>
   </action>
-  <action name="action_Model_Draw">
-   <property name="checkable">
+  <action name="action_Model_Draw" >
+   <property name="checkable" >
     <bool>true</bool>
    </property>
-   <property name="text">
+   <property name="text" >
     <string>Model Draw</string>
    </property>
   </action>
-  <action name="action_Save_As_Simplification">
-   <property name="text">
+  <action name="action_Save_As_Simplification" >
+   <property name="text" >
     <string>Save as Simplification</string>
    </property>
   </action>
-  <action name="dummyAction">
-   <property name="text">
+  <action name="dummyAction" >
+   <property name="text" >
     <string>n/a</string>
    </property>
   </action>
@@ -844,11 +936,11 @@
    <receiver>action_Cluster_Draw</receiver>
    <slot>setChecked(bool)</slot>
    <hints>
-    <hint type="sourcelabel">
+    <hint type="sourcelabel" >
      <x>819</x>
      <y>324</y>
     </hint>
-    <hint type="destinationlabel">
+    <hint type="destinationlabel" >
      <x>-1</x>
      <y>-1</y>
     </hint>
@@ -860,11 +952,11 @@
    <receiver>MainWindow</receiver>
    <slot>close()</slot>
    <hints>
-    <hint type="sourcelabel">
+    <hint type="sourcelabel" >
      <x>-1</x>
      <y>-1</y>
     </hint>
-    <hint type="destinationlabel">
+    <hint type="destinationlabel" >
      <x>506</x>
      <y>323</y>
     </hint>
@@ -876,11 +968,11 @@
    <receiver>action_Cluster_Build</receiver>
    <slot>setChecked(bool)</slot>
    <hints>
-    <hint type="sourcelabel">
+    <hint type="sourcelabel" >
      <x>154</x>
      <y>324</y>
     </hint>
-    <hint type="destinationlabel">
+    <hint type="destinationlabel" >
      <x>-1</x>
      <y>-1</y>
     </hint>
@@ -892,11 +984,11 @@
    <receiver>toolButtonModelDrawSurfel</receiver>
    <slot>setEnabled(bool)</slot>
    <hints>
-    <hint type="sourcelabel">
+    <hint type="sourcelabel" >
      <x>168</x>
      <y>640</y>
     </hint>
-    <hint type="destinationlabel">
+    <hint type="destinationlabel" >
      <x>203</x>
      <y>672</y>
     </hint>
@@ -908,11 +1000,11 @@
    <receiver>toolButtonModelDrawNormal</receiver>
    <slot>setEnabled(bool)</slot>
    <hints>
-    <hint type="sourcelabel">
+    <hint type="sourcelabel" >
      <x>115</x>
      <y>640</y>
     </hint>
-    <hint type="destinationlabel">
+    <hint type="destinationlabel" >
      <x>138</x>
      <y>672</y>
     </hint>
@@ -924,11 +1016,11 @@
    <receiver>toolButtonModelDrawPoints</receiver>
    <slot>setEnabled(bool)</slot>
    <hints>
-    <hint type="sourcelabel">
+    <hint type="sourcelabel" >
      <x>54</x>
      <y>640</y>
     </hint>
-    <hint type="destinationlabel">
+    <hint type="destinationlabel" >
      <x>55</x>
      <y>672</y>
     </hint>
@@ -940,11 +1032,11 @@
    <receiver>sliderModelSurfelRadius</receiver>
    <slot>setEnabled(bool)</slot>
    <hints>
-    <hint type="sourcelabel">
+    <hint type="sourcelabel" >
      <x>203</x>
      <y>672</y>
     </hint>
-    <hint type="destinationlabel">
+    <hint type="destinationlabel" >
      <x>369</x>
      <y>669</y>
     </hint>
@@ -956,11 +1048,11 @@
    <receiver>dockWidgetDrawModel</receiver>
    <slot>setVisible(bool)</slot>
    <hints>
-    <hint type="sourcelabel">
+    <hint type="sourcelabel" >
      <x>-1</x>
      <y>-1</y>
     </hint>
-    <hint type="destinationlabel">
+    <hint type="destinationlabel" >
      <x>194</x>
      <y>688</y>
     </hint>
@@ -972,11 +1064,11 @@
    <receiver>frameIndexRange</receiver>
    <slot>setEnabled(bool)</slot>
    <hints>
-    <hint type="sourcelabel">
+    <hint type="sourcelabel" >
      <x>822</x>
      <y>112</y>
     </hint>
-    <hint type="destinationlabel">
+    <hint type="destinationlabel" >
      <x>822</x>
      <y>170</y>
     </hint>
@@ -988,11 +1080,11 @@
    <receiver>sliderCluster_DrawClusterWithID</receiver>
    <slot>setEnabled(bool)</slot>
    <hints>
-    <hint type="sourcelabel">
+    <hint type="sourcelabel" >
      <x>671</x>
      <y>180</y>
     </hint>
-    <hint type="destinationlabel">
+    <hint type="destinationlabel" >
      <x>681</x>
      <y>218</y>
     </hint>
@@ -1004,11 +1096,11 @@
    <receiver>spinBoxCluster_DrawClusterWithID</receiver>
    <slot>setEnabled(bool)</slot>
    <hints>
-    <hint type="sourcelabel">
+    <hint type="sourcelabel" >
      <x>1021</x>
      <y>187</y>
     </hint>
-    <hint type="destinationlabel">
+    <hint type="destinationlabel" >
      <x>1020</x>
      <y>212</y>
     </hint>
@@ -1020,11 +1112,11 @@
    <receiver>sliderCluster_DrawClusterWithRangeBegin</receiver>
    <slot>setEnabled(bool)</slot>
    <hints>
-    <hint type="sourcelabel">
+    <hint type="sourcelabel" >
      <x>709</x>
      <y>249</y>
     </hint>
-    <hint type="destinationlabel">
+    <hint type="destinationlabel" >
      <x>711</x>
      <y>272</y>
     </hint>
@@ -1036,11 +1128,11 @@
    <receiver>spinBoxCluster_DrawClusterWithRangeBegin</receiver>
    <slot>setEnabled(bool)</slot>
    <hints>
-    <hint type="sourcelabel">
+    <hint type="sourcelabel" >
      <x>782</x>
      <y>255</y>
     </hint>
-    <hint type="destinationlabel">
+    <hint type="destinationlabel" >
      <x>785</x>
      <y>267</y>
     </hint>
@@ -1052,11 +1144,11 @@
    <receiver>spinBoxCluster_DrawClusterWithRangeEnd</receiver>
    <slot>setEnabled(bool)</slot>
    <hints>
-    <hint type="sourcelabel">
+    <hint type="sourcelabel" >
      <x>902</x>
      <y>259</y>
     </hint>
-    <hint type="destinationlabel">
+    <hint type="destinationlabel" >
      <x>905</x>
      <y>273</y>
     </hint>
@@ -1068,11 +1160,11 @@
    <receiver>sliderCluster_DrawClusterWithRangeEnd</receiver>
    <slot>setEnabled(bool)</slot>
    <hints>
-    <hint type="sourcelabel">
+    <hint type="sourcelabel" >
      <x>985</x>
      <y>257</y>
     </hint>
-    <hint type="destinationlabel">
+    <hint type="destinationlabel" >
      <x>985</x>
      <y>273</y>
     </hint>
@@ -1084,11 +1176,11 @@
    <receiver>spinBoxCluster_DrawClusterWithID</receiver>
    <slot>setValue(int)</slot>
    <hints>
-    <hint type="sourcelabel">
+    <hint type="sourcelabel" >
      <x>940</x>
      <y>214</y>
     </hint>
-    <hint type="destinationlabel">
+    <hint type="destinationlabel" >
      <x>989</x>
      <y>219</y>
     </hint>
@@ -1100,11 +1192,11 @@
    <receiver>sliderCluster_DrawClusterWithID</receiver>
    <slot>setValue(int)</slot>
    <hints>
-    <hint type="sourcelabel">
+    <hint type="sourcelabel" >
      <x>996</x>
      <y>208</y>
     </hint>
-    <hint type="destinationlabel">
+    <hint type="destinationlabel" >
      <x>964</x>
      <y>208</y>
     </hint>
@@ -1116,11 +1208,11 @@
    <receiver>spinBoxCluster_DrawClusterWithRangeBegin</receiver>
    <slot>setValue(int)</slot>
    <hints>
-    <hint type="sourcelabel">
+    <hint type="sourcelabel" >
      <x>734</x>
      <y>278</y>
     </hint>
-    <hint type="destinationlabel">
+    <hint type="destinationlabel" >
      <x>759</x>
      <y>278</y>
     </hint>
@@ -1132,11 +1224,11 @@
    <receiver>sliderCluster_DrawClusterWithRangeBegin</receiver>
    <slot>setValue(int)</slot>
    <hints>
-    <hint type="sourcelabel">
+    <hint type="sourcelabel" >
      <x>763</x>
      <y>289</y>
     </hint>
-    <hint type="destinationlabel">
+    <hint type="destinationlabel" >
      <x>736</x>
      <y>285</y>
     </hint>
@@ -1148,11 +1240,11 @@
    <receiver>sliderCluster_DrawClusterWithRangeEnd</receiver>
    <slot>setValue(int)</slot>
    <hints>
-    <hint type="sourcelabel">
+    <hint type="sourcelabel" >
      <x>944</x>
      <y>279</y>
     </hint>
-    <hint type="destinationlabel">
+    <hint type="destinationlabel" >
      <x>965</x>
      <y>284</y>
     </hint>
@@ -1164,11 +1256,11 @@
    <receiver>spinBoxCluster_DrawClusterWithRangeEnd</receiver>
    <slot>setValue(int)</slot>
    <hints>
-    <hint type="sourcelabel">
+    <hint type="sourcelabel" >
      <x>959</x>
      <y>274</y>
     </hint>
-    <hint type="destinationlabel">
+    <hint type="destinationlabel" >
      <x>933</x>
      <y>274</y>
     </hint>
@@ -1180,11 +1272,11 @@
    <receiver>toolButtonClusterDrawSurfel</receiver>
    <slot>setEnabled(bool)</slot>
    <hints>
-    <hint type="sourcelabel">
+    <hint type="sourcelabel" >
      <x>871</x>
      <y>118</y>
     </hint>
-    <hint type="destinationlabel">
+    <hint type="destinationlabel" >
      <x>871</x>
      <y>139</y>
     </hint>
@@ -1196,11 +1288,11 @@
    <receiver>toolButtonClusterDrawSeed</receiver>
    <slot>setEnabled(bool)</slot>
    <hints>
-    <hint type="sourcelabel">
+    <hint type="sourcelabel" >
      <x>743</x>
      <y>121</y>
     </hint>
-    <hint type="destinationlabel">
+    <hint type="destinationlabel" >
      <x>743</x>
      <y>138</y>
     </hint>
@@ -1212,11 +1304,11 @@
    <receiver>toolButtonClusterDrawNormal</receiver>
    <slot>setEnabled(bool)</slot>
    <hints>
-    <hint type="sourcelabel">
+    <hint type="sourcelabel" >
      <x>804</x>
      <y>118</y>
     </hint>
-    <hint type="destinationlabel">
+    <hint type="destinationlabel" >
      <x>804</x>
      <y>140</y>
     </hint>
@@ -1228,11 +1320,11 @@
    <receiver>sliderClusterSurfelRadius</receiver>
    <slot>setEnabled(bool)</slot>
    <hints>
-    <hint type="sourcelabel">
+    <hint type="sourcelabel" >
      <x>881</x>
      <y>139</y>
     </hint>
-    <hint type="destinationlabel">
+    <hint type="destinationlabel" >
      <x>901</x>
      <y>139</y>
     </hint>
@@ -1244,11 +1336,11 @@
    <receiver>toolButtonClusterDraw</receiver>
    <slot>setEnabled(bool)</slot>
    <hints>
-    <hint type="sourcelabel">
+    <hint type="sourcelabel" >
      <x>655</x>
      <y>108</y>
     </hint>
-    <hint type="destinationlabel">
+    <hint type="destinationlabel" >
      <x>658</x>
      <y>133</y>
     </hint>

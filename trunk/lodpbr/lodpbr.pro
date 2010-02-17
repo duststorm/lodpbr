@@ -4,6 +4,8 @@
 
 VCGDIR = ../vcglib
 
+CONFIG += opengl
+
 TARGET = lodpbr
 DEPENDPATH += . \
     Qt/UI 	\
@@ -23,7 +25,10 @@ INCLUDEPATH += . \
     $$VCGDIR	
 
 # Input
-HEADERS += Math/Math.hpp \
+HEADERS += Renderer\GLSplat\GlSplat.h \
+    Renderer\GLSplat\GlSplat_config.h \
+    Renderer\GLSplat\Shader.h \
+    Math/Math.hpp \
     Math/Color.hpp \
     Math/Vector2.hpp \
     Math/Vector3.hpp \
@@ -57,7 +62,8 @@ HEADERS += Math/Math.hpp \
     $$VCGDIR/wrap/io_trimesh/export_ply.h \
     $$VCGDIR/wrap/ply/plylib.h
 
-SOURCES += main.cpp \
+SOURCES += Renderer\GLSplat\GlSplat.cpp \
+    Renderer\GLSplat\Shader.cpp \
     Math/Math.cpp \
     Math/Vector2.cpp \
     Math/Vector3.cpp \
@@ -78,16 +84,19 @@ SOURCES += main.cpp \
     Qt/GLWidget/Log/LSplatLog.cpp \
     Qt/myMainWindow.cpp \
     Qt/myMainWindowRun.cpp \
+    main.cpp \
     $$VCGDIR/wrap/ply/plylib.cpp
+    
 
-QT += opengl
+QT *= opengl xml
 FORMS += Qt/UI/lodpbr.ui
 
+RESOURCES += Renderer/GLSplat/glsplat.qrc
 
 
 # LIBRARIES
 unix{
-	LIBS = 
+	LIBS = -L/usr/lib64 -lGLEW 
 	QMAKE_CXXFLAGS += -fpermissive
 }
 

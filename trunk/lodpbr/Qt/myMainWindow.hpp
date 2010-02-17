@@ -2,7 +2,6 @@
 #define _MYMAINWINDOW_
 
 #include <QtGui/QtGui>
-#include <QGLWidget>
 
 #include "ui_lodpbr.h"
 

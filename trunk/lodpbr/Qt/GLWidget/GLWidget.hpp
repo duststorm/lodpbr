@@ -1,6 +1,8 @@
 #ifndef MYGLFRAME_H
 #define MYGLFRAME_H
 
+#include "Renderer/GLSplat/GlSplat.h"
+
 #include <QGLWidget>
 #include <QMdiSubWindow>
 #include <vector>
@@ -16,13 +18,13 @@
 
 #include "Scene/Camera.hpp"
 
-
-
 #include "Qt/Tools/FPSCounter.h"
 #include "Qt/Tools/Settings.hpp"
 
 #include "Log/ClusterLog.hpp"
 #include "Log/LSplatLog.hpp"
+
+
 
 class GLWidget : public QGLWidget
 {
@@ -241,6 +243,8 @@ private:
 	bool mShowModelPoints;
 	bool mShowModelNormal;
 	bool mShowModelSurfel;
+
+    GlSplat::SplatRenderer mRenderer;
 
 
 };

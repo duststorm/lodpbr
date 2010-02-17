@@ -3,9 +3,6 @@
 #include <iostream>
 
 
-#include <QtOpenGL>
-
-
 #include "myMainWindow.hpp"
 
 using namespace std;
