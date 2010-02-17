@@ -739,7 +739,7 @@ void GLWidget::paintGL()
     			glBegin(GL_POINTS);
     			for (std::vector<Surfel>::iterator s = cluster.Surfels.begin(); s != cluster.Surfels.end();++s)
     			{
-    				glMultiTexCoord1f(GL_TEXTURE2,(s->Radius() * mClusterLog.getRadiusf()) );
+    				glMultiTexCoord1f(GL_TEXTURE2,(s->Radius() * mSurfelRadius * 0.01) );
     				glNormal3fv(s->Normal());
     				glColor4f(0.0f,0.0f,1.0f,1.0f);
     				glVertex3fv(s->Center());
@@ -751,7 +751,7 @@ void GLWidget::paintGL()
     			glBegin(GL_POINTS);
     			for (std::vector<Surfel>::iterator s = cluster.Surfels.begin(); s != cluster.Surfels.end();++s)
     			{
-    				glMultiTexCoord1f(GL_TEXTURE2,(s->Radius() * mClusterLog.getRadiusf() ));
+    				glMultiTexCoord1f(GL_TEXTURE2,(s->Radius() * mSurfelRadius * 0.01));
     				glNormal3fv(s->Normal());
     				glColor4f(0.0f,0.0f,1.0f,1.0f);
     				glVertex3fv(s->Center());
