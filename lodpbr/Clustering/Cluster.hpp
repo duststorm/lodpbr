@@ -291,14 +291,14 @@ public:
 
         		me = MergeEllipses<Real>(lClose);
 
-        		lNeighbors  = KDTree.KNearestNeighbors(lSurfel ,256, KNearestSearchComps);
+        		lNeighbors  = KDTree.KNearestNeighbors(lSurfel ,32, KNearestSearchComps);
 
         		for(SurfelPtrVectorReverseIterator it = lNeighbors.rbegin(); it != lNeighbors.rend(); ++it)
         		{
 
         			if (me.NewSurfel().PerpendicularError() < mHeightMax )
         			{
-        				if(lClose.size() <= 230)
+        				if(lClose.size() <= 16)
         				{
         					if ((*it)->ExpansionMarked() == 1)
         					{
@@ -316,7 +316,7 @@ public:
         				}
         			}
 
-        			if (lClose.size() >= 250 )
+        			if (lClose.size() >= 28)
         			{
         				if ((*it)->Marked() == 0)
         				{
