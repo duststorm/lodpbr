@@ -741,7 +741,7 @@ void GLWidget::paintGL()
     			{
     				glMultiTexCoord1f(GL_TEXTURE2,(s->Radius() * mSurfelRadius * 0.01) );
     				glNormal3fv(s->Normal());
-    				glColor4f(0.0f,0.0f,1.0f,1.0f);
+    				glColor4f(0.0f,0.0f,1.0f,0.7f);
     				glVertex3fv(s->Center());
     			}
     			glEnd();
@@ -753,7 +753,7 @@ void GLWidget::paintGL()
     			{
     				glMultiTexCoord1f(GL_TEXTURE2,(s->Radius() * mSurfelRadius * 0.01));
     				glNormal3fv(s->Normal());
-    				glColor4f(0.0f,0.0f,1.0f,1.0f);
+    				glColor4f(0.0f,0.0f,1.0f,0.7f);
     				glVertex3fv(s->Center());
     			}
     			glEnd();
