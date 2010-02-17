@@ -212,6 +212,8 @@ public:
 
 		        s = Surfel<Real> (v, n, c,radius,pos);
 
+		        s.SetRadius(radius);
+
 		        pSurfel.push_back (s);
 				pBox = pBox + Celer::BoundingBox3<Real>(s.Center(0),s.Center(1),s.Center(2),
 													    s.Center(0),s.Center(1),s.Center(2));

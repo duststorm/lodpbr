@@ -234,6 +234,91 @@ public:
         	KDTree.ResetMarkedClustering();
         }
 
+
+        /// Build a set of Clusters by the Similarities and Aggregations.
+        /// @details ...
+        /// conditions pass by template parameter.
+        /// @param pCont Debug. How many clusters?
+        /// @param pCont pKNeighborsSize. The size of the Neighbor.
+        /// @param pSeed pKNeighborsSize. Initial Seed.
+        template <class Similarity ,class Aggregation>
+        void Build2(int pCont,int pKNeighborsSize ,const SurfelPtr& pSeed,vcg::CallBackPos *cb=0 )
+        {
+    		Clusters.clear();
+    		NewSurfels.clear();
+
+    		int progress = 0;
+    		int kd_tree_size = KDTree.Count();
+        	/// How many comparisons the Kd-Tree do to finding an element
+        	int                                  KNearestSearchComps = 0;
+        	///
+        	/// Surfel that belong to the cluster
+        	/// @detail
+        	SurfelList  lClose;
+
+        	SurfelPtrList  	lOpen;
+        	SurfelPtrVector lNeighbors;
+        	SurfelPtr       lSurfel    = 0;
+
+        	Real mHeightMax	= 0.0;
+
+        	int cont = 0;
+
+        	if(pSeed == 0)
+        	{
+        		return;
+        	}
+
+        	lOpen.push_back(pSeed);
+        	// Para cada semente , gera seus vizinhos e depois escolhe uma semenete que nao esteje na intersecao
+        	// de sua vizinhanca
+        	while ( (lOpen.size() != 0) )
+        	{
+
+        		lSurfel                 = lOpen.front();
+        		lOpen.pop_front();
+
+        		lNeighbors  = KDTree.KNearestNeighbors(lSurfel ,24, KNearestSearchComps);
+
+        		for(SurfelPtrVectorReverseIterator it = lNeighbors.rbegin(); it != lNeighbors.rend(); ++it)
+        		{
+
+
+        			if(lClose.size() < 16)
+        			{
+        				if ((*it)->ExpansionMarked() == 0)
+        				{
+        					(*it)->SetExpansionMarked(1);
+        					lClose.push_back((*(*it)));
+        				}
+
+        			}
+        			else
+        			{
+        				if ((*it)->ExpansionMarked() == 0)
+        				{
+        					lOpen.push_back((*it));
+        				}
+        			}
+
+
+        		}
+        		++cont;
+        		//lClose.pop_front();
+        		lClose.push_front(lSurfel);
+        		progress += lClose.size();
+        		Clusters.push_back(std::make_pair<int,SurfelList>(0,lClose));
+        		MergeEllipses<Real> me = MergeEllipses<Real>(lClose);
+        		NewSurfels.push_back(me.NewSurfel());
+        		lClose.clear();
+        		lNeighbors.clear();
+        		if(cb && (progress%100)==0) cb(progress*50/kd_tree_size,"Cluster Building");
+        	}
+        	cb(100,"Cluster Done!");
+        	std::cout << "progress :" << progress << "kdtree " << kd_tree_size << "Cluster Size"<<  std::endl;
+    		//KDTree.ResetMarkedClustering();
+        }
+
         /// Build a set of Clusters by the Similarities and Aggregations.
         /// @details ...
         /// conditions pass by template parameter.

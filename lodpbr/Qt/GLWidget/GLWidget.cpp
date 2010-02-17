@@ -1,5 +1,4 @@
 #include <QtGui>
-#include <QtOpenGL>
 
 #include <limits>
 
@@ -8,6 +7,7 @@
 
 
 #include "GLWidget.hpp"
+
 #include "Math/Vector3.hpp"
 #include "Math/Vector4.hpp"
 
@@ -41,7 +41,7 @@ GLWidget::GLWidget(const QGLFormat& format, QWidget* parent, const QGLWidget* sh
 void GLWidget::init()
 {
     //setFormat(QGLFormat(QGL::DoubleBuffer | QGL::DepthBuffer));
-
+	makeCurrent();
     setMinimumSize(400, 400);
     setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
     setFocus();
@@ -60,6 +60,8 @@ void GLWidget::init()
 	mNumber = 4;
 
 	mode = true;
+
+	mRenderer.init();
 
 	settings.setBackgroundColor(QColor(255,255,255));
 
@@ -678,7 +680,7 @@ void GLWidget::BuildCluster(vcg::CallBackPos *cb=0 )
 		{
 
 			Celer::Surfel<float>* seed = new Celer::Surfel<float>(cluster.Surfels[0]);
-			cluster.Build<JoinByNormal<float,Celer::Surfel<float>* >,
+			cluster.Build2<JoinByNormal<float,Celer::Surfel<float>* >,
 						  MergeBySize <float,Celer::Surfel<float>* > >(1000,200,(seed),cb );
 
 		}
@@ -707,7 +709,7 @@ void GLWidget::paintGL()
 {
 
     saveGLState();
-	//makeCurrent();
+	makeCurrent();
     initializeGL();
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -727,36 +729,69 @@ void GLWidget::paintGL()
     {
     	if (mShowModel)
     	{
-    		for (std::vector<Surfel>::iterator s = cluster.Surfels.begin(); s != cluster.Surfels.end();++s)
-    		{
-    			//    			if( (s->Curvature() >= 0.0) && (s->Curvature() < 0.25) )
-    			//    				glColor3f(1.0f,1.0f,1.0f);
-    			//    			else if ( (s->Curvature() > 0.25) && (s->Curvature() < 0.50) )
-    			//    				glColor3f(0.0,1.0f,1.0f);
-    			//    			else if ( (s->Curvature() > 0.5) && (s->Curvature() < 0.75) )
-    			//    				glColor3f(1.0f,1.0f,0.0f);
-    			//    			else if ( (s->Curvature() > 0.75) && (s->Curvature() <= 1.0) )
-    			//    				glColor3f(1.0f,0.0f,0.0);
 
-    			if ((camera.Eyes().Norm()* s->Normal()) > -0.2)
+
+    		if (mShowModelSurfel)
+    		{
+
+
+    			mRenderer.beginVisibilityPass();
+    			glBegin(GL_POINTS);
+    			for (std::vector<Surfel>::iterator s = cluster.Surfels.begin(); s != cluster.Surfels.end();++s)
     			{
+    				glMultiTexCoord1f(GL_TEXTURE2,s->Radius());
+    				glNormal3fv(s->Normal());
+    				glColor4f(0.0f,0.0f,1.0f,1.0f);
+    				glVertex3fv(s->Center());
+    			}
+    			glEnd();
+
+    			mRenderer.beginAttributePass();
+
+    			glBegin(GL_POINTS);
+    			for (std::vector<Surfel>::iterator s = cluster.Surfels.begin(); s != cluster.Surfels.end();++s)
+    			{
+    				std::cout << "Radius " << s->Radius() << std::endl;
+    				glMultiTexCoord1f(GL_TEXTURE2,s->Radius());
+    				glNormal3fv(s->Normal());
+    				glColor4f(0.0f,0.0f,1.0f,1.0f);
+    				glVertex3fv(s->Center());
+    			}
+    			glEnd();
+    			mRenderer.finalize();
+
+    			//				s->DrawTriangleFan(16,(mSurfelRadius*0.01));
+    		}
+
+    		if (mShowModelPoints)
+    		{
+    			for (std::vector<Surfel>::iterator s = cluster.Surfels.begin(); s != cluster.Surfels.end();++s)
+    			{
+    				//    			if( (s->Curvature() >= 0.0) && (s->Curvature() < 0.25) )
+    				//    				glColor3f(1.0f,1.0f,1.0f);
+    				//    			else if ( (s->Curvature() > 0.25) && (s->Curvature() < 0.50) )
+    				//    				glColor3f(0.0,1.0f,1.0f);
+    				//    			else if ( (s->Curvature() > 0.5) && (s->Curvature() < 0.75) )
+    				//    				glColor3f(1.0f,1.0f,0.0f);
+    				//    			else if ( (s->Curvature() > 0.75) && (s->Curvature() <= 1.0) )
+    				//    				glColor3f(1.0f,0.0f,0.0);
+
+    				//if ((camera.Eyes().Norm()* s->Normal()) > -0.2)
+
     				//std::cout << "Normal " <<  (camera.Eyes().Norm()* s->Normal()) << std::endl;
-    				if (mShowModelPoints)
-    				{
-    					glDisable(GL_LIGHTING);
-    					glPointSize(2.0);
-    					glBegin(GL_POINTS);
-    					glVertex3fv( s->Center().ToRealPtr() );
-    					glEnd();
-    					glEnable(GL_LIGHTING);
-    				}
-    				if (mShowModelSurfel)
-    				{
-    					s->DrawTriangleFan(32,(mSurfelRadius*0.01));
-    				}
+
+
+    				glColor3f(1.0f,0.0f,0.0);
+    				glDisable(GL_LIGHTING);
+    				glPointSize(4.0);
+    				glBegin(GL_POINTS);
+    				glVertex3fv( s->Center().ToRealPtr() );
+    				glEnd();
+    				glEnable(GL_LIGHTING);
+
     			}
     		}
-		}
+    	}
 
     	for (size_t i = 0; i != Knn.size();++i)
     	{
