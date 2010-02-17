@@ -161,7 +161,7 @@ public:
 
     Celer::Camera getCamera() const
     {
-    	this->mCamera;
+    	return this->mCamera;
     }
 
 private:

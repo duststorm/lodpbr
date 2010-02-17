@@ -244,6 +244,12 @@ public:
         template <class Similarity ,class Aggregation>
         void Build2(int pCont,int pKNeighborsSize ,const SurfelPtr& pSeed,vcg::CallBackPos *cb=0 )
         {
+
+        	if(pSeed == 0)
+        	{
+        		return;
+        	}
+
     		Clusters.clear();
     		NewSurfels.clear();
 
@@ -255,19 +261,18 @@ public:
         	/// Surfel that belong to the cluster
         	/// @detail
         	SurfelList  lClose;
+        	MergeEllipses<Real> me;
 
         	SurfelPtrList  	lOpen;
         	SurfelPtrVector lNeighbors;
-        	SurfelPtr       lSurfel    = 0;
+        	SurfelPtr       lSurfel    = pSeed;
+        	SurfelPtr       newSeed    = 0;
 
-        	Real mHeightMax	= 0.0;
+        	lNeighbors  = KDTree.KNearestNeighbors(lSurfel ,4, KNearestSearchComps);
+
+        	Real mHeightMax	=  0.5*(lSurfel->Center().EuclideanDistance(lNeighbors.back()->Center()));
 
         	int cont = 0;
-
-        	if(pSeed == 0)
-        	{
-        		return;
-        	}
 
         	lOpen.push_back(pSeed);
         	// Para cada semente , gera seus vizinhos e depois escolhe uma semenete que nao esteje na intersecao
@@ -278,24 +283,42 @@ public:
         		lSurfel                 = lOpen.front();
         		lOpen.pop_front();
 
-        		lNeighbors  = KDTree.KNearestNeighbors(lSurfel ,24, KNearestSearchComps);
+        		lSurfel->SetMarked              (1);
+        		lSurfel->SetExpansionMarked     (1);
+        		lSurfel->SetClusterID           (cont);
+
+        		lClose.push_front(lSurfel);
+
+        		me = MergeEllipses<Real>(lClose);
+
+        		lNeighbors  = KDTree.KNearestNeighbors(lSurfel ,256, KNearestSearchComps);
 
         		for(SurfelPtrVectorReverseIterator it = lNeighbors.rbegin(); it != lNeighbors.rend(); ++it)
         		{
 
-
-        			if(lClose.size() < 16)
+        			if (me.NewSurfel().PerpendicularError() < mHeightMax )
         			{
-        				if ((*it)->ExpansionMarked() == 0)
+        				if(lClose.size() <= 230)
         				{
-        					(*it)->SetExpansionMarked(1);
-        					lClose.push_back((*(*it)));
-        				}
+        					if ((*it)->ExpansionMarked() == 1)
+        					{
+        						(*it)->SetMarked(1);
+        						lClose.push_back((*(*it)));
+        						me = MergeEllipses<Real>(lClose);
 
+        					}else
+        					{
+        						(*it)->SetExpansionMarked(1);
+        						lClose.push_back((*(*it)));
+        						me = MergeEllipses<Real>(lClose);
+        					}
+							std::cout << " HeightMax :" << mHeightMax << " me Perpendicular Error " << me.NewSurfel().PerpendicularError() << std::endl;
+        				}
         			}
-        			else
+
+        			if (lClose.size() >= 250 )
         			{
-        				if ((*it)->ExpansionMarked() == 0)
+        				if ((*it)->Marked() == 0)
         				{
         					lOpen.push_back((*it));
         				}
@@ -303,12 +326,22 @@ public:
 
 
         		}
+        		if (lOpen.size() == 0)
+        		{
+        			newSeed = KDTree.SearchSeed();
+        			if(newSeed != 0)
+        			{
+        				lOpen.push_back(newSeed);
+        			}
+        			//std::cout << "Open Size " << lOpen.size() <<  std::endl;
+        		}
+
         		++cont;
         		//lClose.pop_front();
-        		lClose.push_front(lSurfel);
+        		//lClose.push_front(lSurfel);
         		progress += lClose.size();
         		Clusters.push_back(std::make_pair<int,SurfelList>(0,lClose));
-        		MergeEllipses<Real> me = MergeEllipses<Real>(lClose);
+        		//me = MergeEllipses<Real>(lClose);
         		NewSurfels.push_back(me.NewSurfel());
         		lClose.clear();
         		lNeighbors.clear();
@@ -402,6 +435,8 @@ public:
 								if ((*it)->Marked() == 0 )
 								{
 									(*it)->SetMarked(1);
+
+
 									lClose.push_back((*(*it)));
 								}
 
@@ -459,7 +494,7 @@ public:
     	 	for(unsigned int i = pClusterLog.getClusterRangeBegin(); i <= pClusterLog.getClusterRangeEnd() ; ++i )
     	 	{
 
-    	 		if ( ( pClusterLog.getCamera().Eyes().Norm() * NewSurfels[i].Normal() ) < 0.2f )
+    	 		if ( ( pClusterLog.getCamera().Eyes().Norm() * NewSurfels[i].Normal() ) > -0.2f )
     	 		{
     	 			std::list<Celer::Point3<float> > lBoundaries = NewSurfels[i].BoundariesSamples(pSteps,pClusterLog.getRadiusf());
     	 			glBegin (GL_TRIANGLE_FAN);
@@ -503,7 +538,7 @@ public:
         		glBegin(GL_POINTS);
         		for ( SurfelListIterator j = Clusters[pNumber].second.begin() ; j != Clusters[pNumber].second.end(); ++j )
         		{
-                	if ((view *  j->Normal())> 0.2f )
+                	//if ((view *  j->Normal())> 0.2f )
                 	{
                 		glNormal3fv (j->Normal());
 						glVertex3fv( j->Center() );
@@ -517,7 +552,7 @@ public:
         			glPushMatrix();
         			glPointSize(10.0);
         			glEnable(GL_POINT_SMOOTH);
-        			glColor3f(1.0f,1.0f,1.0f);
+        			glColor3f(0.0f,0.0f,0.0f);
         			glBegin(GL_POINTS);
         			{
         				glNormal3fv (Clusters[pNumber].second.begin()->Normal());
@@ -545,7 +580,7 @@ public:
         		glBegin(GL_POINTS);
         		for ( SurfelListIterator j = Clusters[i].second.begin() ; j != Clusters[i].second.end(); ++j )
         		{
-                	if ((view *  j->Normal())> 0.2f )
+                	//if ((view *  j->Normal())> 0.2f )
                     	{
                     		glNormal3fv (j->Normal());
     						glVertex3fv( j->Center() );
@@ -559,7 +594,7 @@ public:
         			glPushMatrix();
         			glPointSize(10.0);
         			glEnable(GL_POINT_SMOOTH);
-        			glColor3f(1.0f,1.0f,1.0f);
+        			glColor3f(0.0f,0.0f,0.0f);
         			glBegin(GL_POINTS);
         			{
         				glNormal3fv (Clusters[i].second.begin()->Normal());
