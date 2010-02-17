@@ -692,8 +692,6 @@ void GLWidget::Clear()
     cluster.Clear();
 }
 
-
-
 void GLWidget::draw()
 {
 
@@ -717,7 +715,7 @@ void GLWidget::paintGL()
     camera.SetViewByMouse();
     camera.LoadModelViewMatrix();
 
-
+    mClusterLog.setCamera(camera);
 
     fps.nextFrame();
 
@@ -733,7 +731,6 @@ void GLWidget::paintGL()
 
     		if (mShowModelSurfel)
     		{
-
 
     			mRenderer.beginVisibilityPass();
     			glBegin(GL_POINTS);
@@ -764,31 +761,30 @@ void GLWidget::paintGL()
 
     		if (mShowModelPoints)
     		{
+				glColor3f(0.5f,0.5f,0.5f);
+				glDisable(GL_LIGHTING);
+				glPointSize(2.0);
+				glBegin(GL_POINTS);
+
     			for (std::vector<Surfel>::iterator s = cluster.Surfels.begin(); s != cluster.Surfels.end();++s)
     			{
-    				//    			if( (s->Curvature() >= 0.0) && (s->Curvature() < 0.25) )
-    				//    				glColor3f(1.0f,1.0f,1.0f);
-    				//    			else if ( (s->Curvature() > 0.25) && (s->Curvature() < 0.50) )
-    				//    				glColor3f(0.0,1.0f,1.0f);
-    				//    			else if ( (s->Curvature() > 0.5) && (s->Curvature() < 0.75) )
-    				//    				glColor3f(1.0f,1.0f,0.0f);
-    				//    			else if ( (s->Curvature() > 0.75) && (s->Curvature() <= 1.0) )
-    				//    				glColor3f(1.0f,0.0f,0.0);
 
-    				//if ((camera.Eyes().Norm()* s->Normal()) > -0.2)
+//    				if( (s->Curvature() >= 0.0)       && (s->Curvature() < 0.25) )
+//    					glColor3f(1.0f,1.0f,1.0f);
+//    				else if ( (s->Curvature() > 0.25) && (s->Curvature() < 0.50) )
+//    					glColor3f(0.0,1.0f,1.0f);
+//    				else if ( (s->Curvature() > 0.5)  && (s->Curvature() < 0.75) )
+//    					glColor3f(1.0f,1.0f,0.0f);
+//    				else if ( (s->Curvature() > 0.75) && (s->Curvature() <= 1.0) )
+//    					glColor3f(1.0f,0.0f,0.0);
+//
+//					if ((camera.Eyes().Norm()* s->Normal()) > -0.2)
 
     				//std::cout << "Normal " <<  (camera.Eyes().Norm()* s->Normal()) << std::endl;
-
-
-    				glColor3f(1.0f,0.0f,0.0);
-    				glDisable(GL_LIGHTING);
-    				glPointSize(4.0);
-    				glBegin(GL_POINTS);
     				glVertex3fv( s->Center().ToRealPtr() );
-    				glEnd();
-    				glEnable(GL_LIGHTING);
-
     			}
+				glEnd();
+				glEnable(GL_LIGHTING);
     		}
     	}
 

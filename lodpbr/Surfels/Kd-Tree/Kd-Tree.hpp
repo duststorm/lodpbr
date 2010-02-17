@@ -118,6 +118,12 @@ public:
     return root->Search (p);
   }
 
+
+  SurfelPtr SearchSeed () const
+  {
+    return root->SearchSeed ();
+  }
+
   /// Returns the nearesNeighbor to a given point
   /// @param p Given point.
   /// @return Pointer to the nearest neighbor object.

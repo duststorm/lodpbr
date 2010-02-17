@@ -205,6 +205,38 @@ public:
 	  }
   }
 
+  SurfelPtr SearchSeed ()
+  {
+	  SurfelPtr pSurfel = 0;
+
+	  for (unsigned int i = 0; i < mListPtr.size(); ++i)
+	  {
+		  if (mListPtr[i]->ExpansionMarked() == 0)
+		  {
+			  return mListPtr[i];
+		  }
+	  }
+
+	  if (son[0] != 0)
+	  {
+		  pSurfel = son[0]->SearchSeed();
+	  }
+
+	  if (pSurfel != 0)
+	  {
+		  return pSurfel;
+	  }
+
+	  if (son[1] != 0)
+	  {
+		  pSurfel = son[1]->SearchSeed();
+	  }
+
+	  return pSurfel;
+
+  }
+
+
   /// Computes the squared distance from a given point to the nodes box
   /// @param p Given point
   /// @return Squared distance
