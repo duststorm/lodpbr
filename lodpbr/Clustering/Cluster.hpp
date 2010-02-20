@@ -291,14 +291,14 @@ public:
 
         		me = MergeEllipses<Real>(lClose);
 
-        		lNeighbors  = KDTree.KNearestNeighbors(lSurfel ,32, KNearestSearchComps);
+        		lNeighbors  = KDTree.KNearestNeighbors(lSurfel ,128, KNearestSearchComps);
 
         		for(SurfelPtrVectorReverseIterator it = lNeighbors.rbegin(); it != lNeighbors.rend(); ++it)
         		{
 
-        			if (me.NewSurfel().PerpendicularError() < mHeightMax )
+        			if (((lSurfel->Center() - (*it)->Center())*lSurfel->Normal()) < mHeightMax )
         			{
-        				if(lClose.size() <= 16)
+        				//if(lClose.size() <= 120)
         				{
         					if ((*it)->ExpansionMarked() == 1)
         					{
@@ -314,18 +314,19 @@ public:
         					}
 							//std::cout << " HeightMax :" << mHeightMax << " me Perpendicular Error " << me.NewSurfel().PerpendicularError() << std::endl;
         				}
-        			}
+        			}else { continue; }
 
-        			if (lClose.size() >= 28)
-        			{
-        				if ((*it)->Marked() == 0)
-        				{
-        					lOpen.push_back((*it));
-        				}
-        			}
+//        			if (lClose.size() >= 28)
+//        			{
+//        				if ((*it)->Marked() == 0)
+//        				{
+//        					lOpen.push_back((*it));
+//        				}
+//        			}
 
 
         		}
+
         		if (lOpen.size() == 0)
         		{
         			newSeed = KDTree.SearchSeed();
@@ -340,7 +341,7 @@ public:
         		//lClose.pop_front();
         		//lClose.push_front(lSurfel);
         		progress += lClose.size();
-        		Clusters.push_back(std::make_pair<int,SurfelList>(0,lClose));
+        		Clusters.push_back(std::make_pair<int,SurfelList>(cont,lClose));
         		//me = MergeEllipses<Real>(lClose);
         		NewSurfels.push_back(me.NewSurfel());
         		lClose.clear();
