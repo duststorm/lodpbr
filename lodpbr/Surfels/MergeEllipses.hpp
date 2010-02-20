@@ -112,8 +112,8 @@ public:
 //                maxError = error;
 //            }
 
-			u = ((mNewNormal*itEllipse->MajorAxis().second)*itEllipse->MajorAxis().first) * ((mNewNormal*itEllipse->MajorAxis().second)*itEllipse->MajorAxis().first);
-            v = (mNewNormal*itEllipse->MinorAxis().second*itEllipse->MinorAxis().first)  *   (mNewNormal*itEllipse->MinorAxis().second*itEllipse->MinorAxis().first);
+			u = ( (mNewNormal*itEllipse->MajorAxis().second)*itEllipse->MajorAxis().first) *  ((mNewNormal*itEllipse->MajorAxis().second)*itEllipse->MajorAxis().first);
+            v = ( (mNewNormal*itEllipse->MinorAxis().second)*itEllipse->MinorAxis().first) * ((mNewNormal*itEllipse->MinorAxis().second)*itEllipse->MinorAxis().first);
             error = fabs( (itEllipse->Center()-mNewCenter) * mNewNormal ) + std::sqrt( u+v );
 
             if (error > maxError)
