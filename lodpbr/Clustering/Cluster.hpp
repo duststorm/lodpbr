@@ -312,7 +312,7 @@ public:
         						lClose.push_back((*(*it)));
         						me = MergeEllipses<Real>(lClose);
         					}
-							std::cout << " HeightMax :" << mHeightMax << " me Perpendicular Error " << me.NewSurfel().PerpendicularError() << std::endl;
+							//std::cout << " HeightMax :" << mHeightMax << " me Perpendicular Error " << me.NewSurfel().PerpendicularError() << std::endl;
         				}
         			}
 
