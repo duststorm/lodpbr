@@ -43,17 +43,17 @@ public:
     	AllPossibleCluster 		= 1 << 15,
     	LimitedNumberOfCluster 	= 1 << 16
     };
-    enum BuildClusterSystem
+    enum BuildClusterShape
 	{
-    	Continuous    		 = 1 << 17,
-    	Interactive			 = 1 << 18
+    	ELLIPTICAL    		 = 1 << 17,
+    	CIRCULAR			 = 1 << 18
     };
 
     Bitmask<unsigned int,Show				 > 	maskShow;
     Bitmask<unsigned int,RenderingClusterBy  > 	maskRenderingClusterBy;
     Bitmask<unsigned int,RenderingClusterWith> 	maskRenderingClusterWith;
     Bitmask<unsigned int,BuildClusterWith    >  maskBuildClusterWith;
-    Bitmask<unsigned int,BuildClusterSystem  >  maskBuildClusterSystem;
+    Bitmask<unsigned int,BuildClusterShape   >  maskBuildClusterShape;
 
     ClusterLog();
 

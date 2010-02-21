@@ -83,15 +83,6 @@ void MyMainWindow::updateMenus()
 void MyMainWindow::updateWindowMenu()
 {}
 
-
-void MyMainWindow::on_actionAdd_triggered()
-{
-	if (GLWIDGET())
-	{
-		GLWIDGET()->setSelected(GLWidget::ADD_NEIBORHOO);
-	}
-}
-
 void MyMainWindow::updateDockCluster()
 {
 	if (GLWIDGET())
@@ -191,6 +182,10 @@ void MyMainWindow::on_sliderModelSurfelRadius_valueChanged (int value)
 
 
 //==== DockBuildCluster =======================================================
+void  MyMainWindow::on_comboBoxCluster_BuildSurfelSplatShape_activated (const QString &s)
+{
+	GLWIDGET()->setClusterSplatShape(s);
+}
 
 void MyMainWindow::on_comboBoxCluster_BuildSurfelSimilarity_activated(const QString &s)
 {
@@ -205,7 +200,12 @@ void MyMainWindow::on_pushButtonInteractive_clicked()
 
 void MyMainWindow::on_pushButtonSeed_clicked ()
 {
-	GLWIDGET()->GetSeed();
+
+	if (GLWIDGET())
+	{
+		GLWIDGET()->setSelected(GLWidget::ADD_NEIBORHOO);
+	}
+
 }
 
 void MyMainWindow::on_pushButtonBuild_clicked()

@@ -88,6 +88,7 @@ public slots:
  	void on_sliderCluster_DrawClusterWithRangeEnd_valueChanged		(int value);
 
 	void on_comboBoxCluster_BuildSurfelSimilarity_activated			(const QString &);
+	void on_comboBoxCluster_BuildSurfelSplatShape_activated			(const QString &);
 
 //	void on_checkBoxCluster_ShowCluster_toggled						(bool checked);
 //	void on_checkBoxCluster_ShowSeed_toggled						(bool checked);
@@ -100,8 +101,6 @@ public slots:
 
 	// coisas da kglib
  	static void createToplevelGLWidget();
-
- 	void on_actionAdd_triggered();
 
 
 signals:

@@ -109,7 +109,7 @@ public slots:
 	//Save and Load
 
 	void setClusterBuiltType	(const QString & text);
-	void setClusterBuiltSystem	(const QString & text);
+	void setClusterSplatShape	(const QString & text);
 
 	void setClusterRendererType	(const QString & text);
 	void setClusterRenderingMode(const QString & text);

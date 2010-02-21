@@ -247,8 +247,8 @@ class Surfel
    	 void 						SetMinError 		( const Real& pMinError ) const;
    	 Real PerpendicularError 						( ) const;
    	 void SetPerpendicularError						( const Real& pPerpendicularError ) ;
-   	 Real GeometricError 							( ) const;
-   	 void SetGeometricError 								( const Real& pGeometricError );
+   	 Real TangencialError 							( ) const;
+   	 void SetTangencialError 								( const Real& pGeometricError );
 
 	 Real 						Similarity 			(  ) const;
 	 void 						SetSimilarity 		( const Real& pSimilarity );
@@ -291,7 +291,7 @@ class Surfel
 	  Real mMinError;
 	  /// Perpendicular error
 	  Real mPerpendicularError;
-	  Real mGeometricError;
+	  Real mTangencialError;
 
 	  Real mCurvature;
 
@@ -337,7 +337,7 @@ Surfel<Real>::Surfel (const Surfel<Real>& pSurfel) :
   		   								 mMaxError		 	(pSurfel.mMaxError),
   		   								 mMinError		 	(pSurfel.mMinError),
   		   								 mPerpendicularError(pSurfel.mPerpendicularError),
-										 mGeometricError	(pSurfel.mGeometricError),
+										 mTangencialError	(pSurfel.mTangencialError),
   										 mCurvature		 	(pSurfel.mCurvature),
   										 mID			 	(pSurfel.mID),
   										 mMarked		 	(pSurfel.mMarked),
@@ -360,7 +360,7 @@ Surfel<Real>::Surfel (const Surfel<Real>* pSurfel) :
   		   								 mMaxError(pSurfel->mMaxError),
   		   								 mMinError(pSurfel->mMinError),
   		  		   						 mPerpendicularError(pSurfel->mPerpendicularError),
-  										 mGeometricError	(pSurfel->mGeometricError),
+  										 mTangencialError	(pSurfel->mTangencialError),
   										 mCurvature(pSurfel->mCurvature),
   										 mID(pSurfel->mID),
   										 mMarked(pSurfel->mMarked),
@@ -523,7 +523,7 @@ inline const Surfel<Real>& Surfel<Real>::operator= ( const Surfel<Real>& pSurfel
 	 this->mSimilarity			= pSurfel.Similarity();
 	 this->mClusterID 			= pSurfel.ClusterID();
 	 this->mPerpendicularError	= pSurfel.PerpendicularError();
-	 this->mGeometricError		= pSurfel.GeometricError();
+	 this->mTangencialError		= pSurfel.TangencialError();
   	return ( *this );
 }
 
@@ -733,15 +733,15 @@ void Surfel<Real>::SetPerpendicularError (const Real& pPerpendicularError)
 };
 
 template<class Real>
-Real Surfel<Real>::GeometricError () const
+Real Surfel<Real>::TangencialError () const
 {
-	 return ( this->mGeometricError );
+	 return ( this->mTangencialError );
 };
 
 template<class Real>
-void Surfel<Real>::SetGeometricError (const Real& pGeometricError)
+void Surfel<Real>::SetTangencialError (const Real& pTangencialError)
 {
-	 this->mGeometricError = pGeometricError;
+	 this->mTangencialError = pTangencialError;
 };
 
 template<class Real>

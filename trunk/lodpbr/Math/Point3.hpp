@@ -20,6 +20,7 @@ namespace Celer
 *@version 1.0.
 *@date 25-Feb-2008.
 *@todo OpenGL interface and a C style array.
+*@todo Vector <-> Point Operator
 */
 
       template <class Real>   class Point3

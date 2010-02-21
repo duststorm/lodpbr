@@ -24,7 +24,7 @@ ClusterLog::ClusterLog()
 	maskRenderingClusterBy			= ClusterLog::Index;
 	maskRenderingClusterWith 		= ClusterLog::GLPointSmooth;
 
-	maskBuildClusterSystem 		= ClusterLog::Continuous;
+	maskBuildClusterShape 		= ClusterLog::ELLIPTICAL;
 	maskBuildClusterWith 		= ClusterLog::NormalOnly;
 	maskShow					=  0;
 }
