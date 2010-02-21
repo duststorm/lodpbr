@@ -188,13 +188,23 @@ public:
         }
 
         template <class Similarity ,class Aggregation>
-        void BuildInteractive(int pKNeighborsSize ,const SurfelPtr& pSeed )
+        void BuildInteractive(int pKNeighborsSize ,const SurfelPtr& pSeed , ClusterLog& clusterLog)
         {
         	SurfelList  lClose;
         	SurfelPtrList  lOpen;
         	SurfelPtrVector                 lNeighbors;
         	SurfelPtr        		        lSurfel    = 0;
         	int                             KNearestSearchComps = 0;
+
+        	int shape = 0;
+        	if (clusterLog.maskBuildClusterShape.Test(ClusterLog::ELLIPTICAL))
+        	{
+        		shape = 1 << 17;
+        	}
+        	else
+        	{
+        		shape = 1 << 18;
+        	}
 
         	if(pSeed == 0)
         	{
@@ -204,6 +214,10 @@ public:
         	lSurfel                 = pSeed;
         	lSurfel->SetMarked              (1);
         	lSurfel->SetExpansionMarked     (1);
+
+        	lClose.push_front(lSurfel);
+
+        	MergeEllipses<Real> me = MergeEllipses<Real>(lClose,shape);
 
         	lNeighbors  = KDTree.KNearestNeighbors(lSurfel ,pKNeighborsSize , KNearestSearchComps);
 
@@ -218,17 +232,24 @@ public:
 
         		}else
         		{
-        			std::cout << "Altura " << ((lSurfel->Center() - (*it)->Center())*lSurfel->Normal()) << std::endl;
-        			//							{
-        			(*it)->SetExpansionMarked(1);
-        			lClose.push_back((*(*it)));
+        			if (  me.NewSurfel(shape).TangencialError() <  2.0*lSurfel->MajorAxis().first )
+        			{
+        				//std::cout << "Altura " << ((lSurfel->Center() - (*it)->Center())*lSurfel->Normal()) << std::endl;
+						(*it)->SetExpansionMarked(1);
+						lClose.push_back((*(*it)));
+						me = MergeEllipses<Real>(lClose,shape);
+        			}
         		}
         	}
-        	lClose.push_front(lSurfel);
 
-        	MergeEllipses<Real> me = MergeEllipses<Real>(lClose);
-        	mCurrentEllipse = me.NewSurfel();
-        	mCurrentEllipse.SetPerpendicularError(lSurfel->PerpendicularError());
+        	//MergeEllipses<Real> me = MergeEllipses<Real>(lClose,shape);
+        	mCurrentEllipse = me.NewSurfel(shape);
+        	//mCurrentEllipse.SetPerpendicularError(lSurfel->PerpendicularError());
+        	std::cout << " Closed Size " << lClose.size() << std::endl;
+        	std::cout << "perpendicular Surfel -- " << lSurfel->PerpendicularError()		 << std::endl;
+        	std::cout << "MajorAxois -- " 			<< lSurfel->MajorAxis().first		 << std::endl;
+        	std::cout << "perpendicular -- " << mCurrentEllipse.PerpendicularError() << std::endl;
+        	std::cout << "Tangencial    -- " << mCurrentEllipse.TangencialError() 	 << std::endl;
         	lClose.clear();
         	lNeighbors.clear();
         	KDTree.ResetMarkedClustering();
@@ -242,12 +263,23 @@ public:
         /// @param pCont pKNeighborsSize. The size of the Neighbor.
         /// @param pSeed pKNeighborsSize. Initial Seed.
         template <class Similarity ,class Aggregation>
-        void Build2(int pCont,int pKNeighborsSize ,const SurfelPtr& pSeed,vcg::CallBackPos *cb=0 )
+        void Build2(int pCont,int pKNeighborsSize ,const SurfelPtr& pSeed,ClusterLog& clusterLog,vcg::CallBackPos *cb=0  )
         {
 
         	if(pSeed == 0)
         	{
         		return;
+        	}
+
+
+        	int shape = 0;
+        	if (clusterLog.maskBuildClusterShape.Test(ClusterLog::ELLIPTICAL))
+        	{
+        		shape = 1 << 17;
+        	}
+        	else
+        	{
+        		shape = 1 << 18;
         	}
 
     		Clusters.clear();
@@ -277,11 +309,11 @@ public:
         	lOpen.push_back(pSeed);
         	// Para cada semente , gera seus vizinhos e depois escolhe uma semenete que nao esteje na intersecao
         	// de sua vizinhanca
-        	while ( (lOpen.size() != 0) )
+        	while(lSurfel != 0)//while ( (lOpen.size() != 0) )
         	{
 
-        		lSurfel                 = lOpen.front();
-        		lOpen.pop_front();
+        		//lSurfel                 = lOpen.front();
+        		//lOpen.pop_front();
 
         		lSurfel->SetMarked              (1);
         		lSurfel->SetExpansionMarked     (1);
@@ -289,7 +321,7 @@ public:
 
         		lClose.push_front(lSurfel);
 
-        		me = MergeEllipses<Real>(lClose);
+        		me = MergeEllipses<Real>(lClose,shape);
 
         		lNeighbors  = KDTree.KNearestNeighbors(lSurfel ,128, KNearestSearchComps);
 
@@ -298,19 +330,19 @@ public:
 
         			if (((lSurfel->Center() - (*it)->Center())*lSurfel->Normal()) < mHeightMax )
         			{
-        				//if(lClose.size() <= 120)
+        				if(me.NewSurfel(shape).TangencialError() <  lSurfel->MajorAxis().first)
         				{
         					if ((*it)->ExpansionMarked() == 1)
         					{
         						(*it)->SetMarked(1);
         						lClose.push_back((*(*it)));
-        						me = MergeEllipses<Real>(lClose);
+        						me = MergeEllipses<Real>(lClose,shape);
 
         					}else
         					{
         						(*it)->SetExpansionMarked(1);
         						lClose.push_back((*(*it)));
-        						me = MergeEllipses<Real>(lClose);
+        						me = MergeEllipses<Real>(lClose,shape);
         					}
 							//std::cout << " HeightMax :" << mHeightMax << " me Perpendicular Error " << me.NewSurfel().PerpendicularError() << std::endl;
         				}
@@ -327,15 +359,16 @@ public:
 
         		}
 
-        		if (lOpen.size() == 0)
-        		{
-        			newSeed = KDTree.SearchSeed();
-        			if(newSeed != 0)
-        			{
-        				lOpen.push_back(newSeed);
-        			}
-        			//std::cout << "Open Size " << lOpen.size() <<  std::endl;
-        		}
+        		lSurfel = KDTree.SearchSeed();
+//        		if (lOpen.size() == 0)
+//        		{
+//        			newSeed = KDTree.SearchSeed();
+//        			if(newSeed != 0)
+//        			{
+//        				lOpen.push_back(newSeed);
+//        			}
+//        			//std::cout << "Open Size " << lOpen.size() <<  std::endl;
+//        		}
 
         		++cont;
         		//lClose.pop_front();
@@ -343,14 +376,14 @@ public:
         		progress += lClose.size();
         		Clusters.push_back(std::make_pair<int,SurfelList>(cont,lClose));
         		//me = MergeEllipses<Real>(lClose);
-        		NewSurfels.push_back(me.NewSurfel());
+        		NewSurfels.push_back(me.NewSurfel(shape));
         		lClose.clear();
         		lNeighbors.clear();
         		if(cb && (progress%100)==0) cb(progress*50/kd_tree_size,"Cluster Building");
         	}
         	cb(100,"Cluster Done!");
         	std::cout << "progress :" << progress << "kdtree " << kd_tree_size << "Cluster Size"<<  std::endl;
-    		//KDTree.ResetMarkedClustering();
+    		KDTree.ResetMarkedClustering();
         }
 
         /// Build a set of Clusters by the Similarities and Aggregations.

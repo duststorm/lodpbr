@@ -103,15 +103,15 @@ void GLWidget::setClusterBuiltType(const QString & text)
 	}
 }
 
-void GLWidget::setClusterBuiltSystem	(const QString & text)
+void GLWidget::setClusterSplatShape	(const QString & text)
 {
-	if 		( text == "Continuous")
+	if 		( text == "Elliptical")
 	{
-		mClusterLog.maskBuildClusterSystem.Set(ClusterLog::Continuous);
+		mClusterLog.maskBuildClusterShape.Set(ClusterLog::ELLIPTICAL);
 	}
-	else if ( text == "Interactive")
+	else if ( text == "Circular")
 	{
-		mClusterLog.maskBuildClusterSystem.Set(ClusterLog::Interactive);
+		mClusterLog.maskBuildClusterShape.Set(ClusterLog::CIRCULAR);
 	}
 	else
 	{
@@ -660,10 +660,10 @@ void GLWidget::BuildInteractive()
 {
 	Celer::Surfel<float>* seed = new Celer::Surfel<float>(mSeed);
 	cluster.BuildInteractive<JoinByNormal<float,Celer::Surfel<float>* >,
-							 MergeBySize <float,Celer::Surfel<float>* > >(300,seed);
-	result[0] = cluster.GetCurrentEllipse();
-	mHeight = result[0].PerpendicularError();
-	mHeight*=100.0;
+							 MergeBySize <float,Celer::Surfel<float>* > >(300,seed,mClusterLog);
+	result[1] = cluster.GetCurrentEllipse();
+	mHeight = result[1].PerpendicularError();
+	//mHeight*=10.0;
 
 }
 
@@ -681,7 +681,7 @@ void GLWidget::BuildCluster(vcg::CallBackPos *cb=0 )
 
 			Celer::Surfel<float>* seed = new Celer::Surfel<float>(cluster.Surfels[0]);
 			cluster.Build2<JoinByNormal<float,Celer::Surfel<float>* >,
-						  MergeBySize <float,Celer::Surfel<float>* > >(1000,200,(seed),cb );
+						  MergeBySize <float,Celer::Surfel<float>* > >(1000,200,(seed),mClusterLog,cb );
 
 		}
 	}
@@ -778,10 +778,11 @@ void GLWidget::paintGL()
 //    				else if ( (s->Curvature() > 0.75) && (s->Curvature() <= 1.0) )
 //    					glColor3f(1.0f,0.0f,0.0);
 //
-//					if ((camera.Eyes().Norm()* s->Normal()) > -0.2)
-
+					if ((camera.Eyes().Norm()* s->Normal()) > -0.2)
+					{
     				//std::cout << "Normal " <<  (camera.Eyes().Norm()* s->Normal()) << std::endl;
-    				glVertex3fv( s->Center().ToRealPtr() );
+						glVertex3fv( s->Center().ToRealPtr() );
+					}
     			}
 				glEnd();
 				glEnable(GL_LIGHTING);
@@ -790,8 +791,8 @@ void GLWidget::paintGL()
 
     	for (size_t i = 0; i != Knn.size();++i)
     	{
-    		result[0].DrawTriangleFan(64,0.5);
-    		result[0].DrawEllpsoid(16,16,1.0,mHeight);//DrawTriangleFan(64,0.5);
+    		result[1].DrawTriangleFan(64,0.5);
+    		result[1].DrawEllpsoid(16,16,1.0,mHeight);//DrawTriangleFan(64,0.5);
     	}
 
     	if (mClusterLog.maskShow.Test(ClusterLog::Clusters))
@@ -1101,7 +1102,9 @@ void GLWidget::endSelection(const QPoint& point)
 	mSelectionMode = NONE;
 	getKNearestNeighbors();
 	if (result.size()>0)
-		std::cout << "ae = esse " << result[0].Curvature() << std::endl;
+	{
+		GetSeed();
+	}
 
 }
 

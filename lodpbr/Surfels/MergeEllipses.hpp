@@ -29,6 +29,12 @@ public:
 	typedef std::list<Surfel>				  		SurfelList;
 	typedef typename SurfelList::iterator 			SurfelListIterator;
 
+	enum Splat
+	{
+    	ELLIPTICAL    		 = 1 << 17,
+    	CIRCULAR			 = 1 << 18
+	};
+
 	MergeEllipses( )
 	{}
 
@@ -56,35 +62,61 @@ public:
 		mNewNormal = pNewNormal;
 	};
 
-	MergeEllipses( const SurfelList& pEllipses )
+	MergeEllipses( const SurfelList& pEllipses, Splat type)
 	: mEllipses(pEllipses)
 	{
 
 		NewCenterAndNormal();
 		ProjectPoints();
 		NewAxis();
-		PerpendicularError();
+		PerpendicularError(NewSurfel(type));
+		TangencialError	  (NewSurfel(type));
 
 	};
 
-	Surfel NewSurfel()
+
+	Surfel NewSurfel(Splat type)
 	{
-		Surfel s = Surfel(mNewCenter,mNewNormal,mNewMinorAxis,mNewMajorAxis,1);
-		s.SetPerpendicularError(mNewPerpendicularError);
-		return ( s );
+		if (type == ELLIPTICAL)
+		{
+			Surfel s = Surfel(mNewCenter,mNewNormal,mNewMinorAxis,mNewMajorAxis,1);
+			s.SetPerpendicularError(mNewPerpendicularError);
+			s.SetTangencialError(mNewTangencialError);
+			return ( s );
+		}
+		if (type == CIRCULAR)
+		{
+			Surfel s =  Surfel(mNewCenter,mNewNormal,std::make_pair(mNewMajorAxis.first,mNewMinorAxis.second),mNewMajorAxis,1);
+			s.SetPerpendicularError(mNewPerpendicularError);
+			s.SetTangencialError(mNewTangencialError);
+			return (s);
+		}
+
 	}
 
-	Surfel*  NewPtrSurfel()
+	Surfel*  NewPtrSurfel(Splat type)
 	{
-		Surfel* s = new Surfel(mNewCenter,mNewNormal,mNewMinorAxis,mNewMajorAxis,1);
-		s->SetPerpendicularError(mNewPerpendicularError);
-		return (s );
+
+		if (type == ELLIPTICAL)
+		{
+			Surfel* s = new Surfel(mNewCenter,mNewNormal,mNewMinorAxis,mNewMajorAxis,1);
+			s->SetPerpendicularError(mNewPerpendicularError);
+			s->SetTangencialError(mNewTangencialError);
+			return ( s );
+		}
+		if (type == CIRCULAR)
+		{
+			Surfel* s = new Surfel(mNewCenter,mNewNormal,std::make_pair(mNewMajorAxis.first,mNewMinorAxis.second),mNewMajorAxis,1);
+			s->SetPerpendicularError(mNewPerpendicularError);
+			s->SetTangencialError(mNewTangencialError);
+			return (s );
+		}
+
 	}
 
-	void PerpendicularError()
+	void PerpendicularError(const Surfel& surfel)
 	{
 
-		Real alfa,beta,factor;
 		Real u 			= 0.0;
 		Real v			= 0.0;
 		Real error 		= 0.0;
@@ -93,26 +125,8 @@ public:
 
 		for (SurfelListIterator itEllipse = mEllipses.begin(); itEllipse != mEllipses.end(); ++itEllipse)
 		{
-//			if(  std::fabs((mNewNormal* itEllipse->MajorAxis.second)) > 1e-6f )
-//			{
-//				factor = ((mNewNormal*itEllipse->MajorAxis.second)* itEllipse->MajorAxis.first) / ((mNewNormal*itEllipse->MinorAxis.second)* itEllipse->MinorAxis.first);
-//				alfa = std::sqrt(1.0/(1.0+factor*factor));
-//                beta = factor*alfa;
-//		        ray = (itEllipse->MajorAxis.second*(alfa*itEllipse->MajorAxis.first)) + (itEllipse->MinorAxis.second*(beta*itEllipse->MinorAxis.first));
-//
-//			}else
-//			{
-//				ray = itEllipse->MinorAxis.second;
-//			}
-//
-//            error = std::fabs( (itEllipse->Center()-mNewCenter) * mNewNormal ) + std::fabs( ray* mNewNormal );
-//
-//            if (error > maxError )
-//            {
-//                maxError = error;
-//            }
 
-			u = ( (mNewNormal*itEllipse->MajorAxis().second)*itEllipse->MajorAxis().first) *  ((mNewNormal*itEllipse->MajorAxis().second)*itEllipse->MajorAxis().first);
+			u = ( (mNewNormal*itEllipse->MajorAxis().second)*itEllipse->MajorAxis().first) * ((mNewNormal*itEllipse->MajorAxis().second)*itEllipse->MajorAxis().first);
             v = ( (mNewNormal*itEllipse->MinorAxis().second)*itEllipse->MinorAxis().first) * ((mNewNormal*itEllipse->MinorAxis().second)*itEllipse->MinorAxis().first);
             error = fabs( (itEllipse->Center()-mNewCenter) * mNewNormal ) + std::sqrt( u+v );
 
@@ -121,6 +135,56 @@ public:
 		}
 
 		mNewPerpendicularError = maxError;
+	}
+
+	void TangencialError(const Surfel& surfel)
+	{
+
+        Real dis_max = 0.0;
+        Real dist = 0.0;
+        Real result = 9999999.0;
+        Real A = 0.0;
+        Real B = 0.0;
+        Real BA = 0.0;
+        Real Aline = 0.0;
+        Point3  q;
+        Vector3 r,s;
+
+        ListPoint3 l = surfel.BoundariesSamples(8,1.0);
+
+        for(ListPoint3Iterator p = l.begin(); p != l.end();++p)
+        {
+
+        	for(SurfelListIterator itEllipse = mEllipses.begin(); itEllipse != mEllipses.end(); ++itEllipse)
+        	{
+			   q =  (*p) - ((( (*p) - itEllipse->Center() ) * itEllipse->Normal()) * itEllipse->Normal()); //(*p) - ( ( ( (*p) - itEllipse->Center() ) * itEllipse->Normal()  ) * itEllipse->Normal());
+               r =  q - itEllipse->Center();
+               s =  (*p) - q;
+               A = (r * itEllipse->MajorAxis().second)/(itEllipse->MajorAxis().first);
+               B = (r * itEllipse->MinorAxis().second)/(itEllipse->MinorAxis().first);
+               if ((A*A + B*B) > 1)
+               {
+                    BA = B/A;
+                    Aline = std::sqrt(1.0/(1.0+(BA*BA)));
+                    dist = (1-(Aline/std::fabs(A))) * std::sqrt(r*r)  + std::sqrt(s*s);
+               }
+               else
+               {
+            	   dist = sqrt(s*s);
+               }
+
+               if (result > dist)
+			   {
+            	   result = dist;
+			   }
+
+        	}
+        	if (result > dis_max)
+            {
+         	   dis_max = result;
+            }
+        }
+        mNewTangencialError = dis_max;
 	}
 
 	// functions
@@ -280,6 +344,7 @@ private:
 
 	Real 						mNewMajorValue;
 
+	Real 						mNewTangencialError;
 	Real 						mNewPerpendicularError;
 
 
