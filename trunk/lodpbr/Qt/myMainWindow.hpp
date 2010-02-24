@@ -76,6 +76,7 @@ public slots:
  	void on_toolButtonModelDrawSurfel_toggled						(bool checked);
  	void on_toolButtonModelSplatting_toggled						(bool checked);
  	void on_sliderModelSurfelRadius_valueChanged					(int value);
+ 	void on_sliderModelSplattingRadius_valueChanged 				(int value);
 
  	// --Cluster Dock Widget Draw--
  	//
@@ -86,6 +87,8 @@ public slots:
  	void on_toolButtonClusterDrawSeed_toggled						(bool checked);
  	void on_toolButtonClusterDrawNormal_toggled						(bool checked);
 
+
+ 	void on_sliderClusterSplattingRadius_valueChanged 				(int value);
  	void on_spinBoxCluster_DrawClusterWithRangeBegin_valueChanged	(int);
  	void on_sliderCluster_DrawClusterWithRangeBegin_valueChanged	(int);
 

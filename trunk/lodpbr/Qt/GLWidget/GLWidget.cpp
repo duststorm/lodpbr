@@ -289,6 +289,12 @@ void GLWidget::setRadius(int value)
 	update();
 }
 
+void GLWidget::setClusterSplatlRadius (int value)
+{
+	mClusterLog.setSplatRadius(value);
+	update();
+}
+
 void GLWidget::SetMode(bool t)
 {
 	mode = t;
@@ -342,6 +348,11 @@ void GLWidget::setShowModelNormal(bool checked)
 void GLWidget::setModelSurfelRadius(int value)
 {
 	mSurfelRadius = value;
+	update();
+}
+void GLWidget::setModelSplatlRadius(int value)
+{
+	mSplatRadius = value;
 	update();
 }
 
@@ -761,7 +772,7 @@ void GLWidget::paintGL()
     			glBegin(GL_POINTS);
     			for (std::vector<Surfel>::iterator s = cluster.Surfels.begin(); s != cluster.Surfels.end();++s)
     			{
-    				glMultiTexCoord1f(GL_TEXTURE2,(s->Radius() * mSurfelRadius * 0.01) );
+    				glMultiTexCoord1f(GL_TEXTURE2,(s->Radius() * mSplatRadius * 0.01) );
     				glNormal3fv(s->Normal());
     				glColor4f(0.0f,0.0f,1.0f,0.7f);
     				glVertex3fv(s->Center());
@@ -773,7 +784,7 @@ void GLWidget::paintGL()
     			glBegin(GL_POINTS);
     			for (std::vector<Surfel>::iterator s = cluster.Surfels.begin(); s != cluster.Surfels.end();++s)
     			{
-    				glMultiTexCoord1f(GL_TEXTURE2,(s->Radius() * mSurfelRadius * 0.01));
+    				glMultiTexCoord1f(GL_TEXTURE2,(s->Radius() * mSplatRadius * 0.01));
     				glNormal3fv(s->Normal());
     				glColor4f(0.0f,0.0f,1.0f,0.7f);
     				glVertex3fv(s->Center());
@@ -812,7 +823,7 @@ void GLWidget::paintGL()
     					glEnd();
     				}
     			}
-    			//				s->DrawTriangleFan(16,(mSurfelRadius*0.01));
+
     		}
 
     		if (mShowModelPoints)
@@ -876,29 +887,29 @@ void GLWidget::paintGL()
     			if  (mClusterLog.maskRenderingClusterWith.Test(ClusterLog::EWASplat))
     			{
 					std::cout << "Felipe" << std::endl;
-//        			mRenderer.beginVisibilityPass();
-//        			glBegin(GL_POINTS);
-//        			for (unsigned int i = mClusterLog.getClusterRangeBegin(); i <= mClusterLog.getClusterRangeEnd() ; ++i)
-//        			{
-//        				glMultiTexCoord1f(GL_TEXTURE2,(cluster.NewSurfels[i].MajorAxis().first  * mSurfelRadius * 0.01) );
-//        				glNormal3fv(cluster.NewSurfels[i].Normal());
-//        				glColor4f(0.0f,0.0f,1.0f,0.7f);
-//        				glVertex3fv(cluster.NewSurfels[i].Center());
-//        			}
-//        			glEnd();
-//
-//        			mRenderer.beginAttributePass();
-//
-//        			glBegin(GL_POINTS);
-//        			for (unsigned int i = mClusterLog.getClusterRangeBegin(); i <= mClusterLog.getClusterRangeEnd() ; ++i)
-//        			{
-//        				glMultiTexCoord1f(GL_TEXTURE2,(cluster.NewSurfels[i].MajorAxis().first * mSurfelRadius * 0.01));
-//        				glNormal3fv(cluster.NewSurfels[i].Normal());
-//        				glColor4f(0.0f,0.0f,1.0f,0.7f);
-//        				glVertex3fv(cluster.NewSurfels[i].Center());
-//        			}
-//        			glEnd();
-//        			mRenderer.finalize();
+        			mRenderer.beginVisibilityPass();
+        			glBegin(GL_POINTS);
+        			for (unsigned int i = mClusterLog.getClusterRangeBegin(); i <= mClusterLog.getClusterRangeEnd() ; ++i)
+        			{
+        				glMultiTexCoord1f(GL_TEXTURE2,(cluster.NewSurfels[i].MajorAxis().first  * mClusterLog.getSplatRadiusf()) );
+        				glNormal3fv(cluster.NewSurfels[i].Normal());
+        				glColor4f(0.0f,0.0f,1.0f,0.7f);
+        				glVertex3fv(cluster.NewSurfels[i].Center());
+        			}
+        			glEnd();
+
+        			mRenderer.beginAttributePass();
+
+        			glBegin(GL_POINTS);
+        			for (unsigned int i = mClusterLog.getClusterRangeBegin(); i <= mClusterLog.getClusterRangeEnd() ; ++i)
+        			{
+        				glMultiTexCoord1f(GL_TEXTURE2,(cluster.NewSurfels[i].MajorAxis().first * mClusterLog.getSplatRadiusf()));
+        				glNormal3fv(cluster.NewSurfels[i].Normal());
+        				glColor4f(0.0f,0.0f,1.0f,0.7f);
+        				glVertex3fv(cluster.NewSurfels[i].Center());
+        			}
+        			glEnd();
+        			mRenderer.finalize();
     			}
     			if (mClusterLog.maskShow.Test(ClusterLog::Surfel))
     			{
