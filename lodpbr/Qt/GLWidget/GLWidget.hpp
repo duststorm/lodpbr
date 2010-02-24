@@ -102,6 +102,9 @@ public:
 public slots:
 	void Clear();
 
+	// Tool bar
+	void takeSnapshot();
+
 	void setBackgroundColor(const QColor& color) { backgroundColor=color; qglClearColor(color); };
 	void setForegroundColor(const QColor& color) { foregroundColor = color; };
 	//@}
@@ -245,6 +248,8 @@ private:
 	bool mShowModelSurfel;
 
     GlSplat::SplatRenderer mRenderer;
+
+    QImage snapBuffer;
 
 
 };
