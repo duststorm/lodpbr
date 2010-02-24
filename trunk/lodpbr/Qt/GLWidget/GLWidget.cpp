@@ -808,11 +808,11 @@ void GLWidget::paintGL()
     			//glColor4f(0.5f,0.5f,0.5f,1.0f);
     			//glColor4f(1.0,0.35,0.0,0.75);
     			glColor4f(0.0f,0.0f,1.0f,0.8f);
-
+    			std::list<Celer::Point3<float> > lBoundaries ;
     			for (std::vector<Surfel>::iterator s = cluster.Surfels.begin(); s != cluster.Surfels.end();++s)
     			{
-
-    				if ( ( mClusterLog.getCamera().Eyes().Norm() * s->Normal() ) > -0.2f )
+    				lBoundaries = s->BoundariesSamples(32,mSurfelRadius * 0.01);
+    				if ( (camera.Eyes().Norm() * s->Normal() ) > -0.2f )
     				{
     					std::list<Celer::Point3<float> > lBoundaries = s->BoundariesSamples(32,mSurfelRadius * 0.01);
     					glBegin (GL_TRIANGLE_FAN);
