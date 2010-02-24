@@ -74,6 +74,16 @@ public:
         this->mRadius = mRadius;
     }
 
+    float getSplatRadiusf() const
+    {
+        return static_cast<float>(mSplatRadius*0.01);
+    }
+
+    void setSplatRadius(unsigned int mRadius)
+    {
+        this->mSplatRadius = mRadius;
+    }
+
     unsigned int getClusteIndex() const
     {
         return mClusteIndex;
@@ -180,6 +190,7 @@ private:
 	unsigned int mClusterRangeEnd;
 
 	unsigned int mRadius;
+	unsigned int mSplatRadius;
 };
 
 #endif /* CLUSTERRENDERLOG_H_ */

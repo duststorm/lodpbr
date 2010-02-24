@@ -196,6 +196,11 @@ void MyMainWindow::on_sliderModelSurfelRadius_valueChanged (int value)
 	GLWIDGET()->setModelSurfelRadius(value);
 }
 
+void MyMainWindow::on_sliderModelSplattingRadius_valueChanged (int value)
+{
+	GLWIDGET()->setModelSplatlRadius(value);
+}
+
 
 //==== DockBuildCluster =======================================================
 void  MyMainWindow::on_comboBoxCluster_BuildSurfelSplatShape_activated (const QString &s)
@@ -263,6 +268,10 @@ void MyMainWindow::on_spinBoxCluster_DrawClusterWithRangeBegin_valueChanged(int 
 
 }
 
+void MyMainWindow:: on_sliderClusterSplattingRadius_valueChanged (int value)
+{
+	GLWIDGET()->setClusterSplatlRadius(value);
+}
 
 void MyMainWindow::on_sliderCluster_DrawClusterWithRangeBegin_valueChanged(int value)
 {
