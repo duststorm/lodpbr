@@ -97,8 +97,8 @@
    </property>
    <property name="minimumSize">
     <size>
-     <width>300</width>
-     <height>420</height>
+     <width>331</width>
+     <height>476</height>
     </size>
    </property>
    <property name="acceptDrops">
@@ -167,20 +167,7 @@
             </property>
            </widget>
           </item>
-          <item row="0" column="3">
-           <widget class="QToolButton" name="toolButtonClusterDrawNormal">
-            <property name="enabled">
-             <bool>false</bool>
-            </property>
-            <property name="text">
-             <string>Normal</string>
-            </property>
-            <property name="checkable">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="2">
+          <item row="1" column="1">
            <widget class="QSlider" name="sliderClusterSurfelRadius">
             <property name="enabled">
              <bool>false</bool>
@@ -219,12 +206,38 @@
            </widget>
           </item>
           <item row="0" column="1">
+           <widget class="QToolButton" name="toolButtonClusterDrawNormal">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
+            <property name="text">
+             <string>Normal</string>
+            </property>
+            <property name="checkable">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="2">
            <widget class="QToolButton" name="toolButtonClusterDrawSurfel">
             <property name="enabled">
              <bool>false</bool>
             </property>
             <property name="text">
-             <string> Surfel </string>
+             <string>   Surfel   </string>
+            </property>
+            <property name="checkable">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="2">
+           <widget class="QToolButton" name="toolButtonClusterSplatting">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
+            <property name="text">
+             <string>Splatting</string>
             </property>
             <property name="checkable">
              <bool>true</bool>
@@ -687,8 +700,8 @@
          </widget>
         </item>
         <item>
-         <layout class="QHBoxLayout" name="horizontalLayout_Model">
-          <item>
+         <layout class="QGridLayout" name="gridLayout_4">
+          <item row="2" column="0">
            <widget class="QToolButton" name="toolButtonModelDrawPoints">
             <property name="enabled">
              <bool>false</bool>
@@ -701,7 +714,7 @@
             </property>
            </widget>
           </item>
-          <item>
+          <item row="1" column="0">
            <widget class="QToolButton" name="toolButtonModelDrawNormal">
             <property name="enabled">
              <bool>false</bool>
@@ -714,20 +727,7 @@
             </property>
            </widget>
           </item>
-          <item>
-           <widget class="QToolButton" name="toolButtonModelDrawSurfel">
-            <property name="enabled">
-             <bool>false</bool>
-            </property>
-            <property name="text">
-             <string> Surfel </string>
-            </property>
-            <property name="checkable">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item>
+          <item row="2" column="2">
            <widget class="QSlider" name="sliderModelSurfelRadius">
             <property name="enabled">
              <bool>false</bool>
@@ -755,7 +755,39 @@
             </property>
            </widget>
           </item>
+          <item row="1" column="1">
+           <widget class="QToolButton" name="toolButtonModelDrawSurfel">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
+            <property name="text">
+             <string>   Surfel   </string>
+            </property>
+            <property name="checkable">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="1">
+           <widget class="QToolButton" name="toolButtonModelSplatting">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
+            <property name="text">
+             <string>Splatting</string>
+            </property>
+            <property name="checkable">
+             <bool>true</bool>
+            </property>
+            <property name="checked">
+             <bool>false</bool>
+            </property>
+           </widget>
+          </item>
          </layout>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_Model"/>
         </item>
         <item>
          <spacer name="verticalSpacer_2">
@@ -903,12 +935,12 @@
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>178</x>
-     <y>541</y>
+     <x>188</x>
+     <y>535</y>
     </hint>
     <hint type="destinationlabel">
-     <x>203</x>
-     <y>573</y>
+     <x>161</x>
+     <y>567</y>
     </hint>
    </hints>
   </connection>
@@ -919,12 +951,12 @@
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>125</x>
-     <y>541</y>
+     <x>135</x>
+     <y>535</y>
     </hint>
     <hint type="destinationlabel">
-     <x>138</x>
-     <y>573</y>
+     <x>80</x>
+     <y>567</y>
     </hint>
    </hints>
   </connection>
@@ -935,12 +967,12 @@
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>64</x>
-     <y>541</y>
+     <x>74</x>
+     <y>535</y>
     </hint>
     <hint type="destinationlabel">
-     <x>66</x>
-     <y>573</y>
+     <x>75</x>
+     <y>598</y>
     </hint>
    </hints>
   </connection>
@@ -951,12 +983,12 @@
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>203</x>
-     <y>573</y>
+     <x>161</x>
+     <y>567</y>
     </hint>
     <hint type="destinationlabel">
-     <x>297</x>
-     <y>570</y>
+     <x>301</x>
+     <y>595</y>
     </hint>
    </hints>
   </connection>
@@ -983,8 +1015,8 @@
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>822</x>
-     <y>112</y>
+     <x>1068</x>
+     <y>108</y>
     </hint>
     <hint type="destinationlabel">
      <x>823</x>
@@ -999,12 +1031,12 @@
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>790</x>
-     <y>233</y>
+     <x>1058</x>
+     <y>218</y>
     </hint>
     <hint type="destinationlabel">
-     <x>880</x>
-     <y>263</y>
+     <x>1057</x>
+     <y>248</y>
     </hint>
    </hints>
   </connection>
@@ -1015,12 +1047,12 @@
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>1032</x>
-     <y>233</y>
+     <x>1058</x>
+     <y>218</y>
     </hint>
     <hint type="destinationlabel">
-     <x>873</x>
-     <y>268</y>
+     <x>869</x>
+     <y>252</y>
     </hint>
    </hints>
   </connection>
@@ -1031,12 +1063,12 @@
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>790</x>
-     <y>298</y>
+     <x>1058</x>
+     <y>281</y>
     </hint>
     <hint type="destinationlabel">
-     <x>880</x>
-     <y>330</y>
+     <x>1057</x>
+     <y>313</y>
     </hint>
    </hints>
   </connection>
@@ -1047,12 +1079,12 @@
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>793</x>
-     <y>298</y>
+     <x>1058</x>
+     <y>281</y>
     </hint>
     <hint type="destinationlabel">
-     <x>797</x>
-     <y>339</y>
+     <x>869</x>
+     <y>321</y>
     </hint>
    </hints>
   </connection>
@@ -1063,12 +1095,12 @@
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>913</x>
-     <y>298</y>
+     <x>1058</x>
+     <y>281</y>
     </hint>
     <hint type="destinationlabel">
-     <x>873</x>
-     <y>397</y>
+     <x>869</x>
+     <y>377</y>
     </hint>
    </hints>
   </connection>
@@ -1079,12 +1111,12 @@
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>996</x>
-     <y>298</y>
+     <x>1058</x>
+     <y>281</y>
     </hint>
     <hint type="destinationlabel">
      <x>1057</x>
-     <y>388</y>
+     <y>369</y>
     </hint>
    </hints>
   </connection>
@@ -1095,12 +1127,12 @@
    <slot>setValue(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>1041</x>
-     <y>263</y>
+     <x>1057</x>
+     <y>248</y>
     </hint>
     <hint type="destinationlabel">
-     <x>873</x>
-     <y>268</y>
+     <x>869</x>
+     <y>252</y>
     </hint>
    </hints>
   </connection>
@@ -1111,12 +1143,12 @@
    <slot>setValue(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>873</x>
-     <y>268</y>
+     <x>869</x>
+     <y>252</y>
     </hint>
     <hint type="destinationlabel">
      <x>1057</x>
-     <y>263</y>
+     <y>248</y>
     </hint>
    </hints>
   </connection>
@@ -1127,12 +1159,12 @@
    <slot>setValue(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>880</x>
-     <y>330</y>
+     <x>1057</x>
+     <y>313</y>
     </hint>
     <hint type="destinationlabel">
-     <x>791</x>
-     <y>339</y>
+     <x>869</x>
+     <y>321</y>
     </hint>
    </hints>
   </connection>
@@ -1143,12 +1175,12 @@
    <slot>setValue(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>791</x>
-     <y>339</y>
+     <x>869</x>
+     <y>321</y>
     </hint>
     <hint type="destinationlabel">
-     <x>880</x>
-     <y>330</y>
+     <x>1057</x>
+     <y>313</y>
     </hint>
    </hints>
   </connection>
@@ -1159,12 +1191,12 @@
    <slot>setValue(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>873</x>
-     <y>397</y>
+     <x>869</x>
+     <y>377</y>
     </hint>
     <hint type="destinationlabel">
      <x>1057</x>
-     <y>388</y>
+     <y>369</y>
     </hint>
    </hints>
   </connection>
@@ -1176,11 +1208,11 @@
    <hints>
     <hint type="sourcelabel">
      <x>1057</x>
-     <y>388</y>
+     <y>369</y>
     </hint>
     <hint type="destinationlabel">
-     <x>873</x>
-     <y>397</y>
+     <x>869</x>
+     <y>377</y>
     </hint>
    </hints>
   </connection>
@@ -1191,12 +1223,12 @@
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>871</x>
-     <y>118</y>
+     <x>1068</x>
+     <y>108</y>
     </hint>
     <hint type="destinationlabel">
-     <x>871</x>
-     <y>139</y>
+     <x>1067</x>
+     <y>140</y>
     </hint>
    </hints>
   </connection>
@@ -1207,12 +1239,12 @@
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>780</x>
-     <y>122</y>
+     <x>1068</x>
+     <y>108</y>
     </hint>
     <hint type="destinationlabel">
-     <x>781</x>
-     <y>185</y>
+     <x>838</x>
+     <y>171</y>
     </hint>
    </hints>
   </connection>
@@ -1223,12 +1255,12 @@
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>804</x>
-     <y>118</y>
+     <x>1068</x>
+     <y>108</y>
     </hint>
     <hint type="destinationlabel">
-     <x>1033</x>
-     <y>154</y>
+     <x>905</x>
+     <y>140</y>
     </hint>
    </hints>
   </connection>
@@ -1239,12 +1271,12 @@
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>881</x>
-     <y>139</y>
+     <x>1067</x>
+     <y>140</y>
     </hint>
     <hint type="destinationlabel">
-     <x>1001</x>
-     <y>151</y>
+     <x>986</x>
+     <y>168</y>
     </hint>
    </hints>
   </connection>
@@ -1255,12 +1287,60 @@
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>780</x>
-     <y>114</y>
+     <x>1068</x>
+     <y>108</y>
     </hint>
     <hint type="destinationlabel">
-     <x>781</x>
-     <y>154</y>
+     <x>838</x>
+     <y>140</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>toolButtonDrawModel</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>toolButtonModelSplatting</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>113</x>
+     <y>522</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>113</x>
+     <y>584</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>toolButtonDrawCluster</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>toolButtonClusterSplatting</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>1020</x>
+     <y>94</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>1020</x>
+     <y>161</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>toolButtonModelSplatting</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>sliderModelSurfelRadius</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>148</x>
+     <y>595</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>182</x>
+     <y>591</y>
     </hint>
    </hints>
   </connection>

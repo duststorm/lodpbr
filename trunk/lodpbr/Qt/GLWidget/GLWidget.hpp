@@ -124,6 +124,7 @@ public slots:
 	void setShowSeed				(bool checked);
 	void setShowSurfel				(bool checked);
 	void setShowNormal				(bool checked);
+	void setShowClusterSplatting    (bool checked);
 
 	void setShowDrawClusterWithID		(bool checked);
 	void setShowDrawClusterWithRange	(bool checked);
@@ -140,6 +141,8 @@ public slots:
 	void setShowModelPoints				 (bool checked);
 	void setShowModelNormal				 (bool checked);
 	void setShowModelSurfel				 (bool checked);
+	void setShowModelSplating       	 (bool checked);
+
 
 	// Cluster
 // --
@@ -246,6 +249,7 @@ private:
 	bool mShowModelPoints;
 	bool mShowModelNormal;
 	bool mShowModelSurfel;
+	bool mShowModelSplatting;
 
     GlSplat::SplatRenderer mRenderer;
 
