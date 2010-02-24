@@ -186,6 +186,11 @@ void MyMainWindow::on_toolButtonModelDrawSurfel_toggled(bool checked)
 	GLWIDGET()->setShowModelSurfel(checked);
 }
 
+void MyMainWindow::on_toolButtonModelSplatting_toggled (bool checked)
+{
+	GLWIDGET()->setShowModelSplating(checked);
+}
+
 void MyMainWindow::on_sliderModelSurfelRadius_valueChanged (int value)
 {
 	GLWIDGET()->setModelSurfelRadius(value);
@@ -303,6 +308,11 @@ void MyMainWindow::on_toolButtonClusterDrawSeed_toggled(bool checked)
 void MyMainWindow::on_toolButtonClusterDrawNormal_toggled(bool checked)
 {
 	GLWIDGET()->setShowNormal(checked);
+}
+
+void MyMainWindow::on_toolButtonClusterSplatting_toggled (bool checked)
+{
+	GLWIDGET()->setShowClusterSplatting(checked);
 }
 
 void MyMainWindow::on_sliderClusterSurfelRadius_valueChanged (int value)
