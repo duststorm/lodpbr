@@ -82,6 +82,11 @@ void GLWidget::init()
 
 }
 
+void GLWidget::takeSnapshot()
+{
+
+}
+
 void GLWidget::setSelectBufferSize(int size)
 {
 	if (mSelectBuffer)

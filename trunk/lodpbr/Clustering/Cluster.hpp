@@ -519,10 +519,12 @@ public:
     	    glEnable(GL_POLYGON_OFFSET_FILL | GL_POLYGON_SMOOTH_HINT | GL_MULTISAMPLE);
     	    glPolygonOffset(1,1);
     	 	glEnable (GL_BLEND);
+    	 	glEnable(GL_MULTISAMPLE);
     	 	glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     	 	glPolygonMode(GL_FRONT_AND_BACK,GL_FILL);
     	 	//glColor4f(0.5f,0.5f,0.5f,1.0f);
-    	 	glColor4f(1.0,0.35,0.0,0.75);
+    	 	//glColor4f(1.0,0.35,0.0,0.75);
+    	 	glColor4f(0.0f,0.0f,1.0f,0.8f);
     	 	if(pClusterLog.maskRenderingClusterBy.Test(ClusterLog::Range))
     	 	{
     	 	for(unsigned int i = pClusterLog.getClusterRangeBegin(); i <= pClusterLog.getClusterRangeEnd() ; ++i )
@@ -551,6 +553,7 @@ public:
 	 			}
 	 			glEnd();
     	 	}
+    	 	glDisable(GL_MULTISAMPLE);
     	 	glPopMatrix();
 
 

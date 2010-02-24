@@ -73,10 +73,21 @@ MyMainWindow::MyMainWindow (QMainWindow *parent): QMainWindow(parent)
 
 }
 
+//==== Tool Bar
+
+//void MyMainWindow::on_action_Snapshot_triggered	()
+//{
+//	if (GLWIDGET())
+//		{
+//			GLWIDGET()->takeSnapshot();
+//		}
+//}
+
 //==== Slot SubWindow Activated ===============================================
 
 void MyMainWindow::updateMenus()
 {
+
 
 }
 

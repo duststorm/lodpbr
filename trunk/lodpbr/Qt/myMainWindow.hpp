@@ -42,6 +42,9 @@ public:
 
 public slots:
 
+	// ToolBar
+//	void on_action_Snapshot_triggered								();
+	//
 	void updateMenus												();
 	void updateWindowMenu											();
 	// para cada janela opengl, atualizar a janela de atributos do cluster
