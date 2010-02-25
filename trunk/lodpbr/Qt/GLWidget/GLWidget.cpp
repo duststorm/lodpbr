@@ -767,20 +767,21 @@ void GLWidget::paintGL()
 
     		if (mShowModelSplatting)
     		{
-
     			mRenderer.beginVisibilityPass();
     			glBegin(GL_POINTS);
     			for (std::vector<Surfel>::iterator s = cluster.Surfels.begin(); s != cluster.Surfels.end();++s)
     			{
-    				glMultiTexCoord1f(GL_TEXTURE2,(s->Radius() * mSplatRadius * 0.01) );
-    				glNormal3fv(s->Normal());
-    				glColor4f(0.0f,0.0f,1.0f,0.7f);
-    				glVertex3fv(s->Center());
+    				if(mShowModelSplatting)
+    				{
+    					glMultiTexCoord1f(GL_TEXTURE2,(s->Radius() * mSplatRadius * 0.01) );
+    					glNormal3fv(s->Normal());
+    					glColor4f(0.0f,0.0f,1.0f,0.7f);
+    					glVertex3fv(s->Center());
+    				}
     			}
     			glEnd();
 
     			mRenderer.beginAttributePass();
-
     			glBegin(GL_POINTS);
     			for (std::vector<Surfel>::iterator s = cluster.Surfels.begin(); s != cluster.Surfels.end();++s)
     			{
@@ -791,13 +792,12 @@ void GLWidget::paintGL()
     			}
     			glEnd();
     			mRenderer.finalize();
-
-    			//				s->DrawTriangleFan(16,(mSurfelRadius*0.01));
     		}
+
 
     		if (mShowModelSurfel)
     		{
-
+    			std::list<Celer::Point3<float> > lBoundaries;
     			glPushMatrix();
     			glEnable(GL_POLYGON_OFFSET_FILL | GL_POLYGON_SMOOTH_HINT | GL_MULTISAMPLE);
     			glPolygonOffset(1,1);
@@ -808,13 +808,11 @@ void GLWidget::paintGL()
     			//glColor4f(0.5f,0.5f,0.5f,1.0f);
     			//glColor4f(1.0,0.35,0.0,0.75);
     			glColor4f(0.0f,0.0f,1.0f,0.8f);
-    			std::list<Celer::Point3<float> > lBoundaries ;
     			for (std::vector<Surfel>::iterator s = cluster.Surfels.begin(); s != cluster.Surfels.end();++s)
     			{
-    				lBoundaries = s->BoundariesSamples(32,mSurfelRadius * 0.01);
     				if ( (camera.Eyes().Norm() * s->Normal() ) > -0.2f )
     				{
-    					std::list<Celer::Point3<float> > lBoundaries = s->BoundariesSamples(32,mSurfelRadius * 0.01);
+    					lBoundaries = s->BoundariesSamples(32,mSurfelRadius * 0.01);
     					glBegin (GL_TRIANGLE_FAN);
     					for(std::list<Celer::Point3<float> >::iterator  it = lBoundaries.begin();it != lBoundaries.end();++it)
     					{
@@ -823,7 +821,7 @@ void GLWidget::paintGL()
     					glEnd();
     				}
     			}
-
+    			glPopMatrix();
     		}
 
     		if (mShowModelPoints)
@@ -886,7 +884,6 @@ void GLWidget::paintGL()
 
     			if  (mClusterLog.maskRenderingClusterWith.Test(ClusterLog::EWASplat))
     			{
-					std::cout << "Felipe" << std::endl;
         			mRenderer.beginVisibilityPass();
         			glBegin(GL_POINTS);
         			for (unsigned int i = mClusterLog.getClusterRangeBegin(); i <= mClusterLog.getClusterRangeEnd() ; ++i)
