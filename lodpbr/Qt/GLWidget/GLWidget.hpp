@@ -97,7 +97,9 @@ public:
     std::vector<Surfel> 								Surfels;
 
     Celer::BoundingBox3<float>   	   					Box;
-
+    //
+    void setCamera(Celer::Camera pCamera){ this->camera = pCamera;}
+    Celer::Camera Camera() {return this->camera;}
 
 public slots:
 	void Clear();

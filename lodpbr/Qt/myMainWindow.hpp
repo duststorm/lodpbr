@@ -55,6 +55,7 @@ public slots:
  	void on_action_Open_LOD_triggered								();
  	void on_action_Save_As_LOD_triggered							();
  	void on_action_Full_Screen_triggered							();
+ 	void on_actionShareView_triggered								();
 
 
  	// -- Visible Dock Widgets
