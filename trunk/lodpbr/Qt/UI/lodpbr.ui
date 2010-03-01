@@ -78,8 +78,19 @@
       <string>Dock windows</string>
      </property>
     </widget>
+    <widget class="QMenu" name="menuMid_Windows">
+     <property name="title">
+      <string>Sub windows</string>
+     </property>
+     <addaction name="actionCascate"/>
+     <addaction name="actionTile"/>
+     <addaction name="separator"/>
+     <addaction name="actionShareView"/>
+    </widget>
     <addaction name="action_Full_Screen"/>
     <addaction name="menuDockWindows"/>
+    <addaction name="menuMid_Windows"/>
+    <addaction name="separator"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuView"/>
@@ -906,6 +917,24 @@
     <string>Save as Simplification</string>
    </property>
   </action>
+  <action name="actionCascate">
+   <property name="text">
+    <string>Cascate</string>
+   </property>
+  </action>
+  <action name="actionTile">
+   <property name="text">
+    <string>Tile</string>
+   </property>
+  </action>
+  <action name="actionShareView">
+   <property name="checkable">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>Share View</string>
+   </property>
+  </action>
  </widget>
  <resources/>
  <connections>
@@ -1370,6 +1399,38 @@
     <hint type="destinationlabel">
      <x>182</x>
      <y>591</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionTile</sender>
+   <signal>triggered()</signal>
+   <receiver>mdiArea</receiver>
+   <slot>tileSubWindows()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>528</x>
+     <y>422</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionCascate</sender>
+   <signal>triggered()</signal>
+   <receiver>mdiArea</receiver>
+   <slot>cascadeSubWindows()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>528</x>
+     <y>422</y>
     </hint>
    </hints>
   </connection>

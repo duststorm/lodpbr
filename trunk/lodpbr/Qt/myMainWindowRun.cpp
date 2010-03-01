@@ -85,9 +85,26 @@ MyMainWindow::MyMainWindow (QMainWindow *parent): QMainWindow(parent)
 
 //==== Slot SubWindow Activated ===============================================
 
-void MyMainWindow::updateMenus()
+void MyMainWindow::on_actionShareView_triggered()
 {
 
+	std::cout <<  "glArea Entro" <<std::endl;
+
+    foreach (QMdiSubWindow *window, mdiArea->subWindowList())
+	{
+
+	     GLWidget *glArea = qobject_cast<GLWidget *>(window->widget());
+	     if(glArea)
+	     {
+	    	 glArea->setCamera( qobject_cast<GLWidget *>(mdiArea->activeSubWindow()->widget())->Camera() );
+	    	 glArea->update();
+	     }
+	}
+
+}
+
+void MyMainWindow::updateMenus()
+{
 
 }
 
