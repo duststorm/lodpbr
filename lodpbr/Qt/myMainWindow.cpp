@@ -30,21 +30,61 @@ bool MyMainWindow::QCallBack(const int pos, const char * str)
 
 void MyMainWindow::on_action_Open_LOD_triggered		()
 {
-	if (GLWIDGET())
-	{
-	    QString fileName = QFileDialog::getOpenFileName (
-	                      this,
-	                      tr("Open File"),
-	                      ".",
-	                      tr("Surfels Model (*.Surfels)"));
 
-		if (fileName != "")
-		{
-			std::string filename =  QFile::encodeName(fileName).constData ();
-			GLWIDGET()->LoadLOD(filename.c_str(),QCallBack);
-		}
 
-	}
+
+    QString fileName = QFileDialog::getOpenFileName (
+                      this,
+                      tr("Choose a ply file"),
+                      ".",
+                      tr("ply model (*.surfels)"));
+
+    // Tries to load file if filename not empty.
+    if (fileName != "") {
+
+  	  GLWidget*  gl = new GLWidget(QGLFormat(QGLFormat(QGL::SampleBuffers)),this);
+  	  gl->setAttribute(Qt::WA_DeleteOnClose);
+  	  mdiArea->addSubWindow(gl);
+
+  	  gl->show();
+  	  gl->calLimits();
+
+	 std::string filename =  QFile::encodeName(fileName).constData ();
+	 gl->LoadLOD(filename.c_str(),QCallBack);
+	 dockWidgetDrawClusterContents->setEnabled(1);
+
+	 std::cout << GLWIDGET()->cluster.Clusters.size() << "Cluster Size" << std::endl;
+	 spinBoxCluster_DrawClusterWithID->setMaximum(GLWIDGET()->cluster.NewSurfels.size());
+
+	 			sliderCluster_DrawClusterWithID->setMaximum(GLWIDGET()->cluster.NewSurfels.size());
+
+	 			spinBoxCluster_DrawClusterWithRangeBegin->setMaximum(GLWIDGET()->cluster.NewSurfels.size());
+	 			spinBoxCluster_DrawClusterWithRangeEnd->setMaximum(GLWIDGET()->cluster.NewSurfels.size());
+
+	 			sliderCluster_DrawClusterWithRangeBegin->setMaximum(GLWIDGET()->cluster.NewSurfels.size());
+	 			sliderCluster_DrawClusterWithRangeEnd->setMaximum(GLWIDGET()->cluster.NewSurfels.size());
+
+	 			// -- Atualiza os valores corrente
+	 			// botao cluster esta ativado ?
+	 			toolButtonDrawCluster->setChecked(GLWIDGET()->getShowCluster());
+	 			// botao Draw Seed esta ativado ?
+	 			toolButtonClusterDrawSeed->setChecked(GLWIDGET()->getShowSeed());
+	 			// botao Draw Srufel esta ativado ?
+	 			toolButtonClusterDrawSurfel->setChecked(GLWIDGET()->getShowSurfel());
+	 			// botao Draw Normal esta ativado ?
+	 			toolButtonClusterDrawNormal->setChecked(GLWIDGET()->getShowNormal());
+
+	 			radioButtonCluster_DrawIndex->setChecked(GLWIDGET()->getShowDrawClusterWithID());
+	 			radioButtonCluster_DrawRange->setChecked(GLWIDGET()->getShowDrawClusterWithRange());
+
+	 			// Atualiza os valoes dos spinBox que automaticamente atualiza os valos dos sliders
+	 			spinBoxCluster_DrawClusterWithID->setValue(GLWIDGET()->getDrawClusterWithID());
+	 			spinBoxCluster_DrawClusterWithRangeBegin->setValue(GLWIDGET()->getDrawClusterWithRangeBegin());
+	 			spinBoxCluster_DrawClusterWithRangeEnd->setValue(GLWIDGET()->getDrawClusterWithRangeEnd());
+
+
+    }
+
 
 }
 void MyMainWindow::on_action_Save_As_LOD_triggered	()

@@ -110,33 +110,6 @@ class Surfel
 		float b;
 		float max_error;
 		float min_error;
-		inline const LoadPlySurfel& operator= ( const Surfel<Real>& pSurfel)
-		{
-
-			this->cx    		= pSurfel.Center().x;
-			this->cy    		= pSurfel.Center().y;
-			this->cz    		= pSurfel.Center().z;
-			this->nx    		= pSurfel.Normal().x;
-			this->ny    		= pSurfel.Normal().y;
-			this->nz    		= pSurfel.Normal().z;
-
-			this->major_axisx  = pSurfel.MajorAxis().second.x;
-			this->major_axisy  = pSurfel.MajorAxis().second.y;
-			this->major_axisz  = pSurfel.MajorAxis().second.z;
-			this->major_axis_size  = pSurfel.MajorAxis().first;
-
-			this->minor_axisx  = pSurfel.MinorAxis().second.x;
-			this->minor_axisy  = pSurfel.MinorAxis().second.y;
-			this->minor_axisz  = pSurfel.MinorAxis().second.z;
-			this->minor_axis_size  = pSurfel.MinorAxis().first;
-			this->r	     		= pSurfel.ColorRGB().Red();
-			this->g 				= pSurfel.ColorRGB().Green();
-			this->b                = pSurfel.ColorRGB().Blue();
-			this->max_error 		= pSurfel.MaxError();
-			this->min_error 		= pSurfel.MinError();
-
-			return ( *this );
-		}
 	};
 
 
@@ -373,15 +346,16 @@ Surfel<Real>::Surfel (const Surfel<Real>* pSurfel) :
 };
 
 template<class Real>
-Surfel<Real>::Surfel (const LoadPlySurfel& pSurfel) : mCenter(pSurfel.cx,pSurfel.cy,pSurfel.cz),
+Surfel<Real>::Surfel (const LoadPlySurfel& pSurfel) :
+										 mCenter(pSurfel.cx,pSurfel.cy,pSurfel.cz),
   										 mNormal(pSurfel.nx,pSurfel.ny,pSurfel.nz),
   									 	 mColor(pSurfel.r,pSurfel.g,pSurfel.b),
   									 	 mSplatRadius(0),
-  		  								 mMinorAxis(std::pair<Real,Vector3>(pSurfel.minor_axis_size,
+  		  								 mMinorAxis(std::make_pair<Real,Vector3>(pSurfel.minor_axis_size,
   		  								   		              Vector3(pSurfel.minor_axisx,
   		  										               		  pSurfel.minor_axisy,
   		  										               		  pSurfel.minor_axisz))),
-  										 mMajorAxis(std::pair<Real,Vector3>(pSurfel.major_axis_size,
+  										 mMajorAxis(std::make_pair<Real,Vector3>(pSurfel.major_axis_size,
   												              Vector3(pSurfel.major_axisx,
   												            		  pSurfel.major_axisy,
   												            		  pSurfel.major_axisz))),
