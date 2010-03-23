@@ -203,6 +203,7 @@ void GLWidget::setShowSurfel(bool checked)
 {
 	if (checked == true)
 	{
+		std::cout << "Set Show Surfel" << std::endl;
 		mClusterLog.maskShow.Add(ClusterLog::Surfel);
 	}
 	else
@@ -371,6 +372,13 @@ void GLWidget::LoadModel(const char * filename,vcg::CallBackPos *cb=0 )
 
 void GLWidget::SaveLOD(const char * filename,vcg::CallBackPos *cb)
 {
+	for (int i = 0; i < cluster.NewSurfels.size();++i)
+	{
+		std::cout << "---Save-------------------------" << std::endl;
+		std::cout <<  cluster.NewSurfels[i] << std::endl;
+		std::cout << "---Save-------------------------" << std::endl;
+	}
+
 	if(cluster.NewSurfels.size() > 0)
 		Celer::IOSurfels<float>::SaveSurfels(cluster.NewSurfels,filename,cb);
 }
@@ -759,7 +767,7 @@ void GLWidget::paintGL()
 	//select(lastPos);
 //
 //--
-    if (  cluster.Surfels.size() != 0 )
+    if (  (cluster.Surfels.size() != 0) || (cluster.NewSurfels.size() != 0) )
     {
     	if (mShowModel)
     	{
