@@ -419,24 +419,24 @@ public:
 		}
 
 		if( pf.AddToRead(Surfel<>::SurfelDesc(0)) !=-1 &&
-				pf.AddToRead(Surfel<>::SurfelDesc(1)) !=-1 &&
-				pf.AddToRead(Surfel<>::SurfelDesc(2)) !=-1 &&
-				pf.AddToRead(Surfel<>::SurfelDesc(3)) !=-1 &&
-				pf.AddToRead(Surfel<>::SurfelDesc(4)) !=-1 &&
-				pf.AddToRead(Surfel<>::SurfelDesc(5)) !=-1 &&
-				pf.AddToRead(Surfel<>::SurfelDesc(6)) !=-1 &&
-				pf.AddToRead(Surfel<>::SurfelDesc(7)) !=-1 &&
-				pf.AddToRead(Surfel<>::SurfelDesc(8)) !=-1 &&
-				pf.AddToRead(Surfel<>::SurfelDesc(9)) !=-1 &&
-				pf.AddToRead(Surfel<>::SurfelDesc(10))!=-1 &&
-				pf.AddToRead(Surfel<>::SurfelDesc(11))!=-1 &&
-				pf.AddToRead(Surfel<>::SurfelDesc(12))!=-1 &&
-				pf.AddToRead(Surfel<>::SurfelDesc(13))!=-1 &&
-				pf.AddToRead(Surfel<>::SurfelDesc(14))!=-1 &&
-				pf.AddToRead(Surfel<>::SurfelDesc(15))!=-1 &&
-				pf.AddToRead(Surfel<>::SurfelDesc(16))!=-1 &&
-				pf.AddToRead(Surfel<>::SurfelDesc(17))!=-1 &&
-				pf.AddToRead(Surfel<>::SurfelDesc(18))!=-1
+			pf.AddToRead(Surfel<>::SurfelDesc(1)) !=-1 &&
+			pf.AddToRead(Surfel<>::SurfelDesc(2)) !=-1 &&
+			pf.AddToRead(Surfel<>::SurfelDesc(3)) !=-1 &&
+			pf.AddToRead(Surfel<>::SurfelDesc(4)) !=-1 &&
+			pf.AddToRead(Surfel<>::SurfelDesc(5)) !=-1 &&
+			pf.AddToRead(Surfel<>::SurfelDesc(6)) !=-1 &&
+			pf.AddToRead(Surfel<>::SurfelDesc(7)) !=-1 &&
+			pf.AddToRead(Surfel<>::SurfelDesc(8)) !=-1 &&
+			pf.AddToRead(Surfel<>::SurfelDesc(9)) !=-1 &&
+			pf.AddToRead(Surfel<>::SurfelDesc(10))!=-1 &&
+			pf.AddToRead(Surfel<>::SurfelDesc(11))!=-1 &&
+			pf.AddToRead(Surfel<>::SurfelDesc(12))!=-1 &&
+			pf.AddToRead(Surfel<>::SurfelDesc(13))!=-1 &&
+			pf.AddToRead(Surfel<>::SurfelDesc(14))!=-1 &&
+			pf.AddToRead(Surfel<>::SurfelDesc(15))!=-1 &&
+			pf.AddToRead(Surfel<>::SurfelDesc(16))!=-1 &&
+			pf.AddToRead(Surfel<>::SurfelDesc(17))!=-1 &&
+			pf.AddToRead(Surfel<>::SurfelDesc(18))!=-1
 		)
 		{
 			mask |= Surfel<>::IOM_SURFEL;

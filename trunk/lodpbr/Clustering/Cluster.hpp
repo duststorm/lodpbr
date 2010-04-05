@@ -130,21 +130,6 @@ public:
 
         }
 
-        SurfelPtrVector GetNotMarked( SurfelPtrVector& plNeighbors )
-        {
-                SurfelPtrVector lNeighbors;
-                for(SurfelPtrVectorIterator it = plNeighbors.begin(); it !=  plNeighbors.end();++it)
-                {
-
-                        if (  ((*it)->ExpansionMarked() == 0) )
-                        {
-                                lNeighbors.push_back((*it));
-                        }
-
-                }
-                return lNeighbors;
-        }
-
 
         void Curvature( SurfelPtr pSurfel, int pNeighbourhoodSize )
         {
@@ -266,13 +251,12 @@ public:
         void Build2(int pCont,int pKNeighborsSize ,const SurfelPtr& pSeed,ClusterLog& clusterLog,vcg::CallBackPos *cb=0  )
         {
 
+        	int shape  =  1<< 17;
+
         	if(pSeed == 0)
         	{
         		return;
         	}
-
-
-        	int shape = 0;
         	if (clusterLog.maskBuildClusterShape.Test(ClusterLog::ELLIPTICAL))
         	{
         		shape = 1 << 17;
@@ -302,12 +286,12 @@ public:
 
         	lNeighbors  = KDTree.KNearestNeighbors(lSurfel ,4, KNearestSearchComps);
 
-        	Real mHeightMax	=  0.5*(lSurfel->Center().EuclideanDistance(lNeighbors.back()->Center()));
+        	Real mHeightMax	=  0.1*(lSurfel->Center().EuclideanDistance(lNeighbors.back()->Center()));
 
         	int cont = 0;
 
         	lOpen.push_back(pSeed);
-        	// Para cada semente , gera seus vizinhos e depois escolhe uma semenete que nao esteje na intersecao
+        	// Para cada semente , gera seus vizinhos e depois escolhe uma semente que nao esteje na intersecao
         	// de sua vizinhanca
         	while(lSurfel != 0)//while ( (lOpen.size() != 0) )
         	{
@@ -330,56 +314,44 @@ public:
 
         			if (((lSurfel->Center() - (*it)->Center())*lSurfel->Normal()) < mHeightMax )
         			{
-        				if(me.NewSurfel(shape).TangencialError() <  lSurfel->MajorAxis().first)
+        				if(me.NewSurfel(shape).TangencialError() <  lSurfel->MajorAxis().first*0.1)
         				{
         					if ((*it)->ExpansionMarked() == 1)
         					{
         						(*it)->SetMarked(1);
         						lClose.push_back((*(*it)));
         						me = MergeEllipses<Real>(lClose,shape);
-
+        						(*it)->SetMinError(me.NewSurfel(shape).TangencialError()+me.NewSurfel(shape).PerpendicularError());
         					}else
         					{
         						(*it)->SetExpansionMarked(1);
         						lClose.push_back((*(*it)));
         						me = MergeEllipses<Real>(lClose,shape);
+        						(*it)->SetMinError(me.NewSurfel(shape).TangencialError()+me.NewSurfel(shape).PerpendicularError());
         					}
 							//std::cout << " HeightMax :" << mHeightMax << " me Perpendicular Error " << me.NewSurfel().PerpendicularError() << std::endl;
         				}
-        			}else { continue; }
 
-//        			if (lClose.size() >= 28)
-//        			{
-//        				if ((*it)->Marked() == 0)
-//        				{
-//        					lOpen.push_back((*it));
-//        				}
-//        			}
+        			}else
+        			{
+        				continue;
+        			}
 
 
         		}
 
         		lSurfel = KDTree.SearchSeed();
-//        		if (lOpen.size() == 0)
-//        		{
-//        			newSeed = KDTree.SearchSeed();
-//        			if(newSeed != 0)
-//        			{
-//        				lOpen.push_back(newSeed);
-//        			}
-//        			//std::cout << "Open Size " << lOpen.size() <<  std::endl;
-//        		}
-
         		++cont;
-        		//lClose.pop_front();
-        		//lClose.push_front(lSurfel);
+        		lClose.pop_back();
         		progress += lClose.size();
         		Clusters.push_back(std::make_pair<int,SurfelList>(cont,lClose));
-        		//me = MergeEllipses<Real>(lClose);
         		NewSurfels.push_back(me.NewSurfel(shape));
         		lClose.clear();
         		lNeighbors.clear();
-        		if(cb && (progress%100)==0) cb(progress*50/kd_tree_size,"Cluster Building");
+        		if(cb && (progress%100)==0)
+        		{
+        			cb(progress*50/kd_tree_size,"Cluster Building");
+        		}
         	}
         	cb(100,"Cluster Done!");
         	std::cout << "progress :" << progress << "kdtree " << kd_tree_size << "Cluster Size"<<  std::endl;
