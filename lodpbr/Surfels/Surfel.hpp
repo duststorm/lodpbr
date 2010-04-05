@@ -215,9 +215,9 @@ class Surfel
 	 std::pair<Real,Vector3> 	MajorAxis			(  ) const;
 
 	 Real 						MaxError 			(  ) const;
-	 void 						SetMaxError			( const Real& pMaxError ) const;
+	 void 						SetMaxError			( const Real& pMaxError ) ;
 	 Real 						MinError 			(  ) const;
-   	 void 						SetMinError 		( const Real& pMinError ) const;
+   	 void 						SetMinError 		( const Real& pMinError ) ;
    	 Real PerpendicularError 						( ) const;
    	 void SetPerpendicularError						( const Real& pPerpendicularError ) ;
    	 Real TangencialError 							( ) const;
@@ -677,7 +677,7 @@ Real Surfel<Real>::MaxError () const
 };
 
 template<class Real>
-void Surfel<Real>::SetMaxError (const Real& pMaxError) const
+void Surfel<Real>::SetMaxError (const Real& pMaxError)
 {
 	 this->mMaxError = pMaxError;
 };
@@ -689,7 +689,7 @@ Real Surfel<Real>::MinError () const
 };
 
 template<class Real>
-void Surfel<Real>::SetMinError (const Real& pMinError) const
+void Surfel<Real>::SetMinError (const Real& pMinError)
 {
 	 this->mMinError = pMinError;
 };

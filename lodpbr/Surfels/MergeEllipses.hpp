@@ -82,6 +82,7 @@ public:
 			Surfel s = Surfel(mNewCenter,mNewNormal,mNewMinorAxis,mNewMajorAxis,1);
 			s.SetPerpendicularError(mNewPerpendicularError);
 			s.SetTangencialError(mNewTangencialError);
+			s.SetMinError(mNewTangencialError+mNewPerpendicularError);
 			return ( s );
 		}
 		if (type == CIRCULAR)
@@ -89,6 +90,7 @@ public:
 			Surfel s =  Surfel(mNewCenter,mNewNormal,std::make_pair(mNewMajorAxis.first,mNewMinorAxis.second),mNewMajorAxis,1);
 			s.SetPerpendicularError(mNewPerpendicularError);
 			s.SetTangencialError(mNewTangencialError);
+			s.SetMinError(mNewTangencialError+mNewPerpendicularError);
 			return (s);
 		}
 
@@ -102,6 +104,7 @@ public:
 			Surfel* s = new Surfel(mNewCenter,mNewNormal,mNewMinorAxis,mNewMajorAxis,1);
 			s->SetPerpendicularError(mNewPerpendicularError);
 			s->SetTangencialError(mNewTangencialError);
+			s->SetMinError(mNewTangencialError+mNewPerpendicularError);
 			return ( s );
 		}
 		if (type == CIRCULAR)
@@ -109,6 +112,7 @@ public:
 			Surfel* s = new Surfel(mNewCenter,mNewNormal,std::make_pair(mNewMajorAxis.first,mNewMinorAxis.second),mNewMajorAxis,1);
 			s->SetPerpendicularError(mNewPerpendicularError);
 			s->SetTangencialError(mNewTangencialError);
+			s->SetMinError(mNewTangencialError+mNewPerpendicularError);
 			return (s );
 		}
 
