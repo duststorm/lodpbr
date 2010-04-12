@@ -286,7 +286,8 @@ public:
 
         	lNeighbors  = KDTree.KNearestNeighbors(lSurfel ,4, KNearestSearchComps);
 
-        	Real mHeightMax	=  0.1*(lSurfel->Center().EuclideanDistance(lNeighbors.back()->Center()));
+        	Real mHeightMax	=  (lSurfel->Center().EuclideanDistance(lNeighbors.back()->Center()));
+        	Real mAreaMax   =  (lSurfel->MajorAxis().first);
 
         	int cont = 0;
 
@@ -307,37 +308,33 @@ public:
 
         		me = MergeEllipses<Real>(lClose,shape);
 
-        		lNeighbors  = KDTree.KNearestNeighbors(lSurfel ,128, KNearestSearchComps);
+        		lNeighbors  = KDTree.KNearestNeighbors(lSurfel ,8, KNearestSearchComps);
+
+        		Real perpendicularSurfel = 999.0;
 
         		for(SurfelPtrVectorReverseIterator it = lNeighbors.rbegin(); it != lNeighbors.rend(); ++it)
         		{
 
-        			if (((lSurfel->Center() - (*it)->Center())*lSurfel->Normal()) < mHeightMax )
+        			perpendicularSurfel = ((lSurfel->Center() - (*it)->Center())*lSurfel->Normal());
+
+
+        			if ( (perpendicularSurfel < mHeightMax) && (me.NewSurfel().TangencialError() < mAreaMax))
         			{
-        				if(me.NewSurfel(shape).TangencialError() <  lSurfel->MajorAxis().first*0.1)
-        				{
         					if ((*it)->ExpansionMarked() == 1)
         					{
         						(*it)->SetMarked(1);
         						lClose.push_back((*(*it)));
         						me = MergeEllipses<Real>(lClose,shape);
-        						(*it)->SetMinError(me.NewSurfel(shape).TangencialError()+me.NewSurfel(shape).PerpendicularError());
+        						(*it)->SetMinError(me.NewSurfel().TangencialError()+me.NewSurfel().PerpendicularError());
         					}else
         					{
         						(*it)->SetExpansionMarked(1);
         						lClose.push_back((*(*it)));
         						me = MergeEllipses<Real>(lClose,shape);
-        						(*it)->SetMinError(me.NewSurfel(shape).TangencialError()+me.NewSurfel(shape).PerpendicularError());
+        						(*it)->SetMinError(me.NewSurfel().TangencialError()+me.NewSurfel().PerpendicularError());
         					}
 							//std::cout << " HeightMax :" << mHeightMax << " me Perpendicular Error " << me.NewSurfel().PerpendicularError() << std::endl;
-        				}
-
-        			}else
-        			{
-        				continue;
-        			}
-
-
+       				}
         		}
 
         		lSurfel = KDTree.SearchSeed();
