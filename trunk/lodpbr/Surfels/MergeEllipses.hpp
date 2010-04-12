@@ -72,8 +72,17 @@ public:
 		PerpendicularError(NewSurfel(type));
 		TangencialError	  (NewSurfel(type));
 
+		mNewSurfel = Surfel(mNewCenter,mNewNormal,mNewMinorAxis,mNewMajorAxis,1);
+		mNewSurfel.SetPerpendicularError(mNewPerpendicularError);
+		mNewSurfel.SetTangencialError(mNewTangencialError);
+		mNewSurfel.SetMinError(mNewTangencialError+mNewPerpendicularError);
+
 	};
 
+	Surfel NewSurfel()
+	{
+		return mNewSurfel;
+	}
 
 	Surfel NewSurfel(Splat type)
 	{
@@ -335,6 +344,8 @@ private:
 
 	// Lista de Ellipses a sofrem "merge"
 	SurfelList					mEllipses;
+
+	Surfel 						mNewSurfel;
 
 	Point3	 					mNewCenter;
 
