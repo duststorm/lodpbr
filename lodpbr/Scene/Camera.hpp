@@ -78,6 +78,11 @@ namespace Celer{
         }
 
 
+        Matrix4x4 getViewMatrix()
+        {
+        	return mViewMatrix;
+        }
+
         void getViewport(GLint viewport[4]) const
         {
           viewport[0] = 0;

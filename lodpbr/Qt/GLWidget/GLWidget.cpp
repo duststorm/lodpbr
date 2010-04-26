@@ -13,6 +13,7 @@
 
 #include <wrap/gl/picking.h>
 
+
 #define DA_APLICACAO_PASSADA 0
 
 
@@ -544,9 +545,6 @@ void GLWidget::glInit()
 
 void GLWidget::initializeGL()
 {
-//	GPUKernel.fragment_source("simple.frag");
-//	GPUKernel.vertex_source("simple.vert");
-//	GPUKernel.install(true);
 
 	makeCurrent();
 	mGLInitialized = true;
@@ -554,86 +552,12 @@ void GLWidget::initializeGL()
     GLfloat luzAmbiente[4] ={0.0f, 0.0f, 0.0f,1.0};
  	GLfloat luzDifusa[4]   ={1.0,1.0,1.0,1.0};         //cor
 	GLfloat luzEspecular[4]={1.0, 1.0, 1.0, 1.0};   //brilho
-//
-//	GLfloat materialAmbient[]   = { 1.0f, 0.35f, 0.0f, 1.0f };
-//	GLfloat materialDiffuse[]   = { 1.0f, 0.35f, 0.0f, 1.0f };
-//	GLfloat materialSpecular[]  = { 1.0f, 1.0f, 1.0f, 1.0f };
-//	GLfloat materialEmission[]  = { 0.0f, 0.0f, 0.0f, 1.0f };
-//	GLfloat materialShininess   = 64.0f;
-//
+
 	GLfloat lightPos0[] = {0.0, 0.0, 5.0, 0.0};
-	GLfloat lightPos1[] = {0.0, 0.0, -5.0, 0.0};
-	GLfloat lightPos2[] = {5.0, 0.0, 0.0, 0.0};
-	GLfloat lightPos3[] = {-5.0, 0.0,0.0, 0.0};
-	GLfloat lightPos4[] = {0.0, -5.0, 0.0, 0.0};
-	GLfloat lightPos5[] = {0.0, 5.0, 0.0, 0.0};
-//
-//
-//	glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, materialAmbient);
-//	glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, materialDiffuse);
-//	glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, materialSpecular);
-//	glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, materialEmission);
-//	glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, materialShininess);
 
 	glShadeModel(GL_SMOOTH);                      	//gouraud
 
-//	glLightModelfv(GL_LIGHT_MODEL_AMBIENT, luzAmbiente);        //luz ambiente
-//	glLightModelfv(GL_LIGHT_MODEL_TWO_SIDE, luzAmbiente);        //luz ambiente
-
-	glLightfv(GL_LIGHT0, GL_AMBIENT, luzAmbiente);  //parametros da luz 0
-	glLightfv(GL_LIGHT0, GL_DIFFUSE, luzDifusa);
-	glLightfv(GL_LIGHT0, GL_SPECULAR, luzEspecular);
-
-	glLightfv(GL_LIGHT1, GL_AMBIENT, luzAmbiente);  //parametros da luz 0
-	glLightfv(GL_LIGHT1, GL_DIFFUSE, luzDifusa);
-	glLightfv(GL_LIGHT1, GL_SPECULAR, luzEspecular);
-
-	glLightfv(GL_LIGHT2, GL_AMBIENT, luzAmbiente);  //parametros da luz 0
-	glLightfv(GL_LIGHT2, GL_DIFFUSE, luzDifusa);
-	glLightfv(GL_LIGHT2, GL_SPECULAR, luzEspecular);
-
-	glLightfv(GL_LIGHT3, GL_AMBIENT, luzAmbiente);  //parametros da luz 0
-	glLightfv(GL_LIGHT3, GL_DIFFUSE, luzDifusa);
-	glLightfv(GL_LIGHT3, GL_SPECULAR, luzEspecular);
-
-	glLightfv(GL_LIGHT4, GL_AMBIENT, luzAmbiente);  //parametros da luz 0
-	glLightfv(GL_LIGHT4, GL_DIFFUSE, luzDifusa);
-	glLightfv(GL_LIGHT4, GL_SPECULAR, luzEspecular);
-
-	glLightfv(GL_LIGHT5, GL_AMBIENT, luzAmbiente);  //parametros da luz 0
-	glLightfv(GL_LIGHT5, GL_DIFFUSE, luzDifusa);
-	glLightfv(GL_LIGHT5, GL_SPECULAR, luzEspecular);
-
-    glLightModelf(GL_LIGHT_MODEL_LOCAL_VIEWER, 1.0f);
-
-    glLightModelfv(GL_LIGHT_MODEL_AMBIENT, luzAmbiente);
-
-    glLightfv(GL_LIGHT0, GL_POSITION, lightPos0);
-    glLightfv(GL_LIGHT1, GL_POSITION, lightPos1);
-    glLightfv(GL_LIGHT2, GL_POSITION, lightPos2);
-    glLightfv(GL_LIGHT3, GL_POSITION, lightPos3);
-    glLightfv(GL_LIGHT4, GL_POSITION, lightPos4);
-    glLightfv(GL_LIGHT5, GL_POSITION, lightPos5);
-
-//	glLightfv(GL_LIGHT0, GL_POSITION,  lightPosition0);
-//	glLightfv(GL_LIGHT1, GL_POSITION,  lightPosition1);
-//
-//	glLightfv(GL_LIGHT1, GL_AMBIENT, luzAmbiente);  //parametros da luz 0
-//	glLightfv(GL_LIGHT1, GL_DIFFUSE, luzDifusa );
-//	glLightfv(GL_LIGHT1, GL_SPECULAR, luzEspecular);
-
-
-	glEnable(GL_COLOR_MATERIAL);
 	//set material properties which will be assigned by glColor
-
-	glEnable(GL_LIGHTING);
-
-	glEnable(GL_LIGHT0);
-	glEnable(GL_LIGHT1);
-	glEnable(GL_LIGHT2);
-	glEnable(GL_LIGHT3);
-	glEnable(GL_LIGHT4);
-	glEnable(GL_LIGHT5);
 
   	glEnable(GL_DEPTH_TEST);
     glEnable(GL_NORMALIZE);
@@ -750,9 +674,16 @@ void GLWidget::paintEvent(QPaintEvent *)
 void GLWidget::paintGL()
 {
 
-    saveGLState();
+    //saveGLState();
 	makeCurrent();
-    initializeGL();
+    //initializeGL();
+	glShadeModel(GL_SMOOTH);                      	//gouraud
+
+	//set material properties which will be assigned by glColor
+
+  	glEnable(GL_DEPTH_TEST);
+    glEnable(GL_NORMALIZE);
+
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     camera.LoadProjectionMatrix();
@@ -762,6 +693,16 @@ void GLWidget::paintGL()
     mClusterLog.setCamera(camera);
 
     fps.nextFrame();
+
+    static float globalAmbient[4] = {0.0f, 0.0f, 0.0f, 1.0f};
+    static float lightPos[4] ={0.0, 0.0, 1.0, 0.0};;
+
+    glEnable(GL_LIGHTING);
+    glEnable(GL_LIGHT0);
+
+
+    glLightfv(GL_LIGHT0, GL_POSITION, lightPos);
+
 
 //--
 	//select(lastPos);
@@ -929,7 +870,7 @@ void GLWidget::paintGL()
     }
 
 
-    restoreGLState();
+    //restoreGLState();
     QPainter p; // used for text overlay
     p.begin(this);
 //    p.setRenderHint(QPainter::Antialiasing);
