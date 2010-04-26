@@ -540,7 +540,7 @@ namespace Celer {
 	};
 
 	template <class Real>
-	inline Vector3<Real> operator*( const Matrix4x4<Real>& a, const Vector4<Real>& v )
+	inline Vector4<Real> operator*( const Matrix4x4<Real>& a, const Vector4<Real>& v )
 	{
 		return ( Vector4<Real>
 		( a[ 0 ].x * v.x + a[ 0 ].y * v.y + a[ 0 ].z * v.z + a[ 0 ].w * v.w,
