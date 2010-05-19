@@ -1,22 +1,10 @@
+include(shared.pri)
+
 TEMPLATE = app
 TARGET = pyramidRendererMeshLab
 
-VCGDIR = ../vcglib
 
 FORMS += Qt/UI/pyramidRendererMeshLab.ui
-
-# LIBRARIES
-unix{
-	LIBS = -L/usr/lib64 -lGLEW 
-	QMAKE_CXXFLAGS += -fpermissive
-}
-
-# Output
-unix{
-	MOC_DIR = .tmp\.moc
-	OBJECTS_DIR = .tmp\.obj
-	UI_HEADERS_DIR = .tmp\.ui
-}
 
 DEPENDPATH += Qt/UI	 \
 		render_splatpyramid \

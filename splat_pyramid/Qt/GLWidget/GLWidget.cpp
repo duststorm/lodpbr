@@ -39,6 +39,29 @@ void GLWidget::init()
 {
     //setFormat(QGLFormat(QGL::DoubleBuffer | QGL::DepthBuffer));
 	makeCurrent();
+
+	glewInit();
+
+	const char* rs = (const char*)glGetString(GL_RENDERER);
+
+	cout << "GL_RENDERER : " << rs << endl;
+	if (!GLEW_ARB_texture_float)
+		std::cout << "SplatPyramid: warning floating point textures are not supported.\n";
+
+	canvas_width  = width();
+	canvas_height = height();
+
+	render_mode = PYRAMID_POINTS;
+	point_based_render = NULL;
+
+	fps_loop = 0;
+
+	rotating = 0;
+	show_points = false;
+	selected = 0;
+	scale_factor = 1.0;
+
+
     setMinimumSize(400, 400);
     setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
     setFocus();
@@ -54,6 +77,23 @@ void GLWidget::init()
 
 	mGLInitialized = false;
 
+}
+
+
+void GLWidget::createPointRenderer( void ) {
+
+	if (point_based_render)
+		delete point_based_render;
+
+	if (render_mode == PYRAMID_POINTS)
+		point_based_render = new PyramidPointRenderer(canvas_width, canvas_height);
+	else if (render_mode == PYRAMID_POINTS_COLOR)
+		point_based_render = new PyramidPointRendererColor(canvas_width, canvas_height);
+
+	assert (point_based_render);
+
+	((PyramidPointRendererBase*)point_based_render)->setShadersDir(QDir::currentPath());
+	((PyramidPointRendererBase*)point_based_render)->createShaders();
 }
 
 
@@ -113,6 +153,7 @@ void GLWidget::initializeGL()
 void GLWidget::LoadModel(const char * filename,bool eliptical, vcg::CallBackPos *cb=0 )
 {
 	objects.push_back( Object( objects.size() ) );
+	bool color_per_vertex = false;
 
 	if(eliptical)
 	{
@@ -122,6 +163,18 @@ void GLWidget::LoadModel(const char * filename,bool eliptical, vcg::CallBackPos 
 	{
 		IOSurfels<double>::LoadMesh(filename, (objects.back()).getSurfels());
 	}
+
+
+	if (color_per_vertex)
+		render_mode =  PYRAMID_POINTS_COLOR;
+	else
+		render_mode =  PYRAMID_POINTS;
+
+	createPointRenderer( );
+
+	/// Sets the default rendering algorithm and loads display lists
+	for (unsigned int i = 0; i < objects.size(); ++i)
+		objects[i].setRendererType( render_mode );
 
 }
 
@@ -134,6 +187,11 @@ void GLWidget::resizeGL(int width, int height)
     glLoadIdentity();
     GLfloat x = GLfloat(width) / height;
     camera.SetProjectionMatrix(30.0,x,0.1,100000);
+
+	canvas_width  = width;
+	canvas_height = height;
+
+	createPointRenderer( );
 
     glMultMatrixf((~camera.PespectiveProjectionMatrix()).ToRealPtr());
     glMatrixMode(GL_MODELVIEW);
@@ -182,17 +240,34 @@ void GLWidget::paintGL()
 
     if (objects.size() > 0)
     {
-    	glColor3f(1.0f,1.0f,1.0f);
-    	glDisable(GL_LIGHTING);
-    	glPointSize(2.0);
-    	glBegin(GL_POINTS);
 
-    	for (std::vector<Surfel<double> >::iterator s = objects.back().getSurfels().begin(); s != objects.back().getSurfels().end();++s)
-    	{
-    		glVertex3d(s->Center()[0],s->Center()[1],s->Center()[2]);
-    	}
-    	glEnd();
-    	glEnable(GL_LIGHTING);
+
+    	point_based_render->clearBuffers();
+
+    	glPushMatrix();
+
+    	// Set eye for back face culling in vertex shader of projection phase
+    	point_based_render->setEye( Point3f(camera.Eyes().x,camera.Eyes().y,camera.Eyes().z) );
+
+    	for (unsigned int i = 0; i < objects.size(); ++i)
+    		point_based_render->projectSamples( &objects[i] );
+
+    	point_based_render->interpolate();
+
+    	point_based_render->draw();
+    	glPopMatrix();
+
+//    	glColor3f(1.0f,1.0f,1.0f);
+//    	glDisable(GL_LIGHTING);
+//    	glPointSize(2.0);
+//    	glBegin(GL_POINTS);
+//
+//    	for (std::vector<Surfel<double> >::iterator s = objects.back().getSurfels().begin(); s != objects.back().getSurfels().end();++s)
+//    	{
+//    		glVertex3d(s->Center()[0],s->Center()[1],s->Center()[2]);
+//    	}
+//    	glEnd();
+//    	glEnable(GL_LIGHTING);
     }
 
   	DrawGroud();

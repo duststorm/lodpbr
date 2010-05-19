@@ -140,7 +140,6 @@ class PyramidPointRendererPlugin : public QObject, public MeshRenderInterface
   int timing_profile;
 
   /*************************************/
-
 };
 
 #endif
