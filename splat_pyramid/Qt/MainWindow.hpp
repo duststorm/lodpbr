@@ -3,7 +3,7 @@
 
 #include <QtGui/QtGui>
 
-#include "ui_QtBasicOpenGL.h"
+#include "ui_pyramidRendererMeshLab.h"
 
 #include "Qt/GLWidget/GLWidget.hpp"
 
