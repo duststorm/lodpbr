@@ -6,6 +6,10 @@ VCGDIR = ../vcglib
 
 CONFIG += opengl
 
+TARGET = photojibe
+DESTDIR = $$PWD/build\bin
+
+
 TARGET = lodpbr
 DEPENDPATH += . \
 	.tmp/.ui 	\
@@ -24,70 +28,70 @@ INCLUDEPATH += . \
 HEADERS += sources\Renderer\GLSplat\GlSplat.h \
     sources\Renderer\GLSplat\GlSplat_config.h \
     sources\Renderer\GLSplat\Shader.h \
-    sources\Math\Math.hpp \
-    sources\Math\Color.hpp \
-    sources\Math\Vector2.hpp \
-    sources\Math\Vector3.hpp \
-    sources\Math\Vector4.hpp \
-    sources\Math\Point2.hpp \
-    sources\Math\Point3.hpp \
-    sources\Math\Matrix3x3.hpp \
-    sources\Math\Matrix4x4.hpp \
-    sources\Math\Quaternion.hpp \
-    sources\Math\BoundingBox3.hpp \
-    sources\Math\EigenSystem.hpp \
-    sources\Scene\Camera.hpp \
-    sources\Scene\Trackball.hpp \
-    sources\Surfels\Kd-Tree\Kd-Tree.hpp \
-    sources\Surfels\Kd-Tree\Kd-TreeNode.hpp \
-    sources\Surfels\Kd-Tree\Kd-TreeRefine.hpp \
-    sources\Surfels\Surfel.hpp \
-    sources\Surfels\IOSurfels.hpp \
-    sources\Surfels\MergeEllipses.hpp \
-    sources\Clustering\Cluster.hpp \
-    sources\Clustering\ClusterCriteria.hpp \
-    sources\Qt\Tools\FPSCounter.h\	
-    sources\Qt\Tools\BitMask.hpp\
-    sources\Qt\Tools\Settings.hpp\
-    sources\Qt\GLWidget\GLWidget.hpp \
-    sources\Qt\GLWidget\WidgetProxy.hpp \
-    sources\Qt\GLWidget\Log\ClusterLog.hpp \
-    sources\Qt\GLWidget\Log\LSplatLog.hpp \
-    sources\Qt\myMainWindow.hpp \
+    sources\Celer\Math\Math.hpp \
+    sources\Celer\Math\Color.hpp \
+    sources\Celer\Math\Vector2.hpp \
+    sources\Celer\Math\Vector3.hpp \
+    sources\Celer\Math\Vector4.hpp \
+    sources\Celer\Math\Point2.hpp \
+    sources\Celer\Math\Point3.hpp \
+    sources\Celer\Math\Matrix3x3.hpp \
+    sources\Celer\Math\Matrix4x4.hpp \
+    sources\Celer\Math\Quaternion.hpp \
+    sources\Celer\Math\BoundingBox3.hpp \
+    sources\Celer\Math\EigenSystem.hpp \
+    sources\Lsplat\Scene\Camera.hpp \
+    sources\Lsplat\Scene\Trackball.hpp \
+    sources\Lsplat\Surfels\Kd-Tree\Kd-Tree.hpp \
+    sources\Lsplat\Surfels\Kd-Tree\Kd-TreeNode.hpp \
+    sources\Lsplat\Surfels\Kd-Tree\Kd-TreeRefine.hpp \
+    sources\Lsplat\Surfels\Surfel.hpp \
+    sources\Lsplat\Surfels\IOSurfels.hpp \
+    sources\Lsplat\Surfels\MergeEllipses.hpp \
+    sources\Lsplat\Clustering\Cluster.hpp \
+    sources\Lsplat\Clustering\ClusterCriteria.hpp \
+    sources\Lsplat\Qt\Tools\FPSCounter.h\	
+    sources\Lsplat\Qt\Tools\BitMask.hpp\
+    sources\Lsplat\Qt\Tools\Settings.hpp\
+    sources\Lsplat\Qt\GLWidget\GLWidget.hpp \
+    sources\Lsplat\Qt\GLWidget\WidgetProxy.hpp \
+    sources\Lsplat\Qt\GLWidget\Log\ClusterLog.hpp \
+    sources\Lsplat\Qt\GLWidget\Log\LSplatLog.hpp \
+    sources\Lsplat\Qt\myMainWindow.hpp \
     $$VCGDIR\wrap\io_trimesh\import_ply.h \
     $$VCGDIR\wrap\io_trimesh\export_ply.h \
     $$VCGDIR\wrap\ply\plylib.h
 
-SOURCES += sources\Renderer\GLSplat\GlSplat.cpp \
-    sources\Renderer\GLSplat\Shader.cpp \
-    sources\Math\Math.cpp \
-    sources\Math\Vector2.cpp \
-    sources\Math\Vector3.cpp \
-    sources\Math\Vector4.cpp \
-    sources\Math\Point2.cpp \
-    sources\Math\Point3.cpp \
-    sources\Math\Matrix3x3.cpp \
-    sources\Math\Matrix4x4.cpp \
-    sources\Math\Quaternion.cpp \
-    sources\Clustering\Cluster.cpp \
-    sources\Scene\Camera.cpp \
-    sources\Scene\Trackball.cpp \
-    sources\Qt\Tools\FPSCounter.cpp\
-    sources\Qt\Tools\Settings.cpp\
-    sources\Qt\GLWidget\GLWidget.cpp \
-    sources\Qt\GLWidget\WidgetProxy.cpp \
-    sources\Qt\GLWidget\Log\ClusterLog.cpp \
-    sources\Qt\GLWidget\Log\LSplatLog.cpp \
-    sources\Qt\myMainWindow.cpp \
-    sources\Qt\myMainWindowRun.cpp \
-    sources\main.cpp \
+SOURCES += sources\Lsplat\Renderer\GLSplat\GlSplat.cpp \
+    sources\Lsplat\Renderer\GLSplat\Shader.cpp \
+    sources\Celer\Math\Math.cpp \
+    sources\Celer\Math\Vector2.cpp \
+    sources\Celer\Math\Vector3.cpp \
+    sources\Celer\Math\Vector4.cpp \
+    sources\Celer\Math\Point2.cpp \
+    sources\Celer\Math\Point3.cpp \
+    sources\Celer\Math\Matrix3x3.cpp \
+    sources\Celer\Math\Matrix4x4.cpp \
+    sources\Celer\Math\Quaternion.cpp \
+    sources\Lsplat\Clustering\Cluster.cpp \
+    sources\Lsplat\Scene\Camera.cpp \
+    sources\Lsplat\Scene\Trackball.cpp \
+    sources\Lsplat\Qt\Tools\FPSCounter.cpp\
+    sources\Lsplat\Qt\Tools\Settings.cpp\
+    sources\Lsplat\Qt\GLWidget\GLWidget.cpp \
+    sources\Lsplat\Qt\GLWidget\WidgetProxy.cpp \
+    sources\Lsplat\Qt\GLWidget\Log\ClusterLog.cpp \
+    sources\Lsplat\Qt\GLWidget\Log\LSplatLog.cpp \
+    sources\Lsplat\Qt\myMainWindow.cpp \
+    sources\Lsplat\Qt\myMainWindowRun.cpp \
+    sources\Lsplat\main.cpp \
     $$VCGDIR\wrap\ply\plylib.cpp
     
 
 QT *= opengl xml
-FORMS += sources\Qt\UI\lodpbr.ui
+FORMS += sources\Lsplat\Qt\UI\lodpbr.ui
 
-RESOURCES += sources\Renderer\GLSplat\glsplat.qrc
+RESOURCES += sources\Lsplat\Renderer\GLSplat\glsplat.qrc
 
 
 LIBS = -L\usr\lib64 -lGLEW
