@@ -7,9 +7,10 @@
 #include <algorithm>
 #include <cmath>
 
-#include "Matrix3x3.hpp"
-#include "Point3.hpp"
-#include "Vector3.hpp"
+#include <Celer/Geometry/Matrix3x3.hpp>
+#include <Celer/Geometry/Point3.hpp>
+#include <Celer/Geometry/Vector3.hpp>
+#include <Celer/Geometry/MathDefinitions.hpp>
 
 namespace Celer
 {
@@ -323,7 +324,7 @@ namespace Celer
 
 						Real g = d[l];
 						Real p = (d[l+1] - g) / (2.0 * e[l]);
-						Real r = Math::Hypotenuse(p,1.0f);
+						Real r = MathDefinitions::Hypotenuse(p,1.0f);
 						if (p < 0) {
 							r = -r;
 						}
@@ -353,7 +354,7 @@ namespace Celer
 							s2 = s;
 							g = c * e[i];
 							h = c * p;
-							r = Math::Hypotenuse(p,e[i]);
+							r = MathDefinitions::Hypotenuse(p,e[i]);
 							e[i+1] = s * r;
 							s = e[i] / r;
 							c = p / r;
