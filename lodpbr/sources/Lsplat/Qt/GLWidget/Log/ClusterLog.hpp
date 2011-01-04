@@ -8,9 +8,9 @@
 #ifndef CLUSTERRENDERLOG_H_
 #define CLUSTERRENDERLOG_H_
 
-#include "Scene/Camera.hpp"
+#include "Lsplat/Scene/Camera.hpp"
 
-#include "Qt/Tools/BitMask.hpp"
+#include "Lsplat/Qt/Tools/BitMask.hpp"
 
 class ClusterLog {
 public:

@@ -25,17 +25,17 @@
 #include <algorithm>
 #include <iostream>
 
-#include "Surfels/Kd-Tree/Kd-Tree.hpp"
-#include "Surfels/MergeEllipses.hpp"
-#include "Surfels/Surfel.hpp"
+#include "Lsplat/Surfels/Kd-Tree/Kd-Tree.hpp"
+#include "Lsplat/Surfels/MergeEllipses.hpp"
+#include "Lsplat/Surfels/Surfel.hpp"
 
-#include "Math/BoundingBox3.hpp"
-#include "Math/EigenSystem.hpp"
-#include "Math/Vector4.hpp"
+#include "Celer/Math/BoundingBox3.hpp"
+#include "Celer/Math/EigenSystem.hpp"
+#include "Celer/Math/Vector4.hpp"
 
 #include "ClusterCriteria.hpp"
 
-#include "Qt/GLWidget/Log/ClusterLog.hpp"
+#include "Lsplat/Qt/GLWidget/Log/ClusterLog.hpp"
 
 template <class Real>
 class Cluster
