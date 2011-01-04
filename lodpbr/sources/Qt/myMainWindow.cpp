@@ -3,7 +3,7 @@
 #include <iostream>
 
 
-#include "myMainWindow.hpp"
+#include "Qt/myMainWindow.hpp"
 
 using namespace std;
 

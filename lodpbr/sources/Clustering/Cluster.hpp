@@ -42,7 +42,6 @@ class Cluster
 {
 
 public:
-
 	typedef typename Celer::Surfel<Real>				Surfel;
 	typedef typename Celer::Surfel<Real>*			    SurfelPtr;
 
@@ -181,14 +180,15 @@ public:
         	SurfelPtr        		        lSurfel    = 0;
         	int                             KNearestSearchComps = 0;
 
-        	int shape = 0;
+        	typename MergeEllipses<Real>::Splat  shape = MergeEllipses<Real>::ELLIPTICAL;
+
         	if (clusterLog.maskBuildClusterShape.Test(ClusterLog::ELLIPTICAL))
         	{
-        		shape = 1 << 17;
+        		shape = MergeEllipses<Real>::ELLIPTICAL;
         	}
         	else
         	{
-        		shape = 1 << 18;
+        		shape = MergeEllipses<Real>::CIRCULAR;
         	}
 
         	if(pSeed == 0)
@@ -251,7 +251,7 @@ public:
         void Build2(int pCont,int pKNeighborsSize ,const SurfelPtr& pSeed,ClusterLog& clusterLog,vcg::CallBackPos *cb=0  )
         {
 
-        	int shape  =  1<< 17;
+        	typename MergeEllipses<Real>::Splat  shape = MergeEllipses<Real>::ELLIPTICAL;
 
         	if(pSeed == 0)
         	{
@@ -259,11 +259,11 @@ public:
         	}
         	if (clusterLog.maskBuildClusterShape.Test(ClusterLog::ELLIPTICAL))
         	{
-        		shape = 1 << 17;
+        		shape = MergeEllipses<Real>::ELLIPTICAL;
         	}
         	else
         	{
-        		shape = 1 << 18;
+        		shape = MergeEllipses<Real>::CIRCULAR;
         	}
 
     		Clusters.clear();
