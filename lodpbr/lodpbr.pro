@@ -89,9 +89,9 @@ SOURCES += sources\Lsplat\Renderer\GLSplat\GlSplat.cpp \
     
 
 QT *= opengl xml
-FORMS += sources\Lsplat\Qt\UI\lodpbr.ui
+FORMS += sources\Qt\UI\lodpbr.ui
 
-RESOURCES += sources\Lsplat\Renderer\GLSplat\glsplat.qrc
+RESOURCES += sources\Renderer\GLSplat\glsplat.qrc
 
 
 LIBS = -L\usr\lib64 -lGLEW
