@@ -286,7 +286,7 @@ public:
 
         	lNeighbors  = KDTree.KNearestNeighbors(lSurfel ,4, KNearestSearchComps);
 
-        	Real mHeightMax	=  (lSurfel->Center().EuclideanDistance(lNeighbors.back()->Center()));
+        	Real mHeightMax	=  0.5*(lSurfel->Center().EuclideanDistance(lNeighbors.back()->Center()));
         	Real mAreaMax   =  (lSurfel->MajorAxis().first);
 
         	int cont = 0;
@@ -308,7 +308,7 @@ public:
 
         		me = MergeEllipses<Real>(lClose,shape);
 
-        		lNeighbors  = KDTree.KNearestNeighbors(lSurfel ,8, KNearestSearchComps);
+        		lNeighbors  = KDTree.KNearestNeighbors(lSurfel ,128, KNearestSearchComps);
 
         		Real perpendicularSurfel = 999.0;
 

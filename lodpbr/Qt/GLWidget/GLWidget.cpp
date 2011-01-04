@@ -694,8 +694,12 @@ void GLWidget::paintGL()
 
     fps.nextFrame();
 
-    static float globalAmbient[4] = {0.0f, 0.0f, 0.0f, 1.0f};
-    static float lightPos[4] ={0.0, 0.0, 1.0, 0.0};;
+    static float lightPos[4];
+
+    lightPos[0] = camera.Eyes().x;
+    lightPos[1] = camera.Eyes().y;
+    lightPos[2] = camera.Eyes().z;
+    lightPos[3] = 0.0f;
 
     glEnable(GL_LIGHTING);
     glEnable(GL_LIGHT0);
