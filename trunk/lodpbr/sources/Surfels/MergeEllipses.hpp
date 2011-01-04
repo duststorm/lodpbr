@@ -17,6 +17,13 @@ template <class Real> class MergeEllipses
 {
 public:
 
+		enum Splat
+		{
+			ELLIPTICAL  = 1 << 17,
+			CIRCULAR		= 1 << 18
+		};
+
+
 	typedef Celer::Point3<Real>    					Point3;
 	typedef Celer::Vector3<Real>   					Vector3;
 	typedef Celer::Matrix3x3<Real> 					Matrix3x3;
@@ -29,11 +36,6 @@ public:
 	typedef std::list<Surfel>				  		SurfelList;
 	typedef typename SurfelList::iterator 			SurfelListIterator;
 
-	enum Splat
-	{
-    	ELLIPTICAL    		 = 1 << 17,
-    	CIRCULAR			 = 1 << 18
-	};
 
 	MergeEllipses( )
 	{}
