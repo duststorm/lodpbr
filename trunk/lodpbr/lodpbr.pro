@@ -14,6 +14,8 @@ TARGET = lodpbr
 DEPENDPATH += . \
 	.tmp/.ui 	\
 	sources\
+	source\LSplat\
+	source\Celer\
     $$VCGDIR	\
     $$VCGDIR\vcg \
     $$VCGDIR\wrap	
@@ -22,12 +24,14 @@ DEPENDPATH += . \
 INCLUDEPATH += . \
 	.tmp\.ui 	\
 	sources \
+	source\LSplat\
+	source\Celer\
     $$VCGDIR	
 
 # Input
-HEADERS += sources\Renderer\GLSplat\GlSplat.h \
-    sources\Renderer\GLSplat\GlSplat_config.h \
-    sources\Renderer\GLSplat\Shader.h \
+HEADERS += sources\Lsplat\Renderer\GLSplat\GlSplat.h \
+    sources\Lsplat\Renderer\GLSplat\GlSplat_config.h \
+    sources\Lsplat\Renderer\GLSplat\Shader.h \
     sources\Celer\Math\Math.hpp \
     sources\Celer\Math\Color.hpp \
     sources\Celer\Math\Vector2.hpp \
@@ -89,9 +93,9 @@ SOURCES += sources\Lsplat\Renderer\GLSplat\GlSplat.cpp \
     
 
 QT *= opengl xml
-FORMS += sources\Qt\UI\lodpbr.ui
+FORMS += sources\Lsplat\Qt\UI\lodpbr.ui
 
-RESOURCES += sources\Renderer\GLSplat\glsplat.qrc
+RESOURCES += sources\Lsplat\Renderer\GLSplat\glsplat.qrc
 
 
 LIBS = -L\usr\lib64 -lGLEW
